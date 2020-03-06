@@ -1,0 +1,399 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Discover the 3 things you need to know when you switch from SQL to MongoDB
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: 3 Things to Know When You Switch from SQL to MongoDB
+   :image: /images/social/twitter/twitter-sql-mdb.png
+
+   Discover the 3 things you need to know when you switch from SQL to MongoDB
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-04-01
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * SQL
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+====================================================
+3 Things to Know When You Switch from SQL to MongoDB
+====================================================
+ 
+.. introduction:: 
+
+   Welcome to the final post in my series on moving from SQL to MongoDB. In
+   the first post, I :doc:`mapped terms and concepts from SQL to MongoDB 
+   </article/map-terms-concepts-sql-mongodb>`. In the second post, I
+   discussed the :doc:`top four reasons why you should use MongoDB
+   </article/top-4-reasons-to-use-mongodb>`.
+
+   Now that we have an understanding of the terminology as well as why
+   MongoDB is worth the effort of changing your mindset, let’s talk about
+   three key ways you need to change your mindset.
+
+   Your first instinct might be to convert your existing columns and rows
+   to fields and documents and stick with your old ways of modeling data.
+   We’ve found that people who try to use MongoDB in the same way that they
+   use a relational database struggle and sometimes fail.
+
+   .. image:: /images/article/sql-to-mdb/trashcomputer.gif
+      :alt: Ron throws computer in the trash 
+
+   We don’t want that to happen to you.
+
+   Let’s discuss three key ways to change your mindset as you move from SQL
+   to MongoDB.
+
+   -  :ref:`sql-mdb-3-scale-doc-diversity`
+   -  :ref:`sql-mdb-3-store-together`
+   -  :ref:`sql-mdb-3-transactions`
+
+   .. blockquote::
+
+      This article is based on a presentation I gave at MongoDB World and
+      MongoDB.local Houston entitled “From SQL to NoSQL: Changing Your
+      Mindset.” 
+      
+      If you prefer videos over articles, check out the 
+      `recording <https://youtu.be/FFj04Apz_BE>`_. Slides are available
+      `here <https://www.slideshare.net/LaurenHaywardSchaefe/jumpstart-from-sql-to-nosql-changing-your-mindset>`_.
+
+.. content::
+
+   .. _sql-mdb-3-scale-doc-diversity:
+
+   Embrace Document Diversity
+   --------------------------
+
+   As we saw in the first post in this series when we modeled documents for
+   Leslie, Ron, and Lauren, :ref:`not all documents in a collection need to have
+   the same fields <sql-mdb-1-store-laurens-info>`.
+
+   Users 
+
+   .. code:: json
+
+      {
+         "_id": 1,
+         "first_name": "Leslie",
+         "last_name": "Yepp",
+         "cell": "8125552344",
+         "city": "Pawnee",
+         "location": [ -86.536632, 39.170344 ],
+         "hobbies": ["scrapbooking", "eating waffles", "working"],
+         "jobHistory": [
+            {
+               "title": "Deputy Director",
+               "yearStarted": 2004
+            },
+            {
+               "title": "City Councillor",
+               "yearStarted": 2012
+            },
+            {
+               "title": "Director, National Parks Service, Midwest Branch",
+               "yearStarted": 2014
+            }
+         ]
+      },
+
+      {
+         "_id": 2,
+         "first_name": "Ron",
+         "last_name": "Swandaughter",
+         "cell": "8125559347",
+         "city": "Pawnee",
+         "hobbies": ["woodworking", "fishing"],
+         "jobHistory": [
+            {
+               "title": "Director",
+               "yearStarted": 2002
+            },
+            {
+               "title": "CEO, Kinda Good Building Company",
+               "yearStarted": 2014
+            },
+            {
+               "title": "Superintendent, Pawnee National Park",
+               "yearStarted": 2018
+            }
+         ]
+      },
+
+      {
+         "_id": 3,
+         "first_name": "Lauren",
+         "last_name": "Burhug",
+         "city": "Pawnee",
+         "hobbies": ["soccer"],
+         "school": "Pawnee Elementary"
+      }
+
+   For those of us with SQL backgrounds, this is going to feel
+   uncomfortable and probably a little odd at first. I promise it will be
+   ok. Embrace document diversity. It gives us so much flexibility and
+   power to model our data.
+
+   In fact, MongoDB has a data modeling pattern specifically for when your
+   documents do not have the same fields. It’s called the `Polymorphic
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-polymorphic-pattern>`_.
+   We use the Polymorphic Pattern when documents in a collection are of
+   similar but not identical structures.
+
+   Let’s take a look at an example that builds on the Polymorphic Pattern.
+   Let’s say we decided to keep a list of each user’s social media
+   followers inside of each ``User`` document. Lauren and Leslie don’t have
+   very many followers, so we could easily list their followers in their
+   documents. For example, Lauren’s document might look something like
+   this:
+
+   .. code:: json
+
+      {
+         "_id": 3,
+         "first_name": "Lauren",
+         "last_name": "Burhug",
+         "city": "Pawnee",
+         "hobbies": ["soccer"],
+         "school": "Pawnee Elementary",
+         "followers”: [
+               "Brandon”,
+               "Wesley”,
+               "Ciara”,
+               ...
+         ]
+      }
+
+   This approach would likely work for most of our users. However, since
+   Ron built a chair that appeared in the very popular Bloosh Magazine, Ron
+   has millions of followers. If we try to list all of his followers in his
+   ``User`` document, it may exceed the `16 megabyte document size
+   limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`_.
+   The question arises: do we want to optimize our document model for the
+   typical use case where a user has a few hundred followers or the outlier
+   use case where a user has millions of followers?
+
+   We can utilize the `Outlier
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-outlier-pattern>`_
+   to solve this problem. The Outlier Pattern allows us to model our data
+   for the typical use case but still handle outlier use cases.
+
+   We can begin modeling Ron’s document just like Lauren’s and include a
+   list of followers. When we begin to approach the document size limit, we
+   can add a new ``has_extras`` field to Ron’s document. (The field can be
+   named anything we’d like.)
+
+   .. code:: json
+
+      {
+         "_id": 2,
+         "first_name": "Ron",
+         "last_name": "Swandaughter",
+         "cell": "8125559347",
+         "city": "Pawnee",
+         "hobbies": ["woodworking", "fishing"],
+         "jobHistory": [
+            {
+               "title": "Director",
+               "yearStarted": 2002
+            },
+            …
+         ], 
+         "followers”: [
+            "Leslie”, 
+            "Donna”,
+            "Tom”
+            …
+         ],
+         "has_extras”: true
+      }
+
+   Then we can create a new document where we will store the rest of Ron’s
+   followers.
+
+   .. code:: json
+
+      {
+         "_id": 2.1,
+         "followers”: [
+            "Jerry”, 
+            "Ann”,
+            "Ben”
+            …
+         ],
+         "is_overflow”: true
+      }
+
+   If Ron continues to gain more followers, we could create another
+   overflow document for him.
+
+   The great thing about the Outlier Pattern is that we are optimizing for
+   the typical use case but we have the flexibility to handle outliers.
+
+   So, embrace document diversity. Resist the urge to force all of your
+   documents to have identical structures just because it’s what you’ve
+   always done.
+
+   For more on MongoDB data modeling design patterns, see `Building with
+   Patterns: A
+   Summary <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`_
+   and the free MongoDB University Course `M320: Data
+   Modeling <http://bit.ly/M320_DataModeling>`_.
+
+   .. _sql-mdb-3-store-together:
+
+   Data That is Accessed Together Should be Stored Together
+   --------------------------------------------------------
+
+   If you have experience with SQL databases, someone probably drilled into
+   your head that you should `normalize your
+   data <https://en.wikipedia.org/wiki/Database_normalization>`_.
+   Normalization is considered good because it prevents data duplication.
+   Let’s take a step back and examine the motivation for database
+   normalization.
+
+   When relational databases became popular, disk space was extremely
+   expensive. Financially, it made sense to normalize data and save disk
+   space. Take a look at the chart below that shows the cost per megabyte
+   over time.
+
+   EMBED THIS CHART!!!!!
+
+   .. code:: auto
+
+      <iframe style="background: #FFFFFF;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" src="https://charts.mongodb.com/charts-storage-costs-sbekh/embed/charts?id=740dea93-d2da-44c3-8104-14ccef947662&amp;theme=light">
+
+   The cost has drastically gone down. Our phones, tablets, laptops, and
+   flash drives have more storage capacity today than they did even five to
+   ten years ago for a fraction of the cost. When was the last time you
+   deleted a photo? I can’t remember when I did. I keep even the really
+   horribly unflattering photos. And I currently backup all of my photos on
+   two external hard drives and multiple cloud services. Storage is so
+   cheap.
+
+   Storage has become so cheap that we’ve seen a shift in the cost of
+   software development. Thirty to forty years ago storage was a huge cost
+   in software development and developers were relatively cheap. Today, the
+   costs have flipped: storage is a small cost of software development and
+   developers are expensive.
+
+   Instead of optimizing for storage, we need to optimize for developers’
+   time and productivity.
+
+   As a developer, I like this shift. I want to be able to focus on
+   implementing business logic and iterate quickly. Those are the things
+   that matter to the business and move developers’ careers forward. I
+   don’t want to be dragged down by data storage specifics.
+
+   Think back to the 
+   :ref:`example in the previous post <sql-mdb-2-program-faster>`
+   where I coded retrieving and updating a user’s profile information. Even
+   in that simple example, I was able to write fewer lines of code and move
+   quicker when I used MongoDB.
+
+   So, optimize your data model for developer productivity and query
+   optimization. Resist the urge to normalize your data for the sake of
+   normalizing your data.
+
+   *Data this is accessed together should be stored together*. If you end
+   up repeating data in your database, that’s ok—especially if you won’t be
+   updating the data very often.
+
+   .. _sql-mdb-3-transactions:
+
+   Tread Carefully with Transactions
+   ---------------------------------
+
+   We discussed in a previous post that 
+   :ref:`MongoDB supports transactions <sql-mdb-1-transactions-mapping>`.
+   The MongoDB engineering team did an
+   amazing job of implementing transactions. They work so well!
+
+   But here’s the thing. Relying on transactions is a bad design smell.
+
+   .. image:: /images/article/sql-to-mdb/badsmell.gif
+      :alt: Ben is shocked by the horrendous smell of Tom's cologne
+
+   Why? This builds on our first two points in this section.
+
+   First, not all documents need to have the same fields. Perhaps you’re
+   breaking up data between multiple collections because it’s not all of
+   identical structure. If that’s the only reason you’ve broken the data
+   up, you can probably put it back together in a single collection.
+
+   Second, data that is accessed together should be stored together. If
+   you’re following this principle, you won’t need to use transactions.
+
+   Some use cases call for transactions. Most do not. If you find yourself
+   frequently using transactions, take a look at your data model and
+   consider if you need to restructure it.
+
+   For more information on transactions and when they should be used, see
+   the `MongoDB MongoDB Multi-Document ACID Transactions
+   Whitepaper <https://www.mongodb.com/collateral/mongodb-multi-document-acid-transactions>`_.
+
+.. summary::
+
+   .. _sql-mdb-3-wrap:
+
+   Wrap Up
+   -------
+
+   Today we discussed the three things you need to know as you move from
+   SQL to MongoDB: 
+
+   -  :ref:`sql-mdb-3-scale-doc-diversity`
+   -  :ref:`sql-mdb-3-store-together`
+   -  :ref:`sql-mdb-3-transactions`
+
+   I hope you enjoy using MongoDB! If you want to jump in and start coding,
+   my teammates and I have written `Quick Start
+   Tutorials <https://www.mongodb.com/blog/channel/quickstart>`_ for a
+   variety of programming languages. I also highly recommend the free
+   courses on `MongoDB University <http://bit.ly/mdb-university>`_.
+
+   .. blockquote::
+
+      When you’re ready to take MongoDB for a spin, check out MongoDB Atlas,
+      MongoDB’s fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB. With a forever-free tier and promo code
+      LAUREN200 for when you’re ready to move beyond the free tier, you’re on
+      your way to realizing the full value of MongoDB.
+
+   In summary, don’t be like Ron. (I mean, don’t be like him in this
+   particular case, because Ron is amazing.)
+
+   .. image:: /images/article/sql-to-mdb/trashcomputer.gif
+      :alt: Ron throws computer in the trash 
+
+   Change your mindset and get the full value of MongoDB.
+
+   .. image:: /images/article/sql-to-mdb/dancingron.gif
+      :alt: Ron dances happily with a tiny black hat attached to his head
