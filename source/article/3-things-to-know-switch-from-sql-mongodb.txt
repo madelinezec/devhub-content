@@ -284,11 +284,13 @@
    space. Take a look at the chart below that shows the cost per megabyte
    over time.
 
-   EMBED THIS CHART!!!!!
-
-   .. code:: auto
-
-      <iframe style="background: #FFFFFF;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" src="https://charts.mongodb.com/charts-storage-costs-sbekh/embed/charts?id=740dea93-d2da-44c3-8104-14ccef947662&amp;theme=light">
+   .. charts:: 
+      :url: https://charts.mongodb.com/charts-storage-costs-sbekh
+      :id: 740dea93-d2da-44c3-8104-14ccef947662
+      :autorefresh: 3600
+      :theme: dark
+      :width: 640
+      :height: 480
 
    The cost has drastically gone down. Our phones, tablets, laptops, and
    flash drives have more storage capacity today than they did even five to
