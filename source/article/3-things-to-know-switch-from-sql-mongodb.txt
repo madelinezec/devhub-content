@@ -65,6 +65,7 @@
 
    .. image:: /images/article/sql-to-mdb/trashcomputer.gif
       :alt: Ron throws computer in the trash 
+      :align: center
 
    We don’t want that to happen to you.
 
@@ -342,6 +343,7 @@
 
    .. image:: /images/article/sql-to-mdb/badsmell.gif
       :alt: Ben is shocked by the horrendous smell of Tom's cologne
+      :align: center
 
    Why? This builds on our first two points in this section.
 
@@ -394,8 +396,10 @@
 
    .. image:: /images/article/sql-to-mdb/trashcomputer.gif
       :alt: Ron throws computer in the trash 
+      :align: center
 
    Change your mindset and get the full value of MongoDB.
 
    .. image:: /images/article/sql-to-mdb/dancingron.gif
       :alt: Ron dances happily with a tiny black hat attached to his head
+      :align: center
