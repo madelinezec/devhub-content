@@ -13,7 +13,16 @@
    :creator: @Lauren_Schaefer
    :title: 3 Things to Know When You Switch from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
+   :image-alt: Picture of developer building blocks
 
+   Discover the 3 things you need to know when you switch from SQL to MongoDB
+
+.. og::
+   :url: http://developer.mongodb.com/article/3-things-to-know-switch-from-sql-mongodb
+   :type: article
+   :title: 3 Things to Know When You Switch from SQL to MongoDB
+   :image: /images/social/open-graph/og-sql-mdb.png
+ 
    Discover the 3 things you need to know when you switch from SQL to MongoDB
 
 .. ---------------------------------------------------------------
@@ -83,8 +92,8 @@
       Mindset.” 
       
       If you prefer videos over articles, check out the 
-      `recording <https://youtu.be/FFj04Apz_BE>`_. Slides are available
-      `here <https://www.slideshare.net/LaurenHaywardSchaefe/jumpstart-from-sql-to-nosql-changing-your-mindset>`_.
+      `recording <https://youtu.be/FFj04Apz_BE>`__. Slides are available
+      `here <https://www.slideshare.net/LaurenHaywardSchaefe/jumpstart-from-sql-to-nosql-changing-your-mindset>`__.
 
 .. content::
 
@@ -164,7 +173,7 @@
 
    In fact, MongoDB has a data modeling pattern specifically for when your
    documents do not have the same fields. It’s called the `Polymorphic
-   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-polymorphic-pattern>`_.
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-polymorphic-pattern>`__.
    We use the Polymorphic Pattern when documents in a collection are of
    similar but not identical structures.
 
@@ -196,13 +205,13 @@
    Ron built a chair that appeared in the very popular Bloosh Magazine, Ron
    has millions of followers. If we try to list all of his followers in his
    ``User`` document, it may exceed the `16 megabyte document size
-   limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`_.
+   limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__.
    The question arises: do we want to optimize our document model for the
    typical use case where a user has a few hundred followers or the outlier
    use case where a user has millions of followers?
 
    We can utilize the `Outlier
-   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-outlier-pattern>`_
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-outlier-pattern>`__
    to solve this problem. The Outlier Pattern allows us to model our data
    for the typical use case but still handle outlier use cases.
 
@@ -264,9 +273,9 @@
 
    For more on MongoDB data modeling design patterns, see `Building with
    Patterns: A
-   Summary <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`_
+   Summary <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
    and the free MongoDB University Course `M320: Data
-   Modeling <http://bit.ly/M320_DataModeling>`_.
+   Modeling <http://bit.ly/M320_DataModeling>`__.
 
    .. _sql-mdb-3-store-together:
 
@@ -275,7 +284,7 @@
 
    If you have experience with SQL databases, someone probably drilled into
    your head that you should `normalize your
-   data <https://en.wikipedia.org/wiki/Database_normalization>`_.
+   data <https://en.wikipedia.org/wiki/Database_normalization>`__.
    Normalization is considered good because it prevents data duplication.
    Let’s take a step back and examine the motivation for database
    normalization.
@@ -361,7 +370,7 @@
 
    For more information on transactions and when they should be used, see
    the `MongoDB MongoDB Multi-Document ACID Transactions
-   Whitepaper <https://www.mongodb.com/collateral/mongodb-multi-document-acid-transactions>`_.
+   Whitepaper <https://www.mongodb.com/collateral/mongodb-multi-document-acid-transactions>`__.
 
 .. summary::
 
@@ -379,9 +388,9 @@
 
    I hope you enjoy using MongoDB! If you want to jump in and start coding,
    my teammates and I have written `Quick Start
-   Tutorials <https://www.mongodb.com/blog/channel/quickstart>`_ for a
+   Tutorials <https://www.mongodb.com/blog/channel/quickstart>`__ for a
    variety of programming languages. I also highly recommend the free
-   courses on `MongoDB University <http://bit.ly/mdb-university>`_.
+   courses on `MongoDB University <http://bit.ly/mdb-university>`__.
 
    .. blockquote::
 
