@@ -1,0 +1,709 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to perform CRUD operations using C Sharp for MongoDB databases.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kenwalger
+   :title: QuickStart: CRUD Operations in C Sharp
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Learn about the MongoDB CRUD operations using C Sharp.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/csharp-crud
+   :title: QuickStart: CRUD Operations in C Sharp
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
+
+   Learn about the MongoDB CRUD operations using C Sharp.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/alger-ken.rst
+
+.. pubdate:: 2020-03-31
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. tags::
+
+   * .NET
+   
+.. languages::
+
+   * C#
+
+.. atf-image:: /images/atf-images/quickstart/csharp.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===========================================
+MongoDB & C Sharp: CRUD Operations Tutorial
+===========================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-csharp.png
+      :scale: 30%
+      :alt: C# badge
+      :align: right
+
+   In this Quick Start post, I’ll show how to set up connections between C#
+   and MongoDB. Then I’ll walk through the database Create, Read, Update,
+   and Delete (CRUD) operations. As you already know, C# is a
+   general-purpose language and MongoDB is a general-purpose data platform.
+   Together, C# and MongoDB are a powerful combination.
+
+.. prerequisites::
+
+   Series Tools & Versions
+   -----------------------
+
+   The tools and versions I’m using for this series are: + MongoDB Atlas
+   with an M0 free cluster + MongoDB Sample Dataset loaded, specifically
+   the ``sample_training`` and ``grades`` dataset. + Windows 10 + Visual
+   Studio Community 2019 + `NuGet <http://bit.ly/nuget-home>`__ packages +
+   MongoDB `C# Driver <http://bit.ly/mongodb-csharp-driver-github>`__
+   (``MongoDB.Driver``), version 2.9.1 + MongoDB BSON Library
+   (`MongoDB.Bson), version 2.9.1
+
+   .. blockquote::
+
+      C# is a popular language when using the .NET framework. If you’re
+      going to be developing in .NET and using MongoDB as your data layer,
+      the C# driver makes it easy to do so.
+
+.. content::
+
+   Setup
+   -----
+
+   To follow along, I’ll be using Visual Studio 2019 on Windows 10 and
+   connecting to a MongoDB Atlas cluster. If you’re using a different OS,
+   IDE, or text editor, the walkthrough might be slightly different, but
+   the code itself should be fairly similar. Let’s jump in and take a look
+   at how nicely C# and MongoDB work together.
+
+   .. blockquote::
+
+      Get started with an M0 cluster on `MongoDB
+      Atlas <http://bit.ly/mongodb-meetatlas>`__ today. It’s free forever
+      and you’ll be able to work alongside this blog series.
+
+   For this demonstration, I’ve chosen a Console App (.NET Core), and I’ve
+   named it ``MongoDBConnectionDemo``. Next, we need to install the MongoDB
+   Driver for C#/.NET for a Solution. We can do that quite easily with
+   `NuGet <http://bit.ly/nuget-home>`__. Inside Visual Studio for Windows,
+   by going to *Tools* -> *NuGet Package Manager* -> Manage NuGet Packages
+   for Solution…\_ We can browse for *MongoDB.Driver*. Then click on our
+   Project and select the driver version we want. In this case, the `latest
+   stable version <http://bit.ly/mongodb-csharp-driver>`__ is 2.9.1. Then
+   click on *Install*. Accept any license agreements that pop up and head
+   into ``Program.cs`` to get started.
+
+   Putting the Driver to Work
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   To use the ``MongoDB.Driver`` we need to add a directive.
+
+   .. code-block:: csp
+
+      using MongoDB.Driver;
+
+   Inside the ``Main()`` method we’ll establish a connection to `MongoDB
+   Atlas </http://bit.ly/mongodb-atlas>`__ with a connection string and to
+   test the connection we’ll print out a list of the databases on the
+   server. The Atlas cluster to which we’ll be connecting has the MongoDB
+   Atlas `Sample Dataset <http://bit.ly/atlas-sample-data-blog>`__
+   installed, so we’ll be able to see a nice database list.
+
+   The first step is to pass in the MongoDB Atlas connection string into a
+   MongoClient object, then we can get the list of databases and print them
+   out.
+
+   .. code-block:: csp
+
+      MongoClient dbClient = new MongoClient(<<YOUR ATLAS CONNECTION STRING>>);
+
+      var dbList = dbClient.ListDatabases().ToList();
+
+      Console.WriteLine("The list of databases on this server is: ");
+      foreach (var db in dbList)
+      {
+          Console.WriteLine(db);
+      }
+
+   When we run the program, we get the following out showing the list of
+   databases:
+
+   .. code-block:: bash
+
+      The list of databases on this server is:
+      { "name" : "sample_airbnb", "sizeOnDisk" : 57466880.0, "empty" : false }
+      { "name" : "sample_geospatial", "sizeOnDisk" : 1384448.0, "empty" : false }
+      { "name" : "sample_mflix", "sizeOnDisk" : 45084672.0, "empty" : false }
+      { "name" : "sample_supplies", "sizeOnDisk" : 1347584.0, "empty" : false }
+      { "name" : "sample_training", "sizeOnDisk" : 73191424.0, "empty" : false }
+      { "name" : "sample_weatherdata", "sizeOnDisk" : 4427776.0, "empty" : false }
+      { "name" : "admin", "sizeOnDisk" : 245760.0, "empty" : false }
+      { "name" : "local", "sizeOnDisk" : 1919799296.0, "empty" : false }
+
+   The whole program thus far comes in at just over 20 lines of code:
+
+   .. code-block:: csp
+
+      using System;
+      using MongoDB.Driver;
+
+      namespace test
+      {
+          class Program
+          {
+              static void Main(string[] args)
+              {
+                  MongoClient dbClient = new MongoClient(<<YOUR ATLAS CONNECTION STRING>>);
+
+                  var dbList = dbClient.ListDatabases().ToList();
+
+                  Console.WriteLine("The list of databases on this server is: ");
+                  foreach (var db in dbList)
+                  {
+                      Console.WriteLine(db);
+                  }
+              }
+          }
+      }
+
+   With a connection in place, let’s move on and start doing CRUD
+   operations inside the MongoDB Atlas database. The first step there is to
+   *Create* some data.
+
+   Create
+   ------
+
+   Data
+   ~~~~
+
+   MongoDB stores data in JSON Documents. Actually, they are stored as
+   Binary JSON (BSON) objects on disk, but that’s another blog post. In our
+   sample dataset, there is a ``sample_training`` with a ``grades``
+   collection. Here’s what a sample document in that collection looks like:
+
+   .. code-block:: json
+
+      {
+      "_id":{"$oid":"56d5f7eb604eb380b0d8d8ce"},
+      "student_id":{"$numberDouble":"0"},
+      "scores":[
+      {"type":"exam","score":{"$numberDouble":"78.40446309504266"}},
+      {"type":"quiz","score":{"$numberDouble":"73.36224783231339"}},
+      {"type":"homework","score":{"$numberDouble":"46.980982486720535"}},
+      {"type":"homework","score":{"$numberDouble":"76.67556138656222"}}
+      ],
+      "class_id":{"$numberDouble":"339"}
+      }
+
+   Connecting to a Specific Collection
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   There are 10,000 students in this collection, 0-9,999. Let’s add one
+   more by using C#. To do this, we’ll need to use another package from
+   NuGet, ``MongoDB.Bson``. I’ll start a new Solution in Visual Studio and
+   call it ``MongoDBCRUDExample``. I’ll install the ``MongoDB.Bson`` and
+   ``MongoDB.Driver`` packages and use the connection string provided from
+   MongoDB Atlas. Next, I’ll access our specific database and collection,
+   ``sample_training`` and ``grades``, respectively.
+
+   .. code-block:: csp
+
+      using System;
+      using MongoDB.Bson;
+      using MongoDB.Driver;
+
+      namespace MongoDBCRUDExample
+      {
+          class Program
+          {
+              static void Main(string[] args)
+              {
+                  MongoClient dbClient = new MongoClient(<<YOUR ATLAS CONNECTION STRING>>);
+
+          var database = dbClient.GetDatabase("sample_training");
+                  var collection = database.GetCollection<BsonDocument>("grades");
+
+              }
+          }
+      }
+
+   Creating a BSON Document
+   ````````````````````````
+
+   The ``collection`` variable is now our key reference point to our data.
+   Since we are using a ``BsonDocument`` when assigning our ``collection``
+   variable, I’ve indicated that I’m not going to be using a pre-defined
+   schema. This utilizes the power and flexibility of MongoDB’s document
+   model. I could define a plain-old-C#-object (POCO) to more strictly
+   define a schema. I’ll take a look at that option in a future post. For
+   now, I’ll create a new ``BsonDocument`` to insert into the database.
+
+   .. code-block:: csp
+
+      var document = new BsonDocument
+                  {
+                      { "student_id", 10000 },
+                      { "scores", new BsonArray
+                          {
+                          new BsonDocument{ {"type", "exam"}, {"score", 88.12334193287023 } },
+                          new BsonDocument{ {"type", "quiz"}, {"score", 74.92381029342834 } },
+                          new BsonDocument{ {"type", "homework"}, {"score", 89.97929384290324 } },
+                          new BsonDocument{ {"type", "homework"}, {"score", 82.12931030513218 } }
+                          }
+                      },
+                      { "class_id", 480}
+                  };
+
+   Create Operation
+   ~~~~~~~~~~~~~~~~
+
+   Then to *Create* the document in the ``sample_training.grades``
+   collection, we can do an insert operation.
+
+   .. code-block:: csp
+
+      collection.InsertOne(document);
+
+   If you need to do that insert asynchronously, the MongoDB C# driver is
+   fully async compatible. The same operation could be done with:
+
+   .. code-block:: csp
+
+      await collection.InsertOneAsync(document);
+
+   If you have a need to insert multiple documents at the same time,
+   MongoDB has you covered there as well with the ``InsertMany`` or
+   ``InsertManyAsync`` methods.
+
+   We’ve seen how to structure a BSON Document in C# and then *Create* it
+   inside a MongoDB database. The MongoDB C# Driver makes it easy to do
+   with the ``InsertOne()``, ``InsertOneAsync()``, ``InsertMany()``, or
+   ``InsertManyAsync()`` methods. Now that we have *Created* data, we’ll
+   want to *Read* it.
+
+   Read
+   ----
+
+   To *Read* documents in MongoDB, we use the
+   `Find() <https://mongodb.github.io/mongo-csharp-driver/2.6/apidocs/html/Overload_MongoDB_Driver_IMongoCollectionExtensions_Find.htm>`__
+   method. This method allows us to chain a variety of methods to it, some
+   of which I’ll explore in this post. To get the first document in the
+   collection, we can use the ``FirstOrDefault`` or ``FirstOrDefaultAsync``
+   method, and print the result to the console.
+
+   .. code-block:: csp
+
+      var firstDocument = collection.Find(new BsonDocument()).FirstOrDefault();
+      Console.WriteLine(firstDocument.ToString());
+
+   returns…
+
+   .. code-block:: json
+
+      { "_id" : ObjectId("56d5f7eb604eb380b0d8d8ce"),
+      "student_id" : 0.0,
+      "scores" : [
+      { "type" : "exam", "score" : 78.404463095042658 },
+      { "type" : "quiz", "score" : 73.362247832313386 },
+      { "type" : "homework", "score" : 46.980982486720535 },
+      { "type" : "homework", "score" : 76.675561386562222 }
+      ],
+      "class_id" : 339.0 }
+
+   You may wonder why we aren’t using ``Single`` as that returns one
+   document too. Well, that has to also ensure the returned document is the
+   only document like that in the collection and that means scanning the
+   whole collection.
+
+   Reading with a Filter
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   Let’s find the `document we created <#created-data>`__ and print it out
+   to the console. The first step is to create a filter to query for our
+   specific document.
+
+   .. code-block:: csp
+
+      var filter = Builders<BsonDocument>.Filter.Eq("student_id", 10000);
+
+   Here we’re setting a filter to look for a document where the
+   ``student_id`` is equal to ``10000``. We can pass the filter into the
+   ``Find()`` method to get the first document that matches the query.
+
+   .. code-block:: csp
+
+      var studentDocument = collection.Find(filter).FirstOrDefault();
+      Console.WriteLine(studentDocument.ToString());
+
+   returns…
+
+   .. code-block:: json
+
+      { "_id" : ObjectId("5d88f88cec6103751b8a0d7f"),
+      "student_id" : 10000,
+      "scores" : [
+      { "type" : "exam", "score" : 88.123341932870233 },
+      { "type" : "quiz", "score" : 74.923810293428346 },
+      { "type" : "homework", "score" : 89.979293842903246 },
+      { "type" : "homework", "score" : 82.129310305132179 }
+      ],
+      "class_id" : 480 }
+
+   If a document isn’t found that matches the query, the ``Find()`` method
+   returns null. Finding the first document in a collection, or with a
+   query is a frequent task. However, what about situations when all
+   documents need to be returned, either in a collection or from a query?
+
+   Reading All Documents
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   For situations in which the expected result set is small, the
+   ``ToList()`` or ``ToListAsync()`` methods can be used to retrieve all
+   documents from a query or in a collection.
+
+   .. code-block:: csp
+
+      var documents = collection.Find(new BsonDocument()).ToList();
+
+   Filters can be passed in here as well, for example, to get documents
+   with exam scores equal or above 95. The filter here looks slightly more
+   complicated, but thanks to the MongoDB driver syntax, it is relatively
+   easy to follow. We’re filtering on documents in which inside the
+   ``scores`` array there is an ``exam`` subdocument with a ``score`` value
+   greater than or equal to 95.
+
+   .. code-block:: csp
+
+      var highExamScoreFilter = Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(
+      "scores", new BsonDocument { { "type", "exam" },
+      { "score", new BsonDocument { { "$gte", 95 } } }
+      });
+      var highExamScores = collection.Find(highExamScoreFilter).ToList();
+
+   For situations where it’s necessary to iterate over the documents that
+   are returned there are a couple of ways to accomplish that as well. In a
+   synchronous situation, a C# ``foreach`` statement can be used with the
+   ``ToEnumerable`` adapter method. In this situation, instead of using the
+   ``ToList()`` method, we’ll use the ``ToCursor()`` method.
+
+   .. code-block:: csp
+
+      var cursor = collection.Find(highExamScoreFilter).ToCursor();
+      foreach (var document in cursor.ToEnumerable())
+      {
+           Console.WriteLine(document);
+      }
+
+   This can be accomplished in an asynchronous fashion with the
+   ``ForEachAsync`` method as well:
+
+   .. code-block:: csp
+
+      await collection.Find(highExamScoreFilter).ForEachAsync(document => Console.WriteLine(document));
+
+   Sorting
+   ~~~~~~~
+
+   With many documents coming back in the result set, it is often helpful
+   to sort the results. We can use the
+   `Sort() <https://mongodb.github.io/mongo-csharp-driver/2.6/apidocs/html/M_MongoDB_Driver_IFindFluent_2_Sort.htm>`__
+   method to accomplish this to see which student had the highest exam
+   score.
+
+   .. code-block:: csp
+
+      var sort = Builders<BsonDocument>.Sort.Descending("student_id");
+
+      var highestScores = collection.Find(highExamScoreFilter).Sort(sort);
+
+   And we can append the ``First()`` method to that to just get the top
+   student.
+
+   .. code-block:: csp
+
+      var highestScore = collection.Find(highExamScoreFilter).Sort(sort).First();
+
+      Console.WriteLine(highestScore);
+
+   Based on the `Atlas Sample Data
+   Set <https://docs.atlas.mongodb.com/sample-data/>`__, the document with
+   a ``student_id`` of 9997 should be returned with an exam score of
+   95.441609472871946.
+
+   You can see the full code for both the *Create* and *Read* operations
+   I’ve shown in the `gist
+   here <https://gist.github.com/kenwalger/37299af2b43cfe548e4d3a3154a31e6d>`__.
+
+   The C# Driver for MongoDB provides many ways to *Read* data from the
+   database and supports both synchronous and asynchronous methods for
+   querying the data. By passing a filter into the ``Find()`` method, we
+   are able to query for specific records. The syntax to build filters and
+   query the database is straightforward and easy to read, making this step
+   of CRUD operations in C# and MongoDB simple to use.
+
+   With the data created and being able to be read, let’s take a look at
+   how we can perform *Update* operations.
+
+   Update
+   ------
+
+
+   So far in this C# Quick Start for MongoDB CRUD operations, we have
+   explored how to *Create* and *Read* data into a MongoDB database using
+   C#. We saw how to add filters to our query and how to sort the data.
+   This section is about the *Update* operation and how C# and MongoDB work
+   together to accomplish this important task.
+
+   Recall that we’ve been working with this ``BsonDocument`` version of a
+   student record:
+
+   .. code-block:: csp
+
+      var document = new BsonDocument
+                  {
+                      { "student_id", 10000 },
+                      { "scores", new BsonArray
+                          {
+                          new BsonDocument{ {"type", "exam"}, {"score", 88.12334193287023 } },
+                          new BsonDocument{ {"type", "quiz"}, {"score", 74.92381029342834 } },
+                          new BsonDocument{ {"type", "homework"}, {"score", 89.97929384290324 } },
+                          new BsonDocument{ {"type", "homework"}, {"score", 82.12931030513218 } }
+                          }
+                      },
+                      { "class_id", 480}
+                  };
+
+   After getting part way through the grading term, our sample student’s
+   instructor notices that he’s been attending the wrong class section. Due
+   to this error the school administration has to change, or *update*, the
+   ``class_id`` associated with his record. He’ll be moving into section
+   483.
+
+   Updating Data
+   ~~~~~~~~~~~~~
+
+   To update a document we need two bits to pass into an ``Update``
+   command. We need a filter to determine *which* documents will be
+   updated. Second, we need what we’re wanting to update.
+
+   Update Filter
+   ~~~~~~~~~~~~~
+
+   For our example, we want to filter based on the document with
+   ``student_id`` equaling 10000.
+
+   .. code-block:: csp
+
+      var filter = Builders<BsonDocument>.Filter.Eq("student_id", 10000)
+
+   Data to be Changed
+   ~~~~~~~~~~~~~~~~~~
+
+   Next, we want to make the change to the ``class_id``. We can do that
+   with ``Set()`` on the ``Update()`` method.
+
+   .. code-block:: csp
+
+      var update = Builders<BsonDocument>.Update.Set("class_id", 483);
+
+   Then we use the ``UpdateOne()`` method to make the changes. Note here
+   that MongoDB will update at most one document using the ``UpdateOne()``
+   method. If no documents match the filter, no documents will be updated.
+
+   .. code-block:: csp
+
+      collection.UpdateOne(filter, update);
+
+   Array Changes
+   ~~~~~~~~~~~~~
+
+   Not all changes are as simple as changing a single field. Let’s use a
+   different filter, one that selects a document with a particular score
+   type for quizes:
+
+   .. code-block:: csp
+
+      var arrayFilter = Builders<BsonDocument>.Filter.Eq("student_id", 10000) & Builders<BsonDocument>
+                        .Filter.Eq("scores.type", "quiz");
+
+   Now if we want to make the change to the quiz score we can do that with
+   ``Set()`` too, but to identify which particular element should be
+   changed is a little different. We can use the `positional $
+   operator <https://docs.mongodb.com/manual/reference/operator/update/positional/>`__
+   to access the quiz ``score`` in the array. The $ operator on its own
+   says “change the array element that we matched within the query” - the
+   filter matches with ``scores.type`` equal to ``quiz`` and that’s the
+   element will get updated with the set.
+
+   .. code-block:: csp
+
+      var arrayUpdate = Builders<BsonDocument>.Update.Set("scores.$.score", 84.92381029342834);
+
+   And again we use the ``UpdateOne()`` method to make the changes.
+
+   .. code-block:: csp
+
+      collection.UpdateOne(arrayFilter , arrayUpdate);
+
+   Additional Update Methods
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   If you’ve been reading along in this blog series I’ve mentioned that the
+   C# driver supports both sync and async interactions with MongoDB.
+   Performing data *Updates* is no different. There is also an
+   ``UpdateOneAsync()`` method available. Additionally, for those cases in
+   which multiple documents need to be updated at once, there are
+   ``UpdateMany()`` or ``UpdateManyAsync()`` options. The ``UpdateMany()``
+   and ``UpdateManyAsync()`` methods match the documents in the ``Filter``
+   and will update *all* documents that match the filter requirements.
+
+   ``Update`` is an important operator in the CRUD world. Not being able to
+   update things as they change would make programming incredibly
+   difficult. Fortunately, C# and MongoDB continue to work well together to
+   make the operations possible and easy to use. Whether it’s updating a
+   student’s grade or updating a user’s address, *Update* is here to handle
+   the changes. The code for the *Create*, *Read*, and *Update* operations
+   can be found in `this
+   gist <https://gist.github.com/kenwalger/f5cf317aa85aad2aa0f9d627d7a8095c>`__.
+
+   We’re winding down this MongoDB C# Quick Start CRUD operation series
+   with only one operation left to explore, *Delete*.
+
+   .. blockquote::
+
+      Remember, you can get started with an M0 cluster on `MongoDB
+      Atlas <http://bit.ly/mongodb-atlas>`__ today. It’s free forever and
+      you’ll be able to work alongside this blog series.
+
+   Delete
+   ------
+
+   To continue along with the student story, let’s take a look at how what
+   would happen if the student dropped the course and had to have their
+   grades deleted. Once again, the MongoDB driver for C# makes it a breeze.
+   And, it provides both sync and async options for the operations.
+
+   Deleting Data
+   ~~~~~~~~~~~~~
+
+   The first step in the deletion process is to create a filter for the
+   document(s) that need to be deleted. In the example for this series,
+   I’ve been using a document with a ``student_id`` value of ``10000`` to
+   work with. Since I’ll only be deleting that single record, I’ll use the
+   ``DeleteOne()`` method (for async situations the ``DeleteOneAsync()``
+   method is available). However, when a filter matches more than a single
+   document and all of them need to be deleted, the ``DeleteMany()`` or
+   ``DeleteManyAsync`` method can be used.
+
+   Here’s the record I want to delete.
+
+   .. code-block:: json
+
+      {
+          { "student_id", 10000 },
+          { "scores", new BsonArray
+              {
+              new BsonDocument{ {"type", "exam"}, {"score", 88.12334193287023 } },
+              new BsonDocument{ {"type", "quiz"}, {"score", 84.92381029342834 } },
+              new BsonDocument{ {"type", "homework"}, {"score", 89.97929384290324 } },
+              new BsonDocument{ {"type", "homework"}, {"score", 82.12931030513218 } }
+              }
+          },
+          { "class_id", 483}
+      };
+
+   I’ll define the filter to match the ``student_id`` equal to ``10000``
+   document:
+
+   .. code-block:: csp
+
+      var deleteFilter = Builders<BsonDocument>.Filter.Eq("student_id", 10000);
+
+   Assuming that we have a ``collection`` variable assigned to for the
+   ``grades`` collection, we next pass the filter into the ``DeleteOne()``
+   method.
+
+   .. code-block:: csp
+
+      collection.DeleteOne(deleteFilter);
+
+   If that command is run on the ``grades`` collection, the document with
+   ``student_id`` equal to ``10000`` would be gone. Note here that
+   ``DeleteOne()`` will delete the first document in the collection that
+   matches the filter. In our example dataset, since there is only a single
+   student with a ``student_id`` equal to ``10000``, we get the desired
+   results.
+
+   For the sake of argument, let’s imagine that the rules for the
+   educational institution are incredibly strict. If you get below a score
+   of 60 on the first exam, you are automatically dropped from the course.
+   We could use a ``for`` loop with ``DeleteOne()`` to loop through the
+   entire collection, find a single document that matches an exam score of
+   less than 60, delete it, and repeat. Recall that ``DeleteOne()`` only
+   deletes the first document it finds that matches the filter. While this
+   could work, it isn’t very efficient as multiple calls to the database
+   are made. How do we handle situations that require deleting multiple
+   records then? We can use ``DeleteMany()``.
+
+   Multiple Deletes
+   ~~~~~~~~~~~~~~~~
+
+   Let’s define a new filter to match the exam score being less than 60:
+
+   .. code-block:: csp
+
+      var deleteLowExamFilter = Builders<BsonDocument>.Filter.ElemMatch<BsonValue>("scores",
+           new BsonDocument { { "type", "exam" }, {"score", new BsonDocument { { "$lt", 60 }}}
+      });
+
+   With the filter defined, we pass it into the ``DeleteMany()`` method:
+
+   .. code-block:: csp
+
+      collection.DeleteMany(deleteLowExamFilter);
+
+   With that command being run, all of the student record documents with
+   low exam scores would be deleted from the collection.
+
+   Check out the `gist for all of the CRUD
+   commands <https://gist.github.com/kenwalger/4a3da771b8471c43d190327556ebc3ab>`__
+   wrapped into a single file.
+
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   This C# Quick Start series has covered the various CRUD Operations
+   (Create, Read, Update, and Delete) operations in MongoDB using basic
+   BSON Documents. We’ve seen how to use filters to match specific
+   documents that we want to read, update, or delete. This series has, thus
+   far, been a gentle introduction to C Sharp and MongoDB.
+
+   BSON Documents are not, however, the only way to be able to use MongoDB
+   with C Sharp. In our applications, we often have classes defining
+   objects. We can map our classes to BSON Documents to work with data as
+   we would in code. I’ll take a look at mapping in a future post.

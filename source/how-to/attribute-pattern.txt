@@ -23,6 +23,8 @@
    :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
 
+   Learn about the Attribute Schema Design pattern in MongoDB.
+
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
 .. ---------------------------------------------------------------

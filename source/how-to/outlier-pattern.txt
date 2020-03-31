@@ -1,0 +1,184 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Over the course of this blog post series, we'll take a look at twelve common Schema Design Patterns that work well in MongoDB.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kenwalger
+   :title: Building with Patterns: The Outlier Pattern
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Learn about the Outlier Schema Design pattern in MongoDB.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/outlier-pattern/
+   :title: Building with Patterns: The Outlier Pattern
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
+
+   Learn about the Outlier Schema Design pattern in MongoDB.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/alger-ken.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2019-01-30
+
+.. updated-date:: 2019-03-19
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/charts.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===========================================
+Building with Patterns: The Outlier Pattern
+===========================================
+
+.. introduction::
+   So far in this *Building with Patterns* series, we’ve looked at the
+   :doc:`Polymorphic </how-to/polymorphic-pattern>`,
+   :doc:`Attribute </how-to/attribute-pattern>``,
+   and
+   :doc:`Bucket </how-to/bucket-pattern>``
+   patterns. While the document schema in these patterns has slight
+   variations, from an application and query standpoint, the document
+   structures are fairly consistent. What happens, however, when this isn’t
+   the case? What happens when there is data that falls outside the
+   “normal” pattern? What if there’s an outlier?
+
+   Imagine you are starting an e-commerce site that sells books. One of the
+   queries you might be interested in running is “who has purchased a
+   particular book”. This could be useful for a recommendation system to
+   show your customers similar books of interest. You decide to store the
+   ``user_id`` of a customer in an array for each book. Simple enough,
+   right?
+
+   Well, this may indeed work for 99.99% of the cases, but what happens
+   when J.K. Rowling releases a new Harry Potter book and sales spike in
+   the millions? The 16MB `BSON
+   document <https://www.mongodb.com/json-and-bson>`__ size limit could
+   easily be reached. Redesigning our entire application for this *outlier*
+   situation could result in reduced performance for the typical book, but
+   we do need to take it into consideration.
+
+.. content::
+
+   The Outlier Pattern
+   -------------------
+
+   With the Outlier Pattern, we are working to prevent a few queries or
+   documents driving our solution towards one that would not be optimal for
+   the majority of our use cases. Not every book sold will sell millions of
+   copies.
+
+   A typical ``book`` document storing ``user_id`` information might look
+   something like:
+
+   .. code-block:: json
+
+      {
+          "_id": ObjectID("507f1f77bcf86cd799439011")
+          "title": "A Genealogical Record of a Line of Alger",
+          "author": "Ken W. Alger",
+          …,
+          "customers_purchased": ["user00", "user01", "user02"]
+
+      }
+
+   This would work well for a large majority of books that aren’t likely to
+   reach the “best seller” lists. Accounting for outliers though results in
+   the ``customers_purchased`` array expanding beyond a 1000 item limit we
+   have set, we’ll add a new field to “flag” the book as an outlier.
+
+   .. code-block:: json
+
+      {
+          "_id": ObjectID("507f191e810c19729de860ea"),
+          "title": "Harry Potter, the Next Chapter",
+          "author": "J.K. Rowling",
+          …,
+         "customers_purchased": ["user00", "user01", "user02", …, "user999"],
+         "has_extras": "true"
+      }
+
+   We’d then move the overflow information into a separate document linked
+   with the book’s ``id``. Inside the application, we would be able to
+   determine if a document has a ``has_extras`` field with a value of
+   ``true``. If that is the case, the application would retrieve the extra
+   information. This could be handled so that it is rather transparent for
+   most of the application code.
+
+   Many design decisions will be based on the application workload, so this
+   solution is intended to show an example of the Outlier Pattern. The
+   important concept to grasp here is that the outliers have a substantial
+   enough difference in their data that, if they were considered “normal”,
+   changing the application design for them would degrade performance for
+   the more typical queries and documents.
+
+   Sample Use Case
+   ---------------
+
+   The Outlier Pattern is an advanced pattern, but one that can result in
+   large performance improvements. It is frequently used in situations when
+   popularity is a factor, such as in social network relationships, book
+   sales, movie reviews, etc. The Internet has transformed our world into a
+   much smaller place and when something becomes popular, it transforms the
+   way we need to model the data around the item.
+
+   One example is a customer that has a video conferencing product. The
+   list of authorized attendees in most video conferences can be kept in
+   the same document as the conference. However, there are a few events,
+   like a company’s all hands, that have thousands of expected attendees.
+   For those outlier conferences, the customer implemented “overflow”
+   documents to record those long lists of attendees.
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   The problem that the Outlier Pattern addresses is preventing a few
+   documents or queries to determine an application’s solution. Especially
+   when that solution would not be optimal for the majority of use cases.
+   We can leverage MongoDB’s flexible data model to add a field to the
+   document “flagging” it as an outlier. Then, inside the application, we
+   handle the outliers slightly differently. By tailoring your schema for
+   the typical document or query, application performance will be optimized
+   for those normal use cases and the outliers will still be addressed.
+
+   One thing to consider with this pattern is that it often is tailored for
+   specific queries and situations. Therefore, ad hoc queries may result in
+   less than optimal performance. Additionally, as much of the work is done
+   within the application code itself, additional code maintenance may be
+   required over time.
+
+   In our next *Building with Patterns* post, we’ll take a look at the
+   `Computed
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-computed-pattern>`__
+   and how to optimize schema for applications that can result in
+   unnecessary waste of resources.

@@ -1,0 +1,343 @@
+:template: devhub-article
+
+.. meta-description:: 
+
+   Learn why using an Object Data Modeling library may not be the best choice when building MongoDB apps with Node.js.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: Do You Need Mongoose When Developing NodeJS and MongoDB Applications?
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: Mongoose vs NodeJS Driver
+
+   Learn why using an Object Data Modeling library may not be the best choice when building MongoDB apps with Node.js.
+
+.. og::
+   :url: http://developer.mongodb.com/article/mongoose-versus-node-js-driver
+   :title: Do You Need Mongoose When Developing NodeJS and MongoDB Applications?
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
+
+   Learn why using an Object Data Modeling library may not be the best choice when building MongoDB apps with Node.js.
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. pubdate:: 2020-03-31
+
+.. type:: article
+.. level:: beginner
+
+.. tags:: 
+
+   * Node.js
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/illustrations/dev-tools.png
+
+======================================================================
+Do You Need Mongoose When Developing Node.js and MongoDB Applications?
+======================================================================
+
+.. introduction::
+
+   `MongoDB Schema Validation <https://docs.mongodb.com/manual/core/schema-validation/>`__ makes it possible to easily enforce a schema against your MongoDB database, while maintaining a high degree of flexibility, giving you the best of both worlds. In the past, the only way to enforce a schema against a MongoDB collection was to do it at the application level using an ODM like `Mongoose <https://mongoosejs.com/>`__, but that posed significant challenges for developers. 
+   
+   Mongoose is a Node.js based Object Data Modeling (ODM) library for MongoDB. It is akin to an Object Relational Mapper (ORM) such as `SQLAlchemy <https://www.sqlalchemy.org/>`__ for traditional SQL databases. The problem that Mongoose aims to solve is allowing developers to enforce a specific schema at the application layer. In addition to enforcing a schema, Mongoose also offers a variety of hooks, model validation, and other features aimed at making it easier to work with MongoDB.
+
+   In this article, we'll take a look at `MongoDB Schema Validation <https://docs.mongodb.com/manual/core/schema-validation/>`__, compare and contrast it to using an ODM like Mongoose, and see how it can help us enforce a database schema, while still allowing for great flexibility when needed, and finally see if the additional features that Mongoose provides are worth the overhead.  
+
+.. content::
+
+   Object Data Modeling in MongoDB
+   -------------------------------
+
+   A huge benefit of using a NoSQL database, like MongoDB, is that you are not constrained to a rigid data model. You can add or remove fields, nest data multiple layers deep, and have a truly flexible data model that meets your needs today and can adapt to your ever-changing needs tomorrow. But being too flexible can also be a challenge. If there is no consensus on what the data model should look like, and every document in a collection contains vastly different fields, you're going to have a bad time.
+
+   On one end of the spectrum, we have ODM's like Mongoose, which from the get-go force us into a semi-rigid schema. For example, let's say we're building a blog and want to represent a blog post. We would first define a schema and then create an accompanying Mongoose model:
+
+   .. code-block:: javascript
+
+      var blog = new Schema({
+          title: String,
+          slug: String,
+          published: Boolean,
+          content: String,
+          tags: [String],
+          comments: [{
+              user: String,
+              content: String,
+              votes: Number
+          }]
+      })
+
+      var Blog = mongoose.model('Blog', blog)
+
+   Once we had a Mongoose model defined, we could run queries for fetching, updating, and deleting data against a MongoDB collection that aligns with the Mongoose model. With the above model, we could do things like:
+
+   .. code-block:: javascript
+      
+      // Create a new blog post
+      var article = new Blog({
+          title:'Awesome Post!', 
+          slug:'awesome-post',
+          published: true,
+          content: 'This is the best post ever',
+          tags: ['featured', 'announcement'],
+      })
+      
+      // Insert the article in our MongoDB database
+      article.save();
+
+      // Find a single blog post
+      Blog.findOne({}, (err,post)=>{
+          console.log(post);
+      })
+
+   The benefit of this approach is that we have a schema to work against in our application code and an explicit relationship between our MongoDB documents and the Mongoose models within our application. The downside, we can only create blog posts and they have to follow the above defined schema. If we change our Mongoose schema, we are changing the relationship completely, and if you're going through rapid development, this can greatly slow you down. 
+   
+   The other downside is that this relationship between the schema and model only exists within the confines of our Node.js application. Our MongoDB database is not aware of the relationship, it just inserts or retrieves data it is asked for without any sort of validation. In the event that we used a different programming language to interact with our database, all the constraints and models we defined in Mongoose would be worthless.
+
+   On the other hand, if we decided to use just the `MongoDB Node.js driver <https://mongodb.github.io/node-mongodb-native/3.5/>`__, we could run queries against any collection in our database, or create new ones on the fly. The MongoDB Node.js driver does not have concepts of object data modeling or mapping.
+   
+   We simply write queries against the database and collection we wish to work with to accomplish the business goals. If we wanted to insert a new blog post in our collection, we could simply execute a command like so:
+
+   .. code-block:: javascript
+
+      db.collection('posts').insertOne({
+           title:'Better Post!', 
+           slug:'a-better-post',
+           published: true,
+           author: 'Ado Kukic',
+           content: 'This is an even better post',
+           tags: ['featured'],
+      })
+
+   This ``insertOne()`` operation would run just fine using the Node.js Driver. If we tried to save this data using our Mongoose ``Blog`` model, it would fail, because we don't have an ``author`` property defined in our Blog Mongoose model.
+
+   Just because the Node.js driver doesn't have the concept of a model, does not mean we couldn't create models to represent our MongoDB data at the application level. We could just as easily create a generic model or use a library such as `objectmodel <https://objectmodel.js.org/>`__. We could create a ``Blog`` model like so:
+
+   .. code-block:: javascript
+
+      function Blog(post) {
+          this.title = post.title;
+          this.slug = post.slug
+          ...
+      }
+
+   We could then use this model in conjunction with our MongoDB Node.js driver, giving us both the flexibility of using the model, but not being constrained by it.
+
+   .. code-block:: javascript
+
+      db.collection('posts').findOne({}).then((err, post) => {
+          let article = new Blog(post);
+      })
+
+   In this scenario, our MongoDB database is still blissfully unaware of our Blog model at the application level, but our developers can work with it, add specific methods and helpers to the model, and would know that this model is only meant to be used within the confines of our Node.js application. Next, let's explore schema validation.
+
+   Adding Schema Validation
+   ------------------------
+
+   When it comes to schema validation, Mongoose enforces it at the application layer as we've seen in the previous section. It does this in two ways. 
+   
+   The first, by defining our model, we are explicitly telling our Node.js application what fields and data types we'll allow to be inserted into a specific collection. For example, our Mongoose Blog schema defines a ``title`` property of type ``String``. If we were to try and insert a blog post with a ``title`` property that was an array, it would fail. Anything outside of the defined fields, will also not be inserted in the database. 
+   
+   The second, is further validating that the data in the defined fields matches our defined set of criteria. For example, we can expand on our Blog model by adding specific validators such as requiring certain fields, ensuring a minimum or maximum length for a specific field, or coming up with our custom logic even. Let's see how this looks like with Mongoose. In our code we would simply expand on the property and add our validators:
+
+   .. code-block:: javascript
+
+      var blog = new Schema({
+          title: {
+              type: String,
+              required: true,
+          },
+          slug: {
+              type: String,
+              required: true,
+          },
+          published: Boolean,
+          content: {
+              type: String,
+              required: true,
+              minlength: 250
+          }
+          ...
+      })
+
+      var Blog = mongoose.model('Blog', blog)
+
+   Mongoose takes care of model definition and schema validation in one fell swoop. The downside though is the still the same. These rules only apply at the application layer and MongoDB itself is none the wiser. 
+
+   The MongoDB Node.js driver itself does not have mechanisms for inserting or managing validations, and it shouldn't. We can define schema validation rules for our MongoDB database using the Mongo `shell <https://docs.mongodb.com/manual/mongo/>`__ or `Compass <https://www.mongodb.com/products/compass>`__. 
+
+   We can create a schema validation when creating our collection or after the fact on an existing collection. Since we've been working with this blog idea as our example, we'll add our schema validations to it. I will use Compass and `MongoDB Atlas <https://mongodb.com/atlas>`__. For a great resource on how to programmatically add schema validations, check out this `series <https://www.mongodb.com/blog/post/json-schema-validation--locking-down-your-model-the-smart-way>`__.
+
+   .. blockquote::
+
+      If you want to follow along with this tutorial and play around with schema validations but don't have a MongoDB instance set up, you can set up a `free MongoDB Atlas cluster here <https://mongodb.com/atlas>`__. You can also use the code **ADO200** to receive a $200 credit to further play around with all the features that Atlas has to offer.
+
+   Create a collection called ``posts`` and let's insert our two documents that we've been working with. The documents are:
+
+   .. code-block:: javascript
+
+      [{"title":"Better Post!","slug":"a-better-post","published":true,"author":"Ado Kukic","content":"This is an even better post","tags":["featured"]}, {"_id":{"$oid":"5e714da7f3a665d9804e6506"},"title":"Awesome Post","slug":"awesome-post","published":true,"content":"This is an awesome post","tags":["featured","announcement"]}]
+
+   Now, within the Compass UI, I will navigate to the **Validation** tab. As expected, there are currently no validation rules in place, meaning our database will accept any document as long as it is valid BSON. Hit the **Add a Rule** button and you'll see a user interface for creating your own validation rules.
+
+   .. image:: /images/schema-validation/blog-valid-schema.png
+        :alt: Valid Document Schema
+
+   By default, there are no rules, so any document will be marked as passing. Let's add a rule to require the ``author`` property. It will look like this:
+
+   .. code-block:: javascript
+
+      {
+        $jsonSchema: {
+          bsonType: "object",
+          required: [ "author" ]
+        }
+      }
+
+   Now we'll see that our initial post, that does not have an ``author`` field has failed validation, while the post that does have the ``author`` field is good to go.
+   
+   .. image:: /images/schema-validation/blog-invalid-schema.png
+        :alt: Invalid Document Schema
+
+   We can go further and add validations to individual fields as well. Say for SEO purposes we wanted all the titles of the blog posts to be a minimum of 20 characters and have a maximum length of 80 characters. We can represent that like this:
+
+   ..  code-block:: javascript
+
+      {
+        $jsonSchema: {
+          bsonType: "object",
+          required: [ "tags" ],
+          properties: {
+            title: {
+              type: "string",
+              minLength: 20,
+              maxLength: 80
+            }
+          }
+        }
+      }
+
+   Now if we try to insert a document into our ``posts`` collection either via the Node.js Driver or via Compass, we will get an error.
+
+   .. image:: /images/schema-validation/blog-validation-error.png
+        :alt: Validation Error
+   
+   There are many more rules and validations you can add. Check out the full list `here <https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/#json-schema>`__. For a more advanced guided approach, check out the articles on `schema validation with arrays <https://www.mongodb.com/blog/post/json-schema-validation--checking-your-arrays>`__ and `dependencies <https://www.mongodb.com/blog/post/json-schema-validation--dependencies-you-can-depend-on>`__.
+
+   Expanding on Schema Validation
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   With Mongoose, our data model and schema are the basis for our interactions with MongoDB. MongoDB itself is not aware of any of these constraints, Mongoose takes the role of judge, jury, and executioner on what queries can be executed and what happens with them.
+
+   But with MongoDB native schema validation, we have additional flexibility. When we implement a schema, validation on existing documents does not happen automatically. Validation is only done on updates and inserts. If we wanted to leave existing documents alone though, we could change the ``validationLevel`` to only validate new documents inserted in the database.
+
+   Additionally, with schema validations done at the MongoDB database level, we can choose to still insert documents that fail validation. The ``validationAction`` option allows us to determine what happens if a query fails validation. By default, it is set to ``error``, but we can change it to ``warn`` if we want the insert to still occur. Now instead of an insert or update erroring out, it would simply warn the user that the operation failed validation.
+
+   And finally, if we needed to, we can bypass document validation altogether by passing the ``bypassDocumentValidation`` option with our query. To show you how this works, let's say we wanted to insert just a ``title`` in our ``posts`` collection and we didn't want any other data. If we tried to just do this:
+
+   .. code-block:: javascript
+
+      db.collection('posts').insertOne({"title":"Awesome"})
+
+   We would get an error saying that document validation failed. But if we wanted to skip document validation for this insert, we would simply do this:
+
+   .. code-block:: javascript
+
+      db.collection('posts').insertOne(
+          {"title":"Awesome"}, 
+          {bypassDocumentValidation: true}
+      )
+
+   This would not be possible with Mongoose. MongoDB schema validation is more in line with the entire philosophy of MongoDB where the focus is on a flexible design schema that is quickly and easily adaptable to your use cases.
+
+   Populate and Lookup
+   -------------------
+
+   The final area where I would like to compare Mongoose and the Node.js MongoDB driver is its support for pseudo-joins. Both Mongoose and the native Node.js driver support the ability to combine documents from multiple collections in the same database, similar to a join in traditional relational databases.
+
+   The Mongoose approach is called Populate. It allows developers to create data models that can reference each other and then with a simple API request data from multiple collections. For our example, let's expand on the blog post and add a new collection for users.
+
+   .. code-block:: javascript
+
+      var user = new Schema({
+          name: String,
+          email: String
+      })
+      
+      var blog = new Schema({
+          title: String,
+          slug: String,
+          published: Boolean,
+          content: String,
+          tags: [String],
+          comments: [{
+              user: {Schema.Types.ObjectId, ref: 'User'},
+              content: String,
+              votes: Number
+          }]
+      }
+
+      var User = mongoose.model('User', user)   
+      var Blog = mongoose.model('Blog', blog)
+
+   What we did above was we created a new model and schema to represent users leaving comments on blog posts. When a user leaves a comment, instead of storing information on them, we would just store that users ``_id``. So an update operation to add a new comment to our post may look something like this:
+
+   .. code-block:: javascript
+
+      Blog.updateOne({ comments: [{user: "12345", content:"Great Post!!!"}]);
+
+   This is assuming that we have a user in our ``User`` collection with the ``_id`` of ``12345``. Now, if we wanted to **populate** our ``user`` property when we do a query and instead of just returning the ``_id`` return the entire document, we could do:
+
+   .. code-block:: javascript
+
+      Blog.
+        findOne({}).
+        populate('comments.user').
+        exec(function (err, post) {
+          console.log(post.comments[0].user.name) // Name of user for 1st comment
+        });   
+
+   Populate coupled with Mongoose data modeling can be very powerful, especially if you're coming from a relational database background. The drawback though is the amount of magic going on under the hood to make this happen. Mongoose would make two separate queries to accomplish this task and if you're joining multiple collections, operations can quickly slow down.
+
+   The other issue is that the populate concept only exists at the application layer. So while this does work, relying on it for your database management can come back to bite you in the future.
+
+   MongoDB as of version 3.2 introduced a new operation called ``$lookup`` that allows to developers to essentially do a left outer join on collections within a single MongoDB database. If we wanted to populate the user information using the Node.js driver, we could create an aggregation pipeline to do it. Our starting point using the ``$lookup`` operator could look like this:
+
+   .. code-block:: javascript
+
+      db.collection('posts').aggregate([
+        {
+          '$lookup': {
+            'from': 'users', 
+            'localField': 'comments.user', 
+            'foreignField': '_id', 
+            'as': 'users'
+          }
+        }, {}
+      ], (err, post) => {
+          console.log(post.users) //This would contain an array of users
+      });
+
+   We could further create an additional step in our aggregation pipeline to replace the user information in the ``comments`` field with the users data, but that's a bit out of the scope of this article. If you wish to learn more about how aggregation pipelines work with MongoDB, check out the `aggregation docs <https://docs.mongodb.com/manual/aggregation/>`__.
+
+   Final Thoughts
+   --------------
+
+   Both Mongoose and the MongoDB Node.js driver support similar functionality. While Mongoose does make MongoDB development familiar to someone who may be completely new, it does perform a lot of magic under the hood that could have unintended consequences in the future.
+
+   I personally believe that you don't need an ODM to be successful with MongoDB. I am also not a huge fan of ORMs in the relation database world. While they make initial dive into a technology feel familiar, they abstract away a lot of the power of a database.
+
+.. summary::          
+   
+   Developers have a lot of choices to make when it comes to building applications. In this article, we looked at the differences between using an ODM versus the native driver and showed that the difference between the two is not that big. Using an ODM like Mongoose can make development feel familiar, but forces you into a rigid design, which is an anti-pattern when considering building with MongoDB.
+
+   The MongoDB Node.js driver works natively with your MongoDB database to give you the best and most flexible development experience. It allows the database to do what it's best at while allowing your application to focus on what it's best at, and that's probably not managing data models.
+

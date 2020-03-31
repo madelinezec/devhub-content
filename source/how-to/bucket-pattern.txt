@@ -23,6 +23,8 @@
    :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
 
+   Learn about the Bucket Schema Design pattern in MongoDB.
+
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
 .. ---------------------------------------------------------------
@@ -185,7 +187,7 @@ Building with Patterns: The Bucket Pattern
 
    The Bucket Design pattern works great for many cases. But what if there
    are outliers in our data? That’s where the next pattern we’ll discuss,
-   the `Outlier Design
-   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-outlier-pattern>`__,
+   the :doc:`Outlier Design
+   Pattern </how-to/outlier-pattern>`,
    comes into play.
 
