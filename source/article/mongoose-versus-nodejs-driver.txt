@@ -119,7 +119,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
 
    This ``insertOne()`` operation would run just fine using the Node.js Driver. If we tried to save this data using our Mongoose ``Blog`` model, it would fail, because we don't have an ``author`` property defined in our Blog Mongoose model.
 
-   Just because the Node.js driver doesn't have the concept of a model, does not mean we couldn't create models to represent our MongoDB data at the application lever. We could just as easily create a generic model or use a library such as `objectmodel <https://objectmodel.js.org/>`__. We could create a ``Blog`` model like so:
+   Just because the Node.js driver doesn't have the concept of a model, does not mean we couldn't create models to represent our MongoDB data at the application level. We could just as easily create a generic model or use a library such as `objectmodel <https://objectmodel.js.org/>`__. We could create a ``Blog`` model like so:
 
    .. code-block:: javascript
 
@@ -235,7 +235,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Expanding on Schema Validation
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   With Mongoose, our our data model and schema are the basis for our interactions with MongoDB. MongoDB itself is not aware of any of these constraints, Mongoose takes the role of judge, jury, and executioner on what queries can be executed and what happens with them.
+   With Mongoose, our data model and schema are the basis for our interactions with MongoDB. MongoDB itself is not aware of any of these constraints, Mongoose takes the role of judge, jury, and executioner on what queries can be executed and what happens with them.
 
    But with MongoDB native schema validation, we have additional flexibility. When we implement a schema, validation on existing documents does not happen automatically. Validation is only done on updates and inserts. If we wanted to leave existing documents alone though, we could change the ``validationLevel`` to only validate new documents inserted in the database.
 
@@ -261,7 +261,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Populate and Lookup
    -------------------
 
-   The final area where I would like to compare Mongoose and the Node.js MongoDB driver is it's support for pseudo-joins. Both Mongoose and the native Node.js driver support the ability to combine documents from multiple collections in the same database, similar to a join in traditional relational databases.
+   The final area where I would like to compare Mongoose and the Node.js MongoDB driver is its support for pseudo-joins. Both Mongoose and the native Node.js driver support the ability to combine documents from multiple collections in the same database, similar to a join in traditional relational databases.
 
    The Mongoose approach is called Populate. It allows developers to create data models that can reference each other and then with a simple API request data from multiple collections. For our example, let's expand on the blog post and add a new collection for users.
 
@@ -340,3 +340,4 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Developers have a lot of choices to make when it comes to building applications. In this article, we looked at the differences between using an ODM versus the native driver and showed that the difference between the two is not that big. Using an ODM like Mongoose can make development feel familiar, but forces you into a rigid design, which is an anti-pattern when considering building with MongoDB.
 
    The MongoDB Node.js driver works natively with your MongoDB database to give you the best and most flexible development experience. It allows the database to do what it's best at while allowing your application to focus on what it's best at, and that's probably not managing data models.
+
