@@ -8,7 +8,7 @@
    :site: @mongodb
    :creator: @kukicado
    :title: Do You Need Mongoose When Developing NodeJS and MongoDB Applications?
-   :image: /images/social/twitter/twitter-mbd-developer.png
+   :image: /images/social/twitter/twitter-mdb-developer.png
    :image-alt: Mongoose vs NodeJS Driver
 
    Learn why using an Object Data Modeling library may not be the best choice when building MongoDB apps with Node.js.
@@ -16,7 +16,7 @@
 .. og::
    :url: http://developer.mongodb.com/article/mongoose-versus-node-js-driver
    :title: Do You Need Mongoose When Developing NodeJS and MongoDB Applications?
-   :image: /images/social/open-graph/og-mbd-developer.png
+   :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
 
    Learn why using an Object Data Modeling library may not be the best choice when building MongoDB apps with Node.js.
