@@ -62,9 +62,9 @@ Building with Patterns: The Outlier Pattern
 .. introduction::
    So far in this *Building with Patterns* series, we’ve looked at the
    :doc:`Polymorphic </how-to/polymorphic-pattern>`,
-   :doc:`Attribute </how-to/attribute-pattern>``,
+   :doc:`Attribute </how-to/attribute-pattern>`,
    and
-   :doc:`Bucket </how-to/bucket-pattern>``
+   :doc:`Bucket </how-to/bucket-pattern>`
    patterns. While the document schema in these patterns has slight
    variations, from an application and query standpoint, the document
    structures are fairly consistent. What happens, however, when this isn’t
