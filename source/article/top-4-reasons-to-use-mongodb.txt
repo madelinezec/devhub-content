@@ -59,6 +59,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. image:: /images/article/sql-to-mdb/typewriter.gif
       :alt: Ron sits at his typewriter and says, "I'm gonna type every word I know."
+      :align: center
 
    Maybe you don’t have a love for typewriters. But perhaps you have a love
    for SQL databases. You’ve been using them for years, you’ve learned how
@@ -101,6 +102,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. figure:: /images/article/sql-to-mdb/verticalscaling.gif
       :alt: Vertical scaling
+      :align: center
 
       Vertical scaling by migrating to larger servers
 
@@ -125,6 +127,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. figure:: /images/article/sql-to-mdb/horizontalscaling.gif
       :alt: Horizontal scaling
+      :align: center
 
       Horizonal scaling by adding more commodity servers
 
@@ -147,6 +150,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. image:: /images/article/sql-to-mdb/db_joins.png
       :alt: Representation of joining tables in a SQL database 
+      :align: center
 
    Recall our rule of thumb when modeling data in MongoDB: *data that is
    accessed together should be stored together*. When you follow this rule
@@ -163,6 +167,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. image:: /images/article/sql-to-mdb/dbnojoins.png
       :alt: Representation of a MongoDB query with no joins 
+      :align: center
 
    .. _sql-mdb-2-pivot-easier:
 
@@ -185,6 +190,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. image:: /images/article/sql-to-mdb/altertable_parksandrec.png
       :alt: Alter Table command 
+      :align: center
 
    Now let’s examine how we can do something similar in MongoDB. When our
    requirements change and we need to begin storing the name of a user’s
@@ -202,6 +208,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. image:: /images/article/sql-to-mdb/altertable_mongo.png
       :alt: Change the shape of your data in MongoDB without executing an Alter Table command
+      :align: center
 
    .. _sql-mdb-2-program-faster:
 
@@ -215,6 +222,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    .. figure:: /images/article/sql-to-mdb/bensurprise.gif
       :alt: Ben looks completely shocked 
+      :align: center
 
       MFW I realized how much easier it is to code with MongoDB.
 

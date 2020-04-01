@@ -92,11 +92,13 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/opinion.gif
       :alt: No.  That's your opinion.  That's the definition of an opinion.
+      :align: center
 
    This is Ron. Ron likes strong women, bacon, and staying off the grid.
 
    .. image:: /images/article/sql-to-mdb/bacon.gif
       :alt: When it comes to bacon, be prepared
+      :align: center
 
    In season 6, Ron discovers `Yelp <https://www.yelp.com>`__. Ron thinks
    Yelp is amazing, because he loves the idea of reviewing places he’s
@@ -110,15 +112,19 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/yogurt1.gif
       :alt: Dear frozen yogurt,
+      :align: center
 
    .. image:: /images/article/sql-to-mdb/yogurt2.gif
       :alt: You are the celery of desserts.
+      :align: center
 
    .. image:: /images/article/sql-to-mdb/yogurt3.gif
       :alt: Be ice cream or be nothing.
+      :align: center
 
    .. image:: /images/article/sql-to-mdb/yogurt4.gif
       :alt: Zero stars.           
+      :align: center
 
    Unfortunately, I see three big problems with his plan: 
    
@@ -150,6 +156,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/trashcomputer.gif
       :alt: Ron throws computer in the trash 
+      :align: center
 
    Don’t be like Ron. (At least in this case, because, in most cases, Ron
    is amazing.) Don’t be stuck in your SQL ways. Change your mindset and
@@ -202,6 +209,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/clippy.gif
       :alt: Clippy raises his eyebrows
+      :align: center
 
    I’m talking about `BSON
    documents <https://docs.mongodb.com/manual/core/document/>`__. BSON is a
@@ -362,6 +370,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/map.png
       :alt: Map of Leslie's location
+      :align: center
 
    Storing Lists of Information
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -494,6 +503,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/erasepictures.gif
       :alt: Ron yells, "Erase all pictures of Ron!" at his tablet
+      :align: center
 
    Skipping Location Data in SQL
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -747,6 +757,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/aprilscreams.gif
       :alt: April screams in terror
+      :align: center
 
    Don’t panic! This flexibility can be hugely valuable as your
    application’s requirements evolve and change.
@@ -772,6 +783,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/rowdocument.png
       :alt: Row and document
+      :align: center
 
    Depending on how you’ve normalized your data, rows across several tables
    could map to a single document. In our examples above, we saw that rows
@@ -787,6 +799,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/columnfield.png
       :alt: Column and field
+      :align: center
 
    Table ⇒ Collection
    ~~~~~~~~~~~~~~~~~~
@@ -797,6 +810,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/tablecollection.png
       :alt: Table and collection
+      :align: center
 
    Database ⇒ Database
    ~~~~~~~~~~~~~~~~~~~
@@ -807,6 +821,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/databasedatabase.png 
       :alt: SQL Database and MongoDB Database
+      :align: center
 
    Index ⇒ Index
    ~~~~~~~~~~~~~
@@ -819,6 +834,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/indexindex.png
       :alt: SQL Index and MongoDB Index
+      :align: center
 
    New MongoDB users often forget how much indexes can impact performance.
    If you have a query that is taking a long time to run, be sure you have
@@ -840,6 +856,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/viewview.png
       :alt: SQL View and MongoDB View
+      :align: center
 
    To learn more about views, see the `MongoDB
    Manual <https://docs.mongodb.com/manual/core/views/>`__.
@@ -870,6 +887,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/joinembedding.png
       :alt: SQL Join and MongoDB Embedding
+      :align: center
 
    For more information, see the MongoDB Manual’s pages on `modeling
    one-to-one relationships with
@@ -886,6 +904,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/joindbref.png
       :alt: SQL Join and MongoDB Database Reference
+      :align: center
 
    However, sometimes embedding does not make sense. Let’s say we wanted to
    store information about our Users’ employers like their names,
@@ -920,6 +939,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/joinlookup.png
       :alt: SQL Left Outer Join and MongoDB $lookup
+      :align: center
 
    For more information, see the MongoDB Manual’s pages on the `aggregation
    framework <https://docs.mongodb.com/manual/core/aggregation-pipeline/index.html>`__
@@ -941,6 +961,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/rctegraphlookup.png
       :alt: SQL Recursive Common Table Expressions and $graphLookup
+      :align: center
 
    For more information, see the MongoDB Manual’s page on
    `$graphLookup <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>`__
@@ -960,6 +981,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/transactiontransaction.png
       :alt: SQL Transaction and MongoDB Transaction
+      :align: center
 
    For more information, see the `MongoDB
    Manual <https://docs.mongodb.com/manual/core/transactions/>`__.
@@ -984,6 +1006,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. image:: /images/article/sql-to-mdb/termmappings.png
       :alt: Mapping of terms from SQL to MongoDB
+      :align: center
 
    Be on the lookout for the next post in this series where we’ll discuss
    the top four reasons you should use MongoDB.
