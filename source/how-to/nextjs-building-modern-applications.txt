@@ -12,7 +12,16 @@
    :site: @mongodb
    :creator: @kukicado
    :title: Building Modern Applications with Next.js and MongoDB
-   :image: /images/nextjs/background-mct.png
+   :image: /images/social/twitter/twitter-nextjs.png
+   :image-alt: Building Modern Applications with Next.js and MongoDB
+
+   Learn how to couple Next.js and MongoDB for your next-generation applications.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/nextjs-building-modern-applications
+   :title: Building Modern Applications with Next.js and MongoDB
+   :image: /images/social/open-graph/og-nextjs.png
+   :type: article
 
    Learn how to couple Next.js and MongoDB for your next-generation applications.
 
