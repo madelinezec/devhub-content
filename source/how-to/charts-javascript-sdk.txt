@@ -65,11 +65,11 @@ Working with MongoDB Charts and the new JavaScript SDK
 
 .. introduction::
 
-   Data has been referred to as the oil of the 21st century. If that's true, then data visualization is the refinery that transforms raw information into actionable insights. MongoDB has always made it easy and flexible to work with data, and recently made it painless to visualize your data with `MongoDB Charts <https://www.mongodb.com/products/charts>`__.
+   Data has been referred to as the oil of the 21st century. If that's true, then data visualization is the refinery that transforms raw information into actionable insights. MongoDB has always made it easy and flexible to work with data and recently made it painless to visualize your data with `MongoDB Charts <https://www.mongodb.com/products/charts>`__.
 
    MongoDB Charts allows you analyze, understand, and take action on your data. You simply connect a MongoDB data source and within seconds are able to create powerful charts and graphs to gain insights into your data. This allows you to easily create dashboards such as the `COVID-19 Tracker <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__ created by our own `Maxime Beugnet <https://twitter.com/MBeugnet>`__.
 
-   Furthermore, your MongoDB Charts are not confined to your `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ instance. You can easily embed these charts in your applications and that's exactly what we're going to be doing today. The traditional way to work with MongoDB Charts outside of MongoDB Atlas has been to embed a code retrieved from the Atlas dashboard, but we developers often need more control and that's where the [MongoDB Charts JavaScript SDK](https://www.mongodb.com/blog/post/the-mongodb-charts-embedding-sdk-beta-has-launched) comes in. This SDK is currently in beta, but already offers much greater flexibility versus just embedding. In this tutorial, we'll learn how to both embed using the iframe approach as well as how to use the JavaScript SDK.
+   Furthermore, your MongoDB Charts are not confined to your `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ instance. You can easily embed these charts in your applications and that's exactly what we're going to be doing today. The traditional way to work with MongoDB Charts outside of MongoDB Atlas has been to embed a code retrieved from the Atlas dashboard, but we developers often need more control and that's where the `MongoDB Charts JavaScript SDK <https://www.mongodb.com/blog/post/the-mongodb-charts-embedding-sdk-beta-has-launched>`__ comes in. This SDK is currently in beta, but already offers much greater flexibility versus just embedding. In this tutorial, we'll learn how to both embed using the iframe approach as well as how to use the JavaScript SDK.
 
 
 .. prerequisites::
@@ -91,7 +91,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Since we'll be writing all of our code in plain JavaScript, let's create an HTML file to house our code. Create an ``index.html`` file. I will be writing my code in `Visual Studio Code <https://code.visualstudio.com/>`__ and will use the `Live Server <https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer>`__ extension to start up a simple server that will just server the ``index.html`` file. Our initial starting point will be as follows:
 
-   ... code-block:: html
+   .. code-block:: html
 
       <html>
         <head>
@@ -109,7 +109,7 @@ Working with MongoDB Charts and the new JavaScript SDK
    Getting Started with MongoDB Charts
    -----------------------------------
 
-   Before we can create charts, we need data. Lucky for us, MongoDB has a number of free datasets we can use. In your MongoDB Atlas dashboard, select the **Clusters** tab. Choose the cluster you wish to use or create a new one for this tutorial and hit the **...** button to view additional options. Finally, select the **Load Sample Dataset** button. This will create a number of databases loaded with sample data. The one we'll be using is called **sample_airbnb**. You may remember this dataset from a `previous article <https://developer.mongodb.com/how-to/python-starlette-stitch>`__ I wrote on building a property booking website with Starlette.
+   Before we can create charts, we need data. Lucky for us, MongoDB has a number of free datasets we can use. In your MongoDB Atlas dashboard, select the **Clusters** tab. Choose the cluster you wish to use or create a new one for this tutorial and hit the ellipsis button to view additional options. Finally, select the **Load Sample Dataset** button. This will create a number of databases loaded with sample data. The one we'll be using is called **sample_airbnb**. You may remember this dataset from a `previous article <https://developer.mongodb.com/how-to/python-starlette-stitch>`__ I wrote on building a property booking website with Starlette.
 
    .. image:: /images/charts-sdk/load-sample-data.png
         :alt: Load Sample Data
@@ -128,7 +128,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    To create our first chart, let's click the **Add Chart** button. We will be presented with a new user interface that will allow us to create our chart or graph. The first step is to choose a data source, and we'll select ``sample_airbnb.listingsAndReviews`` as our data source. Once we do this, we'll see the fields column populated with all the fields for that collection. 
    
-   With MongoDB Charts we're able to create many different types of charts and graphs. We can create bar or column charts, line charts, pie charts, even geographical charts. Depending on the the type of chart we wish to create, the data we need to supply will change.
+   With MongoDB Charts we're able to create many different types of charts and graphs. We can create bar or column charts, line charts, pie charts, even geographical charts. Depending on the type of chart we wish to create, the data we need to supply will change.
 
    .. image:: /images/charts-sdk/first-chart.png
         :alt: First MongoDB Chart
@@ -175,9 +175,9 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Once we have enabled unauthenticated access, we'll see our options for embedding a chart. We can do it via an iframe or via the JavaScript SDK. We'll first show how you can do this with the iframe method. You would simply copy the Embed Code and paste it into your application where you wanted the chart to appear. There is a limited number of configuration options here such as setting an auto-refresh timer as well as a pre-defined light or dark theme, but we could add additional parameters manually.
 
-   Let's go into our code and paste this this embed code to see if our chart loads properly.
+   Let's go into our code and paste this embed code to see if our chart loads properly.
 
-   ... code-block:: html
+   .. code-block:: html
 
       <html>
         <head>
@@ -203,7 +203,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    In the above example, we used the embedded iframe approach to add our MongoDB Chart to our application. While this is easy and seamless it doesn't give us a whole lot of flexibility. This is where the MongoDB Charts JavaScript SDK comes in. Let's comment out the embedded code we pasted earlier. Now in between our script tags, let's use the SDK to programmatically create our chart. The code will look like this:  
 
-   ... code-block:: html
+   .. code-block:: html
 
       <html>
         <head>
@@ -232,7 +232,7 @@ Working with MongoDB Charts and the new JavaScript SDK
    
    Now the chart takes up the entire screen. The reason for that is that it's being rendered within the confines of our chart div, which at this moment doesn't have any specified styling so just defaults to the full width of our browser window. We can change that by adding a little style to our application.
 
-   ... code-block:: html
+   .. code-block:: html
 
       <html>
         <head>
@@ -252,7 +252,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Much better. The JavaScript SDK allows us to additionally call various methods and filters on our chart. While some of these features can also be passed with the iframe approach, it's much cleaner and easier to work with when using the SDK. Let's see some examples.
 
-   ... code-block:: html
+   .. code-block:: html
 
       <html>
         <head>
@@ -294,7 +294,7 @@ Working with MongoDB Charts and the new JavaScript SDK
         </body>
       </html>   
 
-   We've added a lot more code now to control the look and feel as well as functionality of our chart. In the SDK configuration we've disabled the attribution so the MongoDB logo is no longer shown in the bottom right corner of our chart. We also added two methods that directly affect our chart. The first ``refresh()`` method refreshes the chart. In our case, this doesn't really matter since we don't constantly have new data coming in that would impact how the chart is displayed, but say you had an IoT device that was sending data every few seconds and wanted to map it. Being able to programmatically control when the refresh is done, either on a timer or manually, would greatly improve the usability and usefulness of the chart. The second method, ``filter()``, allows us to control the variables that make up the chart. In this case, when we click the **Only in USA** button, our chart will be updated to show the average room price per type of room for properties located in the United States.
+   We've added a lot more code now to control the look and feel as well as functionality of our chart. In the SDK configuration, we've disabled the attribution so the MongoDB logo is no longer shown in the bottom right corner of our chart. We also added two methods that directly affect our chart. The first ``refresh()`` method refreshes the chart. In our case, this doesn't really matter since we don't constantly have new data coming in that would impact how the chart is displayed, but say you had an IoT device that was sending data every few seconds and wanted to map it. Being able to programmatically control when the refresh is done, either on a timer or manually, would greatly improve the usability and usefulness of the chart. The second method, ``filter()``, allows us to control the variables that make up the chart. In this case, when we click the **Only in USA** button, our chart will be updated to show the average room price per type of room for properties located in the United States.
 
    .. image:: /images/charts-sdk/usa-filter.png
         :alt: Price Per Room Type in the USA
