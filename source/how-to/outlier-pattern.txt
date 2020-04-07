@@ -12,15 +12,15 @@
    :site: @mongodb
    :creator: @kenwalger
    :title: Building with Patterns: The Outlier Pattern
-   :image: /images/social/twitter/twitter-mdb-developer.png
-   :image-alt: MongoDB Developers
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: MongoDB Schema Design
 
    Learn about the Outlier Schema Design pattern in MongoDB.
 
 .. og::
    :url: https://developer.mongodb.com/how-to/outlier-pattern/
    :title: Building with Patterns: The Outlier Pattern
-   :image: /images/social/open-graph/og-mdb-developer.png
+   :image: /images/social/open-graph/og-schema-design-patterns.png
    :type: article
 
    Learn about the Outlier Schema Design pattern in MongoDB.
@@ -49,7 +49,7 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/charts.png
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
 .. ---------------------------------------------------------------
 .. ARTICLE CONTENT

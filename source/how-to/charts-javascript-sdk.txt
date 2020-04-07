@@ -13,7 +13,7 @@
    :creator: @kukicado
    :title: Working with MongoDB Charts and the new JavaScript SDK
    :image: /images/social/twitter/twitter-mdb-developer.png
-   :image-alt:
+   :image-alt: MongoDB Developer Logo
 
    Learn how to visualize your data with MongoDB Charts.
 
