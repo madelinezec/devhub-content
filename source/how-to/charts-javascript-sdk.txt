@@ -91,7 +91,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Since we'll be writing all of our code in plain JavaScript, let's create an HTML file to house our code. Create an ``index.html`` file. I will be writing my code in `Visual Studio Code <https://code.visualstudio.com/>`__ and will use the `Live Server <https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer>`__ extension to start up a simple server that will just server the ``index.html`` file. Our initial starting point will be as follows:
 
-   .. code-block::
+   .. code-block:: auto
 
       <html>
         <head>
@@ -177,7 +177,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Let's go into our code and paste this embed code to see if our chart loads properly.
 
-   .. code-block::
+   .. code-block:: auto
 
       <html>
         <head>
@@ -203,7 +203,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    In the above example, we used the embedded iframe approach to add our MongoDB Chart to our application. While this is easy and seamless it doesn't give us a whole lot of flexibility. This is where the MongoDB Charts JavaScript SDK comes in. Let's comment out the embedded code we pasted earlier. Now in between our script tags, let's use the SDK to programmatically create our chart. The code will look like this:  
 
-   .. code-block::
+   .. code-block:: auto
 
       <html>
         <head>
@@ -232,7 +232,7 @@ Working with MongoDB Charts and the new JavaScript SDK
    
    Now the chart takes up the entire screen. The reason for that is that it's being rendered within the confines of our chart div, which at this moment doesn't have any specified styling so just defaults to the full width of our browser window. We can change that by adding a little style to our application.
 
-   .. code-block::
+   .. code-block:: auto
 
       <html>
         <head>
@@ -251,7 +251,7 @@ Working with MongoDB Charts and the new JavaScript SDK
 
    Much better. The JavaScript SDK allows us to additionally call various methods and filters on our chart. While some of these features can also be passed with the iframe approach, it's much cleaner and easier to work with when using the SDK. Let's see some examples.
 
-   .. code-block::
+   .. code-block:: auto
 
       <html>
         <head>
