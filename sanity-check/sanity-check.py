@@ -11,9 +11,9 @@ def read_list_in_directive(file, directive):
             line_stripped = line.strip()
             if directive in line:
                 reading_tags = True
-            if reading_tags and '' is line_stripped:
+            if reading_tags and '' == line_stripped:
                 empty_lines -= 1
-            if reading_tags and empty_lines == 0 and '' is not line_stripped:
+            if reading_tags and empty_lines == 0 and '' != line_stripped:
                 try:
                     array.append(line.split('*')[1].strip())
                 except:
@@ -33,13 +33,13 @@ def read_directive(file, directive):
             line_stripped = line.strip()
             if directive in line:
                 reading_directive = True
-            if reading_directive and '' is line_stripped and empty_lines <= 0:
+            if reading_directive and '' == line_stripped and empty_lines <= 0:
                 return {'file': file, 'array': array, 'description': description}
-            if reading_directive and '' is not line_stripped and empty_lines == 1:
+            if reading_directive and '' != line_stripped and empty_lines == 1:
                 array.append(line_stripped)
-            if reading_directive and '' is line_stripped:
+            if reading_directive and '' == line_stripped:
                 empty_lines -= 1
-            if reading_directive and '' is not line_stripped and empty_lines == 0:
+            if reading_directive and '' != line_stripped and empty_lines == 0:
                 description = line_stripped
         return {'file': file, 'array': array, 'description': description}
 
@@ -71,9 +71,9 @@ def read_meta_description_directive(file):
             line_stripped = line.strip()
             if '.. meta-description' in line:
                 reading_directive = True
-            if reading_directive and '' is line_stripped:
+            if reading_directive and '' == line_stripped:
                 empty_lines -= 1
-            if reading_directive and empty_lines == 0 and '' is not line_stripped:
+            if reading_directive and empty_lines == 0 and '' != line_stripped:
                 description = line_stripped
             if reading_directive and empty_lines < 0:
                 return {'file': file, 'description': description}
@@ -86,6 +86,7 @@ def read_links(file):
             if re.match(r".*>`_[^_].*", line):
                 return {'file': file, 'link_found': True}
         return {'file': file, 'link_found': False}
+
 
 def read_atf_image(file):
     with open(file.path, encoding="utf-8") as f:
@@ -128,7 +129,7 @@ def check_twitter(files):
         for line in ft['array']:
             if ':title:' in line:
                 title = re.compile(':title:(.*)').search(line).group(1)
-                if '' is not title and len(title) > 70:
+                if '' != title and len(title) > 70:
                     output.append(['=> Twitter title is too long (70 max) - need to remove ' + str(len(title) - 70) + ' characters', file_path])
     print_if_necessary_style_columns(output)
 
@@ -154,7 +155,7 @@ def check_og(files):
         for line in ft['array']:
             if ':title:' in line:
                 title = re.compile(':title:(.*)').search(line).group(1)
-                if '' is not title and len(title) > 95:
+                if '' != title and len(title) > 95:
                     output.append(['=> Twitter title is too long (95 max) - need to remove ' + str(len(title) - 95) + ' characters', file_path])
     print_if_necessary_style_columns(output)
 
@@ -199,6 +200,7 @@ def check_level(files):
         if level == '' or level not in ['beginner', 'intermediate', 'advanced']:
             output.append(['=> Level directive is wrong in this file.', file_path])
     print_if_necessary_style_columns(output)
+
 
 def check_atf_image(files):
     output = [['\nList of files without directive atf-image:\n']]
@@ -307,81 +309,82 @@ def check_blogs_exist(existing_blog_posts, line, output):
         output.append(['=> This blog post does not exist in ' + snooty_part, blog])
 
 
-with open('tags.txt', encoding="utf-8") as f:
-    valid_tags = f.read().splitlines()
-with open('products.txt', encoding="utf-8") as f:
-    valid_products = f.read().splitlines()
-with open('languages.txt', encoding="utf-8") as f:
-    valid_languages = f.read().splitlines()
+if __name__ == '__main__':
+    with open('tags.txt', encoding="utf-8") as f:
+        valid_tags = f.read().splitlines()
+    with open('products.txt', encoding="utf-8") as f:
+        valid_products = f.read().splitlines()
+    with open('languages.txt', encoding="utf-8") as f:
+        valid_languages = f.read().splitlines()
 
-blog_posts = []
-with os.scandir('../source/article') as f:
-    for file in f:
-        blog_posts.append(file)
-with os.scandir('../source/how-to') as f:
-    for file in f:
-        blog_posts.append(file)
-with os.scandir('../source/quickstart') as f:
-    for file in f:
-        blog_posts.append(file)
+    blog_posts = []
+    with os.scandir('../source/article') as f:
+        for file in f:
+            blog_posts.append(file)
+    with os.scandir('../source/how-to') as f:
+        for file in f:
+            blog_posts.append(file)
+    with os.scandir('../source/quickstart') as f:
+        for file in f:
+            blog_posts.append(file)
 
-file_tags = []
-file_products = []
-file_languages = []
-file_twitter = []
-file_meta_description = []
-file_links = []
-file_og = []
-file_type = []
-file_level = []
-file_atf_image = []
-images_used = set()
-includes_used = set()
+    file_tags = []
+    file_products = []
+    file_languages = []
+    file_twitter = []
+    file_meta_description = []
+    file_links = []
+    file_og = []
+    file_type = []
+    file_level = []
+    file_atf_image = []
+    images_used = set()
+    includes_used = set()
 
-for file in blog_posts:
-    file_tags.append(read_list_in_directive(file, '.. tags::'))
-    file_products.append(read_list_in_directive(file, '.. products::'))
-    file_languages.append(read_list_in_directive(file, '.. languages::'))
-    file_twitter.append(read_directive(file, '.. twitter::'))
-    file_og.append(read_directive(file, '.. og::'))
-    file_meta_description.append(read_meta_description_directive(file))
-    file_links.append(read_links(file))
-    file_type.append(read_type_directive(file))
-    file_level.append(read_level_directive(file))
-    file_atf_image.append(read_atf_image(file))
+    for file in blog_posts:
+        file_tags.append(read_list_in_directive(file, '.. tags::'))
+        file_products.append(read_list_in_directive(file, '.. products::'))
+        file_languages.append(read_list_in_directive(file, '.. languages::'))
+        file_twitter.append(read_directive(file, '.. twitter::'))
+        file_og.append(read_directive(file, '.. og::'))
+        file_meta_description.append(read_meta_description_directive(file))
+        file_links.append(read_links(file))
+        file_type.append(read_type_directive(file))
+        file_level.append(read_level_directive(file))
+        file_atf_image.append(read_atf_image(file))
 
-check_snooty(blog_posts)
-check_for_invalid_elements(file_tags, valid_tags, 'tag')
-check_for_invalid_elements(file_products, valid_products, 'product')
-check_for_invalid_elements(file_languages, valid_languages, 'language')
-check_twitter(file_twitter)
-check_og(file_og)
-check_meta_description(file_meta_description)
-check_links(file_links)
-check_type(file_type)
-check_level(file_level)
-check_atf_image(file_atf_image)
+    check_snooty(blog_posts)
+    check_for_invalid_elements(file_tags, valid_tags, 'tag')
+    check_for_invalid_elements(file_products, valid_products, 'product')
+    check_for_invalid_elements(file_languages, valid_languages, 'language')
+    check_twitter(file_twitter)
+    check_og(file_og)
+    check_meta_description(file_meta_description)
+    check_links(file_links)
+    check_type(file_type)
+    check_level(file_level)
+    check_atf_image(file_atf_image)
 
-blog_posts_and_authors = list(blog_posts)
+    blog_posts_and_authors = list(blog_posts)
 
-with os.scandir('../source/includes/authors') as f:
-    for file in f:
-        blog_posts_and_authors.append(file)
+    with os.scandir('../source/includes/authors') as f:
+        for file in f:
+            blog_posts_and_authors.append(file)
 
-for file in blog_posts_and_authors:
-    images_used.update(scan_images(file))
-    includes_used.update(scan_includes(file))
+    for file in blog_posts_and_authors:
+        images_used.update(scan_images(file))
+        includes_used.update(scan_includes(file))
 
-all_images = []
-for (dirpath, dirnames, filenames) in os.walk('../source/images'):
-    all_images += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
+    all_images = []
+    for (dirpath, dirnames, filenames) in os.walk('../source/images'):
+        all_images += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
 
-all_includes = []
-for (dirpath, dirnames, filenames) in os.walk('../source/includes'):
-    all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
+    all_includes = []
+    for (dirpath, dirnames, filenames) in os.walk('../source/includes'):
+        all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
 
-check_thing_not_used("images", all_images, images_used)
-check_thing_not_found("images", all_images, images_used)
+    check_thing_not_used("images", all_images, images_used)
+    check_thing_not_found("images", all_images, images_used)
 
-check_thing_not_used("includes", all_includes, includes_used)
-check_thing_not_found("includes", all_includes, includes_used)
+    check_thing_not_used("includes", all_includes, includes_used)
+    check_thing_not_found("includes", all_includes, includes_used)
