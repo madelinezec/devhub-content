@@ -8,7 +8,7 @@ pgp-version = "{+version+}"
 
 [page_groups]
 "home" = ["/article/3-things-to-know-switch-from-sql-mongodb", "/quickstart/golang-multi-document-acid-transactions", "/quickstart/csharp-crud-tutorial", "/quickstart/free-atlas-cluster"]
-"learn" = ["how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci", "/article/map-terms-concepts-sql-mongodb", "/how-to/bucket-pattern"]
+"learn" = ["/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci", "/article/map-terms-concepts-sql-mongodb", "/how-to/bucket-pattern"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
