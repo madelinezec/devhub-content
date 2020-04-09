@@ -11,7 +11,17 @@
 .. twitter::
    :site: @mongodb
    :creator: @MBeugnet
-   :title: Learn how to use the native mapping of POJOs using the MongoDB Java Driver.
+   :title: Learn how to map POJOs using the MongoDB Java Driver.
+   :image: /images/social/twitter/twitter-blue-pattern.png
+   :image: MongoDB
+
+   Learn how to use the native mapping of POJOs using the MongoDB Java Driver.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/java-mapping-pojos
+   :type: article
+   :title: Learn how to map POJOs using the MongoDB Java Driver.
+   :image: /images/social/open-graph/og-blue-pattern.png
 
    Learn how to use the native mapping of POJOs using the MongoDB Java Driver.
 

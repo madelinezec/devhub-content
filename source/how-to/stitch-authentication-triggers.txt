@@ -6,15 +6,24 @@
 
 .. meta-description::
 
-   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google without losing the ability to perform custom actions when users register, sign-in, or leave.
+   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
 
 .. twitter::
    :site: @mongodb
    :creator: @andrewmorgan
    :title: MongoDB Stitch Authentication Triggers
    :image: /images/add-trigger.png
+   :image-alt: Add trigger
 
-   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google without losing the ability to perform custom actions when users register, sign-in, or leave.
+   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/stitch-authentication-triggers
+   :type: article
+   :title: MongoDB Stitch Authentication Triggers
+   :image: /images/add-trigger.png
+
+   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -60,7 +69,7 @@
 MongoDB Stitch Authentication Triggers
 ======================================
 
-.. content::
+.. introduction::
 
    `MongoDB Stitch <https://docs.mongodb.com/stitch>`__ makes it a breeze
    to use third-party services such as
@@ -78,6 +87,8 @@ MongoDB Stitch Authentication Triggers
    deregisters, there may be regulations (such as
    `GDPR <https://www.mongodb.com/collateral/gdpr-impact-to-your-data-management-landscape>`__)
    that mandate you delete all of their data.
+
+.. content::
 
    This is where `Stitch Authentication
    Triggers <https://docs.mongodb.com/stitch/triggers/authentication-triggers/>`__

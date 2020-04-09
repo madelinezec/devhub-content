@@ -11,8 +11,17 @@
 .. twitter::
    :site: @mongodb
    :creator: @nraboy
-   :title: Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
-   :image: /images/atf-images/generic/green.png
+   :title: Static Website Deployments to Stitch with Hugo, Git, and Travis CI
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to continuously deploy a static generated website to MongoDB Stitch using Hugo, simple Git commands, and Travis CI.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci
+   :type: article
+   :title: Static Website Deployments to Stitch with Hugo, Git, and Travis CI
+   :image: /images/social/open-graph/og-green-pattern.png
 
    Learn how to continuously deploy a static generated website to MongoDB Stitch using Hugo, simple Git commands, and Travis CI.
 
@@ -47,7 +56,7 @@
 Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 ==========================================================================
 
-.. content::
+.. introduction::
 
    `MongoDB Stitch <https://www.mongodb.com/cloud/stitch>`__ can do quite a
    few things, some of which `include
@@ -65,6 +74,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    website using `Hugo <https://www.gohugo.io>`__ and automatically deploy
    changes to Stitch through a continuos deployment pipeline consisting of
    Git and `Travis CI <https://travis-ci.org/>`__.
+
+.. prerequisites::
 
    The Requirements for the Tutorial
    ---------------------------------
@@ -91,6 +102,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    MongoDB Atlas and Stitch have forever free tiers which are more than
    enough when accomplishing this tutorial.
+
+.. content::
 
    Configuring the MongoDB Stitch CLI for Static Website Hosting
    -------------------------------------------------------------

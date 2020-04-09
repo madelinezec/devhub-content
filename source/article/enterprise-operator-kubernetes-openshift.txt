@@ -6,15 +6,25 @@
 
 .. meta-description:: 
 
-   To support teams building cloud-native apps with Kubernetes and OpenShift, we are introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB. 
+   Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
 
 .. twitter::
    :site: @mongodb
    :creator: @RobsCranium
-   :title: Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
+   :title: Introducing the MongoDB Enterprise Operator for Kubernetes
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
-   To support teams building cloud-native apps with Kubernetes and OpenShift, we are introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB. 
+   Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
+
+.. og::
+   :url: http://developer.mongodb.com/article/enterprise-operator-kubernetes-openshift
+   :type: article
+   :title: Introducing the MongoDB Enterprise Operator for Kubernetes
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+   Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
+
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -49,7 +59,7 @@
 Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
 ========================================================================
 
-.. content::
+.. introduction::
 
    Today more DevOps teams are leveraging the power of containerization,
    and technologies like Kubernetes and Red Hat OpenShift, to manage
@@ -77,6 +87,8 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
       Kubernetes
    -  Troubleshooting
    -  Where to go for more information
+
+.. content::
 
    The containerization movement
    -----------------------------

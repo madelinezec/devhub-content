@@ -8,8 +8,22 @@
    :site: @mongodb
    :creator: @codepope
    :title: Stitch Triggers Get Scheduled
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
    New Scheduled Stitch Triggers allow Stitch Functions to be called at regular intervals.
+
+.. og::
+   :url: http://developer.mongodb.com/article/stitch-triggers
+   :type: article
+   :title: Stitch Triggers Get Scheduled
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+   New Scheduled Stitch Triggers allow Stitch Functions to be called at regular intervals.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/walker-dj.rst
 

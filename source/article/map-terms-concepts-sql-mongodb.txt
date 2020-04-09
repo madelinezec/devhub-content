@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: Mapping Terms and Concepts from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
+   :image-alt: SQL to MongoDB
+
+   Learn how SQL terms and concepts map to MongoDB.
+
+.. og::
+   :url: http://developer.mongodb.com/article/map-terms-concepts-sql-mongodb
+   :type: article
+   :title: Mapping Terms and Concepts from SQL to MongoDB
+   :image: /images/social/open-graph/og-sql-mdb.png
 
    Learn how SQL terms and concepts map to MongoDB.
 

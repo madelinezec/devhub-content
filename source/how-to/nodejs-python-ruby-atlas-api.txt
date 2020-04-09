@@ -6,9 +6,17 @@
 .. twitter::
    :site: @mongodb
    :creator: @codepope
-   :title: "Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby"
+   :title: Calling the MongoDB Atlas API - How to in Node, Python, and Ruby
    :image: https://webassets.mongodb.com/_com_assets/cms/greg-shield-692-unsplash-hero-acvekgosdk.jpg
  
+   How to call the MongoDB Atlas API from Python, Node and Ruby - easy digesting.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/nodejs-python-ruby-atlas-api
+   :type: article
+   :title: Calling the MongoDB Atlas API - How to in Node, Python, and Ruby
+   :image: https://webassets.mongodb.com/_com_assets/cms/greg-shield-692-unsplash-hero-acvekgosdk.jpg
+
    How to call the MongoDB Atlas API from Python, Node and Ruby - easy digesting.
 
 .. include:: /includes/authors/walker-dj.rst
@@ -34,7 +42,7 @@
 Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
 ========================================================================
 
-.. content::
+.. introduction::
 
    The real power of a cloud-hosted, fully managed service like `MongoDB
    Atlas <https://www.mongodb.com/cloud/atlas>`__ is that you can create
@@ -60,6 +68,8 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
    least fuss in Python, Node, and Ruby. In each example, we'll try and
    access the base URL of the Atlas API which returns a JSON document about
    the underlying applications name, build and other facts.
+
+.. content::
 
    Python
    ------
