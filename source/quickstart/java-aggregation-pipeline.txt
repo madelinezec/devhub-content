@@ -13,7 +13,7 @@
    :creator: @MBeugnet
    :title: How to use the Aggregation Pipeline using the MongoDB Java Driver.
    :image: /images/social/twitter/twitter-blue-pattern.png
-   :image: MongoDB
+   :image-alt: MongoDB
 
    Learn how to use the Aggregation Pipeline using the MongoDB Java Driver.
 

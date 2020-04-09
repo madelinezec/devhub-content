@@ -13,6 +13,7 @@
    :creator: @Lauren_Schaefer
    :title: 3 Things to Know When You Switch from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
+   :image-alt: SQL to MongoDB
 
    Discover the 3 things you need to know when you switch from SQL to MongoDB
 

@@ -13,7 +13,7 @@
    :creator: @MBeugnet
    :title: Learn how to map POJOs using the MongoDB Java Driver.
    :image: /images/social/twitter/twitter-blue-pattern.png
-   :image: MongoDB
+   :image-alt: MongoDB
 
    Learn how to use the native mapping of POJOs using the MongoDB Java Driver.
 
