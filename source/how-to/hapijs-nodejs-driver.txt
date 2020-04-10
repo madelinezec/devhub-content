@@ -365,7 +365,7 @@ Build a RESTful API with HapiJS and MongoDB
           }
       });
 
-   We'll rely on the async/await pattern in our handler functions as well to keep our code clean and concise. Notice how our MongoDB database is now accessible through the ``req`` or request object. We didn't have to pass in an instance, the plugin handled all of that for us, all we have to do was decide what our call to the database was going to be. If we restart our server and navigate to ``localhost:3000/movies`` in our browser we should see the following response:
+   We'll rely on the `async/await pattern <https://javascript.info/async-await>`__ in our handler functions as well to keep our code clean and concise. Notice how our MongoDB database is now accessible through the ``req`` or request object. We didn't have to pass in an instance of our database, the plugin handled all of that for us, all we have to do was decide what our call to the database was going to be. If we restart our server and navigate to ``localhost:3000/movies`` in our browser we should see the following response:
 
    .. image:: /images/hapijs/hapijs-find-one-movie.png
         :alt: JSON Data for a Single Movie
@@ -375,7 +375,7 @@ Build a RESTful API with HapiJS and MongoDB
    Implementing the RESTful Routes
    -------------------------------
 
-   We have five API routes to implement. We'll tackle each one and introduce new concepts for both Hapi.js and MongoDB. We'll start with the route that gets us all the movies.
+   We have six API routes to implement. We'll tackle each one and introduce new concepts for both Hapi.js and MongoDB. We'll start with the route that gets us all the movies.
 
    Get All Movies
    ~~~~~~~~~~~~~~
@@ -405,7 +405,7 @@ Build a RESTful API with HapiJS and MongoDB
    Get Single Movie
    ~~~~~~~~~~~~~~~~
 
-   This route will return the data on just a single movie. For this method, we'll also play around with projection, which will allow us to pick and choose which fields we get back from MongoDB. Here is my implementation:
+   This route will return the data on just a single movie. For this method, we'll also play around with `projection <https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/>`__, which will allow us to pick and choose which fields we get back from MongoDB. Here is my implementation:
 
    .. code-block:: javascript
 
@@ -462,7 +462,7 @@ Build a RESTful API with HapiJS and MongoDB
         	"year": 2019
        }  
 
-   In our implementation we're again using the ``req`` object but this time we're using the ``payload`` sub-object to get the data that is sent to the endpoint. To test that our endpoint works, we'll use Postman to send the request. Our response will give us a lot of info on what happened with the operation so for educational purposes we'll just return the entire document. In a real world application, you would just send back a ``{message: "ok"}`` or similar statement. If we look at the response we'll find a field titled ``insertedCount: 1`` and this will tell us that our document was successfully inserted.
+   In our implementation we're again using the ``req`` object but this time we're using the ``payload`` sub-object to get the data that is sent to the endpoint. To test that our endpoint works, we'll use `Postman <https://www.postman.com/>`__ to send the request. Our response will give us a lot of info on what happened with the operation so for educational purposes we'll just return the entire document. In a real world application, you would just send back a ``{message: "ok"}`` or similar statement. If we look at the response we'll find a field titled ``insertedCount: 1`` and this will tell us that our document was successfully inserted.
 
    .. image:: /images/hapijs/postman-example.png
         :alt: Postman Request
