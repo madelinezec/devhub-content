@@ -610,6 +610,6 @@ Build a RESTful API with HapiJS and MongoDB
    
    .. blockquote::
 
-      If you'd like to get the code for this tutorial, you can find it `here <https://github.com/kukicado/hapijs-mongodb>`__. If you want to give Atlas Search a try, `sign up for MongoDB Atlas for free <https://www.mongodb.com/atlas>` and use code **ADO200** to get a $200 credit towards your account.
+      If you'd like to get the code for this tutorial, you can find it `here <https://github.com/kukicado/hapijs-mongodb>`__. If you want to give Atlas Search a try, `sign up for MongoDB Atlas for free <https://www.mongodb.com/atlas>`__ and use code **ADO200** to get a $200 credit towards your account.
 
    Happy, er.. Hapi coding!
