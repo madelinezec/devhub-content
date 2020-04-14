@@ -108,7 +108,7 @@ How to access the John Hopkins University Covid-19 Data
    - ``covid19jhu`` contains the raw CSV files imported with the ``mongoimport`` tool,
    - ``covid19`` contains the same dataset but with a clean MongoDB schema design with all the good practises we are recommending.
 
-   Here is an example of the documents in the `covid19` database:
+   Here is an example of the documents in the ``covid19`` database:
 
    .. code-block:: javascript
 
