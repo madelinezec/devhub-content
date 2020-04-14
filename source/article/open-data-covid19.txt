@@ -78,7 +78,7 @@ How to access the John Hopkins University Covid-19 Data
 
 .. introduction::
 
-   As the Covid-19 pandemic has swept the globe the work of `JHU (John Hopkins University) and their Covid-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world in general.
+   As the Covid-19 pandemic has swept the globe the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and their `Covid-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world in general.
 
    JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, this data is not in a format that is easy to consume. At MongoDB, we've been working with this data since it was first published while developing our :doc:`Charts dashboard </article/coronavirus-map-live-data-tracker-charts>`. Now we're making `our more accessible version of the JHU data <https://github.com/mongodb-developer/open-data-covid-19>`__ freely available for anyone to use.
 
@@ -134,7 +134,7 @@ How to access the John Hopkins University Covid-19 Data
 
    The document above was obtained by joining together the file ``UID_ISO_FIPS_LookUp_Table.csv`` and the CSV files time series you can find in `this folder <https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series>`__.
 
-   Some fields might not exist in all the documents because they are not relevant or are just not provided by `JHU <https://www.jhu.edu/>`__. If you want more details, run a schema analysis with `MongoDB Compass <https://www.mongodb.com/products/compass>`__ on the `covid19.statistics` collection.
+   Some fields might not exist in all the documents because they are not relevant or are just not provided by `JHU <https://www.jhu.edu/>`__. If you want more details, run a schema analysis with `MongoDB Compass <https://www.mongodb.com/products/compass>`__ on the ``covid19.statistics`` collection.
 
    If you would prefer to host the data yourself, the scripts required to download and transform the JHU data are open-source. You can `view them and instructions for how to use them on our GitHub repository <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
 
@@ -464,3 +464,9 @@ How to access the John Hopkins University Covid-19 Data
    We've also launched an `Atlas credits program <https://www.mongodb.com/blog/post/helping-developers-tackle-covid19>`__ for anyone working on detecting, understanding, and stopping the spread of COVID-19.
 
    If you have any questions, suggestions, or would like any assistance working with the data, we're always available on the `community forums <https://community.mongodb.com/>`__. You can also reach out to `Aaron <https://twitter.com/aaronbassett>`__, `Joe <https://twitter.com/JoeKarlsson1>`__, `Mark <https://twitter.com/judy2k>`__, and `Maxime <https://twitter.com/MBeugnet>`__ directly on Twitter.
+
+   Sources
+   -------
+
+   - `MongoDB Open Data Covid-19 Github repository <https://github.com/mongodb-developer/open-data-covid-19>`__
+   - `JHU Dataset on Github repository <https://github.com/CSSEGISandData/COVID-19>`__
