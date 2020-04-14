@@ -12,15 +12,15 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Multi-Document ACID Transactions in MongoDB with Go
-   :image: /images/social/twitter/twitter-golang.png
-   :image-alt: MongoDB QuickStart twitter banner for golang
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
    Learn how to accomplish ACID transactions and logical sessions with MongoDB and the Go programming language (Golang).
 
 .. og::
    :url: https://developer.mongodb.com/quickstart/golang-multi-document-acid-transactions
    :title: Multi-Document ACID Transactions in MongoDB with Go
-   :image: /images/social/twitter/twitter-golang.png
+   :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
 
    Learn how to accomplish ACID transactions and logical sessions with MongoDB and the Go programming language (Golang).

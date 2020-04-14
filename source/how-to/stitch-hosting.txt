@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: Stitch Hosting: A Drag-and-Drop Delight
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Speed your static hosting uploads with Stitch's enhanced drag and drop feature.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/stitch-hosting
+   :type: article
+   :title: Stitch Hosting: A Drag-and-Drop Delight
+   :image: /images/social/open-graph/og-mdb-developer.png
 
    Speed your static hosting uploads with Stitch's enhanced drag and drop feature.
 

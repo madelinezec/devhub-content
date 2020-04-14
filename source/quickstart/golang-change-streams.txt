@@ -12,7 +12,16 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Reacting to Database Changes with MongoDB Change Streams and Go
-   :image: https://webassets.mongodb.com/_com_assets/cms/QuickStart-Go(Blog)-min-egkag5bi1n.png
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Learn how to use change streams to react to changes to MongoDB documents, databases, and clusters in real-time using the Go programming language.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/golang-change-streams
+   :title: Reacting to Database Changes with MongoDB Change Streams and Go
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
    Learn how to use change streams to react to changes to MongoDB documents, databases, and clusters in real-time using the Go programming language.
 

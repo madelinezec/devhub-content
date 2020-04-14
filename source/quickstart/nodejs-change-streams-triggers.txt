@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: Change Streams & Triggers with Node.js Tutorial
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Discover how to react to changes in your MongoDB database using change streams implemented in Node.js and Atlas triggers.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/nodejs-change-streams-triggers
+   :title: Change Streams & Triggers with Node.js Tutorial
+   :image: /images/social/open-graph/og-pink-pattern.png
+   :type: article
 
    Discover how to react to changes in your MongoDB database using change streams implemented in Node.js and Atlas triggers.
 

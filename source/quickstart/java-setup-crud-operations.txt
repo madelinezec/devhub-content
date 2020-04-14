@@ -13,7 +13,7 @@
    :creator: @MBeugnet
    :title: Learn how to use MongoDB with Java in this CRUD operations tutorial.
    :image: /images/social/twitter/twitter-blue-pattern.png
-   :image: MongoDB
+   :image-alt: MongoDB
 
    Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
 

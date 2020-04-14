@@ -12,6 +12,16 @@
    :site: @mongodb
    :creator: @MBeugnet
    :title: Getting Your Free MongoDB Atlas Cluster
+   :image: /images/social/twitter/twitter-build.png
+   :image-alt: MongoDB Build
+
+   Want to know the quickest way to start with MongoDB? It begins with getting yourself a free MongoDB Atlas Cluster so you can leverage your learning
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/free-atlas-cluster
+   :title: Getting Your Free MongoDB Atlas Cluster
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
    Want to know the quickest way to start with MongoDB? It begins with getting yourself a free MongoDB Atlas Cluster so you can leverage your learning
 

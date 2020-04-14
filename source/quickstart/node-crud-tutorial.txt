@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: MongoDB and Node.js Tutorial - CRUD Operations
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Learn how to execute the CRUD (create, read, update, and delete) operations in MongoDB using Node.js in this step-by-step tutorial.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/node-crud-tutorial
+   :title: MongoDB and Node.js Tutorial - CRUD Operations
+   :image: /images/social/open-graph/og-pink-pattern.png
+   :type: article
 
    Learn how to execute the CRUD (create, read, update, and delete) operations in MongoDB using Node.js in this step-by-step tutorial.
 

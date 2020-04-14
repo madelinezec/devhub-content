@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @YouOldMaid
    :title: Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search
-   :image: /social/twitter/twitter-pink-pattern.png
+   :image: /images/social/twitter/twitter-pink-pattern.png
    :image-alt: MongoDB
 
    Build a Movie Search Engine Using Full Text Search Indexes on MongoDB Atlas.

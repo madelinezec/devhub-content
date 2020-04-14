@@ -8,7 +8,16 @@
     :site: @mongodb
     :creator: @nraboy
     :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
-    :image: https://webassets.mongodb.com/_com_assets/cms/dark_graphql_blog_header-0o8s3wq9e1.png
+    :image: /images/social/twitter/twitter-mdb-developer.png
+    :image-alt: MongoDB Developer
+
+    Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
+
+.. og::
+    :url: https://developer.mongodb.com/how-to/graphql-support-atlas-stitch
+    :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
+    :image: /images/social/open-graph/og-mdb-developer.png
+    :type: article
 
     Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
 
