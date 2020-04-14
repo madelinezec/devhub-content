@@ -9,6 +9,7 @@ Cloud
 Containers
 Data Visualization
 Full-Text Search
+HapiJS
 GatsbyJS
 GraphQL
 IoT

@@ -1,0 +1,625 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to build an API with HapiJS and MongoDB. 
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: Build a RESTful API with HapiJS and MongoDB
+   :image: /images/social/twitter/twitter-build.png
+   :image-alt: Build a RESTful API with HapiJS and MongoDB
+
+   Learn how to build an API with HapiJS and MongoDB.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
+   :title: Build a RESTful API with HapiJS and MongoDB
+   :image: /images/social/open-graph/og-build.png
+   :type: article
+
+   Learn how to build an API with HapiJS and MongoDB.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. atf-image:: /images/atf-images/illustrations/build.png
+
+.. pubdate:: 2020-04-14
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * HapiJS
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===========================================
+Build a RESTful API with HapiJS and MongoDB
+===========================================
+
+.. introduction::
+
+   While `JAMStack <https://jamstack.org/>`__, `static site generators <https://scotch.io/tutorials/top-10-static-site-generators-in-2020>`__, and serverless functions continue to be all the rage in 2020, traditional frameworks like `Express.js <https://expressjs.com/>`__ and `Hapi.js <https://hapi.dev/>`__ remain the go-to solution for many developers. These frameworks are battle-tested, reliable, and scalable, so while they may not be the hottest tech around, you can count on them to get the job done.
+
+   In this post, we're going to build a web application with Hapi.js and MongoDB. If you would like to follow along with this tutorial, you can get the code from this `GitHub repo <https://github.com/kukicado/hapijs-mongodb>`__. Also, be sure to sign up for a `free MongoDB Atlas account <https://www.mongodb.com/atlas>`__ to make sure you can implement all of the code in this tutorial.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial you'll need:
+
+   * `Node.js <https://nodejs.org/en/>`__
+   * `npm <https://www.npmjs.com/>`__
+   * `MongoDB <https://www.mongodb.com/cloud/atlas>`__
+
+   You can download Node.js `here <https://nodejs.org/en/>`__, and it will come with the latest version of npm. For MongoDB, use `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ for free. While you can use a local MongoDB install, you will not be able to implement some of the functionality that relies on MongoDB Atlas Search, so I encourage you to give Atlas a try. All other required items will be covered in the article. 
+
+.. content::
+
+   What is Hapi.js
+   ---------------
+
+   `Hapi.js <https://hapi.dev/>`__ or simply Hapi is a `Node.js <https://nodejs.org/>`__ framework for "building powerful, scalable applications, with minimal overhead and full out-of-the-box functionality". Originally developed for Walmart's e-commerce platform, the framework has been adopted by many enterprises. In my personal experience, I've worked with numerous companies who heavily relied on Hapi.js for their most critical infrastructure ranging from RESTful APIs to traditional web applications.
+   
+   .. image:: /images/hapijs/hapijs.png
+        :alt: HapiJS Homepage
+
+   For this tutorial, I'll assume that you are already familiar with JavaScript and Node.js. If not, I would suggest checking out the `Nodejs.dev <https://nodejs.dev/>`__ website which offers an excellent introduction to Node.js and will get you up and running in no time.
+
+   What We're Building: RESTful Movie Database
+   -------------------------------------------
+
+   The app that we're going to build today is going to expose a series of RESTful endpoints for working with a movies collection. The dataset we'll be relying on can be accessed by loading sample datasets into your MongoDB Atlas cluster. In your MongoDB dashboard, navigate to the **Clusters** tab. Click on the ellipses (...) button on the cluster you wish to use and select the **Load Sample Dataset** option. Within a few minutes, you'll have a series of new databases created and the one we'll work with is called ``sample_mflix``.
+
+   .. image:: /images/hapijs/hapijs-movies.png
+        :alt: Movies Collection
+
+   We will not build a UI as part of this tutorial, instead, we'll focus on getting the most out of our Hapi.js backend.
+
+   Setting up a Hapi.js Application
+   --------------------------------
+
+   Like with any Node.js application, we'll start off our project by installing some packages from the node package manager or npm. Navigate to a directory where you would like to store your application and execute the following commands:
+
+   .. code-block:: bash
+
+      npm init
+
+      npm install @hapi/hapi --save
+
+   Executing ``npm init`` will create a ``package.json`` file where we can store our dependencies. When you run this command you'll be asked a series of questions that will determine how the file gets populated. It's ok to leave all the defaults as is. The ``npm install @hapi/hapi --save`` command will pull down the latest version of the Hapi.js framework and save a reference to this version in the newly created ``package.json`` file. When you've completed this step, create an ``index.js`` file in the root directory and open it up.
+
+   Much like Express, Hapi.js is not a very prescriptive framework. What I mean by this is that we as the developer have the total flexibility to decide how we want our directory structure to look. We could have our entire application in a single file, or break it up into hundreds of components, Hapi.js does not care. To make sure our install was successful, let's write a simple app to display a message in our browser. The code will look like this:
+
+   .. code-block:: javascript
+
+      const Hapi = require('@hapi/hapi');
+      
+      const server = Hapi.server({
+          port: 3000,
+          host: 'localhost'
+      });
+  
+      server.route({
+          method: 'GET',
+          path: '/',
+          handler: (req, h) => {
+  
+              return 'Hello from HapiJS!';
+          }
+      });
+  
+      server.start();
+      console.log('Server running on %s', server.info.uri);
+
+   Let's go through the code above to understand what is going on here. At the start of our program, we are requiring the hapi package which imports all of the Hapi.js API's and makes them available in our app. We then use the ``Hapi.server`` method to create an instance of a Hapi server and pass in our parameters. Now that we have a server, we can add routes to it, and that's what we do in the subsequent section. We are defining a single route for our homepage, saying that this route can only be accessed via a **GET** request, and the handler function is just going to return the message **"Hello from HapiJS!"**. Finally, we start the Hapi.js server and display a message to the console that tells us the server is running. To start the server, execute the following command in your terminal window: 
+
+   .. code-block:: bash
+
+      node index.js
+
+   If we navigate to ``localhost:3000`` in our web browser of choice, our result will look as follows:
+
+   .. image:: /images/hapijs/hello-from-hapijs.png
+        :alt: HapiJS Hello World
+
+   If you see the message above in your browser, then you are ready to proceed to the next section. If you run into any issues, I would first ensure that you have the latest version of Node.js installed and that you have a ``@hapi/hapi`` folder inside of your ``node_modules`` directory.
+
+   Building a RESTful API with Hapi.js
+   -----------------------------------
+
+   Now that we have the basics down, let's go ahead and create the actual routes for our API. The API routes that we'll need to create are as follows:
+
+   * Get all movies
+   * Get a single movie
+   * Insert a movie
+   * Update a movie
+   * Delete a movie
+   * Search for a movie
+
+   For the most part, we just have traditional CRUD operations that you are likely familiar with. But, our final route is a bit more advanced. This route is going to implement search functionality and allow us to highlight some of the more advanced features of both Hapi.js and MongoDB. Let's update our ``index.js`` file with the routes we need.
+
+
+   .. code-block:: javascript
+
+      const Hapi = require('@hapi/hapi');
+      
+      const server = Hapi.server({
+          port: 3000,
+          host: 'localhost'
+      });
+
+      // Get all movies
+      server.route({
+          method: 'GET',
+          path: '/movies',
+          handler: (req, h) => {
+  
+              return 'List all the movies';
+          }
+      });
+      
+      // Add a new movie to the database
+      server.route({
+          method: 'POST',
+          path: '/movies',
+          handler: (req, h) => {
+  
+              return 'Add new movie';
+          }
+      });
+      
+      // Get a single movie
+      server.route({
+          method: 'GET',
+          path: '/movies/{id}',
+          handler: (req, h) => {
+  
+              return 'Return a single movie';
+          }
+      });
+      
+      // Update the details of a movie
+      server.route({
+          method: 'PUT',
+          path: '/movies/{id}',
+          handler: (req, h) => {
+  
+              return 'Update a single movie';
+          }
+      });
+      
+      // Delete a movie from the database
+      server.route({
+          method: 'DELETE',
+          path: '/movies/{id}',
+          handler: (req, h) => {
+  
+              return 'Delete a single movie';
+          }
+      });
+      
+      // Search for a movie
+      server.route({
+          method: 'GET',
+          path: '/search',
+          handler: (req, h) => {
+  
+              return 'Return search results for the specified term';
+          }
+      });
+      
+      server.start();
+      console.log('Server running on %s', server.info.uri);
+
+   We have created our routes, but currently, all they do is return a string saying what the route is meant to do. That's no good. Next, we'll connect our Hapi.js app to our MongoDB database so that we can return actual data. We'll use the `MongoDB Node.js Driver <https://mongodb.github.io/node-mongodb-native/>`__ to accomplish this.
+
+   .. blockquote::
+     
+      If you are interested in learning more about the MongoDB Node.js Driver through in-depth training, check out the `MongoDB for JavaScript Developers <https://university.mongodb.com/courses/M220JS/about>`__ course on MongoDB University. It's free and will teach you all about reading and writing data with the driver, using the aggregation framework, and much more.
+
+   Connecting Our Hapi.js App to MongoDB
+   -------------------------------------
+
+   Connecting a Hapi.js backend to a MongoDB database can be done in multiple ways. We could use the traditional method of just bringing in the `MongoDB Node.js Driver <https://mongodb.github.io/node-mongodb-native/>`__ via npm, we could use an ODM library like Mongoose, but I believe there is a better way to do it. The way we're going to connect to our MongoDB database in our Atlas cluster is using a Hapi.js plugin.
+
+   Hapi.js has many excellent plugins for all your development needs. Whether that need is authentication, logging, localization, or in our case data access, the `Hapi.js plugins <https://hapi.dev/plugins/>`__ page provides many options. The plugin we're going to use is called ``hapi-mongodb``. Let's install this package by running:
+
+   .. code-block:: bash
+
+      npm install hapi-mongodb --save   
+
+   With the package installed, let's go back to our ``index.js`` file and configure the plugin. The process for this relies on the ``register()`` method provided in the Hapi API. We'll register our plugin like so:
+
+   .. code-block:: javascript
+
+       server.register({
+           plugin: require('hapi-mongodb'),
+           options: {
+             uri: 'mongodb+srv://{YOUR-USERNAME}:{YOUR-PASSWORD}@main.zxsxp.mongodb.net/sample_mflix?retryWrites=true&w=majority',
+             settings : {
+               useUnifiedTopology: true
+             },
+             decorate: true
+           }
+       });
+
+   We would want to register this plugin before our routes. For the options object, we are passing our MongoDB Atlas service URI as well as the name of our database, which in this case will be ``sample_mflix``. If you're working with a different database, make sure to update it accordingly. We'll also want to make one more adjustment to our entire code base before moving on. If we try to run our Hapi.js application now, we'll get an error saying that we cannot start our server before plugins are finished registering. The register method will take some time to run and we'll have to wait on it. Rather than deal with this in a synchronous fashion, we'll wrap an async function around our server instantiation. This will make our code much cleaner and easier to reason about. The final result will look like this:
+
+   .. code-block:: javascript
+
+      const Hapi = require('@hapi/hapi');
+            
+      const init = async () => {
+      
+          const server = Hapi.server({
+              port: 3000,
+              host: 'localhost'
+          });
+          
+          await server.register({
+              plugin: require('hapi-mongodb'),
+              options: {
+                url: 'mongodb+srv://{YOUR-USERNAME}:{YOUR-PASSWORD}@main.zxsxp.mongodb.net/sample_mflix?retryWrites=true&w=majority',
+                settings: {
+                    useUnifiedTopology: true
+                }
+              },
+              decorate: true
+          });
+          
+          // Get all movies
+          server.route({
+              method: 'GET',
+              path: '/movies',
+              handler: (req, h) => {
+          
+                  return 'List all the movies';
+              }
+          });
+          
+          // Add a new movie to the database
+          server.route({
+              method: 'POST',
+              path: '/movies',
+              handler: (req, h) => {
+          
+                  return 'Add new movie';
+              }
+          });
+          
+          // Get a single movie
+          server.route({
+              method: 'GET',
+              path: '/movies/{id}',
+              handler: (req, h) => {
+          
+                  return 'Return a single movie';
+              }
+          });
+          
+          // Update the details of a movie
+          server.route({
+              method: 'PUT',
+              path: '/movies/{id}',
+              handler: (req, h) => {
+          
+                  return 'Update a single movie';
+              }
+          });
+          
+          // Delete a movie from the database
+          server.route({
+              method: 'DELETE',
+              path: '/movies/{id}',
+              handler: (req, h) => {
+          
+                  return 'Delete a single movie';
+              }
+          });
+          
+          // Search for a movie
+          server.route({
+              method: 'GET',
+              path: '/search',
+              handler: (req, h) => {
+          
+                  return 'Return search results for the specified term';
+              }
+          });
+          
+          await server.start();
+          console.log('Server running on %s', server.info.uri);
+      }
+      
+      init();  
+
+   Now we should be able to restart our server and it will register the plugin properly and work as intended. To ensure that our connection to the database does work, let's run a sample query to return just a single movie when we hit the ``/movies`` route. We'll do this with a ``findOne()`` operation. The ``hapi-mongodb`` plugin is just a wrapper for the official MongoDB Node.js driver so all the methods work exactly the same. Check out the `official docs <https://mongodb.github.io/node-mongodb-native/3.5/tutorials/main/>`__ for details on all available methods. Let's use the ``findOne()`` method to return a single movie from the database.
+
+   .. code-block:: javascript
+
+      // Get all movies
+      server.route({
+          method: 'GET',
+          path: '/movies',
+          handler: async (req, h) => {
+            
+            const movie = await req.mongo.db.collection('movies').findOne({})
+      
+            return movie;
+          }
+      });
+
+   We'll rely on the `async/await pattern <https://javascript.info/async-await>`__ in our handler functions as well to keep our code clean and concise. Notice how our MongoDB database is now accessible through the ``req`` or request object. We didn't have to pass in an instance of our database, the plugin handled all of that for us, all we have to do was decide what our call to the database was going to be. If we restart our server and navigate to ``localhost:3000/movies`` in our browser we should see the following response:
+
+   .. image:: /images/hapijs/hapijs-find-one-movie.png
+        :alt: JSON Data for a Single Movie
+
+   If you do get the JSON response, it means your connection to the database is good and your plugin has been correctly registered with the Hapi.js application. If you see any sort of error, look at the above instructions carefully. Next, we'll implement our actual database calls to our routes.
+
+   Implementing the RESTful Routes
+   -------------------------------
+
+   We have six API routes to implement. We'll tackle each one and introduce new concepts for both Hapi.js and MongoDB. We'll start with the route that gets us all the movies.
+
+   Get All Movies
+   ~~~~~~~~~~~~~~
+
+   This route will retrieve a list of movies. Since our dataset contains thousands of movies, we would not want to return all of them at once as this would likely cause the user's browser to crash, so we'll limit the result set to 20 items at a time. We'll allow the user to pass an optional query parameter that will give them the next 20 results in the set. My implementation is below.
+
+   .. code-block:: javascript
+
+      // Get all movies
+      server.route({
+          method: 'GET',
+          path: '/movies',
+          handler: async (req, h) => {
+
+            const offset = Number(req.query.offset) || 0;
+
+            const movies = await req.mongo.db.collection('movies').find({}).sort({metacritic:-1}).skip(offset).limit(20).toArray();
+      
+            return movies;
+          }
+      });
+
+   In our implementation, the first thing we do is sort our collection to ensure we get a consistent order of documents. In our case, we're sorting by the ``metacritic`` score in descending order, meaning we'll get the highest rated movies first. Next, we check to see if there is an ``offset`` query parameter. If there is one, we'll take its value and convert it into an integer, otherwise, we'll set the offset value to 0. Next, when we make a call to our MongoDB database, we are going to use that ``offset`` value in the ``skip()`` method which will tell MongoDB how many documents to skip. Finally, we'll use the ``limit()`` method to limit our results to 20 records and the ``toArray()`` method to turn the cursor we get back into an object.
+
+   Try it out. Restart your Hapi.js server and navigate to ``localhost:3000/movies``. Try passing an offset query parameter to see how the results change. For example try ``localhost:3000/movies?offset=500``. Note that if you pass a non-integer value, you'll likely get an error. We aren't doing any sort of error handling in this tutorial but in a real-world application, you should handle all errors accordingly. Next, let's implement the method to return a single movie.
+
+   Get Single Movie
+   ~~~~~~~~~~~~~~~~
+
+   This route will return the data on just a single movie. For this method, we'll also play around with `projection <https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/>`__, which will allow us to pick and choose which fields we get back from MongoDB. Here is my implementation:
+
+   .. code-block:: javascript
+
+      // Get a single movie
+      server.route({
+          method: 'GET',
+          path: '/movies/{id}',
+          handler: async (req, h) => {
+              const id = req.params.id
+              const ObjectID = req.mongo.ObjectID;
+      
+              const movie = await req.mongo.db.collection('movies').findOne({_id: new ObjectID(id)},{projection:{title:1,plot:1,cast:1,year:1, released:1}});
+              
+              return movie;
+          }
+      });
+
+   In this implementation, we're using the ``req.params`` object to get the dynamic value from our route. We're also making use of the ``req.mongo.ObjectID`` method which will allow us to transform the string id into an ObjectID that we use as our unique identifier in the MongoDB database. We'll have to convert our string to an ObjectID otherwise our ``findOne()`` method would not work as our ``_id`` field is not stored as a string. We're also using a projection to return only the ``title``, ``plot``, ``cast``, ``year``, and ``released`` fields. The result is below.
+
+   .. image:: /images/hapijs/mongodb-findone-projection.png
+        :alt: MongoDB Driver Projection
+
+   A quick tip on projection. In the above example, we used the ``{ fieldName: 1 }`` format, which told MongoDB to return only this specific field. If instead we only wanted to omit a few fields, we could have used the inverse ``{ fieldName: 0}`` format instead. This would send us all fields, except the ones named and given a value of zero in the projection option. Note that you can't mix and match the 1 and 0 formats, you have to pick one. The only exception is the ``_id`` field, where if you don't want it you can pass ``{_id:0}``.
+
+   Add A Movie
+   ~~~~~~~~~~~
+
+   The next route we'll implement will be our insert operation and will allow us to add a document to our collection. The implementation looks like this:
+
+   .. code-block:: javascript
+
+       // Add a new movie to the database
+       server.route({
+           method: 'POST',
+           path: '/movies',
+           handler: async (req, h) => {
+   
+               const payload = req.payload
+               
+               const status = await req.mongo.db.collection('movies').insertOne(payload);
+   
+               return status;
+           }
+       });
+
+    The payload that we are going to submit to this endpoint will look like this: 
+
+    .. code-block:: auto
+
+       {
+        	"title": "Avengers: Endgame",
+        	"plot": "The avengers save the day",
+        	"cast" : ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson", "Samuel L. Jackson"],
+        	"year": 2019
+       }  
+
+   In our implementation we're again using the ``req`` object but this time we're using the ``payload`` sub-object to get the data that is sent to the endpoint. To test that our endpoint works, we'll use `Postman <https://www.postman.com/>`__ to send the request. Our response will give us a lot of info on what happened with the operation so for educational purposes we'll just return the entire document. In a real-world application, you would just send back a ``{message: "ok"}`` or similar statement. If we look at the response we'll find a field titled ``insertedCount: 1`` and this will tell us that our document was successfully inserted.
+
+   .. image:: /images/hapijs/postman-example.png
+        :alt: Postman Request
+
+   In this route, we added the functionality to insert a brand new document, in the next route, we'll update an existing one.
+
+   Update A Movie
+   ~~~~~~~~~~~~~~
+
+   Updating a movie works much the same way adding a new movie does. I do want to introduce a new concept in Hapi.js here though and that is the concept of validation. Hapi.js can help us easily validate data before our handler function is called. To do this, we'll import a package that is maintained by the Hapi.js team called `Joi <https://github.com/hapijs/joi>`__. To work with Joi, we'll first need to install the package and include it in our ``index.js`` file. 
+
+   .. code-block:: bash
+
+      npm install @hapi/joi --save
+      npm install joi-objectid --save
+   
+   Next, let's take a look at our implementation of the update route and then I'll explain how it all ties together.
+
+   .. code-block:: javascript
+
+      // Add this below the @hapi/hapi require statement
+      const Joi = require('@hapi/joi');
+      Joi.objectId = require('joi-objectid')(Joi)
+
+      // Update the details of a movie
+      server.route({
+          method: 'PUT',
+          path: '/movies/{id}',
+          options: {
+              validate: {
+                  params: Joi.object({
+                      id: Joi.objectId()
+                  })
+              }
+          },
+          handler: async (req, h) => {
+              const id = req.params.id
+              const ObjectID = req.mongo.ObjectID;
+      
+              const payload = req.payload
+      
+              const status = await req.mongo.db.collection('movies').updateOne({_id: ObjectID(id)}, {$set: payload});
+              
+              return status;
+      
+          }
+      });
+
+   With this route we are really starting to show the strength of Hapi.js. In this implementation, we added an ``options`` object and passed in a ``validate`` object. From here, we validated that the ``id`` parameter matches what we'd expect an ObjectID string to look like. If it did not, our handler function would never be called, instead, the request would short-circuit and we'd get an appropriate error message. Joi can be used to validate not only the defined parameters but also query parameters, payload, and even headers. We barely scratched the surface.
+
+   .. image:: /images/hapijs/postman-put-example.png
+        :alt: Postman Put Request 
+
+   The rest of the implementation had us executing an ``updateOne()`` method which updated an existing object with the new data. Again, we're returning the entire status object here for educational purposes, but in a real-world application, you wouldn't want to send that raw data.
+
+   Delete A Movie
+   ~~~~~~~~~~~~~~
+
+   Deleting a movie will simply remove the record from our collection. There isn't a whole lot of new functionality to showcase here, so let's get right into the implementation.
+
+   .. code-block:: javascript
+
+      // Update the details of a movie
+      server.route({
+          method: 'PUT',
+          path: '/movies/{id}',
+          options: {
+              validate: {
+                  params: Joi.object({
+                      id: Joi.objectId()
+                  })
+              }
+          },
+          handler: async (req, h) => {
+              const id = req.params.id
+              const ObjectID = req.mongo.ObjectID;
+
+              const payload = req.payload
+
+              const status = await req.mongo.db.collection('movies').deleteOne({_id: ObjectID(id)});
+
+              return status;
+      
+          }
+      });   
+   
+   In our delete route implementation, we are going to continue to use the Joi library to validate that the parameter to delete is an actual ObjectId. To remove a document from our collection, we'll use the ``deleteOne()`` method and pass in the ObjectId to delete.
+
+   .. image:: /images/hapijs/postman-delete-example.png
+        :alt: Postman Delete Request
+
+   Implementing this route concludes our discussion on the basic CRUD operations. To close out this tutorial, we'll implement one final route that will allow us to search our movie database. 
+
+   Search For A Movie
+   ~~~~~~~~~~~~~~~~~~
+
+   To conclude our routes, we'll add the ability for a user to search for a movie. To do this we'll rely on a MongoDB Atlas feature called `Atlas Search <https://www.mongodb.com/atlas/search>`__. Before we can implement this functionality on our backend, we'll first need to enable Atlas Search and create an index within our MongoDB Atlas dashboard. Navigate to your dashboard, and locate the ``sample_mflix`` database. Select the ``movies`` collection and click on the **Search (Beta)** tab.
+
+   .. image:: /images/hapijs/atlas-search.png
+        :alt: Atlas Search
+
+   Click the **Create Search Index** button, and for this tutorial, we can leave the field mappings to their default dynamic state, so just hit the **Create Index** button. While our index is built, we can go ahead and implement our backend functionality. The implementation will look like this: 
+
+   .. code-block:: javascript
+
+      // Search for a movie
+      server.route({
+          method: 'GET',
+          path: '/search',
+          handler: async(req, h) => {
+              const query = req.query.term;
+      
+              const results = await req.mongo.db.collection("movies").aggregate([
+                  {
+                      $searchBeta: {
+                          "search": {
+                              "query": query,
+                              "path":"title"
+                          }
+                      }
+                  },
+                  {
+                      $project : {title:1, plot: 1}
+                  },
+                  {  
+                      $limit: 10
+                  }
+                  ]).toArray()
+      
+              return results;
+          }
+      });
+
+   Our ``search`` route has us using the extremely powerful MongoDB aggregation pipeline. In the first stage of the pipeline, we are using the ``$searchBeta`` attribute and passing along our search term. In the next stage of the pipeline, we run a ``$project`` to only return specific fields, in our case the ``title`` and ``plot`` of the movie. Finally, we limit our search results to ten items and convert the cursor to an array and send it to the browser. Let's try to run a search query against our movies collection. Try search for ``localhost:3000/search?term=Star+Wars``. Your results will look like this:
+
+   .. image:: /images/hapijs/atlas-search-results.png
+        :alt: Atlas Search Results
+
+   MongoDB Atlas Search is very powerful and provides all the tools to add superb search functionality for your data without relying on external APIs. Check out the documentation to learn more about how to best leverage it in your applications.  
+
+   Putting It All Together
+   -----------------------
+
+   In this tutorial, I showed you how to create a RESTful API with Hapi.js and MongoDB. We scratched the surface of the capabilities of both, but I hope it was a good introduction and gives you an idea of what's possible. Hapi.js has an extensive plug-in system that will allow you to bring almost any functionality to your backend with just a few lines of code. Integrating MongoDB into Hapi.js using the ``hapi-mongo`` plugin allows you to focus on building features and functionality rather than figuring out best practices and how to glue everything together. Speaking of glue, Hapi.js has a package called `glue <https://github.com/hapijs/glue>`__ that makes it easy to break your server up into multiple components, we didn't need to do that in our tutorial, but it's a great next step for you to explore.
+   
+   .. blockquote::
+
+      If you'd like to get the code for this tutorial, you can find it `here <https://github.com/kukicado/hapijs-mongodb>`__. If you want to give Atlas Search a try, `sign up for MongoDB Atlas for free <https://www.mongodb.com/atlas>`__ and use code **ADO200** to get a $200 credit towards your account.
+
+   Happy, er.. Hapi coding!
