@@ -161,13 +161,13 @@ How to access the John Hopkins University Covid-19 Data
    .. image:: /images/compass-covid19-screencast.gif
       :alt: Screencast showing some of the features of MongoDB Compass for exploring Covid-19 Data
 
-   Of course, because we store the data in MongoDB, you can also access it via the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__ or using `any of our drivers <https://docs.mongodb.com/drivers/>`__. We've included examples below for `Java <https://docs.mongodb.com/drivers/java/>`__, `Node.js <https://docs.mongodb.com/drivers/node/>`__, and `Python <https://docs.mongodb.com/drivers/python/>`__ to get you started. Of course, you only have a read only access.
+   Because we store the data in MongoDB, you can also access it via the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__ or using `any of our drivers <https://docs.mongodb.com/drivers/>`__. We've limited access to these collections to 'read-only'. You can find the connection strings for the shell and Compass below, as well as driver examples for for `Java <https://docs.mongodb.com/drivers/java/>`__, `Node.js <https://docs.mongodb.com/drivers/node/>`__, and `Python <https://docs.mongodb.com/drivers/python/>`__ to get you started.
 
    .. code-block:: shell
 
       mongo "mongodb+srv://covid-19.hip2i.mongodb.net/test"  --username readonly --password readonly
 
-   For MongoDB Compass or your driver, you can use this connexion string.
+   For MongoDB Compass or your driver, you can use this connection string.
 
    .. code-block::
 
@@ -278,17 +278,58 @@ How to access the John Hopkins University Covid-19 Data
       client.connect((err) => {
         const statistics = client.db("covid19").collection("statistics");
 
-        // find the latest 15 cases from France
+        // // Query to get the last 5 entries for France (continent only)
         statistics
           .find({ country: "France" })
-          .sort([["a", 1]])
+          .sort([["date", -1]])
           .limit(15)
           .toArray(function (err, docs) {
             if (err) {
               console.error(err);
             }
             console.log(docs);
-            client.close();
+          });
+
+        //Query to get the last day data (limited to 15 docs here).
+        statistics
+          .find({
+            date: {
+              $lt: new Date(),
+              $gt: new Date(new Date().setDate(new Date().getDate() - 2)),
+            },
+          })
+          .limit(15)
+          .toArray((err, docs) => {
+            if (err) {
+              console.error(err);
+            }
+            console.log(docs);
+          });
+
+        // Query to get the last day data for all the countries within 500km of Paris.
+        const lon = 2.341908;
+        const lat = 48.860199;
+        const earthRadius = 6371; // km
+        const searchRadius = 500; // km
+
+        statistics
+          .find({
+            loc: {
+              $geoWithin: {
+                $centerSphere: [[lon, lat], searchRadius / earthRadius],
+              },
+            },
+            date: {
+              $lt: new Date(),
+              $gt: new Date(new Date().setDate(new Date().getDate() - 2)),
+            },
+          })
+          .limit(5)
+          .toArray((err, docs) => {
+            if (err) {
+              console.error(err);
+            }
+            console.log(docs);
           });
       });
 
@@ -384,6 +425,34 @@ How to access the John Hopkins University Covid-19 Data
 
       if __name__ == "__main__":
           main()
+
+   Accessing the Data with Business Intelligence Tools
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   You can get lots of value from the dataset without any programming at all.
+   We've enabled the `Atlas BI Connector <https://docs.atlas.mongodb.com/bi-connection/>`__, which exposes an SQL interface to MongoDB's document structure.
+   This means you can use data analysis and dashboarding tools like `Tableau <https://www.tableau.com/support/releases/desktop/10.3>`__,
+   `Qlik Sense <https://www.qlik.com/us/products/qlik-sense>`__,
+   and even `MySQL Workbench <https://www.mysql.com/products/workbench/>`__ to analyze, visualise and extract understanding from the data.
+
+   Here's an example of a visualisation produced in a few clicks with Tableau:
+
+   .. image:: /images/map-tableau.png
+      :alt: Covid-19 World map in Tableau.
+
+   Tableau is a powerful data visualisation and dashboard tool, and can be connected to our COVID-19 data in a few steps.
+   We've written a `short tutorial <https://github.com/mongodb-developer/open-data-covid-19/blob/master/tableau/README.md>`__ to get you up and running.
+
+   Accessing the Data with any SQL tool
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   As mentioned above, the `Atlas BI Connector <https://docs.atlas.mongodb.com/bi-connection/>`__ is activated so you can connect any SQL tool to this cluster using the following connection information:
+
+   - Server: covid-19-biconnector.hip2i.mongodb.net,
+   - Port: 27015,
+   - Database: covid19 or covid19jhu (depends which version of the dataset you want to see),
+   - Username: readonly or readonly?source=admin,
+   - Password: readonly.
 
 .. summary::
 
