@@ -105,8 +105,8 @@ How to access the John Hopkins University Covid-19 Data
 
    We produced two different databases in our cluster.
 
-   - `covid19jhu` contains the raw CSV files imported with the `mongoimport` tool,
-   - `covid19` contains the same dataset but with a clean MongoDB schema design with all the good practises we are recommending.
+   - ``covid19jhu`` contains the raw CSV files imported with the ``mongoimport`` tool,
+   - ``covid19`` contains the same dataset but with a clean MongoDB schema design with all the good practises we are recommending.
 
    Here is an example of the documents in the `covid19` database:
 
@@ -161,7 +161,7 @@ How to access the John Hopkins University Covid-19 Data
          "deaths" : 1
       }
 
-   The documents above were obtained by joining together the file `UID_ISO_FIPS_LookUp_Table.csv` and the CSV files time series you can find in `this folder <https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series>`__.
+   The documents above were obtained by joining together the file ``UID_ISO_FIPS_LookUp_Table.csv`` and the CSV files time series you can find in `this folder <https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series>`__.
 
    If you would prefer to host the data yourself, the scripts required to download and transform the JHU data are open-source. You can `view them and instructions for how to use them on our GitHub repository <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
    
@@ -220,7 +220,7 @@ How to access the John Hopkins University Covid-19 Data
 
    Here is the main class of our Java example. Of course you need the three POJOs from the `Java Github folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/java/mongodb-driver/src/main/java/com/mongodb/coronavirus>`__ to make this work.
 
-   .. block-code:: java
+   .. code-block:: java
 
       package com.mongodb.coronavirus;
 
@@ -292,7 +292,7 @@ How to access the John Hopkins University Covid-19 Data
 
    Check out the instructions in the `Node.js folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/nodejs/mongodb-driver>`__.
 
-   .. block-code:: javascript
+   .. code-block:: javascript
 
       const MongoClient = require("mongodb").MongoClient;
 
@@ -331,7 +331,7 @@ How to access the John Hopkins University Covid-19 Data
 
    See all the instructions to get started in the `Python folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/python/mongodb-driver>`__.
 
-   .. block-code:: python
+   .. code-block:: python
 
       #!python3
 
