@@ -64,7 +64,7 @@ Building with Patterns: The Attribute Pattern
    Welcome back to the Building with Patterns series. Last time we looked
    at the :doc:`Polymorphic Pattern </how-to/polymorphic-pattern>`
    which covers situations when all documents in a collection are of
-   similar, but not identical, structure. In this post, we’ll take a look
+   similar, but not identical, structure. In this post, we'll take a look
    at the Attribute Pattern.
 
 
@@ -78,7 +78,7 @@ Building with Patterns: The Attribute Pattern
       documents, *or*
    -  Both of the above conditions are met within the documents.
 
-   For performance reasons, to optimize our search we’d likely need many
+   For performance reasons, to optimize our search we'd likely need many
    indexes to account for all of the subsets. Creating all of these indexes
    could reduce performance. The Attribute Pattern provides a good solution
    for these cases.
@@ -88,9 +88,9 @@ Building with Patterns: The Attribute Pattern
    The Attribute Pattern
    ---------------------
 
-   Let’s think about a collection of movies. The documents will likely have
+   Let's think about a collection of movies. The documents will likely have
    similar fields involved across all of the documents: title, director,
-   producer, cast, etc. Let’s say we want to search on the release date. A
+   producer, cast, etc. Let's say we want to search on the release date. A
    challenge that we face when doing so, is *which* release date? Movies
    are often released on different dates in different countries.
 
@@ -108,7 +108,7 @@ Building with Patterns: The Attribute Pattern
       }
 
    A search for a release date will require looking across many fields at
-   once. In order to quickly do searches for release dates, we’d need
+   once. In order to quickly do searches for release dates, we'd need
    several indexes on our movies collection:
 
    .. code:: javascript

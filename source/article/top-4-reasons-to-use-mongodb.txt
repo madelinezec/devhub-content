@@ -60,25 +60,25 @@ The Top 4 Reasons Why You Should Use MongoDB
    Welcome (or welcome back!) to the SQL to MongoDB series. In the first
    post in this series, I :doc:`mapped terms and concepts from SQL to MongoDB </article/map-terms-concepts-sql-mongodb>`.
 
-   I also introduced you to Ron. Let’s take a moment and return to Ron. Ron
+   I also introduced you to Ron. Let's take a moment and return to Ron. Ron
    is pretty set in his ways. For example, he loves his typewriter. It
-   doesn’t matter that computers are a bajillion times more powerful than
-   typewriters. Until someone convinces him otherwise, he’s sticking with
+   doesn't matter that computers are a bajillion times more powerful than
+   typewriters. Until someone convinces him otherwise, he's sticking with
    his typewriter.
 
    .. image:: /images/article/sql-to-mdb/typewriter.gif
       :alt: Ron sits at his typewriter and says, "I'm gonna type every word I know."
       :align: center
 
-   Maybe you don’t have a love for typewriters. But perhaps you have a love
-   for SQL databases. You’ve been using them for years, you’ve learned how
+   Maybe you don't have a love for typewriters. But perhaps you have a love
+   for SQL databases. You've been using them for years, you've learned how
    to make them work well enough for you, and you know that learning
    MongoDB will require you to change your mindset. Is it really worth the
    effort?
 
    Yes!
 
-   In this post, we’ll examine the top four reasons why you should use
+   In this post, we'll examine the top four reasons why you should use
    MongoDB:
 
    -  :ref:`sql-mdb-2-scale-cheaper`
@@ -105,7 +105,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    You can scale cheaper with MongoDB. Why?
 
-   Let’s begin by talking about scaling SQL databases. Typically, SQL
+   Let's begin by talking about scaling SQL databases. Typically, SQL
    databases scale vertically–when a database becomes too big for its
    server, it is migrated to a larger server.
 
@@ -131,7 +131,7 @@ The Top 4 Reasons Why You Should Use MongoDB
    your database exceeds the capacity of its current server, you can begin
    sharding and split it over two servers. As your database continues to
    grow, you can continue to add more servers. The advantage is that these
-   new servers don’t need to be big, expensive machines–they can be
+   new servers don't need to be big, expensive machines–they can be
    cheaper, commodity hardware. Plus, no downtime is required.
 
    .. figure:: /images/article/sql-to-mdb/horizontalscaling.gif
@@ -145,12 +145,12 @@ The Top 4 Reasons Why You Should Use MongoDB
    Query Faster
    ------------
 
-   Your queries will typically be faster with MongoDB. Let’s examine why.
+   Your queries will typically be faster with MongoDB. Let's examine why.
 
    :ref:`Even in our simple example in the previous post <sql-mdb-1-example-docs>`
-   where we modeled Leslie’s data in SQL, we
+   where we modeled Leslie's data in SQL, we
    saw that her information was spread across three tables. Whenever we
-   want to query for Leslie’s information, we’ll need to join three tables
+   want to query for Leslie's information, we'll need to join three tables
    together.
 
    In these three small tables, the join will be very fast. However, as the
@@ -165,11 +165,11 @@ The Top 4 Reasons Why You Should Use MongoDB
    accessed together should be stored together*. When you follow this rule
    of thumb, most queries will not require you to join any data together.
 
-   Continuing with our earlier example, if we want to retrieve Leslie’s
+   Continuing with our earlier example, if we want to retrieve Leslie's
    information from MongoDB, we can simply query for a single document in
    the ``Users`` collection. As a result, our query will be very fast.
 
-   As our documents and collections grow larger, we don’t have to worry
+   As our documents and collections grow larger, we don't have to worry
    about our queries slowing down as long as we are using indexes and
    continue following our rule of thumb: *data that is accessed together
    should be stored together*.
@@ -188,10 +188,10 @@ The Top 4 Reasons Why You Should Use MongoDB
    down to the database.
 
    In the previous post in this series, we discovered—after implementing our
-   application—that we needed to :ref:`store information about Lauren’s school <sql-mdb-1-store-laurens-info>`.
-   Let’s take a look at this example a little more closely.
+   application—that we needed to :ref:`store information about Lauren's school <sql-mdb-1-store-laurens-info>`.
+   Let's take a look at this example a little more closely.
 
-   To add a new ``school`` column in our SQL database, we’re going to have
+   To add a new ``school`` column in our SQL database, we're going to have
    to alter the ``Users`` table. Executing the ``Alter Table`` command
    could take a couple of hours depending on how much data is in the table.
    The performance of our application could be decreased while the table is
@@ -201,8 +201,8 @@ The Top 4 Reasons Why You Should Use MongoDB
       :alt: Alter Table command 
       :align: center
 
-   Now let’s examine how we can do something similar in MongoDB. When our
-   requirements change and we need to begin storing the name of a user’s
+   Now let's examine how we can do something similar in MongoDB. When our
+   requirements change and we need to begin storing the name of a user's
    school in a ``User`` document, we can simply begin doing so. We can
    choose if and when to update existing documents in the collection.
 
@@ -225,7 +225,7 @@ The Top 4 Reasons Why You Should Use MongoDB
    --------------
 
    To be honest with you, this advantage is one of the biggest surprises to
-   me. I figured that it didn’t matter what you used as your backend
+   me. I figured that it didn't matter what you used as your backend
    database—the code that interacts with it would be basically the same. I
    was wrong.
 
@@ -237,7 +237,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    MongoDB documents map to data structures in most popular programming
    languages. This sounds like such a simple thing, but it makes a
-   *humongous* difference when you’re writing code.
+   *humongous* difference when you're writing code.
 
    A friend encouraged me to test this out, so I did. I implemented the
    code to retrieve and update user profile information. My code has some
@@ -248,15 +248,15 @@ The Top 4 Reasons Why You Should Use MongoDB
    Below is a comparison of my implementation using
    `MySQL <https://www.mysql.com>`__ and MongoDB.
 
-   I wrote the code in Python, but, don’t worry if you’re not familiar with
-   Python, I’ll walk you through it step by step. The concepts will be
+   I wrote the code in Python, but, don't worry if you're not familiar with
+   Python, I'll walk you through it step by step. The concepts will be
    applicable no matter what your programming language of choice is.
 
    Connect to the Databases
    ~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Let’s begin with the typical top-of-the-file stuff. We’ll import what we
-   need, connect to the database, and declare our variables. I’m going to
+   Let's begin with the typical top-of-the-file stuff. We'll import what we
+   need, connect to the database, and declare our variables. I'm going to
    simplify things by hardcoding the User ID of the user whose profile we
    will be retrieving rather than pulling it dynamically from the frontend
    code.
@@ -299,20 +299,20 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    So far, the code is pretty much the same.
 
-   Get the User’s Profile Information
+   Get the User's Profile Information
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Now that we have our database connections ready, let’s use them to
-   retrieve our user profile information. We’ll store the profile
+   Now that we have our database connections ready, let's use them to
+   retrieve our user profile information. We'll store the profile
    information in a `Python
    Dictionary <https://docs.python.org/3/tutorial/datastructures.html#dictionaries>`__.
    Dictionaries are a common data structure in Python and provide an easy
    way to work with your data.
 
-   Let’s begin by implementing the code for MySQL.
+   Let's begin by implementing the code for MySQL.
 
    Since the user profile information is spread across the ``Users`` table
-   and the ``Hobbies`` table, we’ll need to join them in our query. We can
+   and the ``Hobbies`` table, we'll need to join them in our query. We can
    use `prepared
    statements <https://en.wikipedia.org/wiki/Prepared_statement>`__ to
    ensure our data stays safe.
@@ -336,7 +336,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
    Because we joined the ``Users`` and the ``Hobbies`` tables, we have a
    result for each hobby this user has. To retrieve all of the hobbies, we
-   need to iterate the cursor. We’ll append each hobby to a new ``hobbies``
+   need to iterate the cursor. We'll append each hobby to a new ``hobbies``
    array and then add the ``hobbies`` array to our ``user`` dictionary.
 
    MySQL
@@ -352,14 +352,14 @@ The Top 4 Reasons Why You Should Use MongoDB
         hobbies.append(result["hobby"])
       user["hobbies"] = hobbies
 
-   Now let’s implement that same functionality for MongoDB.
+   Now let's implement that same functionality for MongoDB.
 
    Since we stored all of the user profile information in the ``User``
-   document, we don’t need to do any joins. We can simply retrieve a single
+   document, we don't need to do any joins. We can simply retrieve a single
    document in our collection.
 
    Here is where the big advantage that *MongoDB documents map to data
-   structures in most popular programming languages* comes in. I don’t have
+   structures in most popular programming languages* comes in. I don't have
    to do any work to get my data into an easy-to-work-with
    Python Dictionary. MongoDB gives me all of the results in a Python Dictionary
    automatically.
@@ -370,7 +370,7 @@ The Top 4 Reasons Why You Should Use MongoDB
 
       user = db['Users'].find_one({"_id": userId})
 
-   And that’s it—we’re done. What took us 12 lines for MySQL, we were able
+   And that's it—we're done. What took us 12 lines for MySQL, we were able
    to implement in 1 line for MongoDB.
 
    Our ``user`` dictionaries are now pretty similar in both pieces of code.
@@ -405,18 +405,18 @@ The Top 4 Reasons Why You Should Use MongoDB
          '_id': 1
       }
 
-   Now that we have retrieved the user’s profile information, we’d likely
+   Now that we have retrieved the user's profile information, we'd likely
    send that information up the stack to the frontend UI code.
 
-   Update the User’s Profile Information
+   Update the User's Profile Information
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    When Leslie views her profile information in our application, she may
    discover she needs to update her profile information. The frontend UI
    code would send that updated information in a Python dictionary to the
-   Python files we’ve been writing.
+   Python files we've been writing.
 
-   To simulate Leslie updating her profile information, we’ll manually
+   To simulate Leslie updating her profile information, we'll manually
    update the Python dictionary ourselves for both MySQL and MongoDB.
 
    MySQL:
@@ -441,10 +441,10 @@ The Top 4 Reasons Why You Should Use MongoDB
          "hobbies": ["scrapbooking", "eating waffles", "signing bills"]
          } )
 
-   Now that our ``user`` dictionary is updated, let’s push the updated
+   Now that our ``user`` dictionary is updated, let's push the updated
    information to our databases.
 
-   Let’s begin with MySQL. First, we need to update the information that is
+   Let's begin with MySQL. First, we need to update the information that is
    stored in the ``Users`` table.
 
    MySQL
@@ -456,8 +456,8 @@ The Top 4 Reasons Why You Should Use MongoDB
       mycursor.execute(sql, values)
       mydb.commit()
 
-   Second, we need to update our hobbies. For simplicity, we’ll delete any
-   existing hobbies in the ``Hobbies`` table for this user and then we’ll
+   Second, we need to update our hobbies. For simplicity, we'll delete any
+   existing hobbies in the ``Hobbies`` table for this user and then we'll
    insert the new hobbies into the ``Hobbies`` table.
 
    MySQL
@@ -477,8 +477,8 @@ The Top 4 Reasons Why You Should Use MongoDB
          mycursor.executemany(sql,values)
          mydb.commit()
 
-   Now let’s update the user profile information in MongoDB. Since the
-   user’s profile information is stored in a single document, we only have
+   Now let's update the user profile information in MongoDB. Since the
+   user's profile information is stored in a single document, we only have
    to do a single update. Once again we will benefit from MongoDB documents
    mapping to data structures in most popular programming languages. We can
    send our ``user`` Python dictionary when we call ``update_one()``, which
@@ -514,7 +514,7 @@ The Top 4 Reasons Why You Should Use MongoDB
    have MongoDB drivers, visit the `MongoDB
    Manual <https://docs.mongodb.com/ecosystem/drivers/#drivers>`__.
 
-   If you’d like to grab a copy of the code in the examples above, visit my
+   If you'd like to grab a copy of the code in the examples above, visit my
    `GitHub
    repo <https://github.com/mongodb-developer/SQL-to-NoSQL-Examples>`__.
 
@@ -531,5 +531,5 @@ The Top 4 Reasons Why You Should Use MongoDB
    -  :ref:`sql-mdb-2-pivot-easier`
    -  :ref:`sql-mdb-2-program-faster`
 
-   Be on the lookout for the final post in this series where I’ll discuss
+   Be on the lookout for the final post in this series where I'll discuss
    the top three things you need to know as you move from SQL to MongoDB.

@@ -70,7 +70,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    Hugo, Jekyll, 11ty, because of how easy it is to write and maintain in a
    format like Markdown and convert to HTML.
 
-   In this tutorial we’re going to see how to create a static hosted
+   In this tutorial we're going to see how to create a static hosted
    website using `Hugo <https://www.gohugo.io>`__ and automatically deploy
    changes to Stitch through a continuos deployment pipeline consisting of
    Git and `Travis CI <https://travis-ci.org/>`__.
@@ -90,7 +90,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    When it comes to any of the tools involved, please consult the official
    documentation for installing and configuring those tools.
 
-   MongoDB Stitch has a MongoDB Cloud dependency. While we won’t be making
+   MongoDB Stitch has a MongoDB Cloud dependency. While we won't be making
    use of a MongoDB Atlas cluster in this example, having one available is
    a good idea.
 
@@ -109,7 +109,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    -------------------------------------------------------------
 
    There are many ways to get started with the hosting features of MongoDB
-   Stitch, but for this example we’re going to be exploring the CLI because
+   Stitch, but for this example we're going to be exploring the CLI because
    it will have the most compatibility between continuous deployment tools.
 
    From the command line, execute the following:
@@ -120,9 +120,9 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    The above command will install the `Stitch
    CLI <https://docs.mongodb.com/stitch/deploy/stitch-cli-reference/>`__ if
-   you haven’t already installed it previously.
+   you haven't already installed it previously.
 
-   After installing the CLI, it won’t offer much value until you sign into
+   After installing the CLI, it won't offer much value until you sign into
    your account. This is done through a public and secret key combination
    that is configured within Atlas.
 
@@ -159,8 +159,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
       stitch-cli login --api-key=<my-api-key> --private-api-key=<my-private-api-key>
 
-   Don’t forget to swap the values in the above command with the actual
-   values of your keys. Don’t lose track of your keys as they will be used
+   Don't forget to swap the values in the above command with the actual
+   values of your keys. Don't lose track of your keys as they will be used
    again later in this tutorial.
 
    Create a Stitch Project and Enable Hosting
@@ -191,7 +191,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    By now, the CLI should be signed in with the public and secret API key,
    the application id should be available, and hosting should be enabled.
-   We’re almost ready to get into the creation of our static website.
+   We're almost ready to get into the creation of our static website.
 
    From the command line, execute the following command:
 
@@ -215,8 +215,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
       stitch-cli import --include-hosting
 
-   The above command will deploy everything from within the project’s
-   **hosting/files** directory. That directory won’t have anything exciting
+   The above command will deploy everything from within the project's
+   **hosting/files** directory. That directory won't have anything exciting
    until we start working with Hugo.
 
    More information on using the Stitch CLI for deploying websites can be
@@ -226,7 +226,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    Creating a Static Website with Hugo and Markdown
    ------------------------------------------------
 
-   To keep this tutorial simple and easy to understand, we’re going to do
+   To keep this tutorial simple and easy to understand, we're going to do
    the bare minimum in terms of Hugo. In fact, much of what you see was
    taken directly from the `official Hugo
    documentation <https://gohugo.io/getting-started/quick-start/>`__.
@@ -238,31 +238,31 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
       hugo new site hugo
 
    The above command, assuming Hugo is installed, will create a new Hugo
-   within your Stitch project titled, “hugo”. In other words, you’ll now
+   within your Stitch project titled, “hugo”. In other words, you'll now
    have a **hugo** directory within your Stitch project.
 
-   Next you’ll want to pick a theme for your Hugo website. Execute the
+   Next you'll want to pick a theme for your Hugo website. Execute the
    following command to use the theme from the Hugo documentation:
 
    .. code-block:: bash
 
       git submodule add https://github.com/budparr/gohugo-theme-ananke.git hugo/themes/ananke
 
-   Essentially, you’re adding the **ananke** theme as a submodule in the
+   Essentially, you're adding the **ananke** theme as a submodule in the
    **hugo/themes/ananke** path of your project. When the time comes, the
    submodule will be important for the continuous deployment stage with
    Travis CI.
 
-   When it comes to working with Hugo, you’ll want to be within the
-   **hugo** directory of your project. Let’s start by defining the theme
-   that we’re using in the Hugo configuration:
+   When it comes to working with Hugo, you'll want to be within the
+   **hugo** directory of your project. Let's start by defining the theme
+   that we're using in the Hugo configuration:
 
    .. code-block:: bash
 
       echo 'theme = "ananke"' >> config.toml
 
    Our Hugo project, content wise, will be quite empty because it is a new
-   project. Let’s get a new post in there so we have something to show.
+   project. Let's get a new post in there so we have something to show.
    From the command line, execute the following:
 
    .. code-block:: bash
@@ -271,7 +271,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    The above command will create a **hugo/content/posts/my-first-post.md**
    file. Open it and make sure you change ``draft`` to false. When we try
-   to publish, unless we choose to publish drafts, it won’t be published by
+   to publish, unless we choose to publish drafts, it won't be published by
    default unless it is listed as not a draft.
 
    Go ahead and test your new Hugo site with the following:
@@ -287,14 +287,14 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    Static Website Build and Deployment Tasks with Gulp
    ---------------------------------------------------
 
-   As seen in the previous steps, it isn’t difficult to build a Hugo
+   As seen in the previous steps, it isn't difficult to build a Hugo
    project or deploy static assets to Stitch. However, you generally
-   wouldn’t want to manually run multiple commands any time you wanted to
+   wouldn't want to manually run multiple commands any time you wanted to
    deploy. Instead, a build script or deployment script might make more
    sense.
 
    Two popular task runner technologies include Gulp and Grunt. For this
-   example we’re going to use `Gulp <https://gulpjs.com/>`__ for building
+   example we're going to use `Gulp <https://gulpjs.com/>`__ for building
    and deploying our website to Stitch.
 
    At the root of your Stitch project create a **gulpfile.js** file and
@@ -313,16 +313,16 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    of your project and then install various packages which will help
    towards building and deploying the project.
 
-   For example, we’ll be using ``gulp-clean`` for cleaning our project of
-   old files before building and we’ll be using ``gulp-shell`` to interact
-   with the command line from JavaScript. We’re adding the
+   For example, we'll be using ``gulp-clean`` for cleaning our project of
+   old files before building and we'll be using ``gulp-shell`` to interact
+   with the command line from JavaScript. We're adding the
    ``mongodb-stitch-cli`` package because we want the future deployment
    services to have access to it locally within a project rather than
    globally.
 
-   So let’s try to reproduce what we have been running manually.
+   So let's try to reproduce what we have been running manually.
 
-   Open the project’s **gulpfile.js** file and include the following
+   Open the project's **gulpfile.js** file and include the following
    JavaScript code:
 
    .. code-block:: javascript
@@ -344,13 +344,13 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
       exports.build = series(cleanTask, generateTask);
       exports.deploy = series(cleanTask, generateTask, deployTask);
 
-   The above code is incomplete, however, you can see that we’re importing
+   The above code is incomplete, however, you can see that we're importing
    each of the packages that we downloaded and are referencing the
-   **stitch.json** file that exists at the root of our project. We’re doing
-   that because it contains configuration information that we’ll use.
+   **stitch.json** file that exists at the root of our project. We're doing
+   that because it contains configuration information that we'll use.
 
    We have three task functions, and four possible tasks which make use of
-   the functions. Let’s look at the ``cleanTask`` function first:
+   the functions. Let's look at the ``cleanTask`` function first:
 
    .. code-block:: javascript
 
@@ -362,7 +362,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    When the ``cleanTask`` function is ran, the entire **hosting/files**
    directory will be removed. This will be done without reading the
    contents of the directory and it will be done without errors even if the
-   directory doesn’t exist.
+   directory doesn't exist.
 
    When it comes to the ``generateTask`` function, we might have the
    following:
@@ -380,14 +380,14 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    project and pipe the content to our shell. Within the shell command we
    are navigating into the **hugo** directory and running the Hugo build
    command within that directory. We are specifying the URL that exists in
-   our **stitch.json** file as the base URL so our links don’t get messed
+   our **stitch.json** file as the base URL so our links don't get messed
    up during the build.
 
-   The ``generateTask`` isn’t quite ready for prime time yet. If we were to
+   The ``generateTask`` isn't quite ready for prime time yet. If we were to
    run it, everything would work, but the output would be sent to the wrong
    place. We can fix this by changing the Hugo configuration.
 
-   Open the project’s **hugo/config.toml** file and add the following line:
+   Open the project's **hugo/config.toml** file and add the following line:
 
    .. code-block:: none
 
@@ -411,12 +411,12 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
             ]));
       }
 
-   First we’re taking the entire **hosting** directory that exists at the
-   root of our project and we’re piping it to the shell. The first command
+   First we're taking the entire **hosting** directory that exists at the
+   root of our project and we're piping it to the shell. The first command
    signs in with the public and secret API keys. Notice the use of
    environment variables for this shell command. If you want to run this
    task locally, make sure both environment variables are set on your
-   computer with the appropriate data. We’ll be doing the same when it
+   computer with the appropriate data. We'll be doing the same when it
    comes to Travis CI.
 
    After the sign in happens, we import the files to Stitch.
@@ -429,7 +429,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    The above command would clean, generate, and deploy the results to
    Stitch. You can run this locally, or make it a part of your continuous
-   deployment pipeline which we’ll see in the next step.
+   deployment pipeline which we'll see in the next step.
 
    Continuous Deployments to MongoDB Stitch with Travis CI
    -------------------------------------------------------
@@ -441,12 +441,12 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    We want this to be an automated process every time we push our changes
    to GitHub, GitLab, or similar.
 
-   For this example we’ll be using GitHub and Travis CI, but with some
+   For this example we'll be using GitHub and Travis CI, but with some
    adjustments, the same rules apply to other platforms and services as
    well.
 
    Create a new repository on GitHub and then sign into your Travis CI
-   account. You’ll want to activate this project on Travis CI so events
+   account. You'll want to activate this project on Travis CI so events
    start happening when you push your code.
 
    Within Travis CI, open the settings for the particular project and
@@ -454,12 +454,12 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 
    .. image:: /images/how-to/travis-ci-env-variables.jpg
 
-   The keys and values should look similar to what we’ve done a few times
-   already. You’ll want to take your public and secret API keys and add
+   The keys and values should look similar to what we've done a few times
+   already. You'll want to take your public and secret API keys and add
    them to this section of Travis CI. Remember, the Gulp task looks for
-   these variables so that way they aren’t hard coded and sent to GitHub.
+   these variables so that way they aren't hard coded and sent to GitHub.
 
-   Once the project is active and the variables are set on Travis CI, we’ll
+   Once the project is active and the variables are set on Travis CI, we'll
    need to create a configuration file to be sent with our Git pushes.
 
    Within the root of our Stitch project, create a **.travis.yml** file
@@ -485,36 +485,36 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
          on:
             branch: master
 
-   The above configuration does a few things. First we’re saying this
+   The above configuration does a few things. First we're saying this
    runner should have everything necessary to run Node.js 12.X code, hence
-   the Gulp tasks that we wish to run. This runner likely won’t have Hugo
+   the Gulp tasks that we wish to run. This runner likely won't have Hugo
    available, so we need to download and install it. Remember, our Gulp
-   task will try to run Hugo, but that doesn’t mean it exists on the
-   machine we’re using.
+   task will try to run Hugo, but that doesn't mean it exists on the
+   machine we're using.
 
    After installing our runner dependencies, NPM will install the packages
    that exist in our **package.json** file. When these packages are
    available, the build task will run followed by the deploy task.
 
    When you push your entire project to GitHub with this Travis CI
-   configuration, the runner will start and if it doesn’t fail, it will
+   configuration, the runner will start and if it doesn't fail, it will
    automatically push your static output files to Stitch.
 
    Conclusion
    ----------
 
    You just saw how to continuously deploy a Hugo powered website to
-   MongoDB Stitch with Travis CI. While it isn’t difficult to run these in
+   MongoDB Stitch with Travis CI. While it isn't difficult to run these in
    parts, to maintain a solid deployment pipeline is a huge convenience.
    Take some of these reasons:
 
-   -  You don’t need to run multiple commands to deploy a Hugo build
-   -  You don’t need to push your build files to GitHub as they will be
+   -  You don't need to run multiple commands to deploy a Hugo build
+   -  You don't need to push your build files to GitHub as they will be
       built as part of the process
-   -  Builds won’t deploy if they fail during the process
+   -  Builds won't deploy if they fail during the process
    -  Travis CI runners can be scheduled which is great for Hugo content
       with a future publish date
 
-   If Hugo isn’t your preference, most of these steps can be modified to
+   If Hugo isn't your preference, most of these steps can be modified to
    support other static website generators or other continuous deployment
    services.

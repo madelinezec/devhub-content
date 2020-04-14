@@ -64,21 +64,21 @@
    </article/top-4-reasons-to-use-mongodb>`.
 
    Now that we have an understanding of the terminology as well as why
-   MongoDB is worth the effort of changing your mindset, let’s talk about
+   MongoDB is worth the effort of changing your mindset, let's talk about
    three key ways you need to change your mindset.
 
    Your first instinct might be to convert your existing columns and rows
    to fields and documents and stick with your old ways of modeling data.
-   We’ve found that people who try to use MongoDB in the same way that they
+   We've found that people who try to use MongoDB in the same way that they
    use a relational database struggle and sometimes fail.
 
    .. image:: /images/article/sql-to-mdb/trashcomputer.gif
       :alt: Ron throws computer in the trash 
       :align: center
 
-   We don’t want that to happen to you.
+   We don't want that to happen to you.
 
-   Let’s discuss three key ways to change your mindset as you move from SQL
+   Let's discuss three key ways to change your mindset as you move from SQL
    to MongoDB.
 
    -  :ref:`sql-mdb-3-scale-doc-diversity`
@@ -172,16 +172,16 @@
    power to model our data.
 
    In fact, MongoDB has a data modeling pattern specifically for when your
-   documents do not have the same fields. It’s called the `Polymorphic
+   documents do not have the same fields. It's called the `Polymorphic
    Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-polymorphic-pattern>`__.
    We use the Polymorphic Pattern when documents in a collection are of
    similar but not identical structures.
 
-   Let’s take a look at an example that builds on the Polymorphic Pattern.
-   Let’s say we decided to keep a list of each user’s social media
-   followers inside of each ``User`` document. Lauren and Leslie don’t have
+   Let's take a look at an example that builds on the Polymorphic Pattern.
+   Let's say we decided to keep a list of each user's social media
+   followers inside of each ``User`` document. Lauren and Leslie don't have
    very many followers, so we could easily list their followers in their
-   documents. For example, Lauren’s document might look something like
+   documents. For example, Lauren's document might look something like
    this:
 
    .. code:: json
@@ -215,10 +215,10 @@
    to solve this problem. The Outlier Pattern allows us to model our data
    for the typical use case but still handle outlier use cases.
 
-   We can begin modeling Ron’s document just like Lauren’s and include a
+   We can begin modeling Ron's document just like Lauren's and include a
    list of followers. When we begin to approach the document size limit, we
-   can add a new ``has_extras`` field to Ron’s document. (The field can be
-   named anything we’d like.)
+   can add a new ``has_extras`` field to Ron's document. (The field can be
+   named anything we'd like.)
 
    .. code:: json
 
@@ -245,7 +245,7 @@
          "has_extras”: true
       }
 
-   Then we can create a new document where we will store the rest of Ron’s
+   Then we can create a new document where we will store the rest of Ron's
    followers.
 
    .. code:: json
@@ -268,7 +268,7 @@
    the typical use case but we have the flexibility to handle outliers.
 
    So, embrace document diversity. Resist the urge to force all of your
-   documents to have identical structures just because it’s what you’ve
+   documents to have identical structures just because it's what you've
    always done.
 
    For more on MongoDB data modeling design patterns, see `Building with
@@ -286,7 +286,7 @@
    your head that you should `normalize your
    data <https://en.wikipedia.org/wiki/Database_normalization>`__.
    Normalization is considered good because it prevents data duplication.
-   Let’s take a step back and examine the motivation for database
+   Let's take a step back and examine the motivation for database
    normalization.
 
    When relational databases became popular, disk space was extremely
@@ -305,28 +305,28 @@
    The cost has drastically gone down. Our phones, tablets, laptops, and
    flash drives have more storage capacity today than they did even five to
    ten years ago for a fraction of the cost. When was the last time you
-   deleted a photo? I can’t remember when I did. I keep even the really
+   deleted a photo? I can't remember when I did. I keep even the really
    horribly unflattering photos. And I currently backup all of my photos on
    two external hard drives and multiple cloud services. Storage is so
    cheap.
 
-   Storage has become so cheap that we’ve seen a shift in the cost of
+   Storage has become so cheap that we've seen a shift in the cost of
    software development. Thirty to forty years ago storage was a huge cost
    in software development and developers were relatively cheap. Today, the
    costs have flipped: storage is a small cost of software development and
    developers are expensive.
 
-   Instead of optimizing for storage, we need to optimize for developers’
+   Instead of optimizing for storage, we need to optimize for developers'
    time and productivity.
 
    As a developer, I like this shift. I want to be able to focus on
    implementing business logic and iterate quickly. Those are the things
-   that matter to the business and move developers’ careers forward. I
-   don’t want to be dragged down by data storage specifics.
+   that matter to the business and move developers' careers forward. I
+   don't want to be dragged down by data storage specifics.
 
    Think back to the 
    :ref:`example in the previous post <sql-mdb-2-program-faster>`
-   where I coded retrieving and updating a user’s profile information. Even
+   where I coded retrieving and updating a user's profile information. Even
    in that simple example, I was able to write fewer lines of code and move
    quicker when I used MongoDB.
 
@@ -335,7 +335,7 @@
    normalizing your data.
 
    *Data this is accessed together should be stored together*. If you end
-   up repeating data in your database, that’s ok—especially if you won’t be
+   up repeating data in your database, that's ok—especially if you won't be
    updating the data very often.
 
    .. _sql-mdb-3-transactions:
@@ -348,7 +348,7 @@
    The MongoDB engineering team did an
    amazing job of implementing transactions. They work so well!
 
-   But here’s the thing. Relying on transactions is a bad design smell.
+   But here's the thing. Relying on transactions is a bad design smell.
 
    .. image:: /images/article/sql-to-mdb/badsmell.gif
       :alt: Ben is shocked by the horrendous smell of Tom's cologne
@@ -356,13 +356,13 @@
 
    Why? This builds on our first two points in this section.
 
-   First, not all documents need to have the same fields. Perhaps you’re
-   breaking up data between multiple collections because it’s not all of
-   identical structure. If that’s the only reason you’ve broken the data
+   First, not all documents need to have the same fields. Perhaps you're
+   breaking up data between multiple collections because it's not all of
+   identical structure. If that's the only reason you've broken the data
    up, you can probably put it back together in a single collection.
 
    Second, data that is accessed together should be stored together. If
-   you’re following this principle, you won’t need to use transactions.
+   you're following this principle, you won't need to use transactions.
 
    Some use cases call for transactions. Most do not. If you find yourself
    frequently using transactions, take a look at your data model and
@@ -394,13 +394,13 @@
 
    .. blockquote::
 
-      When you’re ready to take MongoDB for a spin, check out MongoDB Atlas,
-      MongoDB’s fully managed database-as-a-service. Atlas is the easiest way
+      When you're ready to take MongoDB for a spin, check out MongoDB Atlas,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
       to get started with MongoDB. With a forever-free tier and promo code
-      LAUREN200 for when you’re ready to move beyond the free tier, you’re on
+      LAUREN200 for when you're ready to move beyond the free tier, you're on
       your way to realizing the full value of MongoDB.
 
-   In summary, don’t be like Ron. (I mean, don’t be like him in this
+   In summary, don't be like Ron. (I mean, don't be like him in this
    particular case, because Ron is amazing.)
 
    .. image:: /images/article/sql-to-mdb/trashcomputer.gif
