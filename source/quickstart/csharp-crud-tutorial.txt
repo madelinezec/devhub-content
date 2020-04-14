@@ -18,7 +18,7 @@
    Learn about the MongoDB CRUD operations using C Sharp.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/csharp-crud
+   :url: https://developer.mongodb.com/quickstart/csharp-crud-tutorial
    :title: QuickStart: CRUD Operations in C Sharp
    :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
