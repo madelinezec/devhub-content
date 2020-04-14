@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: MongoDB and Node.js Tutorial - CRUD Operations
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Learn how to execute the CRUD (create, read, update, and delete) operations in MongoDB using Node.js in this step-by-step tutorial.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/node-crud-tutorial
+   :title: MongoDB and Node.js Tutorial - CRUD Operations
+   :image: /images/social/open-graph/og-pink-pattern.png
+   :type: article
 
    Learn how to execute the CRUD (create, read, update, and delete) operations in MongoDB using Node.js in this step-by-step tutorial.
 
@@ -49,7 +58,7 @@
 
    * `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
    * `Video: How to perform the CRUD operations using MongoDB & Node.js <https://www.mongodb.com/blog/post/quick-start-video-nodejs--mongodb--the-crud-operations>`__
-   * `How to analyze your data using MongoDB’s Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
+   * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
    * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
 
 .. ---------------------------------------------------------------
@@ -71,22 +80,22 @@ MongoDB and Node.js Tutorial - CRUD Operations
     series <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__,
     I walked you through how to connect to a MongoDB database from a Node.js
     script, retrieve a list of databases, and print the results to your
-    console. If you haven’t read that post yet, I recommend you do so and
+    console. If you haven't read that post yet, I recommend you do so and
     then return here.
 
-    Now that we have connected to a database, let’s kick things off with the
+    Now that we have connected to a database, let's kick things off with the
     CRUD (create, read, update, and delete) operations.
 
-    If you prefer video over text, I’ve got you covered. Check out the video
+    If you prefer video over text, I've got you covered. Check out the video
     in the :ref:`section below <node-tutorial-video>`. :-)
 
     .. blockquote::
 
         Get started with an M0 cluster on `Atlas <http://bit.ly/MDB_Atlas>`__
-        today. It’s free forever, and it’s the easiest way to try out the steps
+        today. It's free forever, and it's the easiest way to try out the steps
         in this blog series.
 
-    Here is a summary of what we’ll cover in this post:
+    Here is a summary of what we'll cover in this post:
 
     -  :ref:`node-tutorial-video`
     -  :ref:`node-tutorial-store-data`
@@ -132,21 +141,21 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     -  `MongoDB Atlas <https://bit.ly/MDB_Atlas>`__
     -  `How to create a free cluster on Atlas <https://youtu.be/rPqRyYJmx2g>`__
-    -  `MongoDB University’s Data Modeling Course <http://bit.ly/M320_DataModeling>`__
-    -  `MongoDB University’s Javascript Course <https://bit.ly/M220JS>`__
+    -  `MongoDB University's Data Modeling Course <http://bit.ly/M320_DataModeling>`__
+    -  `MongoDB University's Javascript Course <https://bit.ly/M220JS>`__
 
     .. _node-tutorial-store-data:
 
     How MongoDB Stores Data
     -----------------------
 
-    Before we go any further, let’s take a moment to understand how data is
+    Before we go any further, let's take a moment to understand how data is
     stored in MongoDB.
 
     MongoDB stores data in `BSON
     documents <https://bit.ly/Docs_Documents>`__. BSON is a binary
     representation of JSON (JavaScript Object Notation) documents. When you
-    read MongoDB documentation, you’ll frequently see the term
+    read MongoDB documentation, you'll frequently see the term
     "`document <https://bit.ly/Glossary_Document>`__," but you can think of
     a document as simply a JavaScript object. For those coming from the SQL
     world, you can think of a document as being roughly equivalent to a row.
@@ -162,15 +171,15 @@ MongoDB and Node.js Tutorial - CRUD Operations
     create an index on ``_id``. You can choose to make the value of ``_id``
     meaningful (rather than a somewhat random
     `ObjectId <https://bit.ly/Docs_ObjectIds>`__) if you have a unique value
-    for each document that you’d like to be able to quickly search.
+    for each document that you'd like to be able to quickly search.
 
-    In this blog series, we’ll use the `sample Airbnb listings
+    In this blog series, we'll use the `sample Airbnb listings
     dataset <https://bit.ly/AtlasSampleData_Airbnb>`__. The
     ``sample_airbnb`` database contains one collection:
     ``listingsAndReviews``. This collection contains documents about Airbnb
     listings and their reviews.
 
-    Let’s take a look at a document in the ``listingsAndReviews``
+    Let's take a look at a document in the ``listingsAndReviews``
     collection. Below is part of an `Extended
     JSON <https://bit.ly/Docs_EJSON>`__ representation of a BSON document:
 
@@ -198,13 +207,13 @@ MongoDB and Node.js Tutorial - CRUD Operations
     ------
 
     Now that we know how to connect to a MongoDB database and we understand
-    how data is stored in a MongoDB database, let’s create some data!
+    how data is stored in a MongoDB database, let's create some data!
 
     Create One Document
     ~~~~~~~~~~~~~~~~~~~
 
-    Let’s begin by creating a new Airbnb listing. We can do so by calling
-    `Collection <https://bit.ly/Node_Collection>`__\ ’s
+    Let's begin by creating a new Airbnb listing. We can do so by calling
+    `Collection <https://bit.ly/Node_Collection>`__\ 's
     `insertOne() <https://bit.ly/Node_InsertOne>`__. ``insertOne()`` will
     insert a single document into the collection. The only required
     parameter is the new document (of type object) that will be inserted. If
@@ -248,7 +257,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
     `Quick Start: BSON Data Types -
     ObjectId <https://www.mongodb.com/blog/post/quick-start-bson-data-types--objectid>`__.
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Create>`__.
 
@@ -260,12 +269,12 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     Sometimes you will want to insert more than one document at a time. You
     could choose to repeatedly call ``insertOne()``. The problem is that,
-    depending on how you’ve structured your code, you may end up waiting for
+    depending on how you've structured your code, you may end up waiting for
     each insert operation to return before beginning the next, resulting in
     slow code.
 
     Instead, you can choose to call
-    `Collection <https://bit.ly/Node_Collection>`__\ ’s
+    `Collection <https://bit.ly/Node_Collection>`__\ 's
     `insertMany() <https://bit.ly/Node_InsertMany>`__. ``insertMany()`` will
     insert an array of documents into your collection.
 
@@ -279,7 +288,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
     all of the documents in the given array–regardless of whether any of the
     other inserts fail. By default, ``ordered`` is set to ``true``.
 
-    Let’s write a function to create multiple Airbnb listings.
+    Let's write a function to create multiple Airbnb listings.
 
     .. code-block:: javascript
 
@@ -322,7 +331,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
         ]);
 
     Note that every document does not have the same fields, which is
-    perfectly OK. (I’m guessing that those who come from the SQL world will
+    perfectly OK. (I'm guessing that those who come from the SQL world will
     find this incredibly uncomfortable, but it really will be OK :-) ). When
     you use MongoDB, you get a lot of flexibility in how to structure your
     documents. If you later decide you want to add `schema validation
@@ -344,7 +353,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
     us when we called ``insertOne()``, the Driver has once again created the
     ``_id`` field for us when we called ``insertMany()``.
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Create>`__.
 
@@ -353,16 +362,16 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Read
     ----
 
-    Now that we know how to **create** documents, let’s **read** one!
+    Now that we know how to **create** documents, let's **read** one!
 
     Read One Document
     ~~~~~~~~~~~~~~~~~
 
-    Let’s begin by querying for an Airbnb listing in the `listingsAndReviews
+    Let's begin by querying for an Airbnb listing in the `listingsAndReviews
     collection <https://bit.ly/AtlasSampleData_Airbnb>`__ by name.
 
     We can query for a document by calling
-    `Collection <https://bit.ly/Node_Collection>`__\ ’s
+    `Collection <https://bit.ly/Node_Collection>`__\ 's
     `findOne() <https://bit.ly/Node_findOne>`__. ``findOne()`` will return
     the first document that matches the given query. Even if more than one
     document matches the query, only one document will be returned.
@@ -395,7 +404,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
         }
 
     We can call this function by passing a connected MongoClient as well as
-    the name of a listing we want to find. Let’s search for a listing named
+    the name of a listing we want to find. Let's search for a listing named
     "Infinite Views" that we :ref:`created in an earlier
     section <node-tutorial-create-many>`.
 
@@ -419,23 +428,23 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Note that the ``_id`` of the document in your database will not match
     the ``_id`` in the sample output above.
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Read>`__.
 
     Read Multiple Documents
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    Now that you know how to query for one document, let’s discuss how to
+    Now that you know how to query for one document, let's discuss how to
     query for multiple documents at a time. We can do so by calling
-    `Collection <https://bit.ly/Node_Collection>`__\ ’s
+    `Collection <https://bit.ly/Node_Collection>`__\ 's
     `find() <https://bit.ly/Node_find>`__.
 
     Similar to ``findOne()``, the first parameter for ``find()`` is the
     query object. You can send zero to many properties inside the query
     object.
 
-    Let’s say we want to search for all Airbnb listings that have minimum
+    Let's say we want to search for all Airbnb listings that have minimum
     numbers of bedrooms and bathrooms. We could do so by making a call like
     the following:
 
@@ -460,10 +469,10 @@ MongoDB and Node.js Tutorial - CRUD Operations
     The query above will return a `Cursor <https://bit.ly/Node_Cursor>`__. A
     Cursor allows traversal over the result set of a query.
 
-    You can also use Cursor’s functions to modify what documents are
-    included in the results. For example, let’s say we want to sort our
+    You can also use Cursor's functions to modify what documents are
+    included in the results. For example, let's say we want to sort our
     results so that those with the most recent reviews are returned first.
-    We could use Cursor’s `sort() <https://bit.ly/Node_sort>`__ function to
+    We could use Cursor's `sort() <https://bit.ly/Node_sort>`__ function to
     sort the results using the ``last_review`` field. We could sort the
     results in descending order (indicated by passing -1 to ``sort()``) so
     that listings with the most recent reviews will be returned first. We
@@ -478,10 +487,10 @@ MongoDB and Node.js Tutorial - CRUD Operations
                 })
                     .sort({ last_review: -1 });
 
-    The above query matches 192 documents in our collection. Let’s say we
-    don’t want to process that many results inside of our script. Instead,
+    The above query matches 192 documents in our collection. Let's say we
+    don't want to process that many results inside of our script. Instead,
     we want to limit our results to a smaller number of documents. We can
-    chain another of ``sort()``\ ’s functions to our existing query:
+    chain another of ``sort()``\ 's functions to our existing query:
     `limit() <https://bit.ly/Node_limit>`__. As the name implies,
     ``limit()`` will set the limit for the cursor. We can now update our
     query to only return a certain number of results.
@@ -499,7 +508,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     We could choose to iterate over the cursor to get the results one by
     one. Instead, if we want to retrieve all of our results in an array, we
-    can call Cursor’s `toArray() <https://bit.ly/Node_toArray>`__ function.
+    can call Cursor's `toArray() <https://bit.ly/Node_toArray>`__ function.
     Now our code looks like the following:
 
     .. code-block:: javascript
@@ -513,7 +522,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
                 .limit(maximumNumberOfResults);
         const results = await cursor.toArray();
 
-    Now that we have our query ready to go, let’s put it inside an
+    Now that we have our query ready to go, let's put it inside an
     asynchronous function and add functionality to print the results.
 
     .. code-block:: javascript
@@ -563,7 +572,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             maximumNumberOfResults: 5
         });
 
-    If you’ve created the documents as described in the :ref:`earlier
+    If you've created the documents as described in the :ref:`earlier
     section <node-tutorial-create-many>`, the output would be something like the
     following:
 
@@ -601,7 +610,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             bathrooms: 2.0
             most recent review date: Sun Mar 03 2019
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Read>`__.
 
@@ -610,20 +619,20 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Update
     ------
 
-    We’re halfway through the CRUD operations. Now that we know how to
-    **create** and **read** documents, let’s discover how to **update**
+    We're halfway through the CRUD operations. Now that we know how to
+    **create** and **read** documents, let's discover how to **update**
     them.
 
     Update One Document
     ~~~~~~~~~~~~~~~~~~~    
 
 
-    Let’s begin by updating a single Airbnb listing in the
+    Let's begin by updating a single Airbnb listing in the
     `listingsAndReviews
     collection <https://bit.ly/AtlasSampleData_Airbnb>`__.
 
     We can update a single document by calling
-    `Collection <http://bit.ly/Node_Collection>`__\ ’s
+    `Collection <http://bit.ly/Node_Collection>`__\ 's
     `updateOne() <http://bit.ly/Node_updateOne>`__. ``updateOne()`` has two
     required parameters: 1. filter (object): the Filter used to select the
     document to update. You can think of the filter as essentially the same
@@ -645,9 +654,9 @@ MongoDB and Node.js Tutorial - CRUD Operations
     query. Even if more than one document matches the query, only one
     document will be updated.
 
-    Let’s say we want to update an Airbnb listing with a particular name. We
-    can use ``updateOne()`` to achieve this. We’ll include the name of the
-    listing in the filter param. We’ll use the
+    Let's say we want to update an Airbnb listing with a particular name. We
+    can use ``updateOne()`` to achieve this. We'll include the name of the
+    listing in the filter param. We'll use the
     `$set <https://bit.ly/docs_set>`__ update operator to set new values for
     new or existing fields in the document we are updating. When we use
     $set, we pass a document that contains fields and values that should be
@@ -668,7 +677,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             console.log(`${result.modifiedCount} document(s) was/were updated.`);
         }
 
-    Let’s say we want to update our Airbnb listing that has the name
+    Let's say we want to update our Airbnb listing that has the name
     "Infinite Views." We created this listing in :ref:`an earlier
     section <node-tutorial-create-many>`.
 
@@ -709,7 +718,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             bathrooms: 4.5,
             beds: 8 }
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Update>`__.
 
@@ -722,16 +731,16 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Upsert is a handy feature that allows you to update a document if it
     exists or insert a document if it does not.
 
-    For example, let’s say you wanted to ensure that an Airbnb listing with
+    For example, let's say you wanted to ensure that an Airbnb listing with
     a particular name had a certain number of bedrooms and bathrooms.
-    Without upsert, you’d first use ``findOne()`` to check if the document
-    existed. If the document existed, you’d use ``updateOne()`` to update
-    the document. If the document did not exist, you’d use ``insertOne()``
+    Without upsert, you'd first use ``findOne()`` to check if the document
+    existed. If the document existed, you'd use ``updateOne()`` to update
+    the document. If the document did not exist, you'd use ``insertOne()``
     to create the document. When you use upsert, you can combine all of that
     functionality into a single command.
 
     Our function to upsert a listing with a particular name can be basically
-    identical to the function we wrote above with one key difference: we’ll
+    identical to the function we wrote above with one key difference: we'll
     pass ``{upsert: true}`` in the ``options`` param for ``updateOne()``.
 
     .. code-block:: javascript
@@ -750,7 +759,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             }
         }
 
-    Let’s say we aren’t sure if a listing named "Cozy Cottage" is in our
+    Let's say we aren't sure if a listing named "Cozy Cottage" is in our
     collection or, if it does exist, it may hold old data. Either way, we
     want to ensure the listing that exists in our collection has the most
     up-to-date data. We can call ``upsertListingByName()`` with a connected
@@ -803,7 +812,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             bedrooms: 2,
             beds: 2 }
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Update>`__.
 
@@ -811,15 +820,15 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Update Multiple Documents
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Sometimes you’ll want to update more than one document at a time. In
+    Sometimes you'll want to update more than one document at a time. In
     this case, you can use
-    `Collection <http://bit.ly/Node_Collection>`__\ ’s
+    `Collection <http://bit.ly/Node_Collection>`__\ 's
     `updateMany() <https://bit.ly/Node_updateMany>`__. Like ``updateOne()``,
     ``updateMany()`` requires that you pass a filter of type object and an
     update of type object. You can choose to include options of type object
     as well.
 
-    Let’s say we want to ensure that every document has a field named
+    Let's say we want to ensure that every document has a field named
     ``property_type``. We can use the
     `$exists <https://bit.ly/docs_exists>`__ query operator to search for
     documents where the ``property_type`` field does not exist. Then we can
@@ -879,7 +888,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             …
         }
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Update>`__.
 
@@ -889,17 +898,17 @@ MongoDB and Node.js Tutorial - CRUD Operations
     ------
 
     Now that we know how to **create**, **read**, and **update** documents,
-    let’s tackle the final CRUD operation: **delete**.
+    let's tackle the final CRUD operation: **delete**.
 
     Delete One Document
     ~~~~~~~~~~~~~~~~~~~
 
-    Let’s begin by deleting a single Airbnb listing in the
+    Let's begin by deleting a single Airbnb listing in the
     `listingsAndReviews
     collection <https://bit.ly/AtlasSampleData_Airbnb>`__.
 
     We can delete a single document by calling
-    `Collection <http://bit.ly/Node_Collection>`__\ ’s
+    `Collection <http://bit.ly/Node_Collection>`__\ 's
     `deleteOne() <https://bit.ly/Node_deleteOne>`__. ``deleteOne()`` has one
     required parameter: a filter of type object. The filter is used to
     select the document to delete. You can think of the filter as
@@ -920,8 +929,8 @@ MongoDB and Node.js Tutorial - CRUD Operations
     order <https://docs.mongodb.com/manual/reference/glossary/#term-natural-order>`__
     will be deleted.
 
-    Let’s say we want to delete an Airbnb listing with a particular name. We
-    can use ``deleteOne()`` to achieve this. We’ll include the name of the
+    Let's say we want to delete an Airbnb listing with a particular name. We
+    can use ``deleteOne()`` to achieve this. We'll include the name of the
     listing in the filter param. We can create a function to delete a
     listing with a particular name.
 
@@ -933,7 +942,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             console.log(`${result.deletedCount} document(s) was/were deleted.`);
         }
 
-    Let’s say we want to delete the Airbnb listing we created in an :ref:`earlier
+    Let's say we want to delete the Airbnb listing we created in an :ref:`earlier
     section <node-tutorial-upsert>` that has the name "Cozy Cottage." We can call
     ``deleteListingsByName()`` by passing a connected MongoClient and the
     name "Cozy Cottage."
@@ -948,21 +957,21 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
         1 document(s) was/were deleted.
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Delete>`__.
 
     Deleting Multiple Documents
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Sometimes you’ll want to delete more than one document at a time. In
+    Sometimes you'll want to delete more than one document at a time. In
     this case, you can use
-    `Collection <http://bit.ly/Node_Collection>`__\ ’s
+    `Collection <http://bit.ly/Node_Collection>`__\ 's
     `deleteMany() <https://bit.ly/Node_deleteMany>`__. Like ``deleteOne()``,
     ``deleteMany()`` requires that you pass a filter of type object. You can
     choose to include options of type object as well.
 
-    Let’s say we want to remove documents that have not been updated
+    Let's say we want to remove documents that have not been updated
     recently. We can call ``deleteMany()`` with a filter that searches for
     documents that were scraped prior to a particular date. Our function
     will look like the following.
@@ -991,7 +1000,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     Now only recently scraped documents are in our collection.
 
-    If you’re not a fan of copying and pasting, you can get a full copy of
+    If you're not a fan of copying and pasting, you can get a full copy of
     the code above in the `Node.js Quick Start GitHub
     Repo <https://bit.ly/NodejsQuickStart_Delete>`__.
 
@@ -1002,14 +1011,14 @@ MongoDB and Node.js Tutorial - CRUD Operations
     Wrapping Up
     -----------
 
-    We covered a lot today! Let’s recap.
+    We covered a lot today! Let's recap.
 
     We began by exploring :ref:`how MongoDB stores data in documents and
     collections <node-tutorial-store-data>`. Then we learned the basics of
     :ref:`creating <node-tutorial-create>`, :ref:`reading <node-tutorial-read>`, :ref:`updating <node-tutorial-update>`, and
     :ref:`deleting <node-tutorial-delete>` data.
 
-    Be on the lookout for the `next post in this series where we’ll discuss
+    Be on the lookout for the `next post in this series where we'll discuss
     how you can analyze and manipulate data using the aggregation
     pipeline <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__.
 
@@ -1029,7 +1038,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     -  `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
     -  How to execute the CRUD Operations with MongoDB & Node.js (this post)
-    -  `How to analyze your data using MongoDB’s Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
+    -  `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
     -  `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
     -  `How to react to database changes with change streams and triggers <https://www.mongodb.com/blog/post/node-js-change-streams-and-triggers>`__
  

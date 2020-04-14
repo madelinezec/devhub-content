@@ -82,7 +82,7 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
       - Check out `Maxime's new dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__ (updates every hour).
       - Check out `Thomas's dashboard <https://charts.mongodb.com/charts-coronavirus-dashboard-yamfx/public/dashboards/4b328ffa-ba5d-435e-af11-b39fc974e47a>`__.
 
-   Too Long, Didn’t Read
+   Too Long, Didn't Read
    ---------------------
 
    `Thomas Rueckstiess <https://www.linkedin.com/in/rueckstiess/>`__ and
@@ -137,9 +137,9 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    post <https://systems.jhu.edu/research/public-health/ncov/>`__ which I
    encourage you to read.
 
-   Having data is great but it can also be overwhelming. That’s why data
-   visualisation is also very important. Data alone doesn’t speak and
-   doesn’t help make informed decisions.
+   Having data is great but it can also be overwhelming. That's why data
+   visualisation is also very important. Data alone doesn't speak and
+   doesn't help make informed decisions.
 
    `Johns Hopkins University <https://www.jhu.edu/>`__ also did a great job
    on this part because they provided `this

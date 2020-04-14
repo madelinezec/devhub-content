@@ -6,15 +6,24 @@
 
 .. meta-description::
 
-   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code – however, you may want to access Stitch from your existing tools (e.g. the mongo shell) or backend code – this post shows you how.
+   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
 
 .. twitter::
    :site: @mongodb
    :creator: @andrewmorgan
-   :title: Working with MongoDB Stitch Through the mongo Shell – MongoDB Wire Protocol Support
+   :title: Working with MongoDB Stitch Through the mongo Shell
+   :image: /images/MongoDB_Wire_Protocol.png
+   :image-alt: MongoDB Wire Protocol
+
+   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/stitch-shell
+   :type: article
+   :title: Working with MongoDB Stitch Through the mongo Shell
    :image: /images/MongoDB_Wire_Protocol.png
 
-   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code – however, you may want to access Stitch from your existing tools (e.g. the mongo shell) or backend code – this post shows you how.
+   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -53,12 +62,15 @@
 Working with MongoDB Stitch Through the mongo Shell – MongoDB Wire Protocol Support
 ===================================================================================
 
-.. content::
+.. introduction::
+
    The `Stitch SDK <https://docs.mongodb.com/stitch/client-sdks/>`__ is the
    best way to access `MongoDB Stitch <https://docs.mongodb.com/stitch/>`__
    from your frontend application code – getting to your data and accessing
    your Stitch Services and Functions becomes child's' play.
-   
+
+.. content::
+
    However, those already using MongoDB may have existing backend code and
    tools that work with MongoDB. MongoDB Stitch now supports the `MongoDB
    wire protocol <https://docs.mongodb.com/stitch/wire-protocol/>`__ –

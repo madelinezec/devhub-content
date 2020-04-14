@@ -13,8 +13,17 @@
    :creator: @jayrunkel
    :title: Active-Active Application Architectures with MongoDB
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
-   This post will begin by describing the database capabilities required by modern multi-data center applications
+   This post will begin by describing the database capabilities required by modern multi-data center applications.
+
+.. og::
+   :url: http://developer.mongodb.com/article/active-active-appliction-architectures
+   :type: article
+   :title: Active-Active Application Architectures with MongoDB
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+   This post will begin by describing the database capabilities required by modern multi-data center applications.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)

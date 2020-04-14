@@ -61,7 +61,7 @@ Building with Patterns: The Bucket Pattern
 
 .. introduction::
 
-   In this edition of the *Building with Patterns* series, we’re going to
+   In this edition of the *Building with Patterns* series, we're going to
    cover the Bucket Pattern. This pattern is particularly effective when
    working with Internet of Things (IoT), Real-Time Analytics, or
    Time-Series data in general. By *bucketing* data together we make it
@@ -141,7 +141,7 @@ Building with Patterns: The Bucket Pattern
 
    By using the Bucket Pattern, we have “bucketed” our data to, in this
    case, a one hour bucket. This particular data stream would still be
-   growing as it currently only has 42 measurements; there’s still more
+   growing as it currently only has 42 measurements; there's still more
    measurements for that hour to be added to the “bucket”. When they are
    added to the ``measurements`` array, the ``transaction_count`` will be
    incremented and ``sum_temperature`` will also be updated.
@@ -152,7 +152,7 @@ Building with Patterns: The Bucket Pattern
    When working with time-series data it is frequently more interesting and
    important to know what the average temperature was from 2:00 to 3:00 pm
    in Corning, California on 13 July 2018 than knowing what the temperature
-   was at 2:03 pm. By bucketing and doing pre-aggregation we’re more able
+   was at 2:03 pm. By bucketing and doing pre-aggregation we're more able
    to easily provide that information.
 
    Additionally, as we gather more and more information we may determine
@@ -186,7 +186,7 @@ Building with Patterns: The Bucket Pattern
    pre-aggregation, it can simplify data access.
 
    The Bucket Design pattern works great for many cases. But what if there
-   are outliers in our data? That’s where the next pattern we’ll discuss,
+   are outliers in our data? That's where the next pattern we'll discuss,
    the :doc:`Outlier Design
    Pattern </how-to/outlier-pattern>`,
    comes into play.

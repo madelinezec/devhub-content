@@ -12,8 +12,16 @@
    :site: @mongodb
    :creator: @aydrianh
    :title: Using AWS Rekognition to Analyse and Tag Uploaded Images Using Stitch
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
    Use MongoDB Stitch with AWS Rekognition to tag and analyse images.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/stitch-aws-rekognition-images
+   :title: Using AWS Rekognition to Analyse and Tag Uploaded Images Using Stitch
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)

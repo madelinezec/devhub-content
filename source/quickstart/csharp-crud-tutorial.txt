@@ -18,7 +18,7 @@
    Learn about the MongoDB CRUD operations using C Sharp.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/csharp-crud
+   :url: https://developer.mongodb.com/quickstart/csharp-crud-tutorial
    :title: QuickStart: CRUD Operations in C Sharp
    :image: /images/social/open-graph/og-mdb-developer.png
    :type: article
@@ -62,8 +62,8 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       :alt: C# badge
       :align: right
 
-   In this Quick Start post, I’ll show how to set up connections between C#
-   and MongoDB. Then I’ll walk through the database Create, Read, Update,
+   In this Quick Start post, I'll show how to set up connections between C#
+   and MongoDB. Then I'll walk through the database Create, Read, Update,
    and Delete (CRUD) operations. As you already know, C# is a
    general-purpose language and MongoDB is a general-purpose data platform.
    Together, C# and MongoDB are a powerful combination.
@@ -73,17 +73,19 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Series Tools & Versions
    -----------------------
 
-   The tools and versions I’m using for this series are: + MongoDB Atlas
-   with an M0 free cluster + MongoDB Sample Dataset loaded, specifically
-   the ``sample_training`` and ``grades`` dataset. + Windows 10 + Visual
-   Studio Community 2019 + `NuGet <http://bit.ly/nuget-home>`__ packages +
-   MongoDB `C# Driver <http://bit.ly/mongodb-csharp-driver-github>`__
-   (``MongoDB.Driver``), version 2.9.1 + MongoDB BSON Library
-   (`MongoDB.Bson), version 2.9.1
+   The tools and versions I'm using for this series are:
+
+   - MongoDB Atlas with an M0 free cluster,
+   - MongoDB Sample Dataset loaded, specifically the ``sample_training`` and ``grades`` dataset,
+   - Windows 10,
+   - Visual Studio Community 2019,
+   - `NuGet <http://bit.ly/nuget-home>`__ packages,
+   - MongoDB `C# Driver <http://bit.ly/mongodb-csharp-driver-github>`__: version 2.9.1,
+   - MongoDB BSON Library: version 2.9.1.
 
    .. blockquote::
 
-      C# is a popular language when using the .NET framework. If you’re
+      C# is a popular language when using the .NET framework. If you're
       going to be developing in .NET and using MongoDB as your data layer,
       the C# driver makes it easy to do so.
 
@@ -92,24 +94,24 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Setup
    -----
 
-   To follow along, I’ll be using Visual Studio 2019 on Windows 10 and
-   connecting to a MongoDB Atlas cluster. If you’re using a different OS,
+   To follow along, I'll be using Visual Studio 2019 on Windows 10 and
+   connecting to a MongoDB Atlas cluster. If you're using a different OS,
    IDE, or text editor, the walkthrough might be slightly different, but
-   the code itself should be fairly similar. Let’s jump in and take a look
+   the code itself should be fairly similar. Let's jump in and take a look
    at how nicely C# and MongoDB work together.
 
    .. blockquote::
 
       Get started with an M0 cluster on `MongoDB
-      Atlas <http://bit.ly/mongodb-meetatlas>`__ today. It’s free forever
-      and you’ll be able to work alongside this blog series.
+      Atlas <http://bit.ly/mongodb-meetatlas>`__ today. It's free forever
+      and you'll be able to work alongside this blog series.
 
-   For this demonstration, I’ve chosen a Console App (.NET Core), and I’ve
+   For this demonstration, I've chosen a Console App (.NET Core), and I've
    named it ``MongoDBConnectionDemo``. Next, we need to install the MongoDB
    Driver for C#/.NET for a Solution. We can do that quite easily with
    `NuGet <http://bit.ly/nuget-home>`__. Inside Visual Studio for Windows,
    by going to *Tools* -> *NuGet Package Manager* -> Manage NuGet Packages
-   for Solution…\_ We can browse for *MongoDB.Driver*. Then click on our
+   for Solution... We can browse for *MongoDB.Driver*. Then click on our
    Project and select the driver version we want. In this case, the `latest
    stable version <http://bit.ly/mongodb-csharp-driver>`__ is 2.9.1. Then
    click on *Install*. Accept any license agreements that pop up and head
@@ -124,12 +126,12 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
       using MongoDB.Driver;
 
-   Inside the ``Main()`` method we’ll establish a connection to `MongoDB
+   Inside the ``Main()`` method we'll establish a connection to `MongoDB
    Atlas </http://bit.ly/mongodb-atlas>`__ with a connection string and to
-   test the connection we’ll print out a list of the databases on the
-   server. The Atlas cluster to which we’ll be connecting has the MongoDB
+   test the connection we'll print out a list of the databases on the
+   server. The Atlas cluster to which we'll be connecting has the MongoDB
    Atlas `Sample Dataset <http://bit.ly/atlas-sample-data-blog>`__
-   installed, so we’ll be able to see a nice database list.
+   installed, so we'll be able to see a nice database list.
 
    The first step is to pass in the MongoDB Atlas connection string into a
    MongoClient object, then we can get the list of databases and print them
@@ -188,7 +190,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
           }
       }
 
-   With a connection in place, let’s move on and start doing CRUD
+   With a connection in place, let's move on and start doing CRUD
    operations inside the MongoDB Atlas database. The first step there is to
    *Create* some data.
 
@@ -199,33 +201,33 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    ~~~~
 
    MongoDB stores data in JSON Documents. Actually, they are stored as
-   Binary JSON (BSON) objects on disk, but that’s another blog post. In our
+   Binary JSON (BSON) objects on disk, but that's another blog post. In our
    sample dataset, there is a ``sample_training`` with a ``grades``
-   collection. Here’s what a sample document in that collection looks like:
+   collection. Here's what a sample document in that collection looks like:
 
    .. code-block:: json
 
       {
-      "_id":{"$oid":"56d5f7eb604eb380b0d8d8ce"},
-      "student_id":{"$numberDouble":"0"},
-      "scores":[
-      {"type":"exam","score":{"$numberDouble":"78.40446309504266"}},
-      {"type":"quiz","score":{"$numberDouble":"73.36224783231339"}},
-      {"type":"homework","score":{"$numberDouble":"46.980982486720535"}},
-      {"type":"homework","score":{"$numberDouble":"76.67556138656222"}}
-      ],
-      "class_id":{"$numberDouble":"339"}
+        "_id":{"$oid":"56d5f7eb604eb380b0d8d8ce"},
+        "student_id":{"$numberDouble":"0"},
+        "scores":[
+          {"type":"exam","score":{"$numberDouble":"78.40446309504266"}},
+          {"type":"quiz","score":{"$numberDouble":"73.36224783231339"}},
+          {"type":"homework","score":{"$numberDouble":"46.980982486720535"}},
+          {"type":"homework","score":{"$numberDouble":"76.67556138656222"}}
+        ],
+        "class_id":{"$numberDouble":"339"}
       }
 
    Connecting to a Specific Collection
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   There are 10,000 students in this collection, 0-9,999. Let’s add one
-   more by using C#. To do this, we’ll need to use another package from
-   NuGet, ``MongoDB.Bson``. I’ll start a new Solution in Visual Studio and
-   call it ``MongoDBCRUDExample``. I’ll install the ``MongoDB.Bson`` and
+   There are 10,000 students in this collection, 0-9,999. Let's add one
+   more by using C#. To do this, we'll need to use another package from
+   NuGet, ``MongoDB.Bson``. I'll start a new Solution in Visual Studio and
+   call it ``MongoDBCRUDExample``. I'll install the ``MongoDB.Bson`` and
    ``MongoDB.Driver`` packages and use the connection string provided from
-   MongoDB Atlas. Next, I’ll access our specific database and collection,
+   MongoDB Atlas. Next, I'll access our specific database and collection,
    ``sample_training`` and ``grades``, respectively.
 
    .. code-block:: csp
@@ -254,11 +256,11 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
    The ``collection`` variable is now our key reference point to our data.
    Since we are using a ``BsonDocument`` when assigning our ``collection``
-   variable, I’ve indicated that I’m not going to be using a pre-defined
-   schema. This utilizes the power and flexibility of MongoDB’s document
+   variable, I've indicated that I'm not going to be using a pre-defined
+   schema. This utilizes the power and flexibility of MongoDB's document
    model. I could define a plain-old-C#-object (POCO) to more strictly
-   define a schema. I’ll take a look at that option in a future post. For
-   now, I’ll create a new ``BsonDocument`` to insert into the database.
+   define a schema. I'll take a look at that option in a future post. For
+   now, I'll create a new ``BsonDocument`` to insert into the database.
 
    .. code-block:: csp
 
@@ -297,10 +299,10 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    MongoDB has you covered there as well with the ``InsertMany`` or
    ``InsertManyAsync`` methods.
 
-   We’ve seen how to structure a BSON Document in C# and then *Create* it
+   We've seen how to structure a BSON Document in C# and then *Create* it
    inside a MongoDB database. The MongoDB C# Driver makes it easy to do
    with the ``InsertOne()``, ``InsertOneAsync()``, ``InsertMany()``, or
-   ``InsertManyAsync()`` methods. Now that we have *Created* data, we’ll
+   ``InsertManyAsync()`` methods. Now that we have *Created* data, we'll
    want to *Read* it.
 
    Read
@@ -309,7 +311,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    To *Read* documents in MongoDB, we use the
    `Find() <https://mongodb.github.io/mongo-csharp-driver/2.6/apidocs/html/Overload_MongoDB_Driver_IMongoCollectionExtensions_Find.htm>`__
    method. This method allows us to chain a variety of methods to it, some
-   of which I’ll explore in this post. To get the first document in the
+   of which I'll explore in this post. To get the first document in the
    collection, we can use the ``FirstOrDefault`` or ``FirstOrDefaultAsync``
    method, and print the result to the console.
 
@@ -332,7 +334,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       ],
       "class_id" : 339.0 }
 
-   You may wonder why we aren’t using ``Single`` as that returns one
+   You may wonder why we aren't using ``Single`` as that returns one
    document too. Well, that has to also ensure the returned document is the
    only document like that in the collection and that means scanning the
    whole collection.
@@ -340,7 +342,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Reading with a Filter
    ~~~~~~~~~~~~~~~~~~~~~
 
-   Let’s find the `document we created <#created-data>`__ and print it out
+   Let's find the `document we created <#created-data>`__ and print it out
    to the console. The first step is to create a filter to query for our
    specific document.
 
@@ -348,7 +350,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
       var filter = Builders<BsonDocument>.Filter.Eq("student_id", 10000);
 
-   Here we’re setting a filter to look for a document where the
+   Here we're setting a filter to look for a document where the
    ``student_id`` is equal to ``10000``. We can pass the filter into the
    ``Find()`` method to get the first document that matches the query.
 
@@ -371,7 +373,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       ],
       "class_id" : 480 }
 
-   If a document isn’t found that matches the query, the ``Find()`` method
+   If a document isn't found that matches the query, the ``Find()`` method
    returns null. Finding the first document in a collection, or with a
    query is a frequent task. However, what about situations when all
    documents need to be returned, either in a collection or from a query?
@@ -390,7 +392,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Filters can be passed in here as well, for example, to get documents
    with exam scores equal or above 95. The filter here looks slightly more
    complicated, but thanks to the MongoDB driver syntax, it is relatively
-   easy to follow. We’re filtering on documents in which inside the
+   easy to follow. We're filtering on documents in which inside the
    ``scores`` array there is an ``exam`` subdocument with a ``score`` value
    greater than or equal to 95.
 
@@ -402,11 +404,11 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       });
       var highExamScores = collection.Find(highExamScoreFilter).ToList();
 
-   For situations where it’s necessary to iterate over the documents that
+   For situations where it's necessary to iterate over the documents that
    are returned there are a couple of ways to accomplish that as well. In a
    synchronous situation, a C# ``foreach`` statement can be used with the
    ``ToEnumerable`` adapter method. In this situation, instead of using the
-   ``ToList()`` method, we’ll use the ``ToCursor()`` method.
+   ``ToList()`` method, we'll use the ``ToCursor()`` method.
 
    .. code-block:: csp
 
@@ -453,7 +455,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    95.441609472871946.
 
    You can see the full code for both the *Create* and *Read* operations
-   I’ve shown in the `gist
+   I've shown in the `gist
    here <https://gist.github.com/kenwalger/37299af2b43cfe548e4d3a3154a31e6d>`__.
 
    The C# Driver for MongoDB provides many ways to *Read* data from the
@@ -463,7 +465,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    query the database is straightforward and easy to read, making this step
    of CRUD operations in C# and MongoDB simple to use.
 
-   With the data created and being able to be read, let’s take a look at
+   With the data created and being able to be read, let's take a look at
    how we can perform *Update* operations.
 
    Update
@@ -476,7 +478,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    This section is about the *Update* operation and how C# and MongoDB work
    together to accomplish this important task.
 
-   Recall that we’ve been working with this ``BsonDocument`` version of a
+   Recall that we've been working with this ``BsonDocument`` version of a
    student record:
 
    .. code-block:: csp
@@ -495,10 +497,10 @@ MongoDB & C Sharp: CRUD Operations Tutorial
                       { "class_id", 480}
                   };
 
-   After getting part way through the grading term, our sample student’s
-   instructor notices that he’s been attending the wrong class section. Due
+   After getting part way through the grading term, our sample student's
+   instructor notices that he's been attending the wrong class section. Due
    to this error the school administration has to change, or *update*, the
-   ``class_id`` associated with his record. He’ll be moving into section
+   ``class_id`` associated with his record. He'll be moving into section
    483.
 
    Updating Data
@@ -506,7 +508,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
    To update a document we need two bits to pass into an ``Update``
    command. We need a filter to determine *which* documents will be
-   updated. Second, we need what we’re wanting to update.
+   updated. Second, we need what we're wanting to update.
 
    Update Filter
    ~~~~~~~~~~~~~
@@ -539,7 +541,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Array Changes
    ~~~~~~~~~~~~~
 
-   Not all changes are as simple as changing a single field. Let’s use a
+   Not all changes are as simple as changing a single field. Let's use a
    different filter, one that selects a document with a particular score
    type for quizes:
 
@@ -554,7 +556,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    operator <https://docs.mongodb.com/manual/reference/operator/update/positional/>`__
    to access the quiz ``score`` in the array. The $ operator on its own
    says “change the array element that we matched within the query” - the
-   filter matches with ``scores.type`` equal to ``quiz`` and that’s the
+   filter matches with ``scores.type`` equal to ``quiz`` and that's the
    element will get updated with the set.
 
    .. code-block:: csp
@@ -570,7 +572,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Additional Update Methods
    ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   If you’ve been reading along in this blog series I’ve mentioned that the
+   If you've been reading along in this blog series I've mentioned that the
    C# driver supports both sync and async interactions with MongoDB.
    Performing data *Updates* is no different. There is also an
    ``UpdateOneAsync()`` method available. Additionally, for those cases in
@@ -582,25 +584,25 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    ``Update`` is an important operator in the CRUD world. Not being able to
    update things as they change would make programming incredibly
    difficult. Fortunately, C# and MongoDB continue to work well together to
-   make the operations possible and easy to use. Whether it’s updating a
-   student’s grade or updating a user’s address, *Update* is here to handle
+   make the operations possible and easy to use. Whether it's updating a
+   student's grade or updating a user's address, *Update* is here to handle
    the changes. The code for the *Create*, *Read*, and *Update* operations
    can be found in `this
    gist <https://gist.github.com/kenwalger/f5cf317aa85aad2aa0f9d627d7a8095c>`__.
 
-   We’re winding down this MongoDB C# Quick Start CRUD operation series
+   We're winding down this MongoDB C# Quick Start CRUD operation series
    with only one operation left to explore, *Delete*.
 
    .. blockquote::
 
       Remember, you can get started with an M0 cluster on `MongoDB
-      Atlas <http://bit.ly/mongodb-atlas>`__ today. It’s free forever and
-      you’ll be able to work alongside this blog series.
+      Atlas <http://bit.ly/mongodb-atlas>`__ today. It's free forever and
+      you'll be able to work alongside this blog series.
 
    Delete
    ------
 
-   To continue along with the student story, let’s take a look at how what
+   To continue along with the student story, let's take a look at how what
    would happen if the student dropped the course and had to have their
    grades deleted. Once again, the MongoDB driver for C# makes it a breeze.
    And, it provides both sync and async options for the operations.
@@ -610,14 +612,14 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
    The first step in the deletion process is to create a filter for the
    document(s) that need to be deleted. In the example for this series,
-   I’ve been using a document with a ``student_id`` value of ``10000`` to
-   work with. Since I’ll only be deleting that single record, I’ll use the
+   I've been using a document with a ``student_id`` value of ``10000`` to
+   work with. Since I'll only be deleting that single record, I'll use the
    ``DeleteOne()`` method (for async situations the ``DeleteOneAsync()``
    method is available). However, when a filter matches more than a single
    document and all of them need to be deleted, the ``DeleteMany()`` or
    ``DeleteManyAsync`` method can be used.
 
-   Here’s the record I want to delete.
+   Here's the record I want to delete.
 
    .. code-block:: json
 
@@ -634,7 +636,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
           { "class_id", 483}
       };
 
-   I’ll define the filter to match the ``student_id`` equal to ``10000``
+   I'll define the filter to match the ``student_id`` equal to ``10000``
    document:
 
    .. code-block:: csp
@@ -656,21 +658,21 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    student with a ``student_id`` equal to ``10000``, we get the desired
    results.
 
-   For the sake of argument, let’s imagine that the rules for the
+   For the sake of argument, let's imagine that the rules for the
    educational institution are incredibly strict. If you get below a score
    of 60 on the first exam, you are automatically dropped from the course.
    We could use a ``for`` loop with ``DeleteOne()`` to loop through the
    entire collection, find a single document that matches an exam score of
    less than 60, delete it, and repeat. Recall that ``DeleteOne()`` only
    deletes the first document it finds that matches the filter. While this
-   could work, it isn’t very efficient as multiple calls to the database
+   could work, it isn't very efficient as multiple calls to the database
    are made. How do we handle situations that require deleting multiple
    records then? We can use ``DeleteMany()``.
 
    Multiple Deletes
    ~~~~~~~~~~~~~~~~
 
-   Let’s define a new filter to match the exam score being less than 60:
+   Let's define a new filter to match the exam score being less than 60:
 
    .. code-block:: csp
 
@@ -699,11 +701,11 @@ MongoDB & C Sharp: CRUD Operations Tutorial
 
    This C# Quick Start series has covered the various CRUD Operations
    (Create, Read, Update, and Delete) operations in MongoDB using basic
-   BSON Documents. We’ve seen how to use filters to match specific
+   BSON Documents. We've seen how to use filters to match specific
    documents that we want to read, update, or delete. This series has, thus
    far, been a gentle introduction to C Sharp and MongoDB.
 
    BSON Documents are not, however, the only way to be able to use MongoDB
    with C Sharp. In our applications, we often have classes defining
    objects. We can map our classes to BSON Documents to work with data as
-   we would in code. I’ll take a look at mapping in a future post.
+   we would in code. I'll take a look at mapping in a future post.

@@ -13,6 +13,15 @@
    :creator: @jdrumgoole
    :title: MongoDB 3.6: Here to SRV you with easier replica set connections
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   SRV records are another way in which MongoDB is making life easier for database developers everywhere.
+
+.. og::
+   :url: http://developer.mongodb.com/article/srv-connections-strings
+   :type: article
+   :title: MongoDB 3.6: Here to SRV you with easier replica set connections
+   :image: /images/social/open-graph/og-mdb-developer.png
 
    SRV records are another way in which MongoDB is making life easier for database developers everywhere.
 

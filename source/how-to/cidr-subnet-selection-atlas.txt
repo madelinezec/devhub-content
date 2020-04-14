@@ -6,15 +6,24 @@
 
 .. meta-description:: 
 
-   One of the best features of MongoDB Atlas is the ability to peer your host VPC on your own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
+   VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
 
 .. twitter::
    :site: @mongodb
    :creator: @jaydestro
    :title: CIDR Subnet Selection for MongoDB Atlas
    :image: /images/social/twitter/twitter-security.png
+   :image-alt: Security
 
-   One of the best features of MongoDB Atlas is the ability to peer your host VPC on your own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
+   VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/cidr-subnet-selection-atlas
+   :type: article
+   :title: CIDR Subnet Selection for MongoDB Atlas
+   :image: /images/social/open-graph/og-security.png
+
+   VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -54,16 +63,25 @@ CIDR Subnet Selection for MongoDB Atlas
    Introduction
    ------------
 
-   One of the best features of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas?jmp=blog>`__ is the ability to `peer your host VPC <https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas?jmp=blog>`__ on your own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster. This allows you to reduce your network exposure and improve security of your data.  If you chose to use peering there are some considerations you should think about first in selecting the right IP block for your private traffic.
+   One of the best features of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas?jmp=blog>`__ is the ability to
+   `peer your host VPC <https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas?jmp=blog>`__ on your
+   own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the
+   private IP range of your hosts and MongoDB Atlas cluster. This allows you to reduce your network exposure and
+   improve security of your data.  If you chose to use peering there are some considerations you should think about
+   first in selecting the right IP block for your private traffic.
 
 .. content::
 
    Host VPC
    --------
 
-   The host VPC is where you configure the systems that your application will use to connect to your MongoDB Atlas cluster. AWS provides your account with a default VPC for your hosts You may need to modify the default VPC or create a new one to work alongside MongoDB Atlas.
+   The host VPC is where you configure the systems that your application will use to connect to your MongoDB Atlas
+   cluster. AWS provides your account with a default VPC for your hosts You may need to modify the default VPC or create
+   a new one to work alongside MongoDB Atlas.
 
-   MongoDB Atlas requires your host VPC to follow the `RFC-1918 <https://tools.ietf.org/html/rfc1918>`__ standard for creating private ranges. The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks of the IP address space for private internets:
+   MongoDB Atlas requires your host VPC to follow the `RFC-1918 <https://tools.ietf.org/html/rfc1918>`__ standard for
+   creating private ranges. The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks of
+   the IP address space for private internets:
 
    - 10.0.0.0 - 10.255.255.255 (10/8 prefix)
    - 172.16.0.0 - 172.31.255.255 (172.16/12 prefix)
@@ -74,7 +92,8 @@ CIDR Subnet Selection for MongoDB Atlas
      Don't overlap your ranges!
 
 
-   The point of peering is to permit two private IP ranges to work in conjunction to keep your network traffic off the public internet. This will require you to use separate private IP ranges that do not conflict.
+   The point of peering is to permit two private IP ranges to work in conjunction to keep your network traffic off the
+   public internet. This will require you to use separate private IP ranges that do not conflict.
 
    AWS standard states the following in their "`Invalid VPC Peering <http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/invalid-peering-configurations.html>`__" document:
 
@@ -88,7 +107,11 @@ CIDR Subnet Selection for MongoDB Atlas
    MongoDB Atlas VPC
    -----------------
 
-   When you create a group in MongoDB Atlas, by default we provide you with an AWS VPC which you can only modify before launching your first cluster. Groups with an existing cluster CANNOT MODIFY their VPC CIDR block - this is to comply with the `AWS requirement for peering <http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/Welcome.html>`__. By default we create a VPC with IP range 192.168.248.0/21. To specify your IP block prior to configuring peering and launching your cluster, follow these steps:
+   When you create a group in MongoDB Atlas, by default we provide you with an AWS VPC which you can only modify before
+   launching your first cluster. Groups with an existing cluster CANNOT MODIFY their VPC CIDR block - this is to comply
+   with the `AWS requirement for peering <http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/Welcome.html>`__. By
+   default we create a VPC with IP range 192.168.248.0/21. To specify your IP block prior to configuring peering and
+   launching your cluster, follow these steps:
 
    1. Sign up for `MongoDB Atlas`_ and ensure your payment method is completed.
 
@@ -114,4 +137,8 @@ CIDR Subnet Selection for MongoDB Atlas
    Conclusion
    ----------
 
-   Using peering ensures that your database traffic remains off the public network. This provides you with a much more secure solution allowing you to easily scale up and down without specifying IP addresses each time, and reduces costs on transporting your data from server to server. At any time if you run into problems with this, our support team is always available by clicking the SUPPORT link in the lower left of your window. Our support team is happy to assist in ensuring your peering connection is properly configured.
+   Using peering ensures that your database traffic remains off the public network. This provides you with a much more
+   secure solution allowing you to easily scale up and down without specifying IP addresses each time, and reduces costs
+   on transporting your data from server to server. At any time if you run into problems with this, our support team is
+   always available by clicking the SUPPORT link in the lower left of your window. Our support team is happy to assist
+   in ensuring your peering connection is properly configured.

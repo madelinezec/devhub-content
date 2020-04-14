@@ -12,6 +12,16 @@
    :site: @mongodb
    :creator: @MBeugnet
    :title: Learn how to use the Change Streams using the MongoDB Java Driver.
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Learn how to use the Change Streams using the MongoDB Java Driver.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/java-change-streams
+   :title: Learn how to map POJOs using the MongoDB Java Driver.
+   :image: /images/social/open-graph/og-blue-pattern.png
+   :type: article
 
    Learn how to use the Change Streams using the MongoDB Java Driver.
 

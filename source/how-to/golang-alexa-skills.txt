@@ -7,7 +7,16 @@
     :site: @mongodb
     :creator: @nraboy
     :title: Developing Alexa Skills with MongoDB and Golang
-    :image: https://webassets.mongodb.com/_com_assets/cms/alexa-mongodb-golang-xbmc4riexg.jpg
+    :image: /images/social/twitter/twitter-mdb-developer.png
+    :image-alt: MongoDB Developer
+
+    Learn how to develop Amazon Alexa Skills that interact with MongoDB using the Go programming language and AWS Lambda.
+
+.. og::
+    :url: https://developer.mongodb.com/how-to/golang-alexa-skills
+    :title: Developing Alexa Skills with MongoDB and Golang
+    :image: /images/social/open-graph/og-mdb-developer.png
+    :type: article
 
     Learn how to develop Amazon Alexa Skills that interact with MongoDB using the Go programming language and AWS Lambda.
 

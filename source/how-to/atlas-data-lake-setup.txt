@@ -11,7 +11,17 @@
 .. twitter::
    :site: @mongodb
    :creator: @kenwalger
-   :title: MongoDB Atlas Data Lake Setup
+   :title: Learn how to setup MongoDB Atlas Datalake
+   :image: /images/social/twitter/Twitter-docs.png
+   :image-alt: MongoDB Data Lake
+
+   Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/atlas-data-lake-setup
+   :type: article
+   :title: Learn how to setup MongoDB Atlas Datalake
+   :image: /images/social/open-graph/og-docs.png
 
    Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
 
@@ -49,7 +59,7 @@ MongoDB Atlas Data Lake Setup
 
 .. introduction::
 
-   At MongoDB World 2019, we announced the Beta version of MongoDB Atlas Data Lake which allows for the querying of data stored in Amazon S3 buckets. We’re able to query uncompressed or compressed data stored in JSON, BSON, CSV, TSV, Avro, and Parquet formats right in S3. This is a great feature of MongoDB Atlas to enable the exploration of data stored on S3 without having to import it into a database.
+   At MongoDB World 2019, we announced the Beta version of MongoDB Atlas Data Lake which allows for the querying of data stored in Amazon S3 buckets. We're able to query uncompressed or compressed data stored in JSON, BSON, CSV, TSV, Avro, and Parquet formats right in S3. This is a great feature of MongoDB Atlas to enable the exploration of data stored on S3 without having to import it into a database.
 
    Before diving into the Atlas Data Lake, however, there are some setup steps that need to be done. To start, you'll need an Amazon Web Services (AWS) account, access to the AWS Management Console, and `Command Line Interface (CLI) tools <http://bit.ly/cli-aws>`__. Let's take a look.
 
@@ -58,28 +68,28 @@ MongoDB Atlas Data Lake Setup
    Setting Up the AWS CLI
    ----------------------
 
-   The first thing we’ll need to create is an Identity and Access Management (IAM) user. From the AWS Management Console, I’ll search for IAM. 
+   The first thing we'll need to create is an Identity and Access Management (IAM) user. From the AWS Management Console, I'll search for IAM.
    
    .. image:: /images/how-to/atlas-data-lake-setup/AWS_Management_Console.png
       :alt: "AWS Management Console Search"
 
-   On the left navigation, I’ll select ``Users``, and ``Add User``. I’ll make a new user, I’ll just call it ``DataLakeUser``, and assign Programmatic access. 
+   On the left navigation, I'll select ``Users``, and ``Add User``. I'll make a new user, I'll just call it ``DataLakeUser``, and assign Programmatic access.
 
    .. image:: /images/how-to/atlas-data-lake-setup/AddUser.png
       :alt: "Add User Step"
       :scale: 100%
 
-   Then I’ll click on ``Next: Permissions`` and assign, or I can create, a group that has Administrator Access privileges. 
+   Then I'll click on ``Next: Permissions`` and assign, or I can create, a group that has Administrator Access privileges.
 
    .. image:: /images/how-to/atlas-data-lake-setup/setPermissions.png
       :alt: "Set Permissions"
 
-   I’ll click on ``Next: Tags`` and since I’m not assigning any tags at this point, I’ll move onto ``Next: Review``. And everything looks good, so I’ll create the user.
+   I'll click on ``Next: Tags`` and since I'm not assigning any tags at this point, I'll move onto ``Next: Review``. And everything looks good, so I'll create the user.
 
    .. image:: /images/how-to/atlas-data-lake-setup/keyInformation.png
       :alt: "Access and Secret Key Information"
 
-   I’ll need the ``Access key ID`` and ``Secret access key`` information to configure my command-line interface. I’ll download the .csv file and store it locally. Note that once you leave this screen you won’t have access to this information again and will have to go through the credential creation process to get a new set of keys. That’s why downloading that information at this point is important.
+   I'll need the ``Access key ID`` and ``Secret access key`` information to configure my command-line interface. I'll download the .csv file and store it locally. Note that once you leave this screen you won't have access to this information again and will have to go through the credential creation process to get a new set of keys. That's why downloading that information at this point is important.
 
    Next, in a terminal window I'll run:
 
@@ -127,19 +137,19 @@ MongoDB Atlas Data Lake Setup
    Connecting MongoDB Atlas to S3
    ------------------------------
 
-   Now it’s time to get our feet wet with setting up the connection between Atlas Data Lake and our S3 bucket. Inside the MongoDB Atlas console, on the left side, I’ll click on ``Data Lake`` which takes me to the MongoDB Atlas Data Lake dashboard.
+   Now it's time to get our feet wet with setting up the connection between Atlas Data Lake and our S3 bucket. Inside the MongoDB Atlas console, on the left side, I'll click on ``Data Lake`` which takes me to the MongoDB Atlas Data Lake dashboard.
 
    .. image:: /images/how-to/atlas-data-lake-setup/DL1.png
       :alt: "Try MongoDB Atlas Data Lake"
       :scale: 100%
 
-   From here I'll select ``Try MongoDB Atlas Data Lake`` which will start the step-by-step setup of the connection, but I'll point out a few things along the way as well. After the opening splash screen, we move onto naming our Data Lake. Once you pick a name here, you can’t change it. For now, I’ll call this LakeDemo.
+   From here I'll select ``Try MongoDB Atlas Data Lake`` which will start the step-by-step setup of the connection, but I'll point out a few things along the way as well. After the opening splash screen, we move onto naming our Data Lake. Once you pick a name here, you can't change it. For now, I'll call this LakeDemo.
 
    .. image:: /images/how-to/atlas-data-lake-setup/DL_Naming.png
       :alt: "Name Your Data Lake"
       :scale: 100%
 
-   Next up is the S3 bucket or buckets, this Data Lake will attach to. The S3 bucket I'm using is called ``atlas-data-lake-demo``… not very creative I know… but, I’ll put that into this text box. If you are connecting to more than a single S3 bucket, you can add a comma-separated list in the text box as well.
+   Next up is the S3 bucket or buckets, this Data Lake will attach to. The S3 bucket I'm using is called ``atlas-data-lake-demo``… not very creative I know… but, I'll put that into this text box. If you are connecting to more than a single S3 bucket, you can add a comma-separated list in the text box as well.
 
    .. image:: /images/how-to/atlas-data-lake-setup/S3_Buckets_To_Query.png
       :alt: "S3 Buckets to Query"
@@ -147,11 +157,11 @@ MongoDB Atlas Data Lake Setup
    Role & Policy Task
    ~~~~~~~~~~~~~~~~~~
 
-   The next step in the configuration process is the *Role & Policy* task. This is where the AWS CLI configuration we did previously pays off. Something to note here: As the warning box states, the information for the External ID and ARN aren’t shown inside the MongoDB Atlas interface in this format again, so we’ll want to save this information. I like to copy this information and put it into a ``config.txt`` file that I can find later. The information is also available in the JSON file we’ll create in a moment, but it’s good to save it separately.
+   The next step in the configuration process is the *Role & Policy* task. This is where the AWS CLI configuration we did previously pays off. Something to note here: As the warning box states, the information for the External ID and ARN aren't shown inside the MongoDB Atlas interface in this format again, so we'll want to save this information. I like to copy this information and put it into a ``config.txt`` file that I can find later. The information is also available in the JSON file we'll create in a moment, but it's good to save it separately.
 
-   The next step is to enter a new IAM role for MongoDB Atlas to use. I’ll go with the default suggestion here of ``mdb-dl-role``. 
+   The next step is to enter a new IAM role for MongoDB Atlas to use. I'll go with the default suggestion here of ``mdb-dl-role``.
 
-   There is a generated trust policy that we’ll copy the text from and save into a file named ``dl-role-trust.json``. This allows MongoDB Atlas to be trusted in AWS S3.
+   There is a generated trust policy that we'll copy the text from and save into a file named ``dl-role-trust.json``. This allows MongoDB Atlas to be trusted in AWS S3.
 
    Using that JSON file, we can create an AWS IAM role from the command line… see, I said our previous work would pay off. We copy the command, go to the terminal in the same directory as the ``dl-role-trust.json`` file we just saved, and run the command.
 
@@ -165,11 +175,11 @@ MongoDB Atlas Data Lake Setup
 
    .. blockquote::
 
-      There’s some information we’ll need out of this response in a later step, so don’t clear your screen! 
+      There's some information we'll need out of this response in a later step, so don't clear your screen!
 
    You can also find the information from the AWS Console, but since it was just provided, we can use it from here.
 
-   One more bit of JSON to copy and paste into a file. This time the file is called dl-s3-role-policy.json, and it defines the IAM role that we just created. Once that’s saved, we can apply that policy to the role with the command here in the Roles & Policy step 5.
+   One more bit of JSON to copy and paste into a file. This time the file is called dl-s3-role-policy.json, and it defines the IAM role that we just created. Once that's saved, we can apply that policy to the role with the command here in the Roles & Policy step 5.
 
    .. code-block:: bash
    
@@ -180,18 +190,18 @@ MongoDB Atlas Data Lake Setup
 
    We run this command in the terminal, again in the same folder that the ``dl-s3-role-policy.json`` file resides.
 
-   The next step in the process is to validate the connection. Remember that piece of information I said we’d need? Well, now’s the time. We want the get the Amazon Resource Name (ARN) string from the response we got when we created the IAM role. 
+   The next step in the process is to validate the connection. Remember that piece of information I said we'd need? Well, now's the time. We want the get the Amazon Resource Name (ARN) string from the response we got when we created the IAM role.
 
-   If we scroll up a bit in the terminal window we can find it. Note that we want the ARN under the ``Role`` information, **not** the ARN under the ``Principal`` information. We paste that into the text box and we don’t need to touch the bucket name box. We next click on ``Validate & Launch`` which makes sure that all of our configurations are in place and correct.
+   If we scroll up a bit in the terminal window we can find it. Note that we want the ARN under the ``Role`` information, **not** the ARN under the ``Principal`` information. We paste that into the text box and we don't need to touch the bucket name box. We next click on ``Validate & Launch`` which makes sure that all of our configurations are in place and correct.
 
-   Congratulations! You’ve successfully created an Atlas Data Lake.
+   Congratulations! You've successfully created an Atlas Data Lake.
 
    Swimming in the Data Lake
    -------------------------
 
-   Let's connect to the MongoDB Atlas Data Lake using the Mongo Shell. From the Data Lake console, I’ll click on Step 2 and ``connect``. Then Connect with the Mongo Shell. I already have the Mongo Shell installed, so I’ll choose that option. If you don’t have it already, you can download it for your OS platform.
+   Let's connect to the MongoDB Atlas Data Lake using the Mongo Shell. From the Data Lake console, I'll click on Step 2 and ``connect``. Then Connect with the Mongo Shell. I already have the Mongo Shell installed, so I'll choose that option. If you don't have it already, you can download it for your OS platform.
 
-   I’ll copy the connection string and paste it into the command line.
+   I'll copy the connection string and paste it into the command line.
 
    .. code-block:: bash
    
@@ -200,13 +210,13 @@ MongoDB Atlas Data Lake Setup
 
    Note that I need to replace the connection string, username, and password portions of this with the appropriate information for database access. This user **must** have Atlas Admin privileges to be able to configure the database. You can configure the users and their permissions from the **Database Access** tab on the left. 
 
-   After I run that command from the terminal, I should be inside the Mongo Shell. The Atlas Data Lake console will take me to the next step: database configuration. By clicking on Step 3 here, I’m taken to the documentation for a ``storageSetConfig`` command that I need to run to enable Atlas Data Lake to pull in the data from S3.
+   After I run that command from the terminal, I should be inside the Mongo Shell. The Atlas Data Lake console will take me to the next step: database configuration. By clicking on Step 3 here, I'm taken to the documentation for a ``storageSetConfig`` command that I need to run to enable Atlas Data Lake to pull in the data from S3.
 
    I need to update the information in the sample code to match my S3 bucket region and bucket name. Recall from an earlier step when I set up the directory structure in S3 I mentioned that those directories would come into Atlas Data Lake as collections. This command is where that is defined. We can define the databases that are generated in MongoDB Atlas as well as the collections, and what that structure looks like. Additionally, to improve performance you can structure your data on S3 in a way that aligns with common queries similar to indexing strategies and make the accompanying optimizations to your Storage Config
 
    For example, if our data is stored in S3 in yearly folders and inside each of those folders is data of different file types, e.g. JSON, CSV, TSV, etc. MongoDB Atlas Data Lake will intelligently read the S3 partitions and make the partition names park of the documents. This allows for the efficient querying of data by only opening the needed partitions. Meaning that data in a 2018 folder will be pulled into the query logic and searches for 2018 data will only open 2018 folders. 
 
-   For now, I’ll stick with a single database called ``sample``, but I’ll bring in different datasets from the different file types. I just need to copy these lines here:
+   For now, I'll stick with a single database called ``sample``, but I'll bring in different datasets from the different file types. I just need to copy these lines here:
 
 
    .. code-block:: bash
@@ -273,14 +283,14 @@ MongoDB Atlas Data Lake Setup
 
    Then I run the command from inside the Mongo Shell. I should then get back a ``{ "ok" : 1 }`` response indicating that all is well.
 
-   From here, depending on the size of the datasets, it can take a bit for Atlas Data Lake to generate everything needed. You’ll know it’s ready to go when you can run a
+   From here, depending on the size of the datasets, it can take a bit for Atlas Data Lake to generate everything needed. You'll know it's ready to go when you can run a
 
    .. code-block:: bash
    
       show dbs
 
 
-   command and you are given a list of databases. In the case of this example, I’ll get back a single database named sample.
+   command and you are given a list of databases. In the case of this example, I'll get back a single database named sample.
 
    Then with a 
 
@@ -298,7 +308,7 @@ MongoDB Atlas Data Lake Setup
 
    The Data Lake console will have three green boxes with checkmarks at this point, indicating that the database has been configured. The last step is to run a query.
 
-   Back in the Mongo Shell, I can query any of those collections using MQL, the MongoDB Query Language. I’ll run a simple findOne() on the comics collection. Behind the scenes here, this operation should have fairly reasonable performance as this will only open the associated S3 partition that holds this data.
+   Back in the Mongo Shell, I can query any of those collections using MQL, the MongoDB Query Language. I'll run a simple findOne() on the comics collection. Behind the scenes here, this operation should have fairly reasonable performance as this will only open the associated S3 partition that holds this data.
 
    .. code-block:: bash
    
@@ -325,7 +335,7 @@ MongoDB Atlas Data Lake Setup
    Wrap Up
    -------
 
-   Excellent work! We’ve come a long way in a few relatively short steps. You now have the power to explore your data stored in S3 using MQL. Don’t stop with just the Mongo Shell though. You can also `explore data using MongoDB Compass <https://alger.me/compass-data-lake>`__ and programmatically using MongoDB Drivers for your favorite language.
+   Excellent work! We've come a long way in a few relatively short steps. You now have the power to explore your data stored in S3 using MQL. Don't stop with just the Mongo Shell though. You can also `explore data using MongoDB Compass <https://alger.me/compass-data-lake>`__ and programmatically using MongoDB Drivers for your favorite language.
 
    See MongoDB Atlas Data Lake In Action
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -334,6 +344,6 @@ MongoDB Atlas Data Lake Setup
 
    .. blockquote::
 
-      Enjoy this great new feature of `MongoDB Atlas <http://bit.ly/mongodb-meetatlas>`__. Let us know how you’re putting it to use, we’re always excited to hear how folks are using our products and features.
+      Enjoy this great new feature of `MongoDB Atlas <http://bit.ly/mongodb-meetatlas>`__. Let us know how you're putting it to use, we're always excited to hear how folks are using our products and features.
 
    Until next time, Happy Coding!

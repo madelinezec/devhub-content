@@ -8,6 +8,16 @@
    :site: @mongodb
    :creator: @MBeugnet
    :title: Capture IOT Data With MongoDB Stitch in 5 Minutes
+   :image: /images/social/twitter/twitter-pink-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to use MongoDB Stitch for Internet of Things data in as little as 5 minutes.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/capture-iot-data-stitch
+   :title: Capture IOT Data With MongoDB Stitch in 5 Minutes
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
    Learn how to use MongoDB Stitch for Internet of Things data in as little as 5 minutes.
 
@@ -16,6 +26,7 @@
 .. pubdate:: 2018-10-03
 
 .. type:: how-to
+
 .. level:: beginner
 
 .. tags:: 
@@ -46,6 +57,7 @@ Capture IOT Data With MongoDB Stitch in 5 Minutes
   First, let's have a look at a standard IOT capture architecture:
 
   .. image:: /images/how-to/iot_00-bstfa0fkxb.png
+    :alt: standard IOT capture architecture.
 
   On the left, we have our sensors. Let's assume they can push data every
   second over TCP using a
@@ -67,7 +79,7 @@ Capture IOT Data With MongoDB Stitch in 5 Minutes
   - make security updates on a regular basis of the Operating Systems
     and applications,
   - have an auto-scaling capability (reduce maintenance cost & enable
-    automatic failover)…
+    automatic failover).
 
   This kind of architecture is expensive and maintenance cost can be quite
   high as well.
@@ -75,6 +87,7 @@ Capture IOT Data With MongoDB Stitch in 5 Minutes
   Now let's solve this same problem with MongoDB Stitch!
 
   .. image:: /images/how-to/Iot_01-xs1xezu0vb.png
+    :alt: MongoDB Stitch architecture
 
   Once you have created a `MongoDB Atlas
   cluster <https://www.youtube.com/watch?v=ZpA2FIn761U>`__, you can attach

@@ -11,9 +11,19 @@
 .. twitter::
    :site: @mongodb
    :creator: @MBeugnet
-   :title: In this Java series, you will learn everything you need to know about the MongoDB Java Driver. From installation and setup to advanced operations such as Change Streams and multi-document ACID transactions without forgetting basic CRUD operations and much more.
+   :title: Learn how to use MongoDB with Java in this CRUD operations tutorial.
+   :image: /images/social/twitter/twitter-blue-pattern.png
+   :image-alt: MongoDB
 
-   In this Java series, you will learn everything you need to know about the MongoDB Java Driver. From installation and setup to advanced operations such as Change Streams and multi-document ACID transactions without forgetting basic CRUD operations and much more.
+   Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/java-mapping-pojos
+   :type: article
+   :title: Learn how to use MongoDB with Java in this CRUD operations tutorial.
+   :image: /images/social/open-graph/og-blue-pattern.png
+
+   Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)

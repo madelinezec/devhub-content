@@ -6,14 +6,24 @@
 
 .. meta-description:: 
 
-   Multi-document transactions arrived in MongoDB 4.0 in June 2018. To demonstrate transactions in the wild we use a trivial example app that emulates a flight booking for an online airline application.
+   How to perform multi-document transactions with Python.
 
 .. twitter::
    :site: @mongodb
    :creator: @jdrumgoole
    :title: Introduction to Multi-Document ACID Transactions in Python
+   :image: /images/social/twitter/twitter-pink-pattern.png
+   :image-alt: MongoDB
 
-   Multi-document transactions arrived in MongoDB 4.0 in June 2018. To demonstrate transactions in the wild we use a trivial example app that emulates a flight booking for an online airline application.
+   How to perform multi-document transactions with Python.
+
+.. og::
+   :url: http://developer.mongodb.com/quickstart/python-acid-transactions
+   :type: article
+   :title: Introduction to Multi-Document ACID Transactions in Python
+   :image: /images/social/open-graph/og-pink-pattern.png
+
+   How to perform multi-document transactions with Python.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)

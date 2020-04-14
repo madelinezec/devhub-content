@@ -13,6 +13,15 @@
    :creator: @Lauren_Schaefer
    :title: Mapping Terms and Concepts from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
+   :image-alt: SQL to MongoDB
+
+   Learn how SQL terms and concepts map to MongoDB.
+
+.. og::
+   :url: http://developer.mongodb.com/article/map-terms-concepts-sql-mongodb
+   :type: article
+   :title: Mapping Terms and Concepts from SQL to MongoDB
+   :image: /images/social/open-graph/og-sql-mdb.png
 
    Learn how SQL terms and concepts map to MongoDB.
 
@@ -53,14 +62,14 @@ Mapping Terms and Concepts from SQL to MongoDB
    normalize a database, and, after years of working with tables, you 
    think in rows and columns as well.
 
-   But now you’ve decided to dip your toe into the wonderful world of NoSQL
-   databases, and you’re exploring MongoDB. Perhaps you’re wondering what
+   But now you've decided to dip your toe into the wonderful world of NoSQL
+   databases, and you're exploring MongoDB. Perhaps you're wondering what
    you need to do differently. Can you just translate your rows and columns
    into fields and values and call it a day? Do you really need to change
    the way you think about storing your data?
 
-   We’ll answer those questions and more in this three-part article series.
-   Below is a summary of what we’ll cover today:
+   We'll answer those questions and more in this three-part article series.
+   Below is a summary of what we'll cover today:
 
    -  :ref:`sql-mdb-1-meet-ron`
    -  :ref:`sql-mdb-1-relational`
@@ -86,7 +95,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Meet Ron
    --------
 
-   I’m a huge fan of the best tv show ever created: Parks and Recreation.
+   I'm a huge fan of the best tv show ever created: Parks and Recreation.
    Yes, I wrote that previous sentence as if it were a fact, because it
    actually is.
 
@@ -101,7 +110,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       :align: center
 
    In season 6, Ron discovers `Yelp <https://www.yelp.com>`__. Ron thinks
-   Yelp is amazing, because he loves the idea of reviewing places he’s
+   Yelp is amazing, because he loves the idea of reviewing places he's
    been.
 
    However, Yelp is way too “on the grid” for Ron. He pulls out his beloved
@@ -132,7 +141,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       way slower than posting the review to Yelp where it will be instantly
       available for anyone to read. 
    #. The business he is reviewing may never
-      open the letter he sends as they may just assume it’s junk mail. 
+      open the letter he sends as they may just assume it's junk mail.
    #. No one else will benefit from his review. (These are exactly the type of
       reviews I like to find on Amazon!)
 
@@ -150,7 +159,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    database to a NoSQL database such as MongoDB. They love the idea of
    MongoDB, and they are inspired by the power of the flexible document
    data model. However, they frequently bring with them their SQL mindsets
-   and don’t realize the full value of MongoDB. In fact, when people don’t
+   and don't realize the full value of MongoDB. In fact, when people don't
    change the way they think about modeling their data, they struggle and
    sometimes fail.
 
@@ -158,11 +167,11 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: Ron throws computer in the trash 
       :align: center
 
-   Don’t be like Ron. (At least in this case, because, in most cases, Ron
-   is amazing.) Don’t be stuck in your SQL ways. Change your mindset and
+   Don't be like Ron. (At least in this case, because, in most cases, Ron
+   is amazing.) Don't be stuck in your SQL ways. Change your mindset and
    realize the full value of MongoDB.
 
-   Before we jump into how to change your mindset, let’s begin by answering
+   Before we jump into how to change your mindset, let's begin by answering
    some common questions about non-relational databases and discussing the
    basics of how to store data in MongoDB.
 
@@ -190,32 +199,32 @@ Mapping Terms and Concepts from SQL to MongoDB
    `non-relational
    database <https://www.mongodb.com/scale/what-is-a-non-relational-database>`__?”
 
-   MongoDB is considered a non-relational database. However, that doesn’t
-   mean MongoDB doesn’t store relationship data well. (I know I just used a
+   MongoDB is considered a non-relational database. However, that doesn't
+   mean MongoDB doesn't store relationship data well. (I know I just used a
    double-negative. Stick with me.) MongoDB stores relationship data in a
    different way. In fact, many consider the way MongoDB stores
    relationship data to be more intuitive and more reflective of the
    real-world relationships that are being modeled.
 
-   Let’s take a look at how MongoDB stores data.
+   Let's take a look at how MongoDB stores data.
 
    .. _sql-mdb-1-document-model:
 
    The Document Model
    ------------------
 
-   Instead of tables, MongoDB stores data in documents. No, Clippy, I’m not
+   Instead of tables, MongoDB stores data in documents. No, Clippy, I'm not
    talking about Microsoft Word Documents.
 
    .. image:: /images/article/sql-to-mdb/clippy.gif
       :alt: Clippy raises his eyebrows
       :align: center
 
-   I’m talking about `BSON
+   I'm talking about `BSON
    documents <https://docs.mongodb.com/manual/core/document/>`__. BSON is a
    binary representation of `JSON (JavaScript Object Notation)
    documents <https://docs.mongodb.com/manual/reference/glossary/#term-json>`__.
-   Documents will likely feel comfortable to you if you’ve used any of the
+   Documents will likely feel comfortable to you if you've used any of the
    C-family of programming languages such as C, C#, Go, Java, JavaScript,
    PHP, or Python.
 
@@ -224,7 +233,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    together in collections. Related collections are grouped together and
    stored in a database.
 
-   Let’s discuss some of the basics of a document. Every document begins
+   Let's discuss some of the basics of a document. Every document begins
    and ends with curly braces.
 
    .. code:: json
@@ -232,7 +241,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       {
       }
 
-   Inside of those curly braces, you’ll find an unordered set of
+   Inside of those curly braces, you'll find an unordered set of
    field/value pairs that are separated by commas.
 
    .. code:: json
@@ -264,25 +273,25 @@ Mapping Terms and Concepts from SQL to MongoDB
    Example Documents
    -----------------
 
-   Ok, that’s enough definitions. Let’s take a look at a real example, and
+   Ok, that's enough definitions. Let's take a look at a real example, and
    compare and contrast how we would model the data in SQL vs MongoDB.
 
-   Storing Leslie’s Information
+   Storing Leslie's Information
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Let’s say we need to store information about a user named Leslie. We’ll
+   Let's say we need to store information about a user named Leslie. We'll
    store her contact information including her first name, last name, cell
-   phone number, and city. We’ll also store some extra information about
+   phone number, and city. We'll also store some extra information about
    her including her location, hobbies, and job history.
 
    Storing Contact Information
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   Let’s begin with Leslie’s contact information. When using SQL, we’ll
+   Let's begin with Leslie's contact information. When using SQL, we'll
    create a table named ``Users``. We can create columns for each piece of
    contact information we need to store: first name, last name, cell phone
    number, and city. To ensure we have a unique way to identify each row,
-   we’ll include an ID column.
+   we'll include an ID column.
 
    .. list-table:: Users
       :header-rows: 1
@@ -299,10 +308,10 @@ Mapping Terms and Concepts from SQL to MongoDB
         - 8125552344
         - Pawnee
 
-   Now let’s store that same information in MongoDB. We can create a new
-   document for Leslie where we’ll add field/value pairs for each piece of
-   contact information we need to store. We’ll use ``_id`` to uniquely
-   identify each document. We’ll store this document in a collection named
+   Now let's store that same information in MongoDB. We can create a new
+   document for Leslie where we'll add field/value pairs for each piece of
+   contact information we need to store. We'll use ``_id`` to uniquely
+   identify each document. We'll store this document in a collection named
    ``Users``.
 
    Users 
@@ -320,10 +329,10 @@ Mapping Terms and Concepts from SQL to MongoDB
    Storing Latitude and Longitude
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   Now that we’ve stored Leslie’s contact information, let’s store the
+   Now that we've stored Leslie's contact information, let's store the
    coordinates of her current location.
 
-   When using SQL, we’ll need to split the latitude and longitude between
+   When using SQL, we'll need to split the latitude and longitude between
    two columns.
 
    .. list-table:: Users
@@ -375,15 +384,15 @@ Mapping Terms and Concepts from SQL to MongoDB
    Storing Lists of Information
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   We’re successfully storing Leslie’s contact information and current
-   location. Now let’s store her hobbies.
+   We're successfully storing Leslie's contact information and current
+   location. Now let's store her hobbies.
 
    When using SQL, we could choose to add more columns to the Users table.
    However, since a single user could have many hobbies (meaning we need to
-   represent a one-to-many relationship), we’re more likely to create a
+   represent a one-to-many relationship), we're more likely to create a
    separate table just for hobbies. Each row in the table will contain
    information about one hobby for one user. When we need to retrieve
-   Leslie’s hobbies, we’ll join the ``Users`` table and our new ``Hobbies``
+   Leslie's hobbies, we'll join the ``Users`` table and our new ``Hobbies``
    table.
 
    .. list-table:: Hobbies
@@ -405,10 +414,10 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    Since MongoDB supports arrays, we can simply add a new field named
    “hobbies” to our existing document. The array can contain as many or as
-   few hobbies as we need (assuming we don’t exceed the `16 megabyte
+   few hobbies as we need (assuming we don't exceed the `16 megabyte
    document size
    limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__).
-   When we need to retrieve Leslie’s hobbies, we don’t need to do an
+   When we need to retrieve Leslie's hobbies, we don't need to do an
    expensive join to bring the data together; we can simply retrieve her
    document in the ``Users`` collection.
 
@@ -431,9 +440,9 @@ Mapping Terms and Concepts from SQL to MongoDB
    Storing Groups of Related Information
    `````````````````````````````````````
 
-   Let’s say we also need to store Leslie’s job history.
+   Let's say we also need to store Leslie's job history.
 
-   Just as we did with hobbies, we’re likely to create a separate table
+   Just as we did with hobbies, we're likely to create a separate table
    just for job history information. Each row in the table will contain
    information about one job for one user.
 
@@ -458,9 +467,9 @@ Mapping Terms and Concepts from SQL to MongoDB
         - “Director, National Parks Service, Midwest Branch”
         - 2014
 
-   So far in this article, we’ve used arrays in MongoDB to store
+   So far in this article, we've used arrays in MongoDB to store
    geolocation data and a list of Strings. Arrays can contain values of any
-   type, including objects. Let’s create a document for each job Leslie has
+   type, including objects. Let's create a document for each job Leslie has
    held and store those documents in an array.
 
 
@@ -492,11 +501,11 @@ Mapping Terms and Concepts from SQL to MongoDB
          ]
       }
 
-   Storing Ron’s Information
+   Storing Ron's Information
    ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Now that we’ve decided how we’ll store information about our users in
-   both tables and documents, let’s store information about Ron. Ron will
+   Now that we've decided how we'll store information about our users in
+   both tables and documents, let's store information about Ron. Ron will
    have almost all of the same information as Leslie. However, Ron does his
    best to stay off the grid, so he will not be storing his location in the
    system.
@@ -508,11 +517,11 @@ Mapping Terms and Concepts from SQL to MongoDB
    Skipping Location Data in SQL
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   Let’s begin by examining how we would store Ron’s information in the
-   same tables that we used for Leslie’s. When using SQL, we are required
-   to input a value for every cell in the table. We will represent Ron’s
+   Let's begin by examining how we would store Ron's information in the
+   same tables that we used for Leslie's. When using SQL, we are required
+   to input a value for every cell in the table. We will represent Ron's
    lack of location data with ``NULL``. The problem with using ``NULL`` is
-   that it’s unclear whether the data does not exist or if the data is
+   that it's unclear whether the data does not exist or if the data is
    unknown, so many people discourage the use of ``NULL``.
 
    .. list-table:: Users
@@ -600,7 +609,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Skipping Location Data in MongoDB
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   In MongoDB, we have the option of representing Ron’s lack of location
+   In MongoDB, we have the option of representing Ron's lack of location
    data in two ways: we can omit the ``location`` field from the document
    or we can set ``location`` to ``null``. Best practices suggest that we
    omit the ``location`` field to save space. You can choose if you want
@@ -637,24 +646,24 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    .. _sql-mdb-1-store-laurens-info:
    
-   Storing Lauren’s Information
+   Storing Lauren's Information
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Let’s say we are feeling pretty good about our data models and decide to
+   Let's say we are feeling pretty good about our data models and decide to
    launch our apps using them.
 
    Then we discover we need to store information about a new user: Lauren
-   Burhug. She’s a fourth grade student who Ron teaches about government.
+   Burhug. She's a fourth grade student who Ron teaches about government.
    We need to store a lot of the same information about Lauren as we did
    with Leslie and Ron: her first name, last name, city, and hobbies.
-   However, Lauren doesn’t have a cell phone, location
+   However, Lauren doesn't have a cell phone, location
    data, or job history. We also discover that we need to store a new piece
    of information: her school.
 
    Storing New Information in SQL
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   Let’s begin by storing Lauren’s information in the SQL tables as they
+   Let's begin by storing Lauren's information in the SQL tables as they
    already exist.
 
    .. list-table:: Users
@@ -716,9 +725,9 @@ Mapping Terms and Concepts from SQL to MongoDB
         - 3
         - soccer
 
-   We have two options for storing information about Lauren’s school. We
+   We have two options for storing information about Lauren's school. We
    can choose to add a column to the existing Users table, or we can create
-   a new table. Let’s say we choose to add a column named “school” to the
+   a new table. Let's say we choose to add a column named “school” to the
    Users table. Depending on our access rights to the database, we may need
    to talk to the DBA and convince them to add the field. Most likely, the
    database will need to be taken down, the “school” column will need to be
@@ -729,7 +738,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Storing New Information in MongoDB
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   Let’s examine how we can store Lauren’s information in MongoDB.
+   Let's examine how we can store Lauren's information in MongoDB.
 
 
    Users 
@@ -745,9 +754,9 @@ Mapping Terms and Concepts from SQL to MongoDB
          "school": "Pawnee Elementary"
       }
 
-   As you can see above, we’ve added a new field named “school” to Lauren’s
-   document. We do not need to make any modifications to Leslie’s document
-   or Ron’s document when we add the new “school” field to Lauren’s
+   As you can see above, we've added a new field named “school” to Lauren's
+   document. We do not need to make any modifications to Leslie's document
+   or Ron's document when we add the new “school” field to Lauren's
    document. MongoDB has a flexible schema, so every document in a
    collection does not need to have the same fields.
 
@@ -759,21 +768,21 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: April screams in terror
       :align: center
 
-   Don’t panic! This flexibility can be hugely valuable as your
-   application’s requirements evolve and change.
+   Don't panic! This flexibility can be hugely valuable as your
+   application's requirements evolve and change.
 
    MongoDB provides `schema
    validation <https://docs.mongodb.com/manual/core/schema-validation/>`__
-   so you can lock down your schema as much or as little as you’d like when
-   you’re ready.
+   so you can lock down your schema as much or as little as you'd like when
+   you're ready.
 
    .. _sql-mdb-1-mapping:
 
    Mapping Terms and Concepts from SQL to MongoDB
    ----------------------------------------------
 
-   Now that we’ve compared how you model data in SQL and MongoDB, let’s be
-   a bit more explicit with the terminology. Let’s map terms and concepts
+   Now that we've compared how you model data in SQL and MongoDB, let's be
+   a bit more explicit with the terminology. Let's map terms and concepts
    from SQL to MongoDB.
 
    Row ⇒ Document
@@ -785,7 +794,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: Row and document
       :align: center
 
-   Depending on how you’ve normalized your data, rows across several tables
+   Depending on how you've normalized your data, rows across several tables
    could map to a single document. In our examples above, we saw that rows
    for Leslie in the ``Users``, ``Hobbies``, and ``JobHistory`` tables
    mapped to a single document.
@@ -793,7 +802,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Column ⇒ Field
    ~~~~~~~~~~~~~~
 
-   A column maps roughly to a field. For example, when we modeled Leslie’s
+   A column maps roughly to a field. For example, when we modeled Leslie's
    data, we had a ``first_name`` column in the Users table and a
    ``first_name`` field in a User document.
 
@@ -828,7 +837,7 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    Indexes provide fairly similar functionality in both SQL and MongoDB.
    Indexes are data structures that optimize queries. You can think of them
-   like an index that you’d find in the back of a book; indexes tell the
+   like an index that you'd find in the back of a book; indexes tell the
    database where to look for specific pieces of information. Without an
    index, all information in a table or collection must be searched.
 
@@ -875,12 +884,12 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    In MongoDB, we encourage you to model your data differently. Our rule of
    thumb is *Data that is accessed together should be stored together*. If
-   you’ll be frequently creating, reading, updating, or deleting a chunk of
+   you'll be frequently creating, reading, updating, or deleting a chunk of
    data together, you should probably be storing it together in a document
    rather than breaking it apart across several documents.
 
    You can use embedding to model data that you may have broken out into
-   separate tables when using SQL. When we modeled Leslie’s data for
+   separate tables when using SQL. When we modeled Leslie's data for
    MongoDB earlier, we saw that :ref:`we embedded her job history in her
    User document <sql-mdb-1-job-history>` instead of creating a separate
    ``JobHistory`` document.
@@ -889,7 +898,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: SQL Join and MongoDB Embedding
       :align: center
 
-   For more information, see the MongoDB Manual’s pages on `modeling
+   For more information, see the MongoDB Manual's pages on `modeling
    one-to-one relationships with
    embedding <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-one-relationships-between-documents/>`__
    and `modeling one-to-many relationships with
@@ -906,8 +915,8 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: SQL Join and MongoDB Database Reference
       :align: center
 
-   However, sometimes embedding does not make sense. Let’s say we wanted to
-   store information about our Users’ employers like their names,
+   However, sometimes embedding does not make sense. Let's say we wanted to
+   store information about our Users' employers like their names,
    addresses, and phone numbers. The number of Users that could be
    associated with an employer is unbounded. If we were to embed
    information about an employer in a ``User`` document, the employer data
@@ -941,7 +950,7 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: SQL Left Outer Join and MongoDB $lookup
       :align: center
 
-   For more information, see the MongoDB Manual’s pages on the `aggregation
+   For more information, see the MongoDB Manual's pages on the `aggregation
    framework <https://docs.mongodb.com/manual/core/aggregation-pipeline/index.html>`__
    and
    `$lookup <https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/index.html>`__.
@@ -952,7 +961,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Recursive Common Table Expressions ⇒ $graphLookup (Aggregation Pipeline)
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   When you need to query hierarchical data like a company’s organization
+   When you need to query hierarchical data like a company's organization
    chart in SQL, we can use recursive common table expressions.
 
    MongoDB provides an aggregation framework stage that is similar to
@@ -963,9 +972,9 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: SQL Recursive Common Table Expressions and $graphLookup
       :align: center
 
-   For more information, see the MongoDB Manual’s page on
+   For more information, see the MongoDB Manual's page on
    `$graphLookup <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>`__
-   and `MongoDB University’s free course on the aggregation
+   and `MongoDB University's free course on the aggregation
    framework <http://bit.ly/MDBU_m121>`__.
 
    .. _sql-mdb-1-transactions-mapping:
@@ -973,7 +982,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Multi-Record ACID Transaction ⇒ Multi-Document ACID Transaction
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Finally, let’s talk about `ACID <https://en.wikipedia.org/wiki/ACID>`__
+   Finally, let's talk about `ACID <https://en.wikipedia.org/wiki/ACID>`__
    transactions. Transactions group database operations together so they
    all succeed or none succeed. In SQL, we call these multi-record ACID
    transactions. In MongoDB, we call these multi-document ACID
@@ -993,7 +1002,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Wrap Up
    -------
 
-   We’ve just covered a lot of concepts and terminology. The three term
+   We've just covered a lot of concepts and terminology. The three term
    mappings I recommend you internalize as you get started using MongoDB
    are: 
    
@@ -1008,5 +1017,5 @@ Mapping Terms and Concepts from SQL to MongoDB
       :alt: Mapping of terms from SQL to MongoDB
       :align: center
 
-   Be on the lookout for the next post in this series where we’ll discuss
+   Be on the lookout for the next post in this series where we'll discuss
    the top four reasons you should use MongoDB.

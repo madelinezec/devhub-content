@@ -60,16 +60,16 @@ Building with Patterns: The Outlier Pattern
 ===========================================
 
 .. introduction::
-   So far in this *Building with Patterns* series, we’ve looked at the
+   So far in this *Building with Patterns* series, we've looked at the
    :doc:`Polymorphic </how-to/polymorphic-pattern>`,
    :doc:`Attribute </how-to/attribute-pattern>`,
    and
    :doc:`Bucket </how-to/bucket-pattern>`
    patterns. While the document schema in these patterns has slight
    variations, from an application and query standpoint, the document
-   structures are fairly consistent. What happens, however, when this isn’t
+   structures are fairly consistent. What happens, however, when this isn't
    the case? What happens when there is data that falls outside the
-   “normal” pattern? What if there’s an outlier?
+   “normal” pattern? What if there's an outlier?
 
    Imagine you are starting an e-commerce site that sells books. One of the
    queries you might be interested in running is “who has purchased a
@@ -110,10 +110,10 @@ Building with Patterns: The Outlier Pattern
 
       }
 
-   This would work well for a large majority of books that aren’t likely to
+   This would work well for a large majority of books that aren't likely to
    reach the “best seller” lists. Accounting for outliers though results in
    the ``customers_purchased`` array expanding beyond a 1000 item limit we
-   have set, we’ll add a new field to “flag” the book as an outlier.
+   have set, we'll add a new field to “flag” the book as an outlier.
 
    .. code-block:: json
 
@@ -126,8 +126,8 @@ Building with Patterns: The Outlier Pattern
          "has_extras": "true"
       }
 
-   We’d then move the overflow information into a separate document linked
-   with the book’s ``id``. Inside the application, we would be able to
+   We'd then move the overflow information into a separate document linked
+   with the book's ``id``. Inside the application, we would be able to
    determine if a document has a ``has_extras`` field with a value of
    ``true``. If that is the case, the application would retrieve the extra
    information. This could be handled so that it is rather transparent for
@@ -153,7 +153,7 @@ Building with Patterns: The Outlier Pattern
    One example is a customer that has a video conferencing product. The
    list of authorized attendees in most video conferences can be kept in
    the same document as the conference. However, there are a few events,
-   like a company’s all hands, that have thousands of expected attendees.
+   like a company's all hands, that have thousands of expected attendees.
    For those outlier conferences, the customer implemented “overflow”
    documents to record those long lists of attendees.
 
@@ -163,9 +163,9 @@ Building with Patterns: The Outlier Pattern
    ----------
 
    The problem that the Outlier Pattern addresses is preventing a few
-   documents or queries to determine an application’s solution. Especially
+   documents or queries to determine an application's solution. Especially
    when that solution would not be optimal for the majority of use cases.
-   We can leverage MongoDB’s flexible data model to add a field to the
+   We can leverage MongoDB's flexible data model to add a field to the
    document “flagging” it as an outlier. Then, inside the application, we
    handle the outliers slightly differently. By tailoring your schema for
    the typical document or query, application performance will be optimized
@@ -177,7 +177,7 @@ Building with Patterns: The Outlier Pattern
    within the application code itself, additional code maintenance may be
    required over time.
 
-   In our next *Building with Patterns* post, we’ll take a look at the
+   In our next *Building with Patterns* post, we'll take a look at the
    `Computed
    Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-computed-pattern>`__
    and how to optimize schema for applications that can result in

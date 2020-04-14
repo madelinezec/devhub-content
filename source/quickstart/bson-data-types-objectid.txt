@@ -13,6 +13,15 @@
    :creator: @kenwalger
    :title: Quick Start: BSON Data Types - ObjectId
    :image: /images/objectid.png
+   :image-alt: MongoDB ObjectId
+
+   MongoDB provides an automatic unique identifier for the _id field in the form of an ObjectId data type.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/bson-data-types-objectid
+   :title: Quick Start: BSON Data Types - ObjectId
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
    MongoDB provides an automatic unique identifier for the _id field in the form of an ObjectId data type.
 

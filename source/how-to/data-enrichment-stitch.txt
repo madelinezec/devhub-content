@@ -12,6 +12,16 @@
    :site: @mongodb
    :creator: @MBeugnet
    :title: Data Enrichment with MongoDB Stitch
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB developer
+
+   Learn how to enrich your data with MongoDB Stitch.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/data-enrichment-stitch
+   :title: Data Enrichment with MongoDB Stitch
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
 
    Learn how to enrich your data with MongoDB Stitch.
 

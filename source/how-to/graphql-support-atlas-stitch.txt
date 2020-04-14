@@ -8,7 +8,16 @@
     :site: @mongodb
     :creator: @nraboy
     :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
-    :image: https://webassets.mongodb.com/_com_assets/cms/dark_graphql_blog_header-0o8s3wq9e1.png
+    :image: /images/social/twitter/twitter-mdb-developer.png
+    :image-alt: MongoDB Developer
+
+    Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
+
+.. og::
+    :url: https://developer.mongodb.com/how-to/graphql-support-atlas-stitch
+    :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
+    :image: /images/social/open-graph/og-mdb-developer.png
+    :type: article
 
     Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
 
@@ -40,7 +49,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
 
 .. content::
 
-    We’re pleased to announce that you can now interact with your MongoDB
+    We're pleased to announce that you can now interact with your MongoDB
     documents using the GraphQL standard in your JavaScript applications by
     leveraging Stitch integration in your MongoDB Atlas cluster!
 
@@ -50,7 +59,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     What is GraphQL
     ---------------
 
-    If you’ve never heard of `GraphQL <https://graphql.org/>`__ before, you
+    If you've never heard of `GraphQL <https://graphql.org/>`__ before, you
     can think of it as a query language for APIs. Rather than making simple
     HTTP requests to an API endpoint and receiving the full payload of that
     resource as a response, you can use GraphQL to query for only the fields
@@ -58,7 +67,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     projection <https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/>`__
     or a SQL query.
 
-    By specifying the fields you want returned, you’re now decreasing the
+    By specifying the fields you want returned, you're now decreasing the
     size of the response payload, boosting the performance of your
     application, and writing cleaner code.
 
@@ -97,8 +106,8 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
        Stitch.
     -  A Stitch schema must be defined.
 
-    It doesn’t take more than a few minutes to accomplish each of the above
-    items. I’m going to break it down for you to make it easy.
+    It doesn't take more than a few minutes to accomplish each of the above
+    items. I'm going to break it down for you to make it easy.
 
     Create a MongoDB Atlas Cluster with a Database and Collection
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,8 +129,8 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     .. figure:: /images/how-to/mongodb-cluster-1-1thl0nargy.jpg
         :alt: MongoDB Atlas Cluster
 
-    To get started, we’re going to create a single database and collection
-    for use with Stitch. If one doesn’t already exist, choose **Add my own
+    To get started, we're going to create a single database and collection
+    for use with Stitch. If one doesn't already exist, choose **Add my own
     data** when prompted.
 
     .. figure:: /images/how-to/mongodb-cluster-2-ttf20tmxdz.jpg
@@ -133,8 +142,8 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
 
     After choosing to create the new database and collection, you should be
     brought into the data and schema explorer part of the MongoDB Atlas
-    dashboard. If you’re starting with a fresh database and schema, you
-    won’t have any data as of now.
+    dashboard. If you're starting with a fresh database and schema, you
+    won't have any data as of now.
 
     .. figure:: /images/how-to/mongodb-cluster-3-u4gps2mi7y.jpg
         :alt: MongoDB Atlas Explorer
@@ -147,7 +156,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     To connect your cluster to Stitch, you need to create an application.
-    This is not an application like one you’d develop, but more in the sense
+    This is not an application like one you'd develop, but more in the sense
     that Stitch is providing the backend components required to support your
     web or mobile application.
 
@@ -157,17 +166,17 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     .. figure:: /images/how-to/mongodb-stitch-1-2dzzh2ih6q.jpg
         :alt: MongoDB Stitch
 
-    After navigating to the Stitch service, you’ll be asked to create a new
-    application if one doesn’t already exist. This is where you’ll define
+    After navigating to the Stitch service, you'll be asked to create a new
+    application if one doesn't already exist. This is where you'll define
     information like the application name, the cluster in question, and any
     other deployment information.
 
     .. figure:: /images/how-to/mongodb-stitch-2-n8tiqh2ygl.jpg
         :alt: MongoDB Stitch
 
-    Once created, you’ll be brought to the Stitch dashboard for your
+    Once created, you'll be brought to the Stitch dashboard for your
     particular application. When you develop your application outside of
-    Stitch, you’ll probably want some form of authentication so that people
+    Stitch, you'll probably want some form of authentication so that people
     can access only the documents that they own.
 
     To get the most simple authentication going, choose to enable
@@ -181,13 +190,13 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     need to define access rules for our users.
 
     In the navigation bar, choose **Rules** and select the collection that
-    we wish to configure. In my example, I’m using **demo** as the database
+    we wish to configure. In my example, I'm using **demo** as the database
     and **tasks** as the collection.
 
     .. figure:: /images/how-to/mongodb-stitch-rules-1-dj33ggx1vv.jpg
         :alt: MongoDB Stitch Rules
 
-    You’ll want to choose a permissions template for the collection. In our
+    You'll want to choose a permissions template for the collection. In our
     example we want users to be only able to read their own data. For this
     template, we need to define which field in our MongoDB documents will
     contain the user id. The actual user id is created after the user
@@ -233,23 +242,23 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     While a little more extravagant than we need, I just wanted to show that
     you can have complexity in your schema through the above example.
 
-    MongoDB doesn’t have a schema by default, but GraphQL requires a strict
+    MongoDB doesn't have a schema by default, but GraphQL requires a strict
     type system. Using a JSON schema allows you to map your data in MongoDB
     and enables Stitch to automatically generate a full GraphQL schema. The
     schema you define in Stitch is only related to your application and it
-    doesn’t affect any other workloads on your MongoDB cluster. It simply
-    ensures that the data passed to GraphQL doesn’t create errors. If you’re
-    not sure whether the schema you’ve created matches your data, Stitch
+    doesn't affect any other workloads on your MongoDB cluster. It simply
+    ensures that the data passed to GraphQL doesn't create errors. If you're
+    not sure whether the schema you've created matches your data, Stitch
     also includes validation that will flag inconsistencies between your
     schema and data.
 
-    When you’ve defined your schema, make sure you click the **SAVE**
+    When you've defined your schema, make sure you click the **SAVE**
     button.
 
     .. figure:: /images/how-to/mongodb-stitch-schema-1-wy5bmgkao4.jpg
         :alt: MongoDB Stitch Schema
 
-    Don’t forget to also review and deploy the changes you made so they are
+    Don't forget to also review and deploy the changes you made so they are
     live and ready to be worked with.
 
     Interacting with GraphQL using the Integrated GraphiQL Interface
@@ -261,7 +270,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     Within the Stitch dashboard, choose the **GraphQL** tab from the
     navigation.
 
-    If you’ve ever dabbled with GraphQL, the interface that Stitch offers
+    If you've ever dabbled with GraphQL, the interface that Stitch offers
     might look familiar. It uses GraphiQL as a way to interact with and
     explore the collection using GraphQL queries and mutations.
 
@@ -270,7 +279,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
 
     To get an idea of what queries and mutations are available, take a look
     at the **Document Explorer** within GraphiQL. If you click on **Query**
-    or **Mutation**, you’ll get a list of what’s available for the
+    or **Mutation**, you'll get a list of what's available for the
     particular application. This is based on what you had entered in your
     schema definition for Stitch.
 
@@ -280,21 +289,21 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     -------------------------------------------------------------
 
     Interacting with MongoDB documents through GraphiQL and the Stitch
-    dashboard is great, but in most circumstances you’re going to want to do
+    dashboard is great, but in most circumstances you're going to want to do
     this from your own web or mobile applications.
 
     The Stitch SDK, along with common JavaScript packages and frameworks,
-    makes this an easy process. We’re going to create a very basic
+    makes this an easy process. We're going to create a very basic
     application to get you started in the right direction.
 
-    For this example we’re going to use the following:
+    For this example we're going to use the following:
 
     -  MongoDB Stitch SDK 4.6.0+
     -  Axios
 
     The Stitch SDK will allow us to interact with Stitch specific features
     such as authentication while Axios will give us an easy set of commands
-    for making HTTP requests to the GraphQL endpoint that we’ve configured
+    for making HTTP requests to the GraphQL endpoint that we've configured
     for our collection. Axios is not a requirement, but it is my personal
     preference when making HTTP requests with JavaScript.
 
@@ -321,7 +330,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     3. Create a new document through a GraphQL mutation
     4. Find documents through a GraphQL query
 
-    To work through this, let’s start adding some logic to the application
+    To work through this, let's start adding some logic to the application
     in the ``<script>`` tag.
 
     Within the ``<script>`` tag, add the following:
@@ -350,7 +359,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
         })();
 
     The above snippet will attempt anonymous authentication. If it is
-    successful, the user information will be printed to the console. What’s
+    successful, the user information will be printed to the console. What's
     important in this response is the id, which is the owner id for our
     documents and the access token that we send with future requests to
     prove we are who we say we are.
@@ -405,7 +414,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
 
     To make the GraphQL request from JavaScript, there are many ways to do
     this, but like I mentioned, Axios is my personal favorite. To make the
-    request, you’ll need the endpoint from the Stitch dashboard. You’ll want
+    request, you'll need the endpoint from the Stitch dashboard. You'll want
     to get it from the page where we played around with GraphiQL.
 
     The authorization token can be obtained from the successful

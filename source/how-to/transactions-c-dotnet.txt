@@ -6,15 +6,24 @@
 
 .. meta-description:: 
 
-   MongoDB 4.0 and the MongoDB .NET Driver version 2.7 and above support MongoDB cross collection transactions! Walk through an example of how to use transactions in C#.
+   Walk through an example of how to use transactions in C#.
 
 .. twitter::
    :site: @mongodb
    :creator: @RobsCranium
    :title: MongoDB Transactions with C# and the MongoDB .NET Driver
    :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
 
-   MongoDB 4.0 and the MongoDB .NET Driver version 2.7 and above support MongoDB cross collection transactions! Walk through an example of how to use transactions in C#.
+   Walk through an example of how to use transactions in C#.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/transactions-c-dotnet
+   :type: article
+   :title: MongoDB Transactions with C# and the MongoDB .NET Driver
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+   Walk through an example of how to use transactions in C#.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -59,7 +68,7 @@ Working with MongoDB Transactions with C# and the .NET Framework
     Update 10/2019: This article's code example has been updated to include
     the required handing of the session handle to database methods.
 
-.. content::
+.. introduction::
 
     C# applications connected to a MongoDB database use the MongoDB .NET
     driver. To add the .NET driver to your Visual Studio Application, in the
@@ -70,6 +79,8 @@ Working with MongoDB Transactions with C# and the .NET Framework
 
     Make sure you choose the latest version (>=2.7) of the driver, and press
     *Install*.
+
+.. content::
 
     Prior to MongoDB version 4.0, MongoDB was transactionally consistent at
     the document level. These existing atomic single-document operations
