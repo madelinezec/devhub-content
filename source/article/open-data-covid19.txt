@@ -6,7 +6,7 @@
 
 .. meta-description:: 
 
-   Making the John Hopkins University Covid 19 Data open and accessible to all with MongoDB
+   Making the John Hopkins University COVID-19 Data open and accessible to all with MongoDB
 
 .. twitter::
    :site: @mongodb
@@ -15,15 +15,15 @@
    :image: /images/social/twitter/twitter-covid19.png
    :image-alt: Virus representation
 
-   Making the John Hopkins University Covid 19 Data open and accessible to all with MongoDB
+   Making the John Hopkins University COVID 19 Data open and accessible to all with MongoDB
 
 .. og::
    :url: http://developer.mongodb.com/article/open-data-covid19
-   :title: Open and clean Covid19 dataset from Johns Hopkins University.
+   :title: Open and clean COVID-19 dataset from Johns Hopkins University.
    :image: /images/social/open-graph/og-covid19.png
    :type: article
 
-   Making the John Hopkins University Covid 19 Data open and accessible to all with MongoDB
+   Making the John Hopkins University COVID-19 Data open and accessible to all with MongoDB
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -72,13 +72,13 @@
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------
 
-=======================================================
-How to access the John Hopkins University Covid-19 Data
-=======================================================
+==========================================================
+JSON and SQL access to the COVID-19 data via MongoDB Atlas
+==========================================================
 
 .. introduction::
 
-   As the Covid-19 pandemic has swept the globe the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and their `Covid-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world in general.
+   As the COVID-19 pandemic has swept the globe the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and their `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world in general.
 
    JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, this data is not in a format that is easy to consume. At MongoDB, we've been working with this data since it was first published while developing our :doc:`Charts dashboard </article/coronavirus-map-live-data-tracker-charts>`. Now we're making `our more accessible version of the JHU data <https://github.com/mongodb-developer/open-data-covid-19>`__ freely available for anyone to use.
 
@@ -159,7 +159,7 @@ How to access the John Hopkins University Covid-19 Data
    `Compass <https://www.mongodb.com/products/compass>`__ allows you to dig deeper into the data using the `MongoDB Query Language <https://docs.mongodb.com/manual/tutorial/query-documents/>`__ or via the `Aggregation Pipeline <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__ visual editor. Perform a range of operations on the data, `including mathematical, comparison and groupings <https://docs.mongodb.com/manual/meta/aggregation-quick-reference/#operator-expressions>`__. Create documents which provide unique insights and interpretations. You can use the output from your pipelines as `data-sources for your Charts <https://docs.mongodb.com/charts/saas/data-sources/>`__.
 
    .. image:: /images/compass-covid19-screencast.gif
-      :alt: Screencast showing some of the features of MongoDB Compass for exploring Covid-19 Data
+      :alt: Screencast showing some of the features of MongoDB Compass for exploring COVID-19 Data
 
    Because we store the data in MongoDB, you can also access it via the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__ or using `any of our drivers <https://docs.mongodb.com/drivers/>`__. We've limited access to these collections to 'read-only'. You can find the connection strings for the shell and Compass below, as well as driver examples for for `Java <https://docs.mongodb.com/drivers/java/>`__, `Node.js <https://docs.mongodb.com/drivers/node/>`__, and `Python <https://docs.mongodb.com/drivers/python/>`__ to get you started.
 
@@ -438,7 +438,7 @@ How to access the John Hopkins University Covid-19 Data
    Here's an example of a visualisation produced in a few clicks with Tableau:
 
    .. image:: /images/map-tableau.png
-      :alt: Covid-19 World map in Tableau.
+      :alt: COVID-19 World map in Tableau.
 
    Tableau is a powerful data visualisation and dashboard tool, and can be connected to our COVID-19 data in a few steps.
    We've written a `short tutorial <https://github.com/mongodb-developer/open-data-covid-19/blob/master/tableau/README.md>`__ to get you up and running.
@@ -468,5 +468,5 @@ How to access the John Hopkins University Covid-19 Data
    Sources
    -------
 
-   - `MongoDB Open Data Covid-19 Github repository <https://github.com/mongodb-developer/open-data-covid-19>`__
+   - `MongoDB Open Data COVID-19 Github repository <https://github.com/mongodb-developer/open-data-covid-19>`__
    - `JHU Dataset on Github repository <https://github.com/CSSEGISandData/COVID-19>`__
