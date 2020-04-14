@@ -115,21 +115,17 @@ CIDR Subnet Selection for MongoDB Atlas
 
    1. Sign up for `MongoDB Atlas`_ and ensure your payment method is completed.
 
-   2. Click on the **Network Access** tab, then select **Peering**. You should see a page such as this which shows you
-   that you have not launched a cluster yet:
+   2. Click on the **Network Access** tab, then select **Peering**. You should see a page such as this which shows you that you have not launched a cluster yet:
 
       .. image:: /images/vpc.png
          :alt: Create new peering connection
 
-   3. Click on the **New Peering Connection** button. You will be given a new "Peering Connection" window to add your
-   peering details. At the bottom of this page you'll see a section to modify "Your Atlas VPC"
+   3. Click on the **New Peering Connection** button. You will be given a new "Peering Connection" window to add your peering details. At the bottom of this page you'll see a section to modify "Your Atlas VPC"
 
       .. image:: /images/Modify_Atlas_VPC-50q9i3a77j.png
          :alt: Modify your Atlas VPC
 
-   4. If you would like to specify a different IP range, you may use one of the RFC-1918 ranges with the appropriate
-   subnet and enter it here. It's extremely important to ensure that you choose two distinct RFC-1918 ranges. These two
-   cannot overlap their subnets:
+   4. If you would like to specify a different IP range, you may use one of the RFC-1918 ranges with the appropriate subnet and enter it here. It's extremely important to ensure that you choose two distinct RFC-1918 ranges. These two cannot overlap their subnets:
 
       .. image:: /images/Distinct_RFC.1918_ranges-1yuy4pkhi6.png
          :alt: Choose two distinct RFC-1918 ranges
