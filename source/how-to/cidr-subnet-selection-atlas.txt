@@ -65,10 +65,10 @@ CIDR Subnet Selection for MongoDB Atlas
 
    One of the best features of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas?jmp=blog>`__ is the ability to
    `peer your host VPC <https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas?jmp=blog>`__ on your
-    own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the
-    private IP range of your hosts and MongoDB Atlas cluster. This allows you to reduce your network exposure and
-    improve security of your data.  If you chose to use peering there are some considerations you should think about
-    first in selecting the right IP block for your private traffic.
+   own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the
+   private IP range of your hosts and MongoDB Atlas cluster. This allows you to reduce your network exposure and
+   improve security of your data.  If you chose to use peering there are some considerations you should think about
+   first in selecting the right IP block for your private traffic.
 
 .. content::
 
