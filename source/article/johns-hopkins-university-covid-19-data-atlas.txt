@@ -78,15 +78,15 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
 .. introduction::
 
-   As the COVID-19 pandemic has swept the globe the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and their `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world in general.
+   As the COVID-19 pandemic has swept the globe, the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and its `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world.
 
-   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files. We wanted to make that data a bit more accessible so people could build other analyses and applications directly on top of the data set.
+   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files which you need to download regularly and then query. We wanted to make that data more accessible so people could build other analyses and applications directly on top of the data set.
 
-   We are now hosting a copy of the data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query with Mongodb Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
+   We are now hosting a service with a frequently updated copy of the JHU data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query with Mongodb Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
 
-   With the MongoDB COVID-19 dataset we will ensure that data up to date and cleanly formatted. No more daily downloads, no more handling format layout changes. With this data set we will deliver a consistent JSON and SQL view every day with no downstream ETL required.
+   With the MongoDB COVID-19 dataset we will ensure that data is up to date and cleanly formatted. No more manual downloads. No more frequent format changes. With this data set we will deliver a consistent JSON and SQL view every day with no downstream `ETL <https://www.webopedia.com/TERM/E/ETL.html>`__ required.
 
-   We have not modified the data in any way. What we have done is structured it better and made it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
+   None of the actual data is modified. It is simply structured to make it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
 
    **Table of content:**
 
@@ -229,7 +229,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Accessing the Data with Java
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Our Java examples are available in our `Github Repository's Java folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/java>`__.
+   Our Java examples are available in our `Github Repository Java folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/java>`__.
 
    With the MongoDB Driver
    ```````````````````````
@@ -302,7 +302,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Accessing the Data with Node.js
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Our Node.js examples are available in our `Github Repository's Node.js folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/nodejs>`__.
+   Our Node.js examples are available in our `Github Repository Node.js folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/nodejs>`__.
 
    With the MongoDB Driver
    ```````````````````````
@@ -396,7 +396,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Accessing the Data with Python
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Our Python examples are available in our `Github Repository's Python folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/python>`__.
+   Our Python examples are available in our `Github Repository Python folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/python>`__.
 
    With the MongoDB Driver
    ```````````````````````
@@ -491,7 +491,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Accessing the Data with Golang
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Our Golang examples are available in our `Github Repository's Golang folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/golang>`__.
+   Our Golang examples are available in our `Github Repository Golang folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/golang>`__.
 
    With the MongoDB Driver
    ```````````````````````
