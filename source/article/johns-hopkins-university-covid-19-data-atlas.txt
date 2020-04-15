@@ -93,6 +93,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    - :ref:`covid19-where-do-we-get-the-data`
    - :ref:`covid19-the-mongodb-dataset`
    - :ref:`covid19-get-started`
+
       - :ref:`covid19-charts`
       - :ref:`covid19-compass`
       - :ref:`covid19-shell`
@@ -102,6 +103,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       - :ref:`covid19-golang`
       - :ref:`covid19-bi-tools`
       - :ref:`covid19-sql`
+
    - :ref:`covid19-wrap-up`
    - :ref:`covid19-sources`
 
