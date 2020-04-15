@@ -88,7 +88,26 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    We have not modified the data in any way. What we have done is structured it better and made it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
 
+   **Table of content:**
+
+   - :ref:`covid19-where-do-we-get-the-data`
+   - :ref:`covid19-the-mongodb-dataset`
+   - :ref:`covid19-get-started`
+      - :ref:`covid19-charts`
+      - :ref:`covid19-compass`
+      - :ref:`covid19-shell`
+      - :ref:`covid19-java`
+      - :ref:`covid19-nodejs`
+      - :ref:`covid19-python`
+      - :ref:`covid19-golang`
+      - :ref:`covid19-bi-tools`
+      - :ref:`covid19-sql`
+   - :ref:`covid19-wrap-up`
+   - :ref:`covid19-sources`
+
 .. content::
+
+   .. _covid19-where-do-we-get-the-data:
 
    Where do we get the data?
    -------------------------
@@ -103,6 +122,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    - and many others.
 
    You can read the `full list on their GitHub repository <https://github.com/CSSEGISandData/COVID-19>`__.
+
+   .. _covid19-the-mongodb-dataset:
 
    The MongoDB Dataset
    -------------------
@@ -142,10 +163,25 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    If you would prefer to host the data yourself, the scripts required to download and transform the JHU data are open-source. You can `view them and instructions for how to use them on our GitHub repository <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
 
+   .. _covid19-get-started:
+
    Get Started
    -----------
 
    You can begin exploring the data right away without any MongoDB or programming experience using `MongoDB Charts <https://www.mongodb.com/products/charts>`__ or `MongoDB Compass <https://www.mongodb.com/products/compass>`__.
+
+   In the following sections, we will also show you how to consume this dataset using the Java, Node.js and Python drivers.
+
+   We will show you how to perform the following queries in each language:
+
+   - Retrieve the last 5 days of data for a given place,
+   - Retrieve all the data for the last day,
+   - Make a geospatial query to retrieve data within a certain distance of a given place.
+
+   .. _covid19-charts:
+
+   Explore the Dataset with MongoDB Charts
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    With `Charts <https://www.mongodb.com/products/charts>`__, you can create visualisations of the data using any of the pre-built graphs and charts. You can then `arrange this into a unique dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__, or embed the charts in your pages or blogs.
 
@@ -159,17 +195,15 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       If you want to create your own MongoDB Charts dashboard, you will need to set up your own `Free MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and import the dataset in your cluster using the `import scripts <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
 
+   .. _covid19-compass:
+
+   Explore the Dataset with MongoDB Compass
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    `Compass <https://www.mongodb.com/products/compass>`__ allows you to dig deeper into the data using the `MongoDB Query Language <https://docs.mongodb.com/manual/tutorial/query-documents/>`__ or via the `Aggregation Pipeline <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__ visual editor. Perform a range of operations on the data, `including mathematical, comparison and groupings <https://docs.mongodb.com/manual/meta/aggregation-quick-reference/#operator-expressions>`__. Create documents that provide unique insights and interpretations. You can use the output from your pipelines as `data-sources for your Charts <https://docs.mongodb.com/charts/saas/data-sources/>`__.
 
    .. image:: /images/compass-covid19-screencast.gif
       :alt: Screencast showing some of the features of MongoDB Compass for exploring COVID-19 Data
-
-   Because we store the data in MongoDB, you can also access it via the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__ or using `any of our drivers <https://docs.mongodb.com/drivers/>`__. We've limited access to these collections to 'read-only'. You can find the connection strings for the shell and Compass below, as well as driver examples for `Java <https://docs.mongodb.com/drivers/java/>`__, `Node.js <https://docs.mongodb.com/drivers/node/>`__, and `Python <https://docs.mongodb.com/drivers/python/>`__ to get you started.
-
-   .. code-block:: shell
-
-      mongo "mongodb+srv://covid-19.hip2i.mongodb.net/test"  --username readonly --password readonly
 
    For MongoDB Compass or your driver, you can use this connection string.
 
@@ -177,13 +211,18 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/test
 
-   In the following sections, we will show you how to consume this dataset using the Java, Node.js and Python drivers.
+   .. _covid19-shell:
 
-   We will show you how to perform the following queries in each language:
+   Explore the Dataset with the MongoDB Shell
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   - Retrieve the last 5 days of data for a given place,
-   - Retrieve all the data for the last day,
-   - Make a geospatial query to retrieve data within a certain distance of a given place.
+   Because we store the data in MongoDB, you can also access it via the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__ or using `any of our drivers <https://docs.mongodb.com/drivers/>`__. We've limited access to these collections to 'read-only'. You can find the connection strings for the shell and Compass below, as well as driver examples for `Java <https://docs.mongodb.com/drivers/java/>`__, `Node.js <https://docs.mongodb.com/drivers/node/>`__, and `Python <https://docs.mongodb.com/drivers/python/>`__ to get you started.
+
+   .. code-block:: shell
+
+      mongo "mongodb+srv://covid-19.hip2i.mongodb.net/test"  --username readonly --password readonly
+
+   .. _covid19-java:
 
    Accessing the Data with Java
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,6 +295,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
           }
       }
 
+   .. _covid19-nodejs:
 
    Accessing the Data with Node.js
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -348,6 +388,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
               });
           });
       });
+
+   .. _covid19-python:
 
    Accessing the Data with Python
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -442,6 +484,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       if __name__ == "__main__":
           main()
 
+   .. _covid19-golang:
+
    Accessing the Data with Golang
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -454,7 +498,185 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. code-block:: go
 
-      // TODO
+      package main
+
+      import (
+      	"context"
+      	"fmt"
+      	"os"
+      	"strconv"
+      	"time"
+
+      	"github.com/olekukonko/tablewriter"
+      	"go.mongodb.org/mongo-driver/bson"
+      	"go.mongodb.org/mongo-driver/bson/primitive"
+      	"go.mongodb.org/mongo-driver/mongo"
+      	"go.mongodb.org/mongo-driver/mongo/options"
+      )
+
+      const mdbURL = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19?retryWrites=true&w=majority"
+      const earthRadius = 6371.0
+
+      // Metadata represents (a subset of) the data stored in the metadata
+      // collection in a single document.
+      type Metadata struct {
+      	LastDate time.Time `bson:"last_date"`
+      	// There are other fields in this document, but this sample code doesn't
+      	// use them.
+      }
+
+      // Statistic represents the document structure of documents in the
+      // 'statistics' collection.
+      type Statistic struct {
+      	ID  primitive.ObjectID `bson:"_id"`
+      	UID int32
+
+      	// Location:
+      	CombinedName string `bson:"combined_name"`
+      	City         string
+      	State        string
+      	Country      string
+      	CountryCode  int32  `bson:"country_code"`
+      	CountryISO2  string `bson:"country_iso2"`
+      	CountryISO3  string `bson:"country_iso3"`
+      	FIPS         int32
+      	Loc          struct {
+      		Type        string
+      		Coordinates []float64
+      	}
+
+      	Date time.Time
+
+      	// Statistics:
+      	Confirmed  int32
+      	Deaths     int32
+      	Population int32
+      	Recovered  int32
+      }
+
+      // main is the entrypoint for this binary.
+      // It connects to MongoDB but most of the interesting code is in other functions.
+      func main() {
+      	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+      	defer cancel()
+      	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mdbURL))
+      	if err != nil {
+      		panic(fmt.Sprintf("Error initializing MongoDB Client: %v", err))
+      	}
+      	defer client.Disconnect(ctx)
+
+      	// Get references to the main collections:
+      	database := client.Database("covid19")
+      	statistics := database.Collection("statistics")
+      	metadata := database.Collection("metadata")
+
+      	// Print some interesting results:
+      	fmt.Println("\nMost recent 10 statistics for United Kingdom:")
+      	recentCountryStats(statistics, "United Kingdom")
+      	lastDate := mostRecentDateLoaded(metadata)
+      	fmt.Printf("\nLast date loaded: %v\n", lastDate)
+      	fmt.Println("\nThe last day's highest reported recoveries:")
+      	highestRecoveries(statistics, lastDate)
+      	fmt.Println("\nThe last day's confirmed cases for all the countries within 500km of Paris:")
+      	confirmedWithinRadius(statistics, lastDate, 2.341908, 48.860199, 500.0)
+      }
+
+      // recentCountryStats prints the most recent 10 stats for a country.
+      // Note that this won't work for "US" because that data is broken down by city & state.
+      func recentCountryStats(statistics *mongo.Collection, country string) {
+      	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+      	defer cancel()
+      	findOptions := options.Find().SetSort(bson.D{{"date", -1}}).SetLimit(10)
+      	cur, err := statistics.Find(ctx, bson.D{{"country", country}, {"state", nil}}, findOptions)
+      	if err != nil {
+      		panic(err)
+      	}
+      	defer cur.Close(ctx)
+      	adapter := func(s Statistic) []string {
+      		return []string{
+      			s.Date.String(),
+      			strconv.Itoa(int(s.Confirmed)),
+      			strconv.Itoa(int(s.Recovered)),
+      			strconv.Itoa(int(s.Deaths)),
+      		}
+      	}
+      	printTable(ctx, []string{"Date", "Confirmed", "Recovered", "Deaths"}, cur, adapter)
+      }
+
+      // mostRecentDateLoaded gets the date of the last data loaded into the database
+      // from the 'metadata' collection.
+      func mostRecentDateLoaded(metadata *mongo.Collection) time.Time {
+      	var meta Metadata
+      	if err := metadata.FindOne(context.TODO(), bson.D{}).Decode(&meta); err != nil {
+      		panic(fmt.Sprintf("Error loading metadata document: %v", err))
+      	}
+      	return meta.LastDate
+      }
+
+      // highestRecoveries prints the top 5 countries with the most recoveries.
+      func highestRecoveries(statistics *mongo.Collection, date time.Time) {
+      	/// The last day's highest reported recoveries
+      	opts := options.Find().SetSort(bson.D{{"recovered", -1}}).SetLimit(5)
+      	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+      	defer cancel()
+      	cur, err := statistics.Find(ctx, bson.D{{"date", date}}, opts)
+      	if err != nil {
+      		panic(err)
+      	}
+      	defer cur.Close(ctx)
+      	adapter := func(s Statistic) []string {
+      		return []string{s.CombinedName, strconv.Itoa(int(s.Recovered))}
+      	}
+      	printTable(ctx, []string{"Country", "Recovered"}, cur, adapter)
+      }
+
+      // Confirmed cases for all countries within radius km of a lon/lat coordinate:
+      func confirmedWithinRadius(statistics *mongo.Collection, date time.Time, lon float64, lat float64, radius float64) {
+      	center := bson.A{lon, lat}
+      	locationExpr := bson.E{
+      		"loc", bson.D{{
+      			"$geoWithin", bson.D{{
+      				"$centerSphere", bson.A{center, radius / earthRadius},
+      			}},
+      		}},
+      	}
+      	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+      	defer cancel()
+      	cur, err := statistics.Find(ctx, bson.D{{"date", date}, locationExpr})
+      	if err != nil {
+      		panic(err)
+      	}
+      	defer cur.Close(ctx)
+      	adapter := func(s Statistic) []string {
+      		return []string{s.CombinedName, strconv.Itoa(int(s.Confirmed))}
+      	}
+      	printTable(ctx, []string{"Country", "Confirmed"}, cur, adapter)
+      }
+
+      // printTable prints the results of a statistics query in a table.
+      // headings provides the heading cell contents
+      // mapper is a function which maps Statistic structs to a string array of values to be displayed in the table.
+      func printTable(ctx context.Context, headings []string, cursor *mongo.Cursor, mapper func(Statistic) []string) {
+      	table := tablewriter.NewWriter(os.Stdout)
+      	table.SetHeader(headings)
+
+      	for cursor.Next(ctx) {
+      		var result Statistic
+      		err := cursor.Decode(&result)
+      		if err != nil {
+      			panic(err)
+      		}
+
+      		table.Append(mapper(result))
+      	}
+      	if err := cursor.Err(); err != nil {
+      		panic(err)
+      	}
+
+      	table.Render()
+      }
+
+   .. _covid19-bi-tools:
 
    Accessing the Data with Business Intelligence Tools
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -473,6 +695,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Tableau is a powerful data visualisation and dashboard tool, and can be connected to our COVID-19 data in a few steps.
    We've written a `short tutorial <https://github.com/mongodb-developer/open-data-covid-19/blob/master/tableau/README.md>`__ to get you up and running.
 
+   .. _covid19-sql:
+
    Accessing the Data with any SQL tool
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -486,6 +710,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
 .. summary::
 
+   .. _covid19-wrap-up:
+
    Wrap up
    -------
 
@@ -494,6 +720,8 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    We've also launched an `Atlas credits program <https://www.mongodb.com/blog/post/helping-developers-tackle-covid19>`__ for anyone working on detecting, understanding, and stopping the spread of COVID-19.
 
    If you have any questions, suggestions, or would like any assistance working with the data, we're always available on the `community forums <https://community.mongodb.com/>`__. You can also reach out to `Aaron <https://twitter.com/aaronbassett>`__, `Joe <https://twitter.com/JoeKarlsson1>`__, `Mark <https://twitter.com/judy2k>`__, and `Maxime <https://twitter.com/MBeugnet>`__ directly on Twitter.
+
+   .. _covid19-sources:
 
    Sources
    -------
