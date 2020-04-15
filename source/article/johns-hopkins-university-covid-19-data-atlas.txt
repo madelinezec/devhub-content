@@ -72,9 +72,9 @@
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------
 
-==========================================================
-JSON and SQL access to the COVID-19 data via MongoDB Atlas
-==========================================================
+========================================================================
+How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
+========================================================================
 
 .. introduction::
 
@@ -280,34 +280,40 @@ JSON and SQL access to the COVID-19 data via MongoDB Atlas
       });
 
       client.connect((err) => {
-        const statistics = client.db("covid19").collection("statistics");
+        const covid19Database = client.db("covid19");
+        const statistics = covid19Database.collection("statistics");
+        const metadata = covid19Database.collection("metadata");
 
-        // // Query to get the last 5 entries for France (continent only)
+        // Query to get the last 5 entries for France (continent only)
         statistics
           .find({ country: "France" })
-          .sort([["date", -1]])
-          .limit(15)
-          .toArray(function (err, docs) {
-            if (err) {
-              console.error(err);
-            }
-            console.log(docs);
-          });
-
-        //Query to get the last day data (limited to 15 docs here).
-        statistics
-          .find({
-            date: {
-              $lt: new Date(),
-              $gt: new Date(new Date().setDate(new Date().getDate() - 2)),
-            },
-          })
+          .sort(["date", -1])
           .limit(15)
           .toArray((err, docs) => {
             if (err) {
               console.error(err);
             }
             console.log(docs);
+          });
+
+        //Query to get the last day data (limited to 5 docs here).
+        metadata
+          .find()
+          .toArray((err, docs) => {
+            if (err) {
+              console.error(err);
+            }
+            const lastDate = docs[0].last_date;
+
+            statistics
+              .find({ date: { $eq: lastDate } })
+              .limit(5)
+              .toArray((err, docs) => {
+                if (err) {
+                  console.error(err);
+                }
+                console.log(docs);
+              });
           });
 
         // Query to get the last day data for all the countries within 500km of Paris.
@@ -316,24 +322,30 @@ JSON and SQL access to the COVID-19 data via MongoDB Atlas
         const earthRadius = 6371; // km
         const searchRadius = 500; // km
 
-        statistics
-          .find({
-            loc: {
-              $geoWithin: {
-                $centerSphere: [[lon, lat], searchRadius / earthRadius],
-              },
-            },
-            date: {
-              $lt: new Date(),
-              $gt: new Date(new Date().setDate(new Date().getDate() - 2)),
-            },
-          })
-          .limit(5)
+        metadata
+          .find()
           .toArray((err, docs) => {
             if (err) {
               console.error(err);
             }
-            console.log(docs);
+            const lastDate = docs[0].last_date;
+
+            statistics
+              .find({
+                date: { $eq: lastDate },
+                loc: {
+                  $geoWithin: {
+                    $centerSphere: [[lon, lat], searchRadius / earthRadius],
+                  },
+                },
+              })
+              .limit(5)
+              .toArray((err, docs) => {
+                if (err) {
+                  console.error(err);
+                }
+                console.log(docs);
+              });
           });
       });
 
@@ -429,6 +441,20 @@ JSON and SQL access to the COVID-19 data via MongoDB Atlas
 
       if __name__ == "__main__":
           main()
+
+   Accessing the Data with Golang
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Our Golang examples are available in our `Github Repository's Golang folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/golang>`__.
+
+   With the MongoDB Driver
+   ```````````````````````
+
+   See all the instructions to get started in the `Golang folder <https://github.com/mongodb-developer/open-data-covid-19/tree/master/golang/mongodb-driver>`__.
+
+   .. code-block:: go
+
+      // TODO
 
    Accessing the Data with Business Intelligence Tools
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
