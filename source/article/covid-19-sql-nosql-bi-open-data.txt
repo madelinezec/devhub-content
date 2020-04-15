@@ -84,6 +84,8 @@ JSON and SQL access to the COVID-19 data via MongoDB Atlas
 
    We are now hosting a copy of the data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query with Mongodb Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
 
+   With the MongoDB COVID-19 dataset we will ensure that data up to date and cleanly formatted. No more daily downloads, no more handling format layout changes. With this data set we will deliver a consistent JSON and SQL view every day with no downstream ETL required.
+
    We have not modified the data in any way. What we have done is structured it better and made it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
 
 .. content::
@@ -181,7 +183,7 @@ JSON and SQL access to the COVID-19 data via MongoDB Atlas
 
    - Retrieve the last 5 days of data for a given place,
    - Retrieve all the data for the last day,
-   - Make a geo spatial query to retrieve data within a certain distance of a given place.
+   - Make a geospatial query to retrieve data within a certain distance of a given place.
 
    Accessing the Data with Java
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
