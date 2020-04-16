@@ -692,7 +692,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    There are some example queries which show how to query the data and display it in the notebook,
    and the last example demonstrates how to display a chart using Pandas & Matplotlib!
 
-   .. image: /images/notebook-screenshot.png
+   .. image:: /images/notebook-screenshot.png
       :alt: How to render a chart in a Colab notebook
 
    If you want to modify the notebook, you can take a copy by selecting "Save a copy in Drive ..." from the "File" menu,
