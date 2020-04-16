@@ -721,7 +721,9 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    We've also launched an `Atlas credits program <https://www.mongodb.com/blog/post/helping-developers-tackle-covid19>`__ for anyone working on detecting, understanding, and stopping the spread of COVID-19.
 
-   If you have any questions, suggestions, or would like any assistance working with the data, we're always available on the `community forums <https://community.mongodb.com/>`__. You can also reach out to `Aaron <https://twitter.com/aaronbassett>`__, `Joe <https://twitter.com/JoeKarlsson1>`__, `Mark <https://twitter.com/judy2k>`__, and `Maxime <https://twitter.com/MBeugnet>`__ directly on Twitter.
+   If you are having any problems accessing the data or have other data sets you would like to host please contact us on `the MongoDB community <https://community.mongodb.com/>`__. We would also love to showcase any services you build on top of this data set. Finally please send in PRs for any code changes you would like to make to the examples.
+
+   You can also reach out to the authors directly (`Aaron Bassett <https://twitter.com/aaronbassett>`__, `Joe Karlsson <https://twitter.com/JoeKarlsson1>`__, `Mark Smith <https://twitter.com/judy2k>`__, and `Maxime Beugnet <https://twitter.com/MBeugnet>`__) on Twitter.
 
    .. _covid19-sources:
 
