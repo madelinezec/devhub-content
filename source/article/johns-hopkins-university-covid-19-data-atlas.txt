@@ -736,7 +736,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Take a copy of the data
    ~~~~~~~~~~~~~~~~~~~~~~~
 
-   Accessing _our_ copy of this data in a read-only database is useful,
+   Accessing *our* copy of this data in a read-only database is useful,
    but it won't be enough if you want to integrate it with other data within a single MongoDB cluster.
    You can obtain a copy of the database, either to use offline using a different tool outside of MongoDB, or to load into your own MongoDB instance.
    'mongoexport' is a command-line tool that produces a `JSONL <http://jsonlines.org/>`__ or CSV export of data stored in a MongoDB instance.
