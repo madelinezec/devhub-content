@@ -751,7 +751,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. blockquote::
 
-      If you prefer to work with a JSON array rather than a JSONL file, you can use the ``--jsonArray`` option.
+      Use the ``--jsonArray`` option if you prefer to work with a JSON array rather than a `JSONL <http://jsonlines.org/>`__ file.
 
    Documentation for all the features of 'mongoexport' is available on the `MongoDB website <https://docs.mongodb.com/database-tools/mongoexport/>`__ or with the command ``mongoexport --help``.
 
