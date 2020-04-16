@@ -101,6 +101,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
      - :ref:`covid19-nodejs`
      - :ref:`covid19-python`
      - :ref:`covid19-golang`
+     - :ref:`covid19-colab-notebook`
      - :ref:`covid19-bi-tools`
      - :ref:`covid19-sql`
 
@@ -679,6 +680,23 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       	table.Render()
       }
+
+   .. _covid19-colab-notebook:
+
+   Accessing the Data with Google Colaboratory
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   If you have a Google account, a great way to get started is with our `Google Colab Notebook <https://colab.research.google.com/drive/1M_wu0QqAWnml5_WWYSeMESuJp5pUjtx->`.
+
+   The sample code shows how to install pymongo and use it to connect to the MongoDB COVID-19 dataset.
+   There are some example queries which show how to query the data and display it in the notebook,
+   and the last example demonstrates how to display a chart using Pandas & Matplotlib!
+
+   .. image: /images/notebook-screenshot.png
+      :alt: How to render a chart in a Colab notebook
+
+   If you want to modify the notebook, you can take a copy by selecting "Save a copy in Drive ..." from the "File" menu,
+   and then you'll be free to edit the copy.
 
    .. _covid19-bi-tools:
 
