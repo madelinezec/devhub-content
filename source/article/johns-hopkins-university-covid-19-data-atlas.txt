@@ -766,7 +766,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       Note that you cannot run these commands against our cluster because the user we gave you (``readonly:readonly``) doesn't have write permission on this cluster.
 
-      Read our `Getting Your Free MongoDB Atlas Cluster blog post <https://developer.mongodb.com/quickstart/free-atlas-cluster>`__ if you want to know more.
+      Read our :doc:`Getting Your Free MongoDB Atlas Cluster blog post </quickstart/free-atlas-cluster>` if you want to know more.
 
 .. summary::
 
