@@ -80,11 +80,11 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    As the COVID-19 pandemic has swept the globe, the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and its `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world.
 
-   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files which you need to download regularly and then query. We wanted to make that data more accessible so people could build other analyses and applications directly on top of the data set.
+   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files which you need to download each time to then query. We've set out to make that up-to-date data more accessible so people could build other analyses and applications directly on top of the data set.
 
-   We are now hosting a service with a frequently updated copy of the JHU data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query with Mongodb Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
+   We are now hosting a service with a frequently updated copy of the JHU data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query using the MongoDB Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
 
-   With the MongoDB COVID-19 dataset we will ensure that data is up to date and cleanly formatted. No more manual downloads. No more frequent format changes. With this data set we will deliver a consistent JSON and SQL view every day with no downstream `ETL <https://www.webopedia.com/TERM/E/ETL.html>`__ required.
+   With the MongoDB COVID-19 dataset there will be no more manual downloads and no more frequent format changes. With this data set, this service will deliver a consistent JSON and SQL view every day with no downstream `ETL <https://www.webopedia.com/TERM/E/ETL.html>`__ required.
 
    None of the actual data is modified. It is simply structured to make it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
 
