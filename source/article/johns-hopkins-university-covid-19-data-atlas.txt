@@ -753,9 +753,18 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       Use the ``--jsonArray`` option if you prefer to work with a JSON array rather than a `JSONL <http://jsonlines.org/>`__ file.
 
-   Documentation for all the features of 'mongoexport' is available on the `MongoDB website <https://docs.mongodb.com/database-tools/mongoexport/>`__ or with the command ``mongoexport --help``.
+   Documentation for all the features of ``mongoexport`` is available on the `MongoDB website <https://docs.mongodb.com/database-tools/mongoexport/>`__ and with the command ``mongoexport --help``.
 
    Once you have the data on your computer, you can use it directly with local tools, or load it into your own MongoDB instance using `mongoimport <https://docs.mongodb.com/database-tools/mongoimport/>`__.
+
+   .. code-block:: bash
+
+      mongoimport --collection='statistics' --uri="mongodb+srv://<user>:<password>@<your-cluster>.mongodb.net/covid19" statistics.jsonl
+      mongoimport --collection='metadata' --uri="mongodb+srv://<user>:<password>@<your-cluster>.mongodb.net/covid19" metadata.jsonl
+
+   .. blockquote::
+
+      Note that you cannot run these commands against our cluster because the user we gave you (``readonly:readonly``) doesn't have write permission on this cluster. Read our :doc:`Getting Your Free MongoDB Atlas Cluster </quickstart/free-atlas-cluster>` blog post if you want to know more.
 
 .. summary::
 
