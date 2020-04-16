@@ -104,6 +104,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
      - :ref:`covid19-colab-notebook`
      - :ref:`covid19-bi-tools`
      - :ref:`covid19-sql`
+     - :ref:`covid19-export`
 
    - :ref:`covid19-wrap-up`
    - :ref:`covid19-sources`
@@ -729,6 +730,33 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    - Database: covid19 or covid19jhu (depends which version of the dataset you want to see),
    - Username: readonly or readonly?source=admin,
    - Password: readonly.
+
+   .. _covid19-export:
+
+   Take a copy of the data
+   ~~~~~~~~~~~~~~~~~~~~~~~
+
+   Accessing _our_ copy of this data in a read-only database is useful,
+   but it won't be enough if you want to integrate it with other data within a single MongoDB cluster.
+   You can obtain a copy of the database, either to use offline using a different tool outside of MongoDB, or to load into your own MongoDB instance.
+   'mongoexport' is a command-line tool that produces a `JSONL <http://jsonlines.org/>`__ or CSV export of data stored in a MongoDB instance.
+   First, follow these `instructions to install the MongoDB Database Tools <https://docs.mongodb.com/database-tools/mongoexport/>`__.
+
+   Now you can run the following in your console to download the metadata and statistics collections as jsonl files in your current directory:
+
+   .. code-block:: bash
+
+      # This works on Mac & Linux:
+      export MDB_URL="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19" 
+      # Use the next line instead if on Windows:
+      # set MDB_URL="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19" 
+
+      mongoexport --uri="$MDB_URL" --collection='statistics' --out='statistics.jsonl'
+      mongoexport --uri="$MDB_URL" --collection='metadata' --out='metadata.jsonl'
+
+   Documentation for all the features of 'mongoexport' is available on the 'MongoDB website <https://docs.mongodb.com/database-tools/mongoexport/>`__.
+
+   Once you have the data on your computer, you can use it directly with local tools, or load it into your own MongoDB instance using `<mongoimport <https://docs.mongodb.com/database-tools/mongoimport/>`__
 
 .. summary::
 
