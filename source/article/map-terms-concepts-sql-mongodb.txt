@@ -81,8 +81,8 @@ Mapping Terms and Concepts from SQL to MongoDB
    .. blockquote::
 
       This article is based on a presentation I gave at MongoDB World and
-      MongoDB.local Houston entitled “From SQL to NoSQL: Changing Your
-      Mindset.” 
+      MongoDB.local Houston entitled "From SQL to NoSQL: Changing Your
+      Mindset."
       
       If you prefer videos over articles, check out the 
       `recording <https://youtu.be/FFj04Apz_BE>`__. Slides are available
@@ -113,7 +113,7 @@ Mapping Terms and Concepts from SQL to MongoDB
    Yelp is amazing, because he loves the idea of reviewing places he's
    been.
 
-   However, Yelp is way too “on the grid” for Ron. He pulls out his beloved
+   However, Yelp is way too "on the grid" for Ron. He pulls out his beloved
    typewriter and starts typing reviews that he intends to send via snail
    mail.
 
@@ -180,8 +180,8 @@ Mapping Terms and Concepts from SQL to MongoDB
    Relational Database and Non-Relational Databases
    ------------------------------------------------
 
-   When I talk with developers, they often ask me questions like, “What use
-   cases are good for MongoDB?” Developers often have this feeling that
+   When I talk with developers, they often ask me questions like, "What use
+   cases are good for MongoDB?" Developers often have this feeling that
    `non-relational
    databases <https://www.mongodb.com/scale/what-is-a-non-relational-database>`__
    (or NoSQL databases) like MongoDB are for specific, niche use cases.
@@ -195,9 +195,9 @@ Mapping Terms and Concepts from SQL to MongoDB
    that includes a summary of when you should evaluate other database
    options.
 
-   Another common question is, “If my data is relational, why would I use a
+   Another common question is, "If my data is relational, why would I use a
    `non-relational
-   database <https://www.mongodb.com/scale/what-is-a-non-relational-database>`__?”
+   database <https://www.mongodb.com/scale/what-is-a-non-relational-database>`__?"
 
    MongoDB is considered a non-relational database. However, that doesn't
    mean MongoDB doesn't store relationship data well. (I know I just used a
@@ -413,7 +413,7 @@ Mapping Terms and Concepts from SQL to MongoDB
         - working
 
    Since MongoDB supports arrays, we can simply add a new field named
-   “hobbies” to our existing document. The array can contain as many or as
+   "hobbies" to our existing document. The array can contain as many or as
    few hobbies as we need (assuming we don't exceed the `16 megabyte
    document size
    limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__).
@@ -456,15 +456,15 @@ Mapping Terms and Concepts from SQL to MongoDB
         - year_started
       * - 20
         - 1
-        - “Deputy Director”
+        - "Deputy Director"
         - 2004
       * - 21
         - 1
-        - “City Councillor”
+        - "City Councillor"
         - 2012
       * - 22
         - 1
-        - “Director, National Parks Service, Midwest Branch”
+        - "Director, National Parks Service, Midwest Branch"
         - 2014
 
    So far in this article, we've used arrays in MongoDB to store
@@ -583,27 +583,27 @@ Mapping Terms and Concepts from SQL to MongoDB
         - year_started
       * - 20
         - 1
-        - “Deputy Director”
+        - "Deputy Director"
         - 2004
       * - 21
         - 1
-        - “City Councillor”
+        - "City Councillor"
         - 2012
       * - 22
         - 1
-        - “Director, National Parks Service, Midwest Branch”
+        - "Director, National Parks Service, Midwest Branch"
         - 2014
       * - 23
         - 2
-        - “Director”
+        - "Director"
         - 2002
       * - 24
         - 2
-        - “CEO, Kinda Good Building Company”
+        - "CEO, Kinda Good Building Company"
         - 2014
       * - 25
         - 2
-        - “Superintendent, Pawnee National Park”
+        - "Superintendent, Pawnee National Park"
         - 2018
 
    Skipping Location Data in MongoDB
@@ -727,10 +727,10 @@ Mapping Terms and Concepts from SQL to MongoDB
 
    We have two options for storing information about Lauren's school. We
    can choose to add a column to the existing Users table, or we can create
-   a new table. Let's say we choose to add a column named “school” to the
+   a new table. Let's say we choose to add a column named "school" to the
    Users table. Depending on our access rights to the database, we may need
    to talk to the DBA and convince them to add the field. Most likely, the
-   database will need to be taken down, the “school” column will need to be
+   database will need to be taken down, the "school" column will need to be
    added, NULL values will be stored in every row in the Users table where
    a user does not have a school, and the database will need to be brought
    back up.
@@ -754,9 +754,9 @@ Mapping Terms and Concepts from SQL to MongoDB
          "school": "Pawnee Elementary"
       }
 
-   As you can see above, we've added a new field named “school” to Lauren's
+   As you can see above, we've added a new field named "school" to Lauren's
    document. We do not need to make any modifications to Leslie's document
-   or Ron's document when we add the new “school” field to Lauren's
+   or Ron's document when we add the new "school" field to Lauren's
    document. MongoDB has a flexible schema, so every document in a
    collection does not need to have the same fields.
 

@@ -104,9 +104,9 @@ Building with Patterns: The Bucket Pattern
    index size. For example, we could end up having to index ``sensor_id``
    and ``timestamp`` for every single measurement to enable rapid access at
    the cost of RAM. By leveraging the document data model though, we can
-   “bucket” this data, by time, into documents that hold the measurements
+   "bucket" this data, by time, into documents that hold the measurements
    from a particular time span. We can also programmatically add additional
-   information to each of these “buckets”.
+   information to each of these "buckets".
 
    By applying the Bucket Pattern to our data model, we get some benefits
    in terms of index size savings, potential query simplification, and the
@@ -139,10 +139,10 @@ Building with Patterns: The Bucket Pattern
          sum_temperature: 2413
       }
 
-   By using the Bucket Pattern, we have “bucketed” our data to, in this
+   By using the Bucket Pattern, we have "bucketed" our data to, in this
    case, a one hour bucket. This particular data stream would still be
    growing as it currently only has 42 measurements; there's still more
-   measurements for that hour to be added to the “bucket”. When they are
+   measurements for that hour to be added to the "bucket". When they are
    added to the ``measurements`` array, the ``transaction_count`` will be
    incremented and ``sum_temperature`` will also be updated.
 

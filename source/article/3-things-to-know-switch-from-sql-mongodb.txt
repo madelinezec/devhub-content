@@ -88,8 +88,8 @@
    .. blockquote::
 
       This article is based on a presentation I gave at MongoDB World and
-      MongoDB.local Houston entitled “From SQL to NoSQL: Changing Your
-      Mindset.” 
+      MongoDB.local Houston entitled "From SQL to NoSQL: Changing Your
+      Mindset."
       
       If you prefer videos over articles, check out the 
       `recording <https://youtu.be/FFj04Apz_BE>`__. Slides are available
@@ -193,10 +193,10 @@
          "city": "Pawnee",
          "hobbies": ["soccer"],
          "school": "Pawnee Elementary",
-         "followers”: [
-               "Brandon”,
-               "Wesley”,
-               "Ciara”,
+         "followers": [
+               "Brandon",
+               "Wesley",
+               "Ciara",
                ...
          ]
       }
@@ -236,13 +236,13 @@
             },
             …
          ], 
-         "followers”: [
-            "Leslie”, 
-            "Donna”,
-            "Tom”
+         "followers": [
+            "Leslie",
+            "Donna",
+            "Tom"
             …
          ],
-         "has_extras”: true
+         "has_extras": true
       }
 
    Then we can create a new document where we will store the rest of Ron's
@@ -252,13 +252,13 @@
 
       {
          "_id": 2.1,
-         "followers”: [
-            "Jerry”, 
-            "Ann”,
-            "Ben”
+         "followers": [
+            "Jerry",
+            "Ann",
+            "Ben"
             …
          ],
-         "is_overflow”: true
+         "is_overflow": true
       }
 
    If Ron continues to gain more followers, we could create another

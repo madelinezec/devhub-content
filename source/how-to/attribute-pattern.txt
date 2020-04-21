@@ -172,8 +172,8 @@ Building with Patterns: The Attribute Pattern
           { k: "volume", v: "12", u: "ounces" }
       ]
 
-   Here we break the information out into keys and values, “k” and “v”, and
-   add in a third field, “u” which allows for the units of measure to be
+   Here we break the information out into keys and values, "k" and "v", and
+   add in a third field, "u" which allows for the units of measure to be
    stored separately.
 
    .. code:: javascript

@@ -69,11 +69,11 @@ Building with Patterns: The Outlier Pattern
    variations, from an application and query standpoint, the document
    structures are fairly consistent. What happens, however, when this isn't
    the case? What happens when there is data that falls outside the
-   “normal” pattern? What if there's an outlier?
+   "normal" pattern? What if there's an outlier?
 
    Imagine you are starting an e-commerce site that sells books. One of the
-   queries you might be interested in running is “who has purchased a
-   particular book”. This could be useful for a recommendation system to
+   queries you might be interested in running is "who has purchased a
+   particular book". This could be useful for a recommendation system to
    show your customers similar books of interest. You decide to store the
    ``user_id`` of a customer in an array for each book. Simple enough,
    right?
@@ -111,9 +111,9 @@ Building with Patterns: The Outlier Pattern
       }
 
    This would work well for a large majority of books that aren't likely to
-   reach the “best seller” lists. Accounting for outliers though results in
+   reach the "best seller" lists. Accounting for outliers though results in
    the ``customers_purchased`` array expanding beyond a 1000 item limit we
-   have set, we'll add a new field to “flag” the book as an outlier.
+   have set, we'll add a new field to "flag" the book as an outlier.
 
    .. code-block:: json
 
@@ -136,7 +136,7 @@ Building with Patterns: The Outlier Pattern
    Many design decisions will be based on the application workload, so this
    solution is intended to show an example of the Outlier Pattern. The
    important concept to grasp here is that the outliers have a substantial
-   enough difference in their data that, if they were considered “normal”,
+   enough difference in their data that, if they were considered "normal",
    changing the application design for them would degrade performance for
    the more typical queries and documents.
 
@@ -154,7 +154,7 @@ Building with Patterns: The Outlier Pattern
    list of authorized attendees in most video conferences can be kept in
    the same document as the conference. However, there are a few events,
    like a company's all hands, that have thousands of expected attendees.
-   For those outlier conferences, the customer implemented “overflow”
+   For those outlier conferences, the customer implemented "overflow"
    documents to record those long lists of attendees.
 
 .. summary::
@@ -166,7 +166,7 @@ Building with Patterns: The Outlier Pattern
    documents or queries to determine an application's solution. Especially
    when that solution would not be optimal for the majority of use cases.
    We can leverage MongoDB's flexible data model to add a field to the
-   document “flagging” it as an outlier. Then, inside the application, we
+   document "flagging" it as an outlier. Then, inside the application, we
    handle the outliers slightly differently. By tailoring your schema for
    the typical document or query, application performance will be optimized
    for those normal use cases and the outliers will still be addressed.

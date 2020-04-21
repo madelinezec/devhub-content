@@ -555,7 +555,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    changed is a little different. We can use the `positional $
    operator <https://docs.mongodb.com/manual/reference/operator/update/positional/>`__
    to access the quiz ``score`` in the array. The $ operator on its own
-   says “change the array element that we matched within the query” - the
+   says "change the array element that we matched within the query" - the
    filter matches with ``scores.type`` equal to ``quiz`` and that's the
    element will get updated with the set.
 

@@ -6,7 +6,7 @@
 
 .. meta-description::
 
-   How I ended up building a whole CMS for a newsletter — when it wasn’t even my job
+   How I ended up building a whole CMS for a newsletter — when it wasn't even my job
 
 .. twitter::
    :site: @mongodb
@@ -15,7 +15,7 @@
    :image: /images/social/twitter/twitter-blue-pattern.png
    :image-alt: MongoDB
 
-   How I ended up building a whole CMS for a newsletter — when it wasn’t even my job
+   How I ended up building a whole CMS for a newsletter — when it wasn't even my job
 
 .. og::
    :url: http://developer.mongodb.com/article/good-intentions-rewarded-usual-way
@@ -23,7 +23,7 @@
    :title: Build a Newsletter Website With the MongoDB Data Platform
    :image: /images/social/open-graph/og-blue-pattern.png
 
-   How I ended up building a whole CMS for a newsletter — when it wasn’t even my job
+   How I ended up building a whole CMS for a newsletter — when it wasn't even my job
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -59,19 +59,19 @@ Build a Newsletter Website With the MongoDB Data Platform
 
 .. introduction::
 
-   “This’ll be simple”, I thought.
+   "This'll be simple", I thought.
 
-   “How hard can it be?”, I said to myself, unwisely.
+   "How hard can it be?", I said to myself, unwisely.
 
    *record scratch*
 
    *freeze frame*
 
-   Yup, that’s me. You’re probably wondering how I ended up in this situation.
+   Yup, that's me. You're probably wondering how I ended up in this situation.
 
    Once upon a time, there was a small company, and that small company had an internal newsletter to let people know what was going on. Because the company was small and everyone was busy, the absolute simplest and most minimal approach was chosen, i.e. a Google Doc that anyone in the Marketing team could update when there was relevant news. This system worked well.
 
-   As the company grew, one Google Doc became many Google Docs, and an automated email was added that went out once a week to remind people to look at the docs. Now, things were not so simple. Maybe the docs got updated, and maybe they didn’t, because it was not always clear who owned what. The people receiving the email just saw links to the docs, with no indication of whether there was anything new or good in there, and after a while, they stopped clicking through, or only did so occasionally. The person who had been sending the emails got a new job and asked for someone to take over the running of the newsletter.
+   As the company grew, one Google Doc became many Google Docs, and an automated email was added that went out once a week to remind people to look at the docs. Now, things were not so simple. Maybe the docs got updated, and maybe they didn't, because it was not always clear who owned what. The people receiving the email just saw links to the docs, with no indication of whether there was anything new or good in there, and after a while, they stopped clicking through, or only did so occasionally. The person who had been sending the emails got a new job and asked for someone to take over the running of the newsletter.
 
 .. content::
 
@@ -97,7 +97,7 @@ Build a Newsletter Website With the MongoDB Data Platform
    + containing references to further tables of topics, authors,
    + and so on and so forth.
 
-   In the document-oriented world, we don’t do it that way. Instead, I defined a simple document format:
+   In the document-oriented world, we don't do it that way. Instead, I defined a simple document format:
 
    .. code-block:: javascript
 
@@ -113,7 +113,7 @@ Build a Newsletter Website With the MongoDB Data Platform
          updates: [],
          published: "true",
          publishedDate: 2020-03-30T07:10:06.955+00:00
-         email: “true"
+         email: "true"
       }
 
    This structure should be fairly self-explanatory:
@@ -124,24 +124,24 @@ Build a Newsletter Website With the MongoDB Data Platform
    + one or more topic tags,
    + plus some utility fields to do things like tracking edits.
 
-   Each item is part of a section and can be published simply to the web, or also to email. I don’t want to spam readers with everything, so the email is curated; only items with ``email: true`` go to email, while everything else just shows up on the website but not in readers’ inboxes.
+   Each item is part of a section and can be published simply to the web, or also to email. I don't want to spam readers with everything, so the email is curated; only items with ``email: true`` go to email, while everything else just shows up on the website but not in readers' inboxes.
 
    One item to point out is the updates array, which is empty in this particular example. This field was a later addition to the format, as I realised when I built the edit functionality that it would be good to track who made edits and when. The flexibility of the document model meant that I could simply add that field without causing any cascading changes elsewhere in the code, or even to documents that had already been created in the database.
 
    So much for the database end. Now we need something to read the documents and do something useful with them.
 
-   I went with `Stitch <https://www.mongodb.com/cloud/stitch>`__, which together with the Atlas database is another part of the MongoDB Cloud platform. In keeping with the general direction of the project, Stitch makes my life super-easy by taking care of things like authentication, access rules, MongoDB queries, services, and functions. It’s a lot more than just a convenient place to store files; using Stitch let me write the code in JavaScript, gave me somewhere easy to host the application logic, and connects to the MongoDB Atlas database with a single line of code:
+   I went with `Stitch <https://www.mongodb.com/cloud/stitch>`__, which together with the Atlas database is another part of the MongoDB Cloud platform. In keeping with the general direction of the project, Stitch makes my life super-easy by taking care of things like authentication, access rules, MongoDB queries, services, and functions. It's a lot more than just a convenient place to store files; using Stitch let me write the code in JavaScript, gave me somewhere easy to host the application logic, and connects to the MongoDB Atlas database with a single line of code:
 
    .. code-block:: javascript
 
       client = stitch.Stitch.initializeDefaultAppClient(APP_ID);
 
-   ``APP_ID`` is, of course, my private application ID, which I’m not going to include here! All of the code for the app can be found in my `personal Github repository <https://github.com/riotnrrd-eu/Above-the-Fold>`__; almost all the functionality (and all of the code from the examples below) is in a `single Javascript file <https://github.com/riotnrrd-eu/Above-the-Fold/blob/master/atf.js>`__.
+   ``APP_ID`` is, of course, my private application ID, which I'm not going to include here! All of the code for the app can be found in my `personal Github repository <https://github.com/riotnrrd-eu/Above-the-Fold>`__; almost all the functionality (and all of the code from the examples below) is in a `single Javascript file <https://github.com/riotnrrd-eu/Above-the-Fold/blob/master/atf.js>`__.
 
    Reading Documents
    -----------------
 
-   The newsletter goes out in HTML email, and it has a companion website, so my Stitch app assembles DOM sections in Javascript to display the newsletter. I won’t go through the whole thing, but each step looks something like this:
+   The newsletter goes out in HTML email, and it has a companion website, so my Stitch app assembles DOM sections in Javascript to display the newsletter. I won't go through the whole thing, but each step looks something like this:
 
    .. code-block:: javascript
 
@@ -153,7 +153,7 @@ Build a Newsletter Website With the MongoDB Data Platform
       itemTitle.textContent = currentNewsItem.itemTitle;
       itemTitleContainer.append(itemTitle);
 
-   This logic showcases the benefit of the document object model in MongoDB. ``currentNewsItem`` is an object in JavaScript which maps exactly to the document in MongoDB, and I can access the fields of the document simply by name, as in ``currentNewsItem.itemTitle``. I don’t have to create a whole separate object representation in my code and laboriously populate that with relational queries among many different tables of a database; I have the exact same object representation in the code as in the database.
+   This logic showcases the benefit of the document object model in MongoDB. ``currentNewsItem`` is an object in JavaScript which maps exactly to the document in MongoDB, and I can access the fields of the document simply by name, as in ``currentNewsItem.itemTitle``. I don't have to create a whole separate object representation in my code and laboriously populate that with relational queries among many different tables of a database; I have the exact same object representation in the code as in the database.
 
    In the same way, inputting a new item is simple because I can build up a JSON object from fields in a web form:
 
@@ -178,12 +178,12 @@ Build a Newsletter Website With the MongoDB Data Platform
          window.alert("Submission failed, sorry!");
       });
 
-   There’s a little bit more verbose feedback and error handling on this one than in some other parts of the code since people other than me use this part of the application!
+   There's a little bit more verbose feedback and error handling on this one than in some other parts of the code since people other than me use this part of the application!
 
    Aggregating An Issue
    --------------------
 
-   So much for inserting news items into the database. What about when someone wants to, y’know, read an issue of the newsletter? The first thing I need to do is to talk to the MongoDB Atlas database and figure out what is the most recent issue, where an issue is defined as the set of all the news items with the same published date. MongoDB has a feature called the `aggregation pipeline <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__, which works a bit like piping data from one command to another in a UNIX shell. An aggregation pipeline has multiple stages, each one of which makes a transformation to the input data and passes it on to the next stage. It’s a great way of doing more complex queries like grouping documents, manipulating arrays, reshaping documents into different models, and so on, while keeping each individual step easy to reason about and debug.
+   So much for inserting news items into the database. What about when someone wants to, y'know, read an issue of the newsletter? The first thing I need to do is to talk to the MongoDB Atlas database and figure out what is the most recent issue, where an issue is defined as the set of all the news items with the same published date. MongoDB has a feature called the `aggregation pipeline <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__, which works a bit like piping data from one command to another in a UNIX shell. An aggregation pipeline has multiple stages, each one of which makes a transformation to the input data and passes it on to the next stage. It's a great way of doing more complex queries like grouping documents, manipulating arrays, reshaping documents into different models, and so on, while keeping each individual step easy to reason about and debug.
 
    In my case, I used a very simple aggregation pipeline to retrieve the most recent publication dates in the database, with three stages. In the first stage, using `$group <https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group>`__, I get all the publication dates. In the second stage, I use `$match <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__ to remove any null dates, which correspond to items without a publication date — that is, unpublished items. Finally, I sort the dates, using — you guessed it — `$sort <https://docs.mongodb.com/manual/reference/operator/aggregation/sort/>`__ to get the most recent ones.
 
@@ -203,7 +203,7 @@ Build a Newsletter Website With the MongoDB Data Platform
          .catch(err => { console.error(err) });
       }).catch(err => { console.error(err) });
 
-   As long as I have a list of all the publication dates, I can use the next most recent date for the navigation controls that let readers look at previous issues of the newsletter. The most important usage, though, is to retrieve the current issue, namely the list of all items with that most recent publication date. That’s what the `find()` command does, and it takes as its argument a simple document:
+   As long as I have a list of all the publication dates, I can use the next most recent date for the navigation controls that let readers look at previous issues of the newsletter. The most important usage, though, is to retrieve the current issue, namely the list of all items with that most recent publication date. That's what the ``find()`` command does, and it takes as its argument a simple document:
 
    .. code-block:: javascript
 
@@ -211,7 +211,7 @@ Build a Newsletter Website With the MongoDB Data Platform
 
    In other words, I want all the documents which are published (not the drafts that are sitting in the queue waiting to be published), and where the published date is the most recent date that I found with the aggregation pipeline above.
 
-   That reference to `orderSections` is a utility function that makes sure that the sections of the newsletter come out in the right order. I can also catch any errors that occur, either in the aggregation pipeline or in the find operation itself.
+   That reference to ``orderSections`` is a utility function that makes sure that the sections of the newsletter come out in the right order. I can also catch any errors that occur, either in the aggregation pipeline or in the find operation itself.
 
    Putting It All Together
    -----------------------
@@ -231,8 +231,8 @@ Build a Newsletter Website With the MongoDB Data Platform
    The `updateMany() command <https://docs.mongodb.com/manual/reference/method/db.collection.updateMany/index.html>`__ has three documents as its arguments.
 
    + The first, the filter, specifies which documents to update, which here means all the ones with an ID in the ``itemsToPublish`` array.
-   + The second is the actual update we are going to make, which is to set the ``publishedDate`` to today’s date and mark them as published.
-   + The third, optional argument, is actually empty in my case because I don’t need to specify any options.
+   + The second is the actual update we are going to make, which is to set the ``publishedDate`` to today's date and mark them as published.
+   + The third, optional argument, is actually empty in my case because I don't need to specify any options.
 
    Moving The Mail
    ---------------
@@ -245,7 +245,7 @@ Build a Newsletter Website With the MongoDB Data Platform
 
       const http = context.services.get("mcPublish");
 
-   As is common, the REST API I want to use requires an API key. I generated the key on their website, but I don’t want to leave that lying around. Luckily, Stitch also lets me define a secret, so I don’t need that API key in plaintext:
+   As is common, the REST API I want to use requires an API key. I generated the key on their website, but I don't want to leave that lying around. Luckily, Stitch also lets me define a secret, so I don't need that API key in plaintext:
 
    .. code-block:: javascript
 
@@ -256,26 +256,26 @@ Build a Newsletter Website With the MongoDB Data Platform
    Charting Made Super Easy
    ------------------------
 
-   Fortunately, there’s an obvious answer to my prayers in the shape of Charts, yet another part of the MongoDB Cloud platform, which let me very quickly build a visualisation of activity on the back-end.
+   Fortunately, there's an obvious answer to my prayers in the shape of Charts, yet another part of the MongoDB Cloud platform, which let me very quickly build a visualisation of activity on the back-end.
 
    .. image:: /images/article/good-intentions-rewarded-usual-way/atf-charts.png
       :alt: MongoDB Charts
       :align: center
 
-   Here’s how simple that is: I have my database, imaginatively named “newsletter”, and the collection, named “atf” for Above the Fold, the name of the newsletter I inherited. I can see all of the fields from my document, so I can take the ``_id`` field for my X-axis, and then the ``createdDate`` for the Y-axis, binning by month, to create a real-time chart of the number of news items submitted each month.
+   Here's how simple that is: I have my database, imaginatively named "newsletter", and the collection, named "atf" for Above the Fold, the name of the newsletter I inherited. I can see all of the fields from my document, so I can take the ``_id`` field for my X-axis, and then the ``createdDate`` for the Y-axis, binning by month, to create a real-time chart of the number of news items submitted each month.
 
    .. image:: /images/article/good-intentions-rewarded-usual-way/atf-chart-settings.png
       :alt: Settings for MongoDB Charts
       :align: center
 
-   It really is that easy to create visualizations in Charts, including much more complicated ones than this, using all MongoDB’s rich data types. `Take a look at some of the more advanced options <https://www.mongodb.com/products/charts>`__ and give it a go with your own data, or with the sample data in a :doc:`free instance of MongoDB Atlas </quickstart/free-atlas-cluster>`.
+   It really is that easy to create visualizations in Charts, including much more complicated ones than this, using all MongoDB's rich data types. `Take a look at some of the more advanced options <https://www.mongodb.com/products/charts>`__ and give it a go with your own data, or with the sample data in a :doc:`free instance of MongoDB Atlas </quickstart/free-atlas-cluster>`.
 
-   It was a great learning experience to build this thing, and the whole exercise gave me a renewed appreciation for the power of MongoDB, the document model, and the extended MongoDB Cloud platform – both the Atlas database and the correlated services like Stitch and Charts. There’s also room for expansion; one of the next features I want to build is search, using `MongoDB Atlas’ Text Search <https://www.mongodb.com/atlas/search>`__ feature.
+   It was a great learning experience to build this thing, and the whole exercise gave me a renewed appreciation for the power of MongoDB, the document model, and the extended MongoDB Cloud platform – both the Atlas database and the correlated services like Stitch and Charts. There's also room for expansion; one of the next features I want to build is search, using `MongoDB Atlas' Text Search <https://www.mongodb.com/atlas/search>`__ feature.
 
 .. summary::
 
    Over To You
    -----------
 
-   As I mentioned at the beginning, one of the nice things about this project is that the whole thing fits in the free tier of MongoDB Atlas, Stitch, and Charts. You can `sign up <https://www.mongodb.com/cloud/atlas/signup>`__ for your own free-forever instance and start building today, no credit card required, and no expiry date either. There’s a helpful onboarding wizard that will walk you through loading some sample data and performing some basic tasks, and when you’re ready to go further, the `MongoDB docs <https://docs.mongodb.com/>`__ are top-notch, with plenty of worked examples. Once you get into it and want to learn more, the best place to turn is `MongoDB University <https://university.mongodb.com/>`__, which gives you the opportunity to learn MongoDB at your own pace. You can also get certified on MongoDB, which will get you listed on our public list of `certified MongoDB professionals <https://university.mongodb.com/certified_professional_finder/>`__.
+   As I mentioned at the beginning, one of the nice things about this project is that the whole thing fits in the free tier of MongoDB Atlas, Stitch, and Charts. You can `sign up <https://www.mongodb.com/cloud/atlas/signup>`__ for your own free-forever instance and start building today, no credit card required, and no expiry date either. There's a helpful onboarding wizard that will walk you through loading some sample data and performing some basic tasks, and when you're ready to go further, the `MongoDB docs <https://docs.mongodb.com/>`__ are top-notch, with plenty of worked examples. Once you get into it and want to learn more, the best place to turn is `MongoDB University <https://university.mongodb.com/>`__, which gives you the opportunity to learn MongoDB at your own pace. You can also get certified on MongoDB, which will get you listed on our public list of `certified MongoDB professionals <https://university.mongodb.com/certified_professional_finder/>`__.
 

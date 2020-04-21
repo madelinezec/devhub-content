@@ -238,7 +238,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
       hugo new site hugo
 
    The above command, assuming Hugo is installed, will create a new Hugo
-   within your Stitch project titled, “hugo”. In other words, you'll now
+   within your Stitch project titled, "hugo". In other words, you'll now
    have a **hugo** directory within your Stitch project.
 
    Next you'll want to pick a theme for your Hugo website. Execute the

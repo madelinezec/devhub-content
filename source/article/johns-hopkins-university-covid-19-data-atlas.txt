@@ -119,7 +119,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    All data is from `JHU <https://www.jhu.edu/>`__, they source their data from
 
    - the World Health Organization,
-   - the National Health Commission of the People’s Republic of China,
+   - the National Health Commission of the People's Republic of China,
    - the United States Centre for Disease Control,
    - the Australia Government Department of Health,
    - the European Centre for Disease Prevention and Control,

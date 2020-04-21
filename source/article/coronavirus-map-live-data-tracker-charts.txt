@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @MBeugnet
    :title: Coronavirus Map and Live Data Tracker with MongoDB Charts
-   :image: /images/social/twitter/coronavirus.jpg
+   :image: /images/social/twitter/twitter-covid19.png
    :image-alt: Virus representation
 
    Learn how we put MongoDB Charts to use to track the global Coronavirus outbreak.
@@ -20,7 +20,7 @@
 .. og::
    :url: https://developer.mongodb.com/article/coronavirus-map-live-data-tracker-charts
    :title: Coronavirus Map and Live Data Tracker with MongoDB Charts
-   :image: /images/social/twitter/coronavirus.jpg
+   :image: /images/social/open-graph/og-covid19.png
    :type: article
 
    Learn how we put MongoDB Charts to use to track the global Coronavirus outbreak.
@@ -33,7 +33,7 @@
 
 .. pubdate:: 2020-02-05
 
-.. updated-date:: 2020-03-24
+.. updated-date:: 2020-04-21
 
 .. type:: article
 
@@ -53,7 +53,7 @@
    * Charts
    * Stitch
 
-.. atf-image:: /images/atf-images/illustrations/charts.png
+.. atf-image:: /images/atf-images/illustrations/covid19.png
 
 .. ---------------------------------------------------------------
 .. ARTICLE CONTENT
@@ -65,22 +65,23 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
 
 .. introduction::
 
-   Update
-   ------
+   Updates
+   -------
+
+   April 21st
+   ~~~~~~~~~~
+
+   - `MongoDB Open Data COVID-19 <https://developer.mongodb.com/article/johns-hopkins-university-covid-19-data-atlas>`__ is now available on the new `MongoDB Developer Hub <https://developer.mongodb.com/>`__.
+   - You can check our code samples in `our Github repository <https://github.com/mongodb-developer/open-data-covid-19>`__.
+   - The JHU dataset changed again a few times. It's not really stable and it makes it complicated to build something reliable on top of this service. This is the reason why we created our more accessible version of the JHU dataset.
+   - It's the same data but transformed in JSON documents and available in a readonly MongoDB Cluster we built for you.
 
    March 24th
    ~~~~~~~~~~
    
    - `Johns Hopkins University <https://www.jhu.edu/>`__ changed the dataset they release daily.
-   - They don't include anymore the "recovered" data.
-   - I can't calculate anymore the "actively infected persons" which I was calculating: ``infected = confirmed - deaths - recovered``.
-   - To avoid breaking all my existing charts, I decided to froze the current dashboard and create a `new one based on the new dataset <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__.
+   - I created a `new dashboard based using the new dataset <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__.
    - My new dashboard updates **automatically every hour** as new data comes in.
-
-   .. blockquote::
-
-      - Check out `Maxime's new dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__ (updates every hour).
-      - Check out `Thomas's dashboard <https://charts.mongodb.com/charts-coronavirus-dashboard-yamfx/public/dashboards/4b328ffa-ba5d-435e-af11-b39fc974e47a>`__.
 
    Too Long, Didn't Read
    ---------------------
@@ -92,17 +93,17 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
 
    .. blockquote::
 
+      - Check out `Maxime's dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__.
       - Check out `Thomas's dashboard <https://charts.mongodb.com/charts-coronavirus-dashboard-yamfx/public/dashboards/4b328ffa-ba5d-435e-af11-b39fc974e47a>`__.
-      - Check out `Maxime's frozen dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/1470d5ae-52b4-4bab-b9d3-8a7dd50a616c>`__.
 
    Here is an example of the charts we made using the Coronavirus dataset.
    More below and in the MongoDB Charts dashboards.
 
    .. charts::
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
-      :id: 203e790b-371e-4c75-b308-23ffc1673805
+      :id: 28dc1e9e-27a5-4259-ad5b-0f2b1bc9ff5e
       :autorefresh: 3600
-      :theme: dark
+      :theme: light
       :width: 760
       :height: 570
 
@@ -119,9 +120,11 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    Let The Data Speak
    ------------------
 
-   We have to make decisions at work every day. - Should we discontinue
-   this project? - Should we hire more people? - Can we invest more in this
-   branch? How much?
+   We have to make decisions at work every day.
+
+   - Should we discontinue this project?
+   - Should we hire more people?
+   - Can we invest more in this branch? How much?
 
    Leaders make decisions. Great leaders make informed decisions, based on
    facts backed by data and not just based on assumptions, feelings or
@@ -164,11 +167,11 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    .. blockquote::
 
       - Here is the `Thomas's dashboard <https://charts.mongodb.com/charts-coronavirus-dashboard-yamfx/public/dashboards/4b328ffa-ba5d-435e-af11-b39fc974e47a>`__ Thomas came up with.
-      - Here is the `Maxime's dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/1470d5ae-52b4-4bab-b9d3-8a7dd50a616c>`__ I came up with.
+      - Here is the `Maxime's dashboard <https://charts.mongodb.com/charts-coronavirus-lwlvn/public/dashboards/5e7a3667-c25a-4c3c-8ba2-5f5d6910e339>`__ I came up with.
 
       Both are shared publicly for the greater good.
 
-   `MongoDB Charts <https://www.mongodb.com/products/charts>`__ also allows you to embed easily charts within a website… or a blog post.
+   `MongoDB Charts <https://www.mongodb.com/products/charts>`__ also allows you to embed easily charts within a website... or a blog post.
 
    Here are a few of the graphs I was able to import in here with just two clicks.
 
@@ -184,15 +187,23 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
       :id: d4a56c12-8e3b-4705-9b4c-2883a9c1b17a
       :autorefresh: 3600
-      :theme: dark
+      :theme: light
       :width: 760
       :height: 570
 
    .. charts::
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
-      :id: 78ac7455-c983-4715-b51c-4bc9b1ae4d05
+      :id: 28dc1e9e-27a5-4259-ad5b-0f2b1bc9ff5e
       :autorefresh: 3600
-      :theme: dark
+      :theme: light
+      :width: 760
+      :height: 570
+
+   .. charts::
+      :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
+      :id: 40ecf03a-0e57-4a59-9cbe-15e3f94e9d21
+      :autorefresh: 3600
+      :theme: light
       :width: 760
       :height: 570
 
@@ -200,7 +211,7 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
       :id: ec4a5fe1-d93a-49c5-bfe5-864bce788075
       :autorefresh: 3600
-      :theme: dark
+      :theme: light
       :width: 760
       :height: 570
 
@@ -214,7 +225,7 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
 
    .. charts::
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
-      :id: 1f2ba37d-1505-47c8-8596-9b5401a05ca5
+      :id: e330a135-4993-4a11-a434-45c220a9d2f9
       :autorefresh: 3600
       :theme: dark
       :width: 760
@@ -224,7 +235,7 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
       :id: 7102d538-fa35-4112-a23b-ae769feca279
       :autorefresh: 3600
-      :theme: dark
+      :theme: light
       :width: 760
       :height: 1000
 
@@ -236,9 +247,9 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    -------------
 
    If you have a source of data that provides different or more accurate
-   data about this virus. Please let me know on Twitter
-   [@MBeugnet](https://twitter.com/mbeugnet) or in the comment section. I
-   will do my best to update this data and provide more charts.
+   data about this virus. Please let me know on Twitter `@MBeugnet <https://twitter.com/mbeugnet>`__ or
+   in the `MongoDB community website <https://community.mongodb.com/>`__.
+   I will do my best to update this data and provide more charts.
 
    .. blockquote::
 
@@ -251,10 +262,12 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    Sources
    -------
 
-   -  `Dashboard <https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6>`__ from `Johns Hopkins University <https://www.jhu.edu/>`__.
-   -  `Blog post from Johns Hopkins University <https://systems.jhu.edu/research/public-health/ncov/>`__.
-   -  `Public Google Spreadsheet (old version) - deprecated <https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXocejdxZaTs6w/htmlview?usp=sharing&sle=true#>`__.
-   -  `Public Google Spreadsheet (new version) - deprecated <https://docs.google.com/spreadsheets/d/1wQVypefm946ch4XDp37uZ-wartW4V7ILdg-qYiDXUHM/edit?usp=sharing>`__.
-   -  `Public Google Spreadsheet (Time Series) - deprecated <https://docs.google.com/spreadsheets/d/1UF2pSkFTURko2OvfHWWlFpDFAr1UxCBA4JLwlSP6KFo/edit?usp=sharing>`__.
-   -  `Github Repository with CSV dataset from Johns Hopkins University <https://github.com/CSSEGISandData/COVID-19>`__.
-   -  Image credit: `Scientific Animations <http://www.scientificanimations.com/wiki-images/>`__ (CC BY-SA 4.0).
+   - `MongoDB Open Data COVID-19 - Blog Post <https://developer.mongodb.com/article/johns-hopkins-university-covid-19-data-atlas>`__.
+   - `MongoDB Open Data COVID-19 - Github Repo <https://github.com/mongodb-developer/open-data-covid-19>`__.
+   - `Dashboard <https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6>`__ from `Johns Hopkins University <https://www.jhu.edu/>`__.
+   - `Blog post from Johns Hopkins University <https://systems.jhu.edu/research/public-health/ncov/>`__.
+   - `Public Google Spreadsheet (old version) - deprecated <https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXocejdxZaTs6w/htmlview?usp=sharing&sle=true#>`__.
+   - `Public Google Spreadsheet (new version) - deprecated <https://docs.google.com/spreadsheets/d/1wQVypefm946ch4XDp37uZ-wartW4V7ILdg-qYiDXUHM/edit?usp=sharing>`__.
+   - `Public Google Spreadsheet (Time Series) - deprecated <https://docs.google.com/spreadsheets/d/1UF2pSkFTURko2OvfHWWlFpDFAr1UxCBA4JLwlSP6KFo/edit?usp=sharing>`__.
+   - `Github Repository with CSV dataset from Johns Hopkins University <https://github.com/CSSEGISandData/COVID-19>`__.
+   - Image credit: `Scientific Animations <http://www.scientificanimations.com/wiki-images/>`__ (CC BY-SA 4.0).
