@@ -6,7 +6,7 @@
 
 .. meta-description:: 
 
-   Making the John Hopkins University COVID-19 Data open and accessible to all with MongoDB
+   Making the Johns Hopkins University COVID-19 Data open and accessible to all with MongoDB
 
 .. twitter::
    :site: @mongodb
@@ -15,7 +15,7 @@
    :image: /images/social/twitter/twitter-covid19.png
    :image-alt: Virus representation
 
-   Making the John Hopkins University COVID 19 Data open and accessible to all with MongoDB
+   Making the Johns Hopkins University COVID 19 Data open and accessible to all with MongoDB
 
 .. og::
    :url: http://developer.mongodb.com/article/open-data-covid19
@@ -23,7 +23,7 @@
    :image: /images/social/open-graph/og-covid19.png
    :type: article
 
-   Making the John Hopkins University COVID-19 Data open and accessible to all with MongoDB
+   Making the Johns Hopkins University COVID-19 Data open and accessible to all with MongoDB
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -38,6 +38,8 @@
 .. include:: /includes/authors/karlsson-joe.rst
 
 .. pubdate:: 2020-04-20
+
+.. updated-date:: 2020-04-21
 
 .. type:: article
 
@@ -78,19 +80,25 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
 .. introduction::
 
-   As the COVID-19 pandemic has swept the globe, the work of `JHU (John Hopkins University) <https://www.jhu.edu/>`__ and its `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world.
+   TL;DR
+   -----
 
-   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files which you need to download each time to then query. We've set out to make that up-to-date data more accessible so people could build other analyses and applications directly on top of the data set.
+   Our MongoDB Cluster is running in version 4.2.5.
 
-   We are now hosting a service with a frequently updated copy of the JHU data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query using the MongoDB Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
+   You can connect to it using MongoDB Compass, the Mongo Shell, SQL or any MongoDB driver supporting at least MongoDB 4.2 with the following URI:
 
-   With the MongoDB COVID-19 dataset there will be no more manual downloads and no more frequent format changes. With this data set, this service will deliver a consistent JSON and SQL view every day with no downstream `ETL <https://www.webopedia.com/TERM/E/ETL.html>`__ required.
+   .. code-block:: auto
 
-   None of the actual data is modified. It is simply structured to make it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
+      mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
 
-   **Table of content:**
+   .. blockquote::
 
-   - :ref:`covid19-where-do-we-get-the-data`
+      ``readonly`` is the username and the password, they are not meant to be replaced.
+
+   Table of Contents
+   -----------------
+
+   - :ref:`covid19-introduction`
    - :ref:`covid19-the-mongodb-dataset`
    - :ref:`covid19-get-started`
 
@@ -109,14 +117,29 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    - :ref:`covid19-wrap-up`
    - :ref:`covid19-sources`
 
+   .. _covid19-introduction:
+
+   Introduction
+   ------------
+
+   As the COVID-19 pandemic has swept the globe, the work of `JHU (Johns Hopkins University) <https://www.jhu.edu/>`__ and its `COVID-19 dashboard <https://coronavirus.jhu.edu/map.html>`__ has become vitally important in keeping people informed about the progress of the virus in their communities, in their countries, and in the world.
+
+   JHU not only publishes their dashboard, but `they make the data powering it freely available for anyone to use <https://github.com/CSSEGISandData/COVID-19>`__. However, their data is delivered as flat CSV files which you need to download each time to then query. We've set out to make that up-to-date data more accessible so people could build other analyses and applications directly on top of the data set.
+
+   We are now hosting a service with a frequently updated copy of the JHU data in MongoDB Atlas, our database in the cloud. This data is free for anyone to query using the MongoDB Query language and/or SQL. We also support a `variety of BI tools directly <https://docs.atlas.mongodb.com/bi-connection/>`__ so you can query the data with Tableau, Qlik and Excel.
+
+   With the MongoDB COVID-19 dataset there will be no more manual downloads and no more frequent format changes. With this data set, this service will deliver a consistent JSON and SQL view every day with no downstream `ETL <https://www.webopedia.com/TERM/E/ETL.html>`__ required.
+
+   None of the actual data is modified. It is simply structured to make it easier to query by placing it within a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and by creating some convenient APIs.
+
 .. content::
 
-   .. _covid19-where-do-we-get-the-data:
+   .. _covid19-the-mongodb-dataset:
 
-   Where do we get the data?
-   -------------------------
+   The MongoDB Dataset
+   -------------------
 
-   All data is from `JHU <https://www.jhu.edu/>`__, they source their data from
+   All the data we use to create the MongoDB COVID-19 dataset comes from the `JHU <https://www.jhu.edu/>`__ dataset. In their turn, here are the sources they are using:
 
    - the World Health Organization,
    - the National Health Commission of the People's Republic of China,
@@ -127,12 +150,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    You can read the `full list on their GitHub repository <https://github.com/CSSEGISandData/COVID-19>`__.
 
-   .. _covid19-the-mongodb-dataset:
-
-   The MongoDB Dataset
-   -------------------
-
-   We produced two different databases in our cluster.
+   Using the CSV files they provide, we are producing two different databases in our cluster.
 
    - ``covid19jhu`` contains the raw CSV files imported with the `mongoimport <https://docs.mongodb.com/manual/reference/program/mongoimport/>`__ tool,
    - ``covid19`` contains the same dataset but with a clean MongoDB schema design with all the good practices we are recommending.
@@ -197,7 +215,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. blockquote::
 
-      If you want to create your own MongoDB Charts dashboard, you will need to set up your own `Free MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and import the dataset in your cluster using the `import scripts <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
+      If you want to create your own MongoDB Charts dashboard, you will need to set up your own `Free MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster and import the dataset in your cluster using the `import scripts <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__ or use ``mongoexport & mongoimport`` or ``mongodump & mongorestore``. See this section for more details: :ref:`covid19-export`.
 
    .. _covid19-compass:
 
@@ -213,7 +231,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. code-block::
 
-      mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/test
+      mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
 
    .. _covid19-shell:
 
@@ -224,7 +242,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. code-block:: shell
 
-      mongo "mongodb+srv://covid-19.hip2i.mongodb.net/test"  --username readonly --password readonly
+      mongo "mongodb+srv://covid-19.hip2i.mongodb.net/covid19"  --username readonly --password readonly
 
    .. _covid19-java:
 
@@ -289,7 +307,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
           }
 
           private static MongoClientSettings getMongoClient() {
-              String connectionString = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/test";
+              String connectionString = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19";
               CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
               CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
               return MongoClientSettings.builder()
@@ -316,7 +334,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       const MongoClient = require("mongodb").MongoClient;
 
       const uri =
-        "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/test?retryWrites=true&w=majority";
+        "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19";
 
       const client = new MongoClient(uri, {
         useNewUrlParser: true,
@@ -414,7 +432,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       from tabulate import tabulate
 
       EARTH_RADIUS = 6371.0
-      MDB_URL = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/test?retryWrites=true&w=majority"
+      MDB_URL = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
 
 
       def main():
@@ -518,7 +536,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       	"go.mongodb.org/mongo-driver/mongo/options"
       )
 
-      const mdbURL = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19?retryWrites=true&w=majority"
+      const mdbURL = "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
       const earthRadius = 6371.0
 
       // Metadata represents (a subset of) the data stored in the metadata
@@ -767,6 +785,13 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       Note that you cannot run these commands against our cluster because the user we gave you (``readonly:readonly``) doesn't have write permission on this cluster.
 
       Read our :doc:`Getting Your Free MongoDB Atlas Cluster blog post </quickstart/free-atlas-cluster>` if you want to know more.
+
+   Another smart way to duplicate the dataset in your own cluster would be to use ``mongodump`` and ``mongorestore``. Apart from being more efficient, it will also grab the indexes definition along with the data.
+
+   .. code-block:: bash
+
+      mongodump --uri="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
+      mongorestore --drop --uri="<YOUR_URI>"
 
 .. summary::
 
