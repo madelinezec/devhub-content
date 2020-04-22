@@ -1,0 +1,262 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: MongoDB Schema Design Anti-Pattern: Massive Arrays
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
+
+.. og::
+   :url: http://developer.mongodb.com/article/3-things-to-know-switch-from-sql-mongodb
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Massive Arrays
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-04-22
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   * `Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==============
+Massive Arrays
+==============
+ 
+.. introduction:: 
+
+   Design patterns are a fundamental part of software engineering.  They provide developers with best practices and a common language as they architect applications.  
+
+   At MongoDB, we have schema design patterns to help developers be successful as they plan and iterate on their schema designs.  `Daniel Coupal <https://twitter.com/danielcoupal>`__ and `Ken Alger <https://twitter.com/kenwalger>`__ co-wrote a fantastic `blog series <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__ that highlights each of the schema design patterns.  If you really want to dive into the details (and I recommend you do!), check out `MongoDB University’s free course on Data Modeling <https://university.mongodb.com/courses/M320/about>`__.
+
+   Sometimes, developers jump right in to designing their schemas and building their apps without thinking about best practices.  As their apps begin to scale, they realize that things are bad.
+
+   .. figure:: /images/article/anti-patterns/massive-arrays/thisisbad.gif
+      :alt: Oh, this is bad. I should not have done this.
+
+   We’ve identified several common mistakes developers make with MongoDB.  We call these mistakes “schema design anti-patterns.”  
+
+   Throughout this blog series, I’ll introduce you to six common anti-patterns.  Let’s start today with the Massive Arrays anti-pattern.
+
+.. content::
+
+   Massive Arrays
+   --------------
+
+   One of the rules of thumb when modeling data in MongoDB is *data that is accessed together should be stored together*.  If you’ll be retrieving or updating data together frequently, you should probably store it together.  Data is commonly stored together by embedding related information in subdocuments or arrays.  
+
+   The problem is that sometimes developers take this too far and embed massive amounts of information in a single document.
+
+   Consider an example where we store information about employees who work in various government buildings.  If we were to embed the employees in the building document, we might store our data in a buildings collection like the following:
+
+   .. code-block:: javascript
+
+      // buildings collection
+      {
+         "_id": "city_hall",
+         "name": "City Hall",
+         "city": "Pawnee",
+         "state": "IN",
+         "employees": [
+            {
+               "_id": 123456789,
+               "first": "Leslie",
+               "last": "Yepp",
+               "cell": "8125552344",
+               "start-year": "2004"
+            },
+            {
+               "_id": 234567890,
+               "first": "Ron",
+               "last": "Swandaughter",
+               "cell": "8125559347",
+               "start-year": "2002"
+            }
+         ]
+      }
+
+   In this example, the employees array is unbounded.  As we begin storing information about all of the employees who work in City Hall, the employees array will become massive—potentially sending us over the `16 mb document maximum <https://docs.mongodb.com/manual/reference/limits/#BSON%20Document%20Size>`__.  Additionally, reading and building indexes on arrays gradually becomes less performant as array size increases.
+
+   The example above is an example of the massive arrays anti-pattern.  
+
+   So how can we fix this?  
+
+   Instead of embedding the employees in the buildings documents, we could flip the model and instead embed the buildings in the employees documents:
+
+   .. code-block:: javascript
+
+      // employees collection
+      {
+         "_id": 123456789,
+         "first": "Leslie",
+         "last": "Yepp",
+         "cell": "8125552344",
+         "start-year": "2004",
+         "building": {
+            "_id": "city_hall",
+            "name": "City Hall",
+            "city": "Pawnee",
+            "state": "IN"
+         }
+      },
+      {
+         "_id": 234567890,
+         "first": "Ron",
+         "last": "Swandaughter",
+         "cell": "8125559347",
+         "start-year": "2002",
+         "building": {
+            "_id": "city_hall",
+            "name": "City Hall",
+            "city": "Pawnee",
+            "state": "IN"
+         }
+      }
+
+   In the example above, we are repeating the information about City Hall in the document for each City Hall employee.  If we are frequently displaying information about an employee and their building in our application together, this model probably makes sense.
+
+   The disadvantage with this approach is we have a lot of data duplication.  Storage is cheap, so data duplication isn’t necessarily a problem from a storage cost perspective.  However, every time we need to update information about City Hall, we’ll need to update the document for every employee who works there.  If we take a look at the information we’re currently storing about the buildings, updates will likely be very infrequent, so this approach may be a good one.
+
+   If our use case does not call for information about employees and their building to be displayed or updated together, we may want to instead separate the information into two collections and `use references <https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencing>`__ to link them:
+
+   .. code-block:: javascript
+
+      // buildings collection
+      {
+         "_id": "city_hall",
+         "name": "City Hall",
+         "city": "Pawnee",
+         "state": "IN"
+      }
+      
+      // employees collection
+      {
+         "_id": 123456789,
+         "first": "Leslie",
+         "last": "Yepp",
+         "cell": "8125552344",
+         "start-year": "2004",
+         "building_id": "city_hall"
+      },
+      {
+         "_id": 234567890,
+         "first": "Ron",
+         "last": "Swandaughter",
+         "cell": "8125559347",
+         "start-year": "2002",
+         "building_id": "city_hall"
+      }
+
+   Here we have completely separated our data.  We have eliminated massive arrays, and we have no data duplication.  
+
+   The drawback is that if we need to retrieve information about an employee and their building together, we’ll need to use $lookup to join the data together.  $lookup operations can be expensive, so it’s important to consider how often you’ll need to perform $lookup if you choose this option.
+
+   If we find ourselves frequently using `$lookup <https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/index.html>`__, another option is to use the `extended reference pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__.  The extended reference pattern is a mixture of the previous two approaches where we duplicate some—but not all—of the data in the two collections.  We only duplicate the data that is frequently accessed together. 
+
+   For example, if our application has a user profile page that displays information about the user as well as the name of the building and the state where they work, we may want to embed the building name and state fields in the employee document:
+
+   .. code-block:: javascript
+
+      // buildings collection
+      {
+         "_id": "city_hall",
+         "name": "City Hall",
+         "city": "Pawnee",
+         "state": "IN"
+      }
+
+      //employees collection
+      {
+         "_id": 123456789,
+         "first": "Leslie",
+         "last": "Yepp",
+         "cell": "8125552344",
+         "start-year": "2004",
+         "building_name": {
+            "name": "City Hall",
+            "state": "IN"
+         }
+      },
+      {
+         "_id": 234567890,
+         "first": "Ron",
+         "last": "Swandaughter",
+         "cell": "8125559347",
+         "start-year": "2002",
+         "building": {
+            "name": "City Hall",
+            "state": "IN"
+         }
+      }
+   
+   As we saw when we duplicated data previously, we should be mindful of duplicating data that will frequently be updated.  In this particular case, the name of the building and the state the building is in are very unlikely to change, so this solution works.
+
+.. summary::
+
+   Summary
+   -------
+
+   Storing related information that you’ll be frequently querying together is generally good.  However, storing information in massive arrays that will continue to grow over time is generally bad.
+
+   As is true with all MongoDB schema design patterns and anti-patterns, carefully consider your use case—the data you will store and how you will query it—in order to determine what schema design is best for you.
+
+   Be on the lookout for more posts in this anti-patterns series in the coming weeks.
+
+   .. blockquote::
+
+      When you're ready to build a schema in MongoDB, check out `MongoDB Atlas <http://bit.ly/MDB_Atlas>`__,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB. With a forever-free tier and promo code
+      LAUREN200 for when you're ready to move beyond the free tier, you're on
+      your way to realizing the full value of MongoDB.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Unbounded Arrays Anti-Pattern <https://dochub.mongodb.org/core/anti-pattern-unbounded-arrays>`__
+   - `MongoDB Docs: Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
+   - `MongoDB Docs: Model One-to-One Relationships with Embedded Documents <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-one-relationships-between-documents/>`__
+   - `MongoDB Docs: Model One-to-Many Relationships with Embedded Documents <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/>`__
+   - `MongoDB Docs: Model One-to-Many Relationships with Document References <https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/>`__
+   - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
