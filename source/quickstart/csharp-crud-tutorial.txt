@@ -320,7 +320,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       var firstDocument = collection.Find(new BsonDocument()).FirstOrDefault();
       Console.WriteLine(firstDocument.ToString());
 
-   returns…
+   returns...
 
    .. code-block:: json
 
@@ -359,7 +359,7 @@ MongoDB & C Sharp: CRUD Operations Tutorial
       var studentDocument = collection.Find(filter).FirstOrDefault();
       Console.WriteLine(studentDocument.ToString());
 
-   returns…
+   returns...
 
    .. code-block:: json
 

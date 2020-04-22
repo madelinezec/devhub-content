@@ -127,7 +127,7 @@ Building with Patterns: The Attribute Pattern
       {
           title: "Star Wars",
           director: "George Lucas",
-          …
+          ...
           releases: [
               {
               location: "USA",
@@ -145,9 +145,9 @@ Building with Patterns: The Attribute Pattern
               location: "UK",
               date: ISODate("1977-12-27T01:00:00+01:00")
               },
-              …
+              ...
           ],
-          …
+          ...
       }
 
    Indexing becomes much more manageable by creating one index on the

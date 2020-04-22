@@ -105,8 +105,8 @@ Build a Newsletter Website With the MongoDB Data Platform
          _id: 5e715b2099e27fa8539274ea,
          section: "events",
          itemTitle: "[Webinar] Building FHIR Applications with MongoDB, April 14th",
-         itemText: "MongoDB and FHIR both natively support the JSON format, the standard e…",
-         itemLink: "https://www.mongodb.com/webinar/building-fhir-applications-with-mongod…",
+         itemText: "MongoDB and FHIR both natively support the JSON format, the standard e...",
+         itemLink: "https://www.mongodb.com/webinar/building-fhir-applications-with-mongod...",
          tags: ["fhir", "healthcare", "webinar"],
          createdDate: 2020-03-17T23:01:20.038+00:00
          submitter: "marketing.genius@mongodb.com",
@@ -270,7 +270,7 @@ Build a Newsletter Website With the MongoDB Data Platform
 
    It really is that easy to create visualizations in Charts, including much more complicated ones than this, using all MongoDB's rich data types. `Take a look at some of the more advanced options <https://www.mongodb.com/products/charts>`__ and give it a go with your own data, or with the sample data in a :doc:`free instance of MongoDB Atlas </quickstart/free-atlas-cluster>`.
 
-   It was a great learning experience to build this thing, and the whole exercise gave me a renewed appreciation for the power of MongoDB, the document model, and the extended MongoDB Cloud platform – both the Atlas database and the correlated services like Stitch and Charts. There's also room for expansion; one of the next features I want to build is search, using `MongoDB Atlas' Text Search <https://www.mongodb.com/atlas/search>`__ feature.
+   It was a great learning experience to build this thing, and the whole exercise gave me a renewed appreciation for the power of MongoDB, the document model, and the extended MongoDB Cloud platform - both the Atlas database and the correlated services like Stitch and Charts. There's also room for expansion; one of the next features I want to build is search, using `MongoDB Atlas' Text Search <https://www.mongodb.com/atlas/search>`__ feature.
 
 .. summary::
 

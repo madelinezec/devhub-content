@@ -11,7 +11,7 @@
 .. twitter::
    :site: @mongodb
    :creator: @andrewmorgan
-   :title: MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
+   :title: MongoDB & Data Streaming - Implementing a MongoDB Kafka Consumer
    :image: /images/social/twitter/twitter-mdb-developer.png
 
    Discover how to implement a MongoDB Kafka consumer
@@ -45,7 +45,7 @@
 .. ---------------------------------------------------------------
 
 ================================================================
-MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
+MongoDB & Data Streaming - Implementing a MongoDB Kafka Consumer
 ================================================================
 
 .. content::
@@ -58,7 +58,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
     from data requires mixing huge volumes of information from many sources.
 
     At the same time, we're impatient to get answers instantly; if the time
-    to insight exceeds 10s of milliseconds then the value is lost –
+    to insight exceeds 10s of milliseconds then the value is lost -
     applications such as high frequency trading, fraud detection, and
     recommendation engines can't afford to wait. This often means analyzing
     the inflow of data before it even makes it to the database of record.
@@ -67,7 +67,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
 
     Kafka and data streams are focused on ingesting the massive flow of data
     from multiple fire-hoses and then routing it to the systems that need it
-    – filtering, aggregating, and analyzing en-route.
+    - filtering, aggregating, and analyzing en-route.
 
     This blog introduces Apache Kafka and then illustrates how to use
     MongoDB as a source (producer) and destination (consumer) for the
@@ -105,7 +105,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
  
     *Figure 1: Kafka Producers, Consumers, Topics, and Partitions*
 
-    MongoDB As A Kafka Consumer – A Java Example
+    MongoDB As A Kafka Consumer - A Java Example
     --------------------------------------------
 
     In order to use MongoDB as a Kafka consumer, the received events must be
@@ -193,7 +193,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
             return fishDocument;
         };
 
-    In a real application more would be done with the received messages –
+    In a real application more would be done with the received messages -
     they could be combined with reference data read from MongoDB, acted on
     and then passed along the pipeline by publishing to additional topics.
     In this example, the final step is to confirm from the ``mongo`` shell
@@ -219,7 +219,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
     Full Java Code for MongoDB Kafka Consumer
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    **Business Object –** ``Fish.java``
+    **Business Object -** ``Fish.java``
 
     .. code-block:: java
 
@@ -302,11 +302,11 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
             }
         }
 
-    **Kafka Consumer for MongoDB –** ``MongoDBSimpleConsumer.java``
+    **Kafka Consumer for MongoDB -** ``MongoDBSimpleConsumer.java``
 
     Note that this example consumer is written using the Kafka *Simple
-    Consumer API* – there is also a Kafka *High Level Consumer API* which
-    hides much of the complexity – including managing the offsets. The
+    Consumer API* - there is also a Kafka *High Level Consumer API* which
+    hides much of the complexity - including managing the offsets. The
     Simple API provides more control to the application but at the cost of
     writing extra code.
 
@@ -545,7 +545,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
             }
         }
 
-    **Maven Dependencies –** ``pom.xml``
+    **Maven Dependencies -** ``pom.xml``
 
     .. code-block:: auto
 
@@ -640,7 +640,7 @@ MongoDB & Data Streaming – Implementing a MongoDB Kafka Consumer
             </dependencies>
             </project>
 
-    **Test Data –** ``Fish.json`` 
+    **Test Data -** ``Fish.json``
     
     A sample of the test data injected into Kafka is shown below:
 

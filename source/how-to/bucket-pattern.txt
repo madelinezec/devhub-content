@@ -129,7 +129,7 @@ Building with Patterns: The Bucket Pattern
              timestamp: ISODate("2019-01-31T10:01:00.000Z"),
              temperature: 40
              },
-             …
+             ...
              {
              timestamp: ISODate("2019-01-31T10:42:00.000Z"),
              temperature: 42

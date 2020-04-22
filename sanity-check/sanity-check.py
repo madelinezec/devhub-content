@@ -3,7 +3,7 @@ import re
 
 
 def read_list_in_directive(file, directive):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         reading_tags = False
         empty_lines = 1
         array = []
@@ -24,7 +24,7 @@ def read_list_in_directive(file, directive):
 
 
 def read_directive(file, directive):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         reading_directive = False
         empty_lines = 1
         array = []
@@ -45,7 +45,7 @@ def read_directive(file, directive):
 
 
 def read_type_directive(file):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         for line in f.readlines():
             line_stripped = line.strip()
             if '.. type::' in line_stripped:
@@ -53,8 +53,20 @@ def read_type_directive(file):
         return {'file': file, 'folder': file.path.split('/')[2]}
 
 
+def read_weird_characters(file):
+    with open(file.path, encoding='utf-8') as f:
+        weird_chars = '‘’´“”–…'
+        regex = r'[' + weird_chars + '].*[' + weird_chars + ']?'
+        lines = []
+        for line_nb, line in enumerate(f.readlines()):
+            if any(x in line for x in weird_chars):
+                search = re.search(regex, line)
+                lines.append('l.' + str(line_nb + 1) + ': ' + str.strip(line[search.start():search.end()]))
+        return {'file': file, 'lines': lines, 'chars': weird_chars}
+
+
 def read_level_directive(file):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         for line in f.readlines():
             line_stripped = line.strip()
             if '.. level::' in line_stripped:
@@ -63,7 +75,7 @@ def read_level_directive(file):
 
 
 def read_meta_description_directive(file):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         reading_directive = False
         empty_lines = 1
         description = ''
@@ -81,7 +93,7 @@ def read_meta_description_directive(file):
 
 
 def read_links(file):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         for line in f.readlines():
             if re.match(r".*>`_[^_].*", line):
                 return {'file': file, 'link_found': True}
@@ -89,7 +101,7 @@ def read_links(file):
 
 
 def read_atf_image(file):
-    with open(file.path, encoding="utf-8") as f:
+    with open(file.path, encoding='utf-8') as f:
         for line in f.readlines():
             line_stripped = line.strip()
             if '.. atf-image::' in line_stripped:
@@ -212,6 +224,19 @@ def check_atf_image(files):
     print_if_necessary_style_columns(output)
 
 
+def check_weird_characters(files):
+    output = [['\nList of files with weird characters:\n']]
+    for ft in files:
+        file_path = ft['file'].path.replace('../source', '')
+        lines = ft['lines']
+        chars = ft['chars']
+        if len(lines) != 0:
+            output.append(['=> this file contains weird characters like ' + chars, file_path])
+            for line in lines:
+                output.append(['  - ' + str.strip(line[:70])])
+    print_if_necessary_style_columns(output)
+
+
 def print_if_necessary(output):
     if len(output) > 1:
         for line in output:
@@ -230,13 +255,13 @@ def print_if_necessary_style_columns(output):
             width_col_2 = max(width_col_2, len(output[i][1]))
     for i in range(len(output)):
         if len(output[i]) > 1:
-            print(output[i][0].ljust(width_col_1), " => ", output[i][1].ljust(width_col_2))
+            print(output[i][0].ljust(width_col_1), ' => ', output[i][1].ljust(width_col_2))
         else:
             print(output[i][0].ljust(width_col_1))
 
 
 def scan_images(file):
-    with open(file, encoding="utf-8") as f:
+    with open(file, encoding='utf-8') as f:
         images = []
         for line in f.readlines():
             line_chards = line.split()
@@ -247,7 +272,7 @@ def scan_images(file):
 
 
 def scan_includes(file):
-    with open(file, encoding="utf-8") as f:
+    with open(file, encoding='utf-8') as f:
         includes = []
         for line in f.readlines():
             if line.strip().startswith('.. include::'):
@@ -274,7 +299,7 @@ def check_thing_not_found(things, all_images, images_used):
 def check_snooty(blog_posts):
     blog_posts = list(map(lambda b: b.path.replace('../source', '').replace('.txt', ''), blog_posts))
     output = [['\nList of errors in snooty.toml.\n']]
-    with open('../snooty.toml', encoding="utf-8") as f:
+    with open('../snooty.toml', encoding='utf-8') as f:
         home = ''
         learn = ''
         reading_page_groups = False
@@ -310,11 +335,11 @@ def check_blogs_exist(existing_blog_posts, line, output):
 
 
 if __name__ == '__main__':
-    with open('tags.txt', encoding="utf-8") as f:
+    with open('tags.txt', encoding='utf-8') as f:
         valid_tags = f.read().splitlines()
-    with open('products.txt', encoding="utf-8") as f:
+    with open('products.txt', encoding='utf-8') as f:
         valid_products = f.read().splitlines()
-    with open('languages.txt', encoding="utf-8") as f:
+    with open('languages.txt', encoding='utf-8') as f:
         valid_languages = f.read().splitlines()
 
     blog_posts = []
@@ -338,6 +363,7 @@ if __name__ == '__main__':
     file_type = []
     file_level = []
     file_atf_image = []
+    file_weird_characters = []
     images_used = set()
     includes_used = set()
 
@@ -352,6 +378,7 @@ if __name__ == '__main__':
         file_type.append(read_type_directive(file))
         file_level.append(read_level_directive(file))
         file_atf_image.append(read_atf_image(file))
+        file_weird_characters.append(read_weird_characters(file))
 
     check_snooty(blog_posts)
     check_for_invalid_elements(file_tags, valid_tags, 'tag')
@@ -364,6 +391,7 @@ if __name__ == '__main__':
     check_type(file_type)
     check_level(file_level)
     check_atf_image(file_atf_image)
+    check_weird_characters(file_weird_characters)
 
     blog_posts_and_authors = list(blog_posts)
 
@@ -383,8 +411,8 @@ if __name__ == '__main__':
     for (dirpath, dirnames, filenames) in os.walk('../source/includes'):
         all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
 
-    check_thing_not_used("images", all_images, images_used)
-    check_thing_not_found("images", all_images, images_used)
+    check_thing_not_used('images', all_images, images_used)
+    check_thing_not_found('images', all_images, images_used)
 
-    check_thing_not_used("includes", all_includes, includes_used)
-    check_thing_not_found("includes", all_includes, includes_used)
+    check_thing_not_used('includes', all_includes, includes_used)
+    check_thing_not_found('includes', all_includes, includes_used)

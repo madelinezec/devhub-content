@@ -454,7 +454,7 @@ Building Modern Applications with Next.js and MongoDB
         
       const [results, setResults] = useState(data);
       
-      return ( … )}
+      return ( ... )}
 
    If we look at our app now, it won't look very different at all. And that's ok. All we've done so far is change how our UI is rendered, moving it from hard coded static values, to an in-memory object. Next let's go ahead and make our form work with this in-memory data. Since our forms are very similar, we can create a component here as well and re-use the same component.
 
@@ -702,7 +702,7 @@ Building Modern Applications with Next.js and MongoDB
    .. code-block:: javascript
 
       import fetch from 'isomorphic-unfetch'
-      const Home = ({data}) => { … }
+      const Home = ({data}) => { ... }
       
       Home.getInitialProps = async () => {
         const res = await fetch('http://localhost:3000/api/daily')

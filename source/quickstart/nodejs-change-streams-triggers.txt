@@ -836,7 +836,7 @@ Change Streams & Triggers with Node.js Tutorial
     Change streams allow you to react immediately to changes in your
     database. If you want to constantly be monitoring changes to your
     database, ensuring that your application that is monitoring the change
-    stream is always up and not missing any events is possible… but can be
+    stream is always up and not missing any events is possible... but can be
     challenging. This is where MongoDB Atlas Triggers come in.
 
     MongoDB supports triggers in `Atlas <http://bit.ly/MDB_Atlas>`__. `Atlas
@@ -883,11 +883,11 @@ Change Streams & Triggers with Node.js Tutorial
         contains the ``sample_airbnb`` database and click **Link**. The
         changes will be deployed. The deployment may take a minute or two.
         Scroll to the top of the page to see the status.
-    #.  In the **Select a cluster…** selection box, select your cluster that
+    #.  In the **Select a cluster...** selection box, select your cluster that
         contains the ``sample_airbnb`` database.
-    #.  In the **Select a database name…** selection box, select
+    #.  In the **Select a database name...** selection box, select
         **sample_airbnb**.
-    #.  In the **Select a collection name…** selection box, select
+    #.  In the **Select a collection name...** selection box, select
         **listingsAndReviews**.
     #.  In the Operation Type section, check the box beside **Insert**.
     #.  In the Function code box, replace the commented code with a call to

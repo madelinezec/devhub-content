@@ -77,7 +77,7 @@ MongoDB Stitch Authentication Triggers
    `Facebook <https://docs.mongodb.com/stitch/authentication/facebook/>`__
    to authenticate your app's users. This is great for your users as it
    means they don't need to go through the tedious process of having to
-   provide all of their details to yet another application/service – it
+   provide all of their details to yet another application/service - it
    also means one less password to remember.
 
    While delegating the authentication process makes your app secure and

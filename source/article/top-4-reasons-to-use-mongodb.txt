@@ -106,7 +106,7 @@ The Top 4 Reasons Why You Should Use MongoDB
    You can scale cheaper with MongoDB. Why?
 
    Let's begin by talking about scaling SQL databases. Typically, SQL
-   databases scale vertically–when a database becomes too big for its
+   databases scale vertically-when a database becomes too big for its
    server, it is migrated to a larger server.
 
    .. figure:: /images/article/sql-to-mdb/verticalscaling.gif
@@ -131,7 +131,7 @@ The Top 4 Reasons Why You Should Use MongoDB
    your database exceeds the capacity of its current server, you can begin
    sharding and split it over two servers. As your database continues to
    grow, you can continue to add more servers. The advantage is that these
-   new servers don't need to be big, expensive machines–they can be
+   new servers don't need to be big, expensive machines-they can be
    cheaper, commodity hardware. Plus, no downtime is required.
 
    .. figure:: /images/article/sql-to-mdb/horizontalscaling.gif

@@ -59,28 +59,28 @@
 .. ---------------------------------------------------------------
 
 ===================================================================================
-Working with MongoDB Stitch Through the mongo Shell – MongoDB Wire Protocol Support
+Working with MongoDB Stitch Through the mongo Shell - MongoDB Wire Protocol Support
 ===================================================================================
 
 .. introduction::
 
    The `Stitch SDK <https://docs.mongodb.com/stitch/client-sdks/>`__ is the
    best way to access `MongoDB Stitch <https://docs.mongodb.com/stitch/>`__
-   from your frontend application code – getting to your data and accessing
+   from your frontend application code - getting to your data and accessing
    your Stitch Services and Functions becomes child's' play.
 
 .. content::
 
    However, those already using MongoDB may have existing backend code and
    tools that work with MongoDB. MongoDB Stitch now supports the `MongoDB
-   wire protocol <https://docs.mongodb.com/stitch/wire-protocol/>`__ –
+   wire protocol <https://docs.mongodb.com/stitch/wire-protocol/>`__ -
    meaning that you can continue to work with your favorite tools
    (including the ``mongo`` shell) and drivers while benefiting from
    Stitch's quick and simple data access control and hosted JavaScript
    functions.
    
    After enabling connection string access, connecting to your Stitch app
-   from the ``mongo`` shell is business as usual – just use the connection
+   from the ``mongo`` shell is business as usual - just use the connection
    string you're shown in the Stitch UI:
    
    .. code-block:: bash

@@ -170,7 +170,7 @@ Quick Start: BSON Data Types - Decimal128
    Another consideration, beyond simply the usage in MongoDB, is the usage
    and support your programming has for decimal128. Many languages don't
    natively support this feature and will require a plugin or additional
-   package to get the functionality. Some examples…
+   package to get the functionality. Some examples...
 
    Python: The
    ```decimal.Decimal`` <https://docs.python.org/3/library/decimal.html>`__

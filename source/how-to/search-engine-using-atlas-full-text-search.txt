@@ -523,7 +523,7 @@ Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search in 10 Minutes
       :alt: Almost there
       :align: center
 
-   Finally! – The Front End
+   Finally! - The Front End
    ------------------------
 
    From the front end application, it takes a single call from the Fetch

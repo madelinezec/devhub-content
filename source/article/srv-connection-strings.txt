@@ -60,7 +60,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
 .. content::
 
     If you have logged into `MongoDB Atlas <http://bit.ly/meetatlas>`__
-    recently – and you should, the entry-level tier is free! – you may have
+    recently - and you should, the entry-level tier is free! - you may have
     noticed a strange new syntax on 3.6 connection strings.
 
     .. figure:: /images/srv-address.png

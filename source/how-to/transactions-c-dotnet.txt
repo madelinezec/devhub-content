@@ -232,7 +232,7 @@ Working with MongoDB Transactions with C# and the .NET Framework
     Key points:
     -----------
 
-    -  You don't have to match class properties to JSON objects – just
+    -  You don't have to match class properties to JSON objects - just
        define a class object and insert it directly into the database. There
        is no need for an Object Relational Mapper (ORM) layer.
     -  MongoDB transactions use snapshot isolation meaning only the client

@@ -149,7 +149,7 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
    dashboard <https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6>`__
    to make this data more human accessible.
 
-   This is great… But we can do even better visualisations with `MongoDB
+   This is great... But we can do even better visualisations with `MongoDB
    Charts <https://www.mongodb.com/products/charts>`__.
 
    Free Your Data With MongoDB Charts

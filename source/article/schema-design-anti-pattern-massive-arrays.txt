@@ -67,23 +67,23 @@ Massive Arrays
 
    Design patterns are a fundamental part of software engineering.  They provide developers with best practices and a common language as they architect applications.  
 
-   At MongoDB, we have schema design patterns to help developers be successful as they plan and iterate on their schema designs.  `Daniel Coupal <https://twitter.com/danielcoupal>`__ and `Ken Alger <https://twitter.com/kenwalger>`__ co-wrote a fantastic `blog series <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__ that highlights each of the schema design patterns.  If you really want to dive into the details (and I recommend you do!), check out `MongoDB University’s free course on Data Modeling <https://university.mongodb.com/courses/M320/about>`__.
+   At MongoDB, we have schema design patterns to help developers be successful as they plan and iterate on their schema designs.  `Daniel Coupal <https://twitter.com/danielcoupal>`__ and `Ken Alger <https://twitter.com/kenwalger>`__ co-wrote a fantastic `blog series <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__ that highlights each of the schema design patterns.  If you really want to dive into the details (and I recommend you do!), check out `MongoDB University's free course on Data Modeling <https://university.mongodb.com/courses/M320/about>`__.
 
-   Sometimes, developers jump right in to designing their schemas and building their apps without thinking about best practices.  As their apps begin to scale, they realize that things are bad.
+   Sometimes, developers jump right into designing their schemas and building their apps without thinking about best practices.  As their apps begin to scale, they realize that things are bad.
 
    .. figure:: /images/article/anti-patterns/massive-arrays/thisisbad.gif
       :alt: Oh, this is bad. I should not have done this.
 
-   We’ve identified several common mistakes developers make with MongoDB.  We call these mistakes “schema design anti-patterns.”  
+   We've identified several common mistakes developers make with MongoDB.  We call these mistakes "schema design anti-patterns".
 
-   Throughout this blog series, I’ll introduce you to six common anti-patterns.  Let’s start today with the Massive Arrays anti-pattern.
+   Throughout this blog series, I'll introduce you to six common anti-patterns.  Let's start today with the Massive Arrays anti-pattern.
 
 .. content::
 
    Massive Arrays
    --------------
 
-   One of the rules of thumb when modeling data in MongoDB is *data that is accessed together should be stored together*.  If you’ll be retrieving or updating data together frequently, you should probably store it together.  Data is commonly stored together by embedding related information in subdocuments or arrays.  
+   One of the rules of thumb when modeling data in MongoDB is *data that is accessed together should be stored together*.  If you'll be retrieving or updating data together frequently, you should probably store it together.  Data is commonly stored together by embedding related information in subdocuments or arrays.  
 
    The problem is that sometimes developers take this too far and embed massive amounts of information in a single document.
 
@@ -155,7 +155,7 @@ Massive Arrays
 
    In the example above, we are repeating the information about City Hall in the document for each City Hall employee.  If we are frequently displaying information about an employee and their building in our application together, this model probably makes sense.
 
-   The disadvantage with this approach is we have a lot of data duplication.  Storage is cheap, so data duplication isn’t necessarily a problem from a storage cost perspective.  However, every time we need to update information about City Hall, we’ll need to update the document for every employee who works there.  If we take a look at the information we’re currently storing about the buildings, updates will likely be very infrequent, so this approach may be a good one.
+   The disadvantage with this approach is we have a lot of data duplication.  Storage is cheap, so data duplication isn't necessarily a problem from a storage cost perspective.  However, every time we need to update information about City Hall, we'll need to update the document for every employee who works there.  If we take a look at the information we're currently storing about the buildings, updates will likely be very infrequent, so this approach may be a good one.
 
    If our use case does not call for information about employees and their building to be displayed or updated together, we may want to instead separate the information into two collections and `use references <https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-referencing>`__ to link them:
 
@@ -189,7 +189,7 @@ Massive Arrays
 
    Here we have completely separated our data.  We have eliminated massive arrays, and we have no data duplication.  
 
-   The drawback is that if we need to retrieve information about an employee and their building together, we’ll need to use $lookup to join the data together.  $lookup operations can be expensive, so it’s important to consider how often you’ll need to perform $lookup if you choose this option.
+   The drawback is that if we need to retrieve information about an employee and their building together, we'll need to use $lookup to join the data together.  $lookup operations can be expensive, so it's important to consider how often you'll need to perform $lookup if you choose this option.
 
    If we find ourselves frequently using `$lookup <https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/index.html>`__, another option is to use the `extended reference pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__.  The extended reference pattern is a mixture of the previous two approaches where we duplicate some—but not all—of the data in the two collections.  We only duplicate the data that is frequently accessed together. 
 
@@ -236,7 +236,7 @@ Massive Arrays
    Summary
    -------
 
-   Storing related information that you’ll be frequently querying together is generally good.  However, storing information in massive arrays that will continue to grow over time is generally bad.
+   Storing related information that you'll be frequently querying together is generally good.  However, storing information in massive arrays that will continue to grow over time is generally bad.
 
    As is true with all MongoDB schema design patterns and anti-patterns, carefully consider your use case—the data you will store and how you will query it—in order to determine what schema design is best for you.
 

@@ -103,7 +103,7 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
    ``requests.get()`` call. This installs the code needed to respond to the
    server when it asks for the digest.
 
-   If we now run this program…
+   If we now run this program...
 
    .. figure:: /images/how-to/atlaspython-tin8y89s18.png
       :alt: Calling Atlas from Python
@@ -145,7 +145,7 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
       .then(res => res.json())
       .then(json => console.log(JSON.stringify(json,null," ")));
 
-   Taking it from the top… We first require and import the digest-fetch
+   Taking it from the top... We first require and import the digest-fetch
    package. It'll pull in the other needed packages. Then we create our
    DigestFetch client, giving it the user and key values from the
    environment and an empty set of options. After setting the API's URL
@@ -156,7 +156,7 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
    .. figure:: /images/how-to/atlasnode-8rd944aaw7.png
       :alt: Calling Atlas from Node
 
-   On to our final language…
+   On to our final language...
 
    Ruby
    ----

@@ -285,7 +285,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
     by another document in the collection), the remaining documents will not
     be inserted. If ordered is set to ``false``, the documents may not be
     inserted in the order given in the array. MongoDB will attempt to insert
-    all of the documents in the given array–regardless of whether any of the
+    all of the documents in the given array-regardless of whether any of the
     other inserts fail. By default, ``ordered`` is set to ``true``.
 
     Let's write a function to create multiple Airbnb listings.
@@ -885,7 +885,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
             room_type: 'Entire home/apt',
             bedrooms: 4,
             beds: 7
-            …
+            ...
         }
 
     If you're not a fan of copying and pasting, you can get a full copy of

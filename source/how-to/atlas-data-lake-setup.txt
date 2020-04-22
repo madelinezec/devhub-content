@@ -149,7 +149,7 @@ MongoDB Atlas Data Lake Setup
       :alt: "Name Your Data Lake"
       :scale: 100%
 
-   Next up is the S3 bucket or buckets, this Data Lake will attach to. The S3 bucket I'm using is called ``atlas-data-lake-demo``… not very creative I know… but, I'll put that into this text box. If you are connecting to more than a single S3 bucket, you can add a comma-separated list in the text box as well.
+   Next up is the S3 bucket or buckets, this Data Lake will attach to. The S3 bucket I'm using is called ``atlas-data-lake-demo``... not very creative I know... but, I'll put that into this text box. If you are connecting to more than a single S3 bucket, you can add a comma-separated list in the text box as well.
 
    .. image:: /images/how-to/atlas-data-lake-setup/S3_Buckets_To_Query.png
       :alt: "S3 Buckets to Query"
@@ -163,7 +163,7 @@ MongoDB Atlas Data Lake Setup
 
    There is a generated trust policy that we'll copy the text from and save into a file named ``dl-role-trust.json``. This allows MongoDB Atlas to be trusted in AWS S3.
 
-   Using that JSON file, we can create an AWS IAM role from the command line… see, I said our previous work would pay off. We copy the command, go to the terminal in the same directory as the ``dl-role-trust.json`` file we just saved, and run the command.
+   Using that JSON file, we can create an AWS IAM role from the command line... see, I said our previous work would pay off. We copy the command, go to the terminal in the same directory as the ``dl-role-trust.json`` file we just saved, and run the command.
 
    .. code-block:: bash
 

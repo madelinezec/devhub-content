@@ -445,7 +445,7 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
 
    Make sure you replace the User and Public API key values with those you
    obtained from your Ops Manager console. You can pick any name for the
-   credentials – just make a note of it as you will need it later when you
+   credentials - just make a note of it as you will need it later when you
    start creating MongoDB clusters. 
    
    Now we're ready to start deploying

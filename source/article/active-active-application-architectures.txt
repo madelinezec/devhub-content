@@ -76,7 +76,7 @@ Active-Active Application Architectures with MongoDB
     is limited understanding among many application architects as to the
     specific tradeoffs made by various modern databases. The popular belief
     appears to be that if an application must accept writes concurrently in
-    multiple data centers, then it needs to use a multi-master database –
+    multiple data centers, then it needs to use a multi-master database -
     where multiple masters are responsible for a single copy or partition of
     the data. This is a misconception and it is compounded by a limited
     understanding of the (potentially negative) implications this choice has
@@ -578,11 +578,11 @@ Active-Active Application Architectures with MongoDB
     view of the data over time. 
     
     MongoDB 3.6 also introduced `causal
-    consistency <https://docs.mongodb.com/master/core/read-isolation-consistency-recency/#causal-consistency>`__ – guaranteeing that every read operation within a client session will
+    consistency <https://docs.mongodb.com/master/core/read-isolation-consistency-recency/#causal-consistency>`__ - guaranteeing that every read operation within a client session will
     always see the previous write operation, regardless of which replica is
     serving the request. By enforcing strict, causal ordering of operations
     within a session, causal consistency ensures every read is always
-    logically consistent, enabling monotonic reads from a distributed system – guarantees that cannot be met by most multi-node databases. Causal
+    logically consistent, enabling monotonic reads from a distributed system - guarantees that cannot be met by most multi-node databases. Causal
     consistency allows developers to maintain the benefits of strict data
     consistency enforced by legacy single node relational databases, while
     modernizing their infrastructure to take advantage of the scalability
