@@ -31,6 +31,8 @@
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
+.. include:: /includes/authors/coupal-daniel.rst
+
 .. pubdate:: 2020-04-22
 
 .. type:: article
