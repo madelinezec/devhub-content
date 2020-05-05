@@ -45,12 +45,13 @@ def read_directive(file, directive):
 
 
 def read_type_directive(file):
-    with open(file.path, encoding='utf-8') as f:
+    with open(file.path, encoding="utf-8") as f:
+        path_split = file.path.replace('\\', '/').split('/')
         for line in f.readlines():
             line_stripped = line.strip()
             if '.. type::' in line_stripped:
-                return {'file': file, 'type': line_stripped.split()[2] if len(line_stripped.split()) >= 3 else '', 'folder': file.path.split('/')[2]}
-        return {'file': file, 'folder': file.path.split('/')[2]}
+                return {'file': file, 'type': line_stripped.split()[2] if len(line_stripped.split()) >= 3 else '', 'folder': path_split[2]}
+        return {'file': file, 'folder': path_split[2]}
 
 
 def read_weird_characters(file):

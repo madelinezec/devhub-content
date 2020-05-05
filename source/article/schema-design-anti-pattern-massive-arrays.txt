@@ -74,7 +74,7 @@ Massive Arrays
    .. figure:: /images/article/anti-patterns/massive-arrays/thisisbad.gif
       :alt: Oh, this is bad. I should not have done this.
 
-   We've identified several common mistakes developers make with MongoDB.  We call these mistakes "schema design anti-patterns".
+   We've identified several common mistakes developers make with MongoDB.  We call these mistakes "schema design anti-patterns."
 
    Throughout this blog series, I'll introduce you to six common anti-patterns.  Let's start today with the Massive Arrays anti-pattern.
 

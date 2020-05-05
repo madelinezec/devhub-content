@@ -99,7 +99,7 @@ Building with Patterns: The Outlier Pattern
    A typical ``book`` document storing ``user_id`` information might look
    something like:
 
-   .. code-block:: json
+   .. code-block:: javascript
 
       {
           "_id": ObjectID("507f1f77bcf86cd799439011")
@@ -115,7 +115,7 @@ Building with Patterns: The Outlier Pattern
    the ``customers_purchased`` array expanding beyond a 1000 item limit we
    have set, we'll add a new field to "flag" the book as an outlier.
 
-   .. code-block:: json
+   .. code-block:: javascript
 
       {
           "_id": ObjectID("507f191e810c19729de860ea"),
@@ -178,7 +178,7 @@ Building with Patterns: The Outlier Pattern
    required over time.
 
    In our next *Building with Patterns* post, we'll take a look at the
-   `Computed
-   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-computed-pattern>`__
+   :doc:`Computed
+   Pattern </how-to/computed-pattern>`
    and how to optimize schema for applications that can result in
    unnecessary waste of resources.
