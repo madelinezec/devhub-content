@@ -1,0 +1,252 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to use MongoDB Atlas as a data store for your Strapi Headless CMS. 
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: Use MongoDB as the Data Store for your Strapi Headless CMS
+   :image: /images/social/twitter/twitter-build.png
+   :image-alt: Build a RESTful API with HapiJS and MongoDB
+
+   Learn how to build an API with HapiJS and MongoDB.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
+   :title: Use MongoDB as the Data Store for your Strapi Headless CMS
+   :image: /images/social/open-graph/og-build.png
+   :type: article
+
+   Learn how to use MongoDB Atlas as a data store for your Strapi Headless CMS. 
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. atf-image:: /images/atf-images/illustrations/build.png
+
+.. pubdate:: 2020-05-05
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * Node.js
+   * GraphQL
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==========================================================
+Use MongoDB as the Data Store for your Strapi Headless CMS
+==========================================================
+
+.. introduction::
+
+   The modern web is evolving quickly and one of the best innovations in recent years is the advent of `Headless CMS <https://www.storyblok.com/tp/headless-cms-explained>`__ frameworks. I believe that Headless CMS systems will do for content what RESTful APIs did for SaaS. The idea is simple, you decouple content creation and management from the presentation layer. You then expose the content through either RESTful or GraphQL APIs to be consumed by the front-end.
+
+   `Headless CMS frameworks <https://headlesscms.org/>`__ work especially well with `static site generators <https://www.staticgen.com/>`__ which have traditionally relied on simple markdown files for content management. This works great for a small personal blog, for example, but quickly becomes a management mess when you have multiple authors, many different types of content, and ever-changing requirements. A Headless CMS system takes care of content organization and creation while giving you flexibility on how you want to present the content.
+
+   Today, we are going to look at an open-source Headless CMS called `Strapi <https://strapi.io/>`__. Strapi comes from the word "bootstrap", and helps bootSTRAP your API. In this post, we'll look at some of the features of Strapi and how it can help us manage our content as well as how we can combine it with MongoDB to have a modern content management platform. 
+
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial you'll need:
+
+   * `Node.js <https://nodejs.org/en/>`__
+   * `npm <https://www.npmjs.com/>`__
+   * `MongoDB <https://www.mongodb.com/cloud/atlas>`__
+
+   You can download Node.js `here <https://nodejs.org/en/>`__, and it will come with the latest version of npm and npx. For MongoDB, use `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ for free, and to sweeten the deal even further you can use code **ADO200** for a $200 credit. 
+
+.. content::
+
+   What is Strapi
+   ---------------
+
+   `Strapi <https://hapi.dev/>`__ is an open-source Headless CMS framework. It is essentially a back-end or admin panel for content creation. It allows developers to easily define a custom content structure and customize it fully for their use case. The framework has a really powerful plug-in system for making content creation and management painless regardless of your use-case.
+   
+   .. image:: /images/strapi/strapi.png
+        :alt: Strapi Homepage
+
+   In this tutorial, we'll set up and configure Strapi. We'll do it in two ways. First, we'll do a default install to quickly get started and show off the functionality of Strapi, and then we'll also create a second instance that uses MongoDB as the database to store our content.
+
+   Bootstrapping Strapi
+   --------------------
+
+   To get started with Strapi, we'll execute a command in our terminal using `npx <https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b>`__. If you have a recent version of Node and npm installed, npx will already be installed as well so simply execute the following command in a directory where you want your Strapi app to live:
+
+   .. code-block:: bash
+
+      npx create-strapi-app my-project --quickstart
+
+   Feel free to change the ``my-project`` name to a more suitable option. The ``--quickstart`` argument will use a series of default configuration options to get you up and running as quickly as possible.
+
+   The npx command will take some time to run and download all the packages it needs, and once it's done, it will automatically start up your Strapi app. If it does not, navigate to the ``my-project`` directory and run:
+
+   .. code-block:: bash
+
+      npm run develop
+
+   This will start the Strapi server. When it is up and running, navigate to ``localhost:1337`` in your browser and you'll be greeted with the following welcome screen:    
+
+   .. image:: /images/strapi/welcome.png
+        :alt: Strapi Welcome
+
+   Fill out the information with either real or fake data and you'll be taken to your new dashboard.
+
+   .. image:: /images/strapi/dashboard.png
+        :alt: Strapi Dashboard
+
+   If you see the dashboard pictured above, you are all set! When we passed the ``--quickstart`` argument in our npx command, Strapi created a SQLite database to use and store our data. You can find this database file if you navigate to your ``my-project`` directory and look in the ``.tmp`` directory. 
+   
+   Feel free to mess around in the admin dashboard to familiarize yourself with Strapi. Next, we're going to rerun our creation script, but this time, we won't pass the ``--quickstart`` argument. We'll have to set a couple of different configuration items, primarily our database config. When you're ready proceed to the next section.
+
+   Bootstrapping Strapi with MongoDB
+   ---------------------------------
+
+   Before we get into working with Strapi, we'll re-run the installation script and change our database provider from the default SQLite to MongoDB. There are many reasons why you'd want to use MongoDB for your Strapi app, but one of the most compelling ones to me is that many virtual machines are ephemeral, so if you're installing Strapi on a VM to test it out, every time you restart the app, that SQLite DB will be gone and you'll have to start over.
+
+   Now then, let's go ahead and stop our Strapi app from running and delete the ``my-project`` folder. We'll start clean. After you've done this, run the following command:
+
+   .. code-block:: bash
+
+      npx create-strapi-app my-project
+
+   After a few seconds you'll be prompted to choose an installation type. You can choose between **Quickstart** and **Custom**, and you'll want to select **Custom**. Next, for your database client select **MongoDB**, in the CLI it may say **mongo**. For the database name, you can choose whatever name makes sense to you, I'll go with **strapi**. You do not already have to have a database created in your MongoDB Atlas instance, Strapi will do this for you.
+
+   Next, you'll be prompted for the Host URL. If you're running your MongoDB database on Atlas, the host will be unique to your cluster. To find it, go to your MongoDB Atlas dashboard, navigate to your **Clusters** tab, and hit the **Connect** button. Choose any of the options and your connection string will be displayed. It will be the part highlighted in the image below.
+
+      .. image:: /images/strapi/atlas-connection-string.png
+        :alt: MongoDB Atlas Connection String
+
+   Add your connection string, and the next option you'll be asked for will be **+srv connection** and for this, you'll say **true**. After that, you'll be asked for a Port, but you can ignore this since we are using a ``srv`` connection. Finally, you will be asked to provide your username and password for the specific cluster. Add those in and continue. You'll be asked for an Authentication database, and you can leave this blank and just hit enter to continue. And at the end of it all, you'll get your final question asking to **Enable SSL connection** and for this one pass in **y** or **true**.
+
+   Your terminal window will look something like this when it's all said and done:
+
+   .. code-block:: none
+
+      Creating a new Strapi application at C:\Users\kukic\desktop\strapi\my-project.
+
+      ? Choose your installation type Custom (manual settings)
+      ? Choose your default database client mongo
+      ? Database name: strapi
+      ? Host: {YOUR-MONGODB-ATLAS-HOST}
+      ? +srv connection: true
+      ? Port (It will be ignored if you enable +srv): 27017
+      ? Username: ado
+      ? Password: ******
+      ? Authentication database (Maybe "admin" or blank):
+      ? Enable SSL connection: (y/N) Y       
+
+   Once you pass the **Y** argument to the final question, npx will take care of the rest and create your Strapi app, this time using MongoDB for its data store. To make sure everything works correctly, once the install is done, navigate to your project directory and run:
+
+   .. code-block:: bash
+
+      npm run develop
+
+   Your application will once again run on ``localhost:1337`` and you'll be greeted with the familiar welcome screen.
+
+   .. image:: /images/strapi/welcome.png
+        :alt: Strapi Welcome
+
+   To see the database schema in MongoDB Atlas, navigate to your dashboard, go into the cluster you've chosen to install the Strapi database, and view its collections. By default it will look like this:
+
+   .. image:: /images/strapi/strapi-mongodb.png
+        :alt: Strapi MongoDB Collections
+
+
+   Better Content Management with Strapi
+   -------------------------------------
+
+   Now that we have Strapi set up to use MongoDB as our database, let's go into the Strapi dashboard at ``localhost:1337/admin`` and learn to use some of the features this Headless CMS provides. We'll start by creating a new content type. Navigate to the **Content-Types Builder** section of the dashboard and click on the **Create New Collection Type** button. 
+
+   A collection type is, as the name implies, a type of content for your application. It can be a blog post, a promo, a quick-tip, or really any sort of content you need for your application. We'll create a blog post. The first thing we'll need to do is give it a name. I'll give my blog posts collection the very creative name of **Posts**. 
+   
+   Once we have the name defined, next we'll add a series of fields for our collection. This is where Strapi really shines. The default installation gives us many different data types to work with such as text for a title or rich text for the body of a blog post, but Strapi also allows us to create custom components and even customize these default types to suit our needs.
+
+   .. image:: /images/strapi/strapi-field-types.png
+        :alt: Strapi Field Types
+
+   My blog post will have a **Title** of type **Text**, a **Content** element for the content of the post of type **Rich Text**, and a **Published** value of type **Date** for when the post is to go live. Feel free to copy my layout, or create your own. Once you're satisfied hit the save button and the Strapi server will restart and you'll see your new collection type in the main navigation.
+
+   .. image:: /images/strapi/posts-collection.png
+        :alt: Strapi Posts Collection
+
+   Let's go ahead and create a few posts for our blog. Now that we have some posts created, we can view the content both in the Strapi dashboard, as well as in our MongoDB Atlas collections view. Notice in MongoDB Atlas that a new collection called **posts** was created and that it now holds the blog posts we've written.
+
+   .. image:: /images/strapi/atlas-posts-collection.png
+        :alt: Atlas Posts Collection
+
+   We are only scratching the surface of what's available with Strapi. Let me show you one more powerful feature of Strapi. 
+   
+   * Create a new Content Type, call it **Tags**, and give it only one field called **name**. 
+   * Open up your existing Posts collection type and hit the **Add another field** button.
+   * From here, select the field type of **Relation**.
+   * On the left-hand side you'll see Posts, and on the right hand click the dropdown arrow and find your new **Tags** collection and select it.
+   * Finally, select the last visual so that it says **Post has many Tags** and hit **Finish**. 
+   
+   Notice that some of the options are traditional 1:1, 1:M, M:M relationships that you might remember from the traditional RDBMS world. Note that even though we're using MongoDB, these relationships will be correctly represented so you don't have to worry about the underlying data model.
+
+   .. image:: /images/strapi/strapi-tags-collection.png
+        :alt: Strapi Tags Collection
+
+   Go ahead and create a few entries in your new Tags collection, and then go into an existing post you have created. You'll see the option to add ``tags`` to your post now and you'll have a dropdown menu to choose from. No more guessing what the tag should be... is it NodeJS, or Node.Js, maybe just Node?
+
+   Accessing Strapi Content
+   ------------------------
+
+   So far we have created our Strapi app, created various content types, and created some content, but how do we make use of this content in the applications that are meant to consume it? We have two options. We can expose the data via RESTful endpoints, or via GraphQL. I'll show you both.
+
+   Let's first look at the RESTful approach. When we create a new content type Strapi automatically creates an accompanying RESTFul endpoint for us. So we could access our posts at ``localhost:1337/posts`` and our tags at ``localhost:1337/tags``. But not so fast, if we try to navigate to either of these endpoints we'll be treated with a ``403 Forbidden`` message. We haven't made these endpoints publically available.
+
+   To do this, go into the **Roles & Permissions** section of the Strapi dashboard, select the **Public** role and you'll see a list of permissions by feature and content type. By default, they're all disabled. For our demo, let's enable the **count**, **find**, and **findOne** permissions for the **Posts** and **Tags** collections.
+
+   .. image:: /images/strapi/strapi-access-via-api.png
+        :alt: Strapi Access via API
+
+   Now if you navigate to ``localhost:1337/posts`` or ``localhost:1337:tags`` you'll see your content delivered in JSON format.
+
+   To access our content via GraphQL, we'll need to enable the GraphQL plugin. Navigate to the **Marketplace** tab in the Strapi dashboard and download the GraphQL plugin. It will take a couple of minutes to download and install the plugin. Once it is installed, you can access all of your content by navigating to ``localhost:1337/graphql``. You'll have to ensure that the Roles & Permissions for the different collections are available, but if you've done the RESTful example above they will be.
+
+   .. image:: /images/strapi/strapi-access-via-graphql.png
+        :alt: Strapi Access via GraphQL
+
+   We get everything we'd expect with the GraphQL plugin. We can view our entire schema and docs, run queries and mutations and it all just works. Now we can easily consume this data with any front-end. Say we're building an app with `Gatsby <https://www.gatsbyjs.org/>`__ or `Next.js <https://nextjs.org/>`__, we can call our endpoint, get all the data and generate all the pages ahead of time, giving us best-in-class performance as well as content management.
+
+   Putting It All Together
+   -----------------------
+
+   In this tutorial, I introduced you to Strapi, one of the best open-source Headless CMS frameworks around. I covered how you can use Strapi with MongoDB to have a permanent data store, and I covered various features of the Strapi framework. Finally, I showed you how to access your Strapi content with both RESTful APIs as well as GraphQL.
+
+   If you would like to see an article on how we can consume our Strapi content in a static website generator like Gatsby or Hugo, or how you can extend Strapi for your use case let me know in the `MongoDB Community forums <https://developer.mongodb.com/community/forums/>`__, and I'll be happy to do a write-up!
+   
+   .. blockquote::
+
+      If you want to safely store your Strapi content in MongoDB, `sign up for MongoDB Atlas for free <https://www.mongodb.com/atlas>`__ and use code **ADO200** to get a $200 credit towards your account.
+
+Happy content creation!
