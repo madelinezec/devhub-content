@@ -193,14 +193,6 @@ Coronavirus Map and Live Data Tracker with MongoDB Charts
 
    .. charts::
       :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
-      :id: 28dc1e9e-27a5-4259-ad5b-0f2b1bc9ff5e
-      :autorefresh: 3600
-      :theme: light
-      :width: 760
-      :height: 570
-
-   .. charts::
-      :url: https://charts.mongodb.com/charts-coronavirus-lwlvn
       :id: 40ecf03a-0e57-4a59-9cbe-15e3f94e9d21
       :autorefresh: 3600
       :theme: light

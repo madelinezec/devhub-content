@@ -39,7 +39,7 @@
 
 .. pubdate:: 2020-04-20
 
-.. updated-date:: 2020-04-21
+.. updated-date:: 2020-05-06
 
 .. type:: article
 
@@ -94,6 +94,17 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    .. blockquote::
 
       ``readonly`` is the username and the password, they are not meant to be replaced.
+
+   Updates
+   -------
+
+   May 6th
+   ~~~~~~~
+
+   - The ``covid19`` database now has 5 collections. More details in our `README.md <https://github.com/mongodb-developer/open-data-covid-19/blob/master/README.md>`__.
+   - The ``covid19.statistics`` collection is renamed ``covid19.global_and_us`` for more clarity.
+   - :doc:`Maxime's Charts </article/coronavirus-map-live-data-tracker-charts>` are now using the ``covid19.global_and_us`` collection.
+   - The dataset is updated hourly so any commit done by JHU will be reflected at most one hour later in our cluster.
 
    Table of Contents
    -----------------
@@ -181,9 +192,17 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    The document above was obtained by joining together the file ``UID_ISO_FIPS_LookUp_Table.csv`` and the CSV files time series you can find in `this folder <https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series>`__.
 
-   Some fields might not exist in all the documents because they are not relevant or are just not provided by `JHU <https://www.jhu.edu/>`__. If you want more details, run a schema analysis with `MongoDB Compass <https://www.mongodb.com/products/compass>`__ on the ``covid19.statistics`` collection.
+   Some fields might not exist in all the documents because they are not relevant or are just not provided by `JHU <https://www.jhu.edu/>`__. If you want more details, run a schema analysis with `MongoDB Compass <https://www.mongodb.com/products/compass>`__ on the different collections available.
 
    If you would prefer to host the data yourself, the scripts required to download and transform the JHU data are open-source. You can `view them and instructions for how to use them on our GitHub repository <https://github.com/mongodb-developer/open-data-covid-19/tree/master/data-import>`__.
+
+   In the ``covid19`` database, you will find 5 collections which are detailed in our `Github repository README.md file <https://github.com/mongodb-developer/open-data-covid-19/blob/master/README.md>`__.
+
+   - metadata
+   - global (the data from the time series global files)
+   - us_only (the data from the time series US files)
+   - global_and_us (the most complete one)
+   - countries_summary (same as global but countries are grouped in a single doc for each date)
 
    .. _covid19-get-started:
 
@@ -283,23 +302,26 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
               try (MongoClient client = MongoClients.create(getMongoClient())) {
                   int earthRadius = 6371;
                   MongoDatabase db = client.getDatabase("covid19");
-                  MongoCollection<Stat> statsCollection = db.getCollection("statistics", Stat.class);
+                  MongoCollection<GlobalAndUs> globalAndUsCollection = db.getCollection("global_and_us", GlobalAndUs.class);
                   MongoCollection<Metadata> metadataCollection = db.getCollection("metadata", Metadata.class);
 
                   System.out.println("Query to get the last 5 entries for France (continent only)");
                   Bson franceFilter = eq("country", "France");
                   Bson noStateFilter = eq("state", null);
-                  statsCollection.find(and(franceFilter, noStateFilter)).sort(descending("date")).limit(5).forEach(System.out::println);
+                  globalAndUsCollection.find(and(franceFilter, noStateFilter))
+                                       .sort(descending("date"))
+                                       .limit(5)
+                                       .forEach(System.out::println);
 
                   System.out.println("\nQuery to get the last day data (limited to 5 docs here).");
                   Metadata metadata = metadataCollection.find().first();
                   Date lastDate = metadata.getLastDate();
                   Bson lastDayFilter = eq("date", lastDate);
-                  statsCollection.find(lastDayFilter).limit(5).forEach(System.out::println);
+                  globalAndUsCollection.find(lastDayFilter).limit(5).forEach(System.out::println);
 
                   System.out.println("\nQuery to get the last day data for all the countries within 500km of Paris.");
                   Bson aroundParisFilter = geoWithinCenterSphere("loc", 2.341908, 48.860199, 500.0 / earthRadius);
-                  statsCollection.find(and(lastDayFilter, aroundParisFilter)).forEach(System.out::println);
+                  globalAndUsCollection.find(and(lastDayFilter, aroundParisFilter)).forEach(System.out::println);
 
                   System.out.println("\nPrint the Metadata summary.");
                   metadataCollection.find().forEach(System.out::println);
@@ -343,11 +365,11 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       client.connect((err) => {
         const covid19Database = client.db("covid19");
-        const statistics = covid19Database.collection("statistics");
+        const globalAndUS = covid19Database.collection("global_and_us");
         const metadata = covid19Database.collection("metadata");
 
         // Query to get the last 5 entries for France (continent only)
-        statistics
+        globalAndUS
           .find({ country: "France" })
           .sort(["date", -1])
           .limit(15)
@@ -367,7 +389,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
             }
             const lastDate = docs[0].last_date;
 
-            statistics
+            globalAndUS
               .find({ date: { $eq: lastDate } })
               .limit(5)
               .toArray((err, docs) => {
@@ -392,7 +414,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
             }
             const lastDate = docs[0].last_date;
 
-            statistics
+            globalAndUS
               .find({
                 date: { $eq: lastDate },
                 loc: {
@@ -438,11 +460,11 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       def main():
           client = MongoClient(MDB_URL)
           db = client.get_database("covid19")
-          stats = db.get_collection("statistics")
+          stats = db.get_collection("global_and_us")
           metadata = db.get_collection("metadata")
 
           # Get some results for the UK:
-          print("\nMost recent 10 statistics for the UK:")
+          print("\nMost recent 10 global_and_us for the UK:")
           results = (
               stats.find({"country": "United Kingdom", "state": None})
               .sort("date", pymongo.DESCENDING)
@@ -547,9 +569,9 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       	// use them.
       }
 
-      // Statistic represents the document structure of documents in the
-      // 'statistics' collection.
-      type Statistic struct {
+      // GlobalAndUS represents the document structure of documents in the
+      // 'global_and_us' collection.
+      type GlobalAndUS struct {
       	ID  primitive.ObjectID `bson:"_id"`
       	UID int32
 
@@ -589,32 +611,32 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       	// Get references to the main collections:
       	database := client.Database("covid19")
-      	statistics := database.Collection("statistics")
+      	global_and_us := database.Collection("global_and_us")
       	metadata := database.Collection("metadata")
 
       	// Print some interesting results:
-      	fmt.Println("\nMost recent 10 statistics for United Kingdom:")
-      	recentCountryStats(statistics, "United Kingdom")
+      	fmt.Println("\nMost recent 10 global_and_us for United Kingdom:")
+      	recentCountryStats(global_and_us, "United Kingdom")
       	lastDate := mostRecentDateLoaded(metadata)
       	fmt.Printf("\nLast date loaded: %v\n", lastDate)
       	fmt.Println("\nThe last day's highest reported recoveries:")
-      	highestRecoveries(statistics, lastDate)
+      	highestRecoveries(global_and_us, lastDate)
       	fmt.Println("\nThe last day's confirmed cases for all the countries within 500km of Paris:")
-      	confirmedWithinRadius(statistics, lastDate, 2.341908, 48.860199, 500.0)
+      	confirmedWithinRadius(global_and_us, lastDate, 2.341908, 48.860199, 500.0)
       }
 
       // recentCountryStats prints the most recent 10 stats for a country.
       // Note that this won't work for "US" because that data is broken down by city & state.
-      func recentCountryStats(statistics *mongo.Collection, country string) {
+      func recentCountryStats(global_and_us *mongo.Collection, country string) {
       	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
       	defer cancel()
       	findOptions := options.Find().SetSort(bson.D{{"date", -1}}).SetLimit(10)
-      	cur, err := statistics.Find(ctx, bson.D{{"country", country}, {"state", nil}}, findOptions)
+      	cur, err := global_and_us.Find(ctx, bson.D{{"country", country}, {"state", nil}}, findOptions)
       	if err != nil {
       		panic(err)
       	}
       	defer cur.Close(ctx)
-      	adapter := func(s Statistic) []string {
+      	adapter := func(s GlobalAndUS) []string {
       		return []string{
       			s.Date.String(),
       			strconv.Itoa(int(s.Confirmed)),
@@ -638,24 +660,24 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       }
 
       // highestRecoveries prints the top 5 countries with the most recoveries.
-      func highestRecoveries(statistics *mongo.Collection, date time.Time) {
+      func highestRecoveries(global_and_us *mongo.Collection, date time.Time) {
       	/// The last day's highest reported recoveries
       	opts := options.Find().SetSort(bson.D{{"recovered", -1}}).SetLimit(5)
       	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
       	defer cancel()
-      	cur, err := statistics.Find(ctx, bson.D{{"date", date}}, opts)
+      	cur, err := global_and_us.Find(ctx, bson.D{{"date", date}}, opts)
       	if err != nil {
       		panic(err)
       	}
       	defer cur.Close(ctx)
-      	adapter := func(s Statistic) []string {
+      	adapter := func(s GlobalAndUS) []string {
       		return []string{s.CombinedName, strconv.Itoa(int(s.Recovered))}
       	}
       	printTable(ctx, []string{"Country", "Recovered"}, cur, adapter)
       }
 
       // Confirmed cases for all countries within radius km of a lon/lat coordinate:
-      func confirmedWithinRadius(statistics *mongo.Collection, date time.Time, lon float64, lat float64, radius float64) {
+      func confirmedWithinRadius(global_and_us *mongo.Collection, date time.Time, lon float64, lat float64, radius float64) {
       	center := bson.A{lon, lat}
       	locationExpr := bson.E{
       		"loc", bson.D{{
@@ -666,26 +688,26 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       	}
       	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
       	defer cancel()
-      	cur, err := statistics.Find(ctx, bson.D{{"date", date}, locationExpr})
+      	cur, err := global_and_us.Find(ctx, bson.D{{"date", date}, locationExpr})
       	if err != nil {
       		panic(err)
       	}
       	defer cur.Close(ctx)
-      	adapter := func(s Statistic) []string {
+      	adapter := func(s GlobalAndUS) []string {
       		return []string{s.CombinedName, strconv.Itoa(int(s.Confirmed))}
       	}
       	printTable(ctx, []string{"Country", "Confirmed"}, cur, adapter)
       }
 
-      // printTable prints the results of a statistics query in a table.
+      // printTable prints the results of a global_and_us query in a table.
       // headings provides the heading cell contents
-      // mapper is a function which maps Statistic structs to a string array of values to be displayed in the table.
-      func printTable(ctx context.Context, headings []string, cursor *mongo.Cursor, mapper func(Statistic) []string) {
+      // mapper is a function which maps GlobalAndUS structs to a string array of values to be displayed in the table.
+      func printTable(ctx context.Context, headings []string, cursor *mongo.Cursor, mapper func(GlobalAndUS) []string) {
       	table := tablewriter.NewWriter(os.Stdout)
       	table.SetHeader(headings)
 
       	for cursor.Next(ctx) {
-      		var result Statistic
+      		var result GlobalAndUS
       		err := cursor.Decode(&result)
       		if err != nil {
       			panic(err)
@@ -760,11 +782,11 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    ``mongoexport`` is a command-line tool that produces a `JSONL <http://jsonlines.org/>`__ or CSV export of data stored in a MongoDB instance.
    First, follow these `instructions to install the MongoDB Database Tools <https://docs.mongodb.com/database-tools/mongoexport/#availability>`__.
 
-   Now you can run the following in your console to download the metadata and statistics collections as jsonl files in your current directory:
+   Now you can run the following in your console to download the metadata and global_and_us collections as jsonl files in your current directory:
 
    .. code-block:: bash
 
-      mongoexport --collection='statistics' --out='statistics.jsonl' --uri="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
+      mongoexport --collection='global_and_us' --out='global_and_us.jsonl' --uri="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
       mongoexport --collection='metadata' --out='metadata.jsonl' --uri="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19"
 
    .. blockquote::
@@ -777,7 +799,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    .. code-block:: bash
 
-      mongoimport --collection='statistics' --uri="mongodb+srv://<user>:<password>@<your-cluster>.mongodb.net/covid19" statistics.jsonl
+      mongoimport --collection='global_and_us' --uri="mongodb+srv://<user>:<password>@<your-cluster>.mongodb.net/covid19" global_and_us.jsonl
       mongoimport --collection='metadata' --uri="mongodb+srv://<user>:<password>@<your-cluster>.mongodb.net/covid19" metadata.jsonl
 
    .. blockquote::
