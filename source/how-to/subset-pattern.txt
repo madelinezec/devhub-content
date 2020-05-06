@@ -1,0 +1,149 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Over the course of this blog post series, we'll take a look at twelve common Schema Design Patterns that work well in MongoDB.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kenwalger
+   :title: Building with Patterns: The Subset Pattern
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: MongoDB Schema Design
+
+   Learn about the Subset Schema Design pattern in MongoDB.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/subset-pattern/
+   :title: Building with Patterns: The Subset Pattern
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+   :type: article
+
+   Learn about the Subset Schema Design pattern in MongoDB.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/alger-ken.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2019-02-20
+
+.. updated-date:: 2019-03-19
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==========================================
+Building with Patterns: The Subset Pattern
+==========================================
+
+.. introduction::
+   Some years ago, the first PCs had a whopping 256KB of RAM and dual 5.25"
+   floppy drives. No hard drives as they were incredibly expensive at the
+   time. These limitations resulted in having to physically swap floppy
+   disks due to a lack of memory when working with large (for the time)
+   amounts of data. If only there was a way back then to only bring into
+   memory the data I frequently used, as in a subset of the overall data.
+   
+   Modern applications aren't immune from exhausting resources. MongoDB
+   keeps frequently accessed data, referred to as the `working
+   set <https://docs.mongodb.com/manual/reference/glossary/#term-working-set>`__,
+   in RAM. When the working set of data and indexes grows beyond the
+   physical RAM allotted, performance is reduced as disk accesses starts to
+   occur and data rolls out of RAM.
+   
+   How can we solve this? First, we could add more RAM to the server. That
+   only scales so much though. We can look at
+   `sharding <https://docs.mongodb.com/manual/reference/glossary/#term-shard>`__
+   our collection, but that comes with additional costs and complexities
+   that our application may not be ready for. Another option is to reduce
+   the size of our working set. This is where we can leverage the Subset
+   Pattern.
+   
+.. content::   
+   The Subset Pattern
+   ------------------
+   
+   This pattern addresses the issues associated with a working set that
+   exceeds RAM, resulting in information being removed from memory. This is
+   frequently caused by large documents which have a lot of data that isn't
+   actually used by the application. What do I mean by that exactly?
+   
+   Imagine an e-commerce site that has a list of reviews for a product.
+   When accessing that product's data it's quite possible that we'd only
+   need the most recent ten or so reviews. Pulling in the entirety of the
+   product data with **all** of the reviews could easily cause the working
+   set to expand.
+   
+   .. image:: /images/how-to/design-patterns/subset-full-doc.png
+      :alt: A full document with reviews
+      :align: center
+   
+   Instead of storing all the reviews with the product, we can split the
+   collection into two collections. One collection would have the most
+   frequently used data, e.g. current reviews and the other collection
+   would have less frequently used data, e.g. old reviews, product history,
+   etc. We can duplicate part of a 1-N or N-N relationship that is used by
+   the most used side of the relationship.
+   
+   .. image:: /images/how-to/design-patterns/subset-two-collections.png
+      :alt: A document with a subset and a full review collection
+      :align: center
+   
+   In the **Product** collection, we'll only keep the ten most recent
+   reviews. This allows the working set to be reduced by only bringing in a
+   portion, or subset, of the overall data. The additional information,
+   reviews in this example, are stored in a separate **Reviews** collection
+   that can be accessed if the user wants to see additional reviews. When
+   considering where to split your data, the most used part of the document
+   should go into the "main" collection and the less frequently used data
+   into another. For our reviews, that split might be the number of reviews
+   visible on the product page.
+   
+   Sample Use Case
+   ---------------
+   
+   The Subset Pattern is very useful when we have a large portion of data
+   inside a document that is rarely needed. Product reviews, article
+   comments, actors in a movie are all examples of use cases for this
+   pattern. Whenever the document size is putting pressure on the size of
+   the working set and causing the working set to exceed the computer's RAM
+   capacities, the Subset Pattern is an option to consider.
+   
+.. summary::   
+   Conclusion
+   ----------
+   
+   By using smaller documents with more frequently accessed data, we reduce
+   the overall size of the working set. This allows for shorter disk access
+   times for the most frequently used information that an application
+   needs. One tradeoff that we must make when using the Subset Pattern is
+   that we must manage the subset and also if we need to pull in older
+   reviews or all of the information, it will require additional trips to
+   the database to do so.
+   
+   The next post in this series will look at the features and benefits of
+   the `Extended Reference
+   Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__.
