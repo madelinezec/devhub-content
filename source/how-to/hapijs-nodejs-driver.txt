@@ -87,7 +87,7 @@ Build a RESTful API with HapiJS and MongoDB
    `Hapi.js <https://hapi.dev/>`__ or simply Hapi is a `Node.js <https://nodejs.org/>`__ framework for "building powerful, scalable applications, with minimal overhead and full out-of-the-box functionality". Originally developed for Walmart's e-commerce platform, the framework has been adopted by many enterprises. In my personal experience, I've worked with numerous companies who heavily relied on Hapi.js for their most critical infrastructure ranging from RESTful APIs to traditional web applications.
    
    .. image:: /images/hapijs/hapijs.png
-        :alt: HapiJS Homepage
+      :alt: HapiJS Homepage
 
    For this tutorial, I'll assume that you are already familiar with JavaScript and Node.js. If not, I would suggest checking out the `Nodejs.dev <https://nodejs.dev/>`__ website which offers an excellent introduction to Node.js and will get you up and running in no time.
 
@@ -97,7 +97,7 @@ Build a RESTful API with HapiJS and MongoDB
    The app that we're going to build today is going to expose a series of RESTful endpoints for working with a movies collection. The dataset we'll be relying on can be accessed by loading sample datasets into your MongoDB Atlas cluster. In your MongoDB dashboard, navigate to the **Clusters** tab. Click on the ellipses (...) button on the cluster you wish to use and select the **Load Sample Dataset** option. Within a few minutes, you'll have a series of new databases created and the one we'll work with is called ``sample_mflix``.
 
    .. image:: /images/hapijs/hapijs-movies.png
-        :alt: Movies Collection
+      :alt: Movies Collection
 
    We will not build a UI as part of this tutorial, instead, we'll focus on getting the most out of our Hapi.js backend.
 
@@ -146,7 +146,7 @@ Build a RESTful API with HapiJS and MongoDB
    If we navigate to ``localhost:3000`` in our web browser of choice, our result will look as follows:
 
    .. image:: /images/hapijs/hello-from-hapijs.png
-        :alt: HapiJS Hello World
+      :alt: HapiJS Hello World
 
    If you see the message above in your browser, then you are ready to proceed to the next section. If you run into any issues, I would first ensure that you have the latest version of Node.js installed and that you have a ``@hapi/hapi`` folder inside of your ``node_modules`` directory.
 
@@ -378,7 +378,7 @@ Build a RESTful API with HapiJS and MongoDB
    We'll rely on the `async/await pattern <https://javascript.info/async-await>`__ in our handler functions as well to keep our code clean and concise. Notice how our MongoDB database is now accessible through the ``req`` or request object. We didn't have to pass in an instance of our database, the plugin handled all of that for us, all we have to do was decide what our call to the database was going to be. If we restart our server and navigate to ``localhost:3000/movies`` in our browser we should see the following response:
 
    .. image:: /images/hapijs/hapijs-find-one-movie.png
-        :alt: JSON Data for a Single Movie
+      :alt: JSON Data for a Single Movie
 
    If you do get the JSON response, it means your connection to the database is good and your plugin has been correctly registered with the Hapi.js application. If you see any sort of error, look at the above instructions carefully. Next, we'll implement our actual database calls to our routes.
 
@@ -436,7 +436,7 @@ Build a RESTful API with HapiJS and MongoDB
    In this implementation, we're using the ``req.params`` object to get the dynamic value from our route. We're also making use of the ``req.mongo.ObjectID`` method which will allow us to transform the string id into an ObjectID that we use as our unique identifier in the MongoDB database. We'll have to convert our string to an ObjectID otherwise our ``findOne()`` method would not work as our ``_id`` field is not stored as a string. We're also using a projection to return only the ``title``, ``plot``, ``cast``, ``year``, and ``released`` fields. The result is below.
 
    .. image:: /images/hapijs/mongodb-findone-projection.png
-        :alt: MongoDB Driver Projection
+      :alt: MongoDB Driver Projection
 
    A quick tip on projection. In the above example, we used the ``{ fieldName: 1 }`` format, which told MongoDB to return only this specific field. If instead we only wanted to omit a few fields, we could have used the inverse ``{ fieldName: 0}`` format instead. This would send us all fields, except the ones named and given a value of zero in the projection option. Note that you can't mix and match the 1 and 0 formats, you have to pick one. The only exception is the ``_id`` field, where if you don't want it you can pass ``{_id:0}``.
 
@@ -475,7 +475,7 @@ Build a RESTful API with HapiJS and MongoDB
    In our implementation we're again using the ``req`` object but this time we're using the ``payload`` sub-object to get the data that is sent to the endpoint. To test that our endpoint works, we'll use `Postman <https://www.postman.com/>`__ to send the request. Our response will give us a lot of info on what happened with the operation so for educational purposes we'll just return the entire document. In a real-world application, you would just send back a ``{message: "ok"}`` or similar statement. If we look at the response we'll find a field titled ``insertedCount: 1`` and this will tell us that our document was successfully inserted.
 
    .. image:: /images/hapijs/postman-example.png
-        :alt: Postman Request
+      :alt: Postman Request
 
    In this route, we added the functionality to insert a brand new document, in the next route, we'll update an existing one.
 
@@ -524,7 +524,7 @@ Build a RESTful API with HapiJS and MongoDB
    With this route we are really starting to show the strength of Hapi.js. In this implementation, we added an ``options`` object and passed in a ``validate`` object. From here, we validated that the ``id`` parameter matches what we'd expect an ObjectID string to look like. If it did not, our handler function would never be called, instead, the request would short-circuit and we'd get an appropriate error message. Joi can be used to validate not only the defined parameters but also query parameters, payload, and even headers. We barely scratched the surface.
 
    .. image:: /images/hapijs/postman-put-example.png
-        :alt: Postman Put Request 
+      :alt: Postman Put Request 
 
    The rest of the implementation had us executing an ``updateOne()`` method which updated an existing object with the new data. Again, we're returning the entire status object here for educational purposes, but in a real-world application, you wouldn't want to send that raw data.
 
@@ -562,7 +562,7 @@ Build a RESTful API with HapiJS and MongoDB
    In our delete route implementation, we are going to continue to use the Joi library to validate that the parameter to delete is an actual ObjectId. To remove a document from our collection, we'll use the ``deleteOne()`` method and pass in the ObjectId to delete.
 
    .. image:: /images/hapijs/postman-delete-example.png
-        :alt: Postman Delete Request
+      :alt: Postman Delete Request
 
    Implementing this route concludes our discussion on the basic CRUD operations. To close out this tutorial, we'll implement one final route that will allow us to search our movie database. 
 
@@ -572,7 +572,7 @@ Build a RESTful API with HapiJS and MongoDB
    To conclude our routes, we'll add the ability for a user to search for a movie. To do this we'll rely on a MongoDB Atlas feature called `Atlas Search <https://www.mongodb.com/atlas/search>`__. Before we can implement this functionality on our backend, we'll first need to enable Atlas Search and create an index within our MongoDB Atlas dashboard. Navigate to your dashboard, and locate the ``sample_mflix`` database. Select the ``movies`` collection and click on the **Search (Beta)** tab.
 
    .. image:: /images/hapijs/atlas-search.png
-        :alt: Atlas Search
+      :alt: Atlas Search
 
    Click the **Create Search Index** button, and for this tutorial, we can leave the field mappings to their default dynamic state, so just hit the **Create Index** button. While our index is built, we can go ahead and implement our backend functionality. The implementation will look like this: 
 
@@ -609,7 +609,7 @@ Build a RESTful API with HapiJS and MongoDB
    Our ``search`` route has us using the extremely powerful MongoDB aggregation pipeline. In the first stage of the pipeline, we are using the ``$searchBeta`` attribute and passing along our search term. In the next stage of the pipeline, we run a ``$project`` to only return specific fields, in our case the ``title`` and ``plot`` of the movie. Finally, we limit our search results to ten items and convert the cursor to an array and send it to the browser. Let's try to run a search query against our movies collection. Try search for ``localhost:3000/search?term=Star+Wars``. Your results will look like this:
 
    .. image:: /images/hapijs/atlas-search-results.png
-        :alt: Atlas Search Results
+      :alt: Atlas Search Results
 
    MongoDB Atlas Search is very powerful and provides all the tools to add superb search functionality for your data without relying on external APIs. Check out the documentation to learn more about how to best leverage it in your applications.  
 

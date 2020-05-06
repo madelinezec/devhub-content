@@ -75,7 +75,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    `Starlette <https://www.starlette.io/>`__ is a Python ASGI framework that shines. It is a fairly new framework but has already garnered the attention of many Python developers for its high performance, support for `WebSockets <https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API>`__, `GraphQL <https://graphql.org/>`__, impressive 100% test coverage, and zero hard dependencies.
 
    .. image:: /images/starlette/starlette.png
-         :alt: Starlette Logo
+      :alt: Starlette Logo
 
    The framework is very light and easy to work with. The really impressive thing about Starlette is that it can be treated either as either an entire framework, or just a toolkit, where components can be independently utilized in your existing framework or application. For this tutorial, we'll treat Starlette as a framework and build our entire application with Starlette. For this tutorial, I'll assume you are familiar with Python, but if you need a refresher, there's no better place than the `official Python tutorial <https://docs.python.org/3/tutorial/>`__.
 
@@ -85,7 +85,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Today we are going to be building a rental reservation system, similar to AirBnB, that we'll conveniently name MongoBnB. Our application will display a list of featured properties, allow the user to sort by various parameters, view additional details of a selected property, and finally book and cancel reservations.
 
    .. image:: /images/starlette/mongobnb.png
-         :alt: MongoBnB
+      :alt: MongoBnB
 
    We have a lot to do today, so let's dive right into it!
 
@@ -95,12 +95,12 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    As I mentioned at the beginning of this article, we are going to use a sample dataset provided by MongoDB Atlas. If you don't already have an account, `sign up for free here <https://www.mongodb.com/atlas>`__ (and use code **ADO200** for a $200 credit), and create a new cluster. Once you have a cluster up and running, whether it'd be new or existing, load the sample dataset by clicking on the three dots button to see additional options, and then select "Load Sample Dataset."
 
    .. image:: /images/starlette/load-sample.png
-         :alt: Load Sample Dataset
+      :alt: Load Sample Dataset
 
    The sample dataset provided by MongoDB Atlas will create a number of collections containing various  datasets. Navigate to the **Collections** tab to see them all. All of the datasets will be created as separate databases prefixed with ``sample_`` and then the name of the dataset. It may take a few minutes for all of the databases to be imported, but the one we care about for our application is called ``sample_airbnb``. Open this database up and you'll see one collection called ``listingsAndReviews``. Click on it to see the data we will be working with.
 
    .. image:: /images/starlette/collection.png
-         :alt: Sample AirBnB Dataset
+      :alt: Sample AirBnB Dataset
 
    This collection will have over 5,000 documents, with each containing all the information we could ever want for a particular listing. For our application, we'll only work with a subset of the data, but you will have lots of existing data to expand on in case you wish to add additional features beyond the scope of the tutorial. Look around the dataset and familiarize yourself with it a little bit. Run a few filter queries such as ``{"price": {"$lt":10}}`` or ``{"review_scores.review_scores_rating":100}`` to find some really affordable properties or some of the highest rated ones respectively.
 
@@ -167,7 +167,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Repeat for both the ``listing.html`` and ``confirmation.html`` pages. Notice that we're also bringing in `TailwindCSS <https://tailwindcss.com/>`__. Tailwind will allow us to better style our pages without writing a bunch of custom CSS.
 
    .. image:: /images/starlette/directory.png
-         :alt: MongoBnB Directory Structure
+      :alt: MongoBnB Directory Structure
 
    Since we have our skeleton views created, let's open up the ``routes.py`` file and hook up our views to our controllers. In the ``routes.py`` file, add the following code:
 
@@ -351,7 +351,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Save both the ``index.html`` file and the ``routes.py`` file. Restart the uvicorn server and navigate to ``localhost:8000``. The result displayed should look like the image below:
 
    .. image:: /images/starlette/mongobnb.png
-         :alt: MongoBnB Homepage
+      :alt: MongoBnB Homepage
 
    Excellent! Our homepage is looking good. It's showing 15 results that are coming from the MongoDB database. Clicking on **Details** or **Booking** just takes you to an empty HTML page for now, but that's ok, we're not there yet. Before we implement those, let's also add some filters to our homepage to help our visitors discover additional properties.
 
@@ -413,7 +413,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Our homepage now supports multiple different filters. If a user visits just the homepage, they'll see the original results, but clicking on of the filter buttons will return a different set of results depending on the type of filter selected. Pymongo supports all of MongoDB's filtering functionality in the familiar syntax. Check out the examples above for various ways to write filters.
 
    .. image:: /images/starlette/mongobnb-filters.png
-         :alt: MongoBnB Homepage with Filters
+      :alt: MongoBnB Homepage with Filters
 
    Make the changes above, restart your uvicorn server, and navigate to ``localhost:8000`` to see the results.
 
@@ -503,7 +503,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Save both of the files, restart your server, and navigate to ``localhost:8000``. Click on the **Details** button of any property you wish to see expanded information on. The page should look like this:
 
    .. image:: /images/starlette/listing-details.png
-         :alt: MongoBnB Listing Details Page
+      :alt: MongoBnB Listing Details Page
 
    Booking Confirmation Page
    -------------------------
@@ -558,7 +558,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    We are treating our unique ``_id`` property as the confirmation code for the booking. Restart the server and go ahead and book a property! You should see the following UI:
 
    .. image:: /images/starlette/confirmation.png
-         :alt: MongoBnB Booking Confirmation
+      :alt: MongoBnB Booking Confirmation
 
    Handling The Bookings
    ---------------------
@@ -575,7 +575,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    To create a new MongoDB Stitch application, we'll go into our MongoDB Atlas dashboard. Select **Stitch** from the left-hand menu and click the **New Application** button. Give your application a name, link it to your cluster that has the ``sample_airbnb`` database and hit **Create**. MongoDB Atlas will take a few seconds to set up your Stitch application and redirect you to it.
 
    .. image:: /images/starlette/create-stitch-app.png
-         :alt: MongoDB Stitch App
+      :alt: MongoDB Stitch App
 
    Once the MongoDB Stitch dashboard loads up, select **3rd Party Services** from the menu and then **Twilio**. Here you will be asked to name your Twilio service for Stitch as well as provide your Twilio Account SID. You will need an active Twilio account to get the Account SID, and if you don't have one head on over to `Twilio <https://twilio.com>`__ to sign up and create your account.
 
@@ -610,14 +610,14 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Once these settings are in place hit the **Save** button.
 
    .. image:: /images/starlette/stitch-trigger.png
-         :alt: Stitch Trigger
+      :alt: Stitch Trigger
 
    Now our serverless function should be ready to go. Hit the **Review & Deploy Changes** button in the top blue bar. Once the changes are deployed, go back to your Starlette application on ``localhost:8000``. 
 
    Select a booking that pleases you and click on the **Book** button. Immediately you will see the confirmation page we built earlier, but in a few seconds, you will also receive a text message telling you that the booking has been created.
 
    .. image:: /images/starlette/confirmation-sms.png
-         :alt: Stitch Twilio SMS
+      :alt: Stitch Twilio SMS
 
    Handling Incoming Twilio SMS with MongoDB Stitch
    ------------------------------------------------
@@ -625,7 +625,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    Our final piece of functionality in MongoDB Stitch will be to allow the user to send us the confirmation id in the event they want to cancel their booking. To do this, let's navigate back to **3rd Party Services** and click our Twilio service we created earlier. From here, we'll click on the **Add Incoming Webhook** button.
 
    .. image:: /images/starlette/twilio-webhook.png
-         :alt: Stitch Webhook
+      :alt: Stitch Webhook
 
    We can leave all the default settings as is but what we'll want to take note of on this page is the **Webhook URL**. Copy it and save it as we'll need it in just a few minutes. Navigate to the **Function Editor** tab and add the following code:
 
@@ -650,12 +650,12 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
    This function will take the body of the SMS message, which for all intents and purposes we'll assume to just be the reservation ``_id``, and if it is, we'll go into our ``bookings`` collection and delete that record. Once that is done, we'll respond back to the user telling them that their reservation has been cancelled.
 
    .. image:: /images/starlette/twilio.png
-         :alt: Twilio Webhook Setup
+      :alt: Twilio Webhook Setup
 
    This function won't fire automatically though. To get it to work, we'll need to tell Twilio about our function. Log into your Twilio dashboard and navigate to the **Phone Numbers** service. Select the phone number you wish to use and scroll the the bottom of the page to find the **Messaging** settings. In the **A Message Comes In** setting, from the drop down select **Webhook** and for the value paste in your MongoDB Stitch Webhook URL we saved from earlier. That's it. Now it should all work!
 
    .. image:: /images/starlette/cancel-sms.png
-         :alt: MongoBnB Booking Cancellation
+      :alt: MongoBnB Booking Cancellation
 
    Putting It All Together
    -----------------------

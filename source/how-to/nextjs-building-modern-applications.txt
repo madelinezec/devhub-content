@@ -75,7 +75,7 @@ Building Modern Applications with Next.js and MongoDB
    `Next.js <https://nextjs.org/>`__ is a `React <https://reactjs.org/>`__ based framework for building modern web applications. The framework comes with a lot of powerful features such as server side rendering, automatic code splitting, static exporting and much more that make it easy to build scalable and production ready apps. Its opinionated nature means that the framework is focused on developer productivity, but still flexible enough to give developers plenty of choice when it comes to handling the big architectural decisions.
    
    .. image:: /images/nextjs/nextjs.png
-        :alt: NextJS Homepage
+      :alt: NextJS Homepage
 
    For this tutorial, I'll assume that you are already familiar with React, and if so, you'll be up and running with Next.js in no time at all. If you are not familiar with React, I would suggest looking at resources such as the `official React docs <https://reactjs.org/docs/getting-started.html>`__ or taking a `free React starter course <https://scotch.io/starters/react/getting-started-with-react-2019-edition?ref=home-start-here>`__ to get familiar with the framework first.
 
@@ -87,7 +87,7 @@ Building Modern Applications with Next.js and MongoDB
    There are many great apps that help you track your calories and macros. Unfortunately, most apps do not allow you to track a range and another interesting thing that I learned in my fitness journey this year is that for many beginners trying to hit their daily macro goals is a challenge and many folks end up giving up when they fail to hit the exact targets consistently. For that reason, my coach suggests a target range for calories and macros rather than a hard set number.
 
    .. image:: /images/nextjs/mct-app.png
-        :alt: MCT App
+      :alt: MCT App
 
    So that's what we're building today. We'll use Next.js to build our entire application and MongoDB as our database to store our progress. Let's get into it!
 
@@ -97,12 +97,12 @@ Building Modern Applications with Next.js and MongoDB
    The easiest way to create a Next.js application is by using the official create-next-app npx command. To do that we'll simply open up our Terminal window and type: ``npx create-next-app mct``. "mct" is going to be the name of our application as well as the directory where our code is going to live.
 
    .. image:: /images/nextjs/create-next-app.png
-        :alt: create-next-app
+      :alt: create-next-app
 
    Execute this command and a default application will be created. Once the files are created navigate into the directory by running ``cd mct`` in the Terminal window and then execute ``npm run dev``. This will start a development server for your Next.js application which you'll be able to access at ``localhost:3000``.
 
    .. image:: /images/nextjs/next-default.png
-        :alt: Next.js Default
+      :alt: Next.js Default
 
    Navigate to ``localhost:3000`` and you should see a page very similar to the one in the above screenshot. If you see the Welcome to Next.js page you are good to go. If not, I would suggest following the Next.js docs and troubleshooting tips to ensure proper setup.
 
@@ -112,7 +112,7 @@ Building Modern Applications with Next.js and MongoDB
    Before we dive into building our application any further, let's quickly look at how Next.js structures our application. The default directory structure looks like this:
 
    .. image:: /images/nextjs/next-directory.png
-        :alt: Next.js Default Directory Structure
+      :alt: Next.js Default Directory Structure
 
    The areas we're going to be focused on are the pages, components, and public directories. The .next directory contains the build artifacts for our application, and we should generally avoid making direct changes to it.
 
@@ -150,7 +150,7 @@ Building Modern Applications with Next.js and MongoDB
    Go ahead and save this file. Next.js will automatically rebuild the application and you should be able to navigate to ``http://localhost:3000/about`` now and see your new component in action.
 
    .. image:: /images/nextjs/about-unstyled.png
-        :alt: About Us Page Unstyled
+      :alt: About Us Page Unstyled
 
    Next.js will automatically handle all the routing plumbing and ensure the right component gets loaded. Just remember, whatever you name your file in the pages directory is what the corresponding URL will be. 
 
@@ -192,7 +192,7 @@ Building Modern Applications with Next.js and MongoDB
    If we go and refresh our browser, the About page should look like this:
 
    .. image:: /images/nextjs/about-styled.png
-        :alt: About Us Page Styled
+      :alt: About Us Page Styled
 
    Good enough for now. If you want to learn more about Tailwind, check out their `official docs here <https://tailwindcss.com/docs/installation/>`__.
 
@@ -362,7 +362,7 @@ Building Modern Applications with Next.js and MongoDB
    And this will result in our UI looking like this:
 
    .. image:: /images/nextjs/mct-app.png
-        :alt: MCT App
+      :alt: MCT App
 
    There is a bit to unwind here. So let's take a look at it piece by piece. At the very top we have a simple header that just displays the name of our application. Next, we have our day information and selection options. After that, we have our daily results showing whether we are in compliance or not for the selected day. If we are within the suggested range, the background is green. If we are over the range, meaning we've had too much of  a particular macro, the background is red, and if we under-consumed a particular macro, the background is blue. Finally, we have our form which allows us to update our daily results, our target calories and macros, as well as variance for our range.
 
@@ -602,14 +602,14 @@ Building Modern Applications with Next.js and MongoDB
    Before we can save our data, we'll need a database. For this I'll use MongoDB and MongoDB Atlas to host my database. If you don't already have MongoDB Atlas, you can sign up and use it for `free here <https://www.mongodb.com/atlas>`__, otherwise go into an existing cluster and create a new database. Inside MongoDB Atlas, I will use an existing cluster and set up a new database called MCT. With this new database created, I will create a new collection called daily that will store my daily results, target macros, as well as allowed variants.
 
    .. image:: /images/nextjs/mongodb-atlas.png
-        :alt: MongoDB Atlas
+      :alt: MongoDB Atlas
 
    With my database set up, I will also add a few days worth of data. Feel free to add your own data or if you'd like the dataset I'm using, you can get it here. I will use `MongoDB Compass <https://www.mongodb.com/download-center/compass>`__ to import and view the data, but you can import the data however you want: use the CLI, add in manually, or use Compass.
 
    Thanks to MongoDB's document model, I can represent the data exactly as I had it in-memory. The only additional fields I will have in my MongoDB model is an _id field that will be a unique identifier for the document and a date field that will represent the data for a specific date. The image below shows the data model for one document in MongoDB Compass.
 
    .. image:: /images/nextjs/mongodb-compass.png
-        :alt: MongoDB Compass
+      :alt: MongoDB Compass
 
    Now that we have some real data to work with, let's go ahead and connect our Next.js application to our MongoDB Database. Since Next.js is a React based framework that's running Node server-side we will use the excellent Mongo Node Driver to facilitate this connection.
 
@@ -633,7 +633,7 @@ Building Modern Applications with Next.js and MongoDB
    Save the file, go to your browser and navigate to ``localhost:3000/api/daily``. What you'll see is the JSON response of ``{message:'Hello from the Daily route'}``. This code is only ever run server side and the only thing the browser receives is the response we send. This seems like the perfect place to set up our connection to MongoDB.
 
    .. image:: /images/nextjs/api-response.png
-        :alt: API Endpoint Response
+      :alt: API Endpoint Response
 
    While we can set the connection in this daily.js file, in a real world application, we are likely to have multiple API endpoints and for that reason, it's probably a better idea to establish our connection to the database in a middleware function that we can pass to all of our api routes. So as a best practice, let's do that here.
 
@@ -691,7 +691,7 @@ Building Modern Applications with Next.js and MongoDB
    As you can see we now have a handler object that gives us much more flexibility. We can use different HTTP verbs, add our middleware, and more. What the code above does, is that it connects to our MongoDB Atlas cluster and from the MCT database and daily collection, finds and returns one item and then renders it to the screen. If we hit ``localhost:3000/api/daily`` now in our browser we'll see this:
 
    .. image:: /images/nextjs/daily-api.png
-        :alt: Daily API Response
+      :alt: Daily API Response
 
    Woohoo! We have our data and the data model matches our in-memory data model, so our next step will be to use this real data instead of our in-memory sample. To do that, we'll open up the index.js page.
 
@@ -790,7 +790,7 @@ Building Modern Applications with Next.js and MongoDB
    We added two new methods, one to get the data from the previous day and one to get the data from the following day. In our UI we also made the date label dynamic so that it displays and tells us what day we are currently looking at. With these changes go ahead and refresh your browser and you should be able to see the new data for days you have entered in your database. If a particular date does not exist, it will show 0's for everything.
 
    .. image:: /images/nextjs/no-data-for-day.png
-        :alt: MCT No Data
+      :alt: MCT No Data
 
    Saving and Updating Data In MongoDB
    -----------------------------------

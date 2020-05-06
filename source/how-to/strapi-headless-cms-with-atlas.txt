@@ -91,7 +91,7 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    `Strapi <https://hapi.dev/>`__ is an open-source Headless CMS framework. It is essentially a back-end or admin panel for content creation. It allows developers to easily define a custom content structure and customize it fully for their use case. The framework has a really powerful plug-in system for making content creation and management painless regardless of your use-case.
    
    .. image:: /images/strapi/strapi.png
-        :alt: Strapi Homepage
+      :alt: Strapi Homepage
 
    In this tutorial, we'll set up and configure Strapi. We'll do it in two ways. First, we'll do a default install to quickly get started and show off the functionality of Strapi, and then we'll also create a second instance that uses MongoDB as the database to store our content.
 
@@ -115,12 +115,12 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    This will start the Strapi server. When it is up and running, navigate to ``localhost:1337`` in your browser and you'll be greeted with the following welcome screen:    
 
    .. image:: /images/strapi/welcome.png
-        :alt: Strapi Welcome
+      :alt: Strapi Welcome
 
    Fill out the information with either real or fake data and you'll be taken to your new dashboard.
 
    .. image:: /images/strapi/dashboard.png
-        :alt: Strapi Dashboard
+      :alt: Strapi Dashboard
 
    If you see the dashboard pictured above, you are all set! When we passed the ``--quickstart`` argument in our npx command, Strapi created a SQLite database to use and store our data. You can find this database file if you navigate to your ``my-project`` directory and look in the ``.tmp`` directory. 
    
@@ -141,8 +141,8 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
 
    Next, you'll be prompted for the Host URL. If you're running your MongoDB database on Atlas, the host will be unique to your cluster. To find it, go to your MongoDB Atlas dashboard, navigate to your **Clusters** tab, and hit the **Connect** button. Choose any of the options and your connection string will be displayed. It will be the part highlighted in the image below.
 
-      .. image:: /images/strapi/atlas-connection-string.png
-        :alt: MongoDB Atlas Connection String
+   .. image:: /images/strapi/atlas-connection-string.png
+      :alt: MongoDB Atlas Connection String
 
    Add your connection string, and the next option you'll be asked for will be **+srv connection** and for this, you'll say **true**. After that, you'll be asked for a Port, but you can ignore this since we are using a ``srv`` connection. Finally, you will be asked to provide your username and password for the specific cluster. Add those in and continue. You'll be asked for an Authentication database, and you can leave this blank and just hit enter to continue. And at the end of it all, you'll get your final question asking to **Enable SSL connection** and for this one pass in **y** or **true**.
 
@@ -172,12 +172,12 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    Your application will once again run on ``localhost:1337`` and you'll be greeted with the familiar welcome screen.
 
    .. image:: /images/strapi/welcome.png
-        :alt: Strapi Welcome
+      :alt: Strapi Welcome
 
    To see the database schema in MongoDB Atlas, navigate to your dashboard, go into the cluster you've chosen to install the Strapi database, and view its collections. By default it will look like this:
 
    .. image:: /images/strapi/strapi-mongodb.png
-        :alt: Strapi MongoDB Collections
+      :alt: Strapi MongoDB Collections
 
 
    Better Content Management with Strapi
@@ -190,17 +190,17 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    Once we have the name defined, next we'll add a series of fields for our collection. This is where Strapi really shines. The default installation gives us many different data types to work with such as text for a title or rich text for the body of a blog post, but Strapi also allows us to create custom components and even customize these default types to suit our needs.
 
    .. image:: /images/strapi/strapi-field-types.png
-        :alt: Strapi Field Types
+      :alt: Strapi Field Types
 
    My blog post will have a **Title** of type **Text**, a **Content** element for the content of the post of type **Rich Text**, and a **Published** value of type **Date** for when the post is to go live. Feel free to copy my layout, or create your own. Once you're satisfied hit the save button and the Strapi server will restart and you'll see your new collection type in the main navigation.
 
    .. image:: /images/strapi/posts-collection.png
-        :alt: Strapi Posts Collection
+      :alt: Strapi Posts Collection
 
    Let's go ahead and create a few posts for our blog. Now that we have some posts created, we can view the content both in the Strapi dashboard, as well as in our MongoDB Atlas collections view. Notice in MongoDB Atlas that a new collection called **posts** was created and that it now holds the blog posts we've written.
 
    .. image:: /images/strapi/atlas-posts-collection.png
-        :alt: Atlas Posts Collection
+      :alt: Atlas Posts Collection
 
    We are only scratching the surface of what's available with Strapi. Let me show you one more powerful feature of Strapi. 
    
@@ -213,7 +213,7 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    Notice that some of the options are traditional 1:1, 1:M, M:M relationships that you might remember from the traditional RDBMS world. Note that even though we're using MongoDB, these relationships will be correctly represented so you don't have to worry about the underlying data model.
 
    .. image:: /images/strapi/strapi-tags-collection.png
-        :alt: Strapi Tags Collection
+      :alt: Strapi Tags Collection
 
    Go ahead and create a few entries in your new Tags collection, and then go into an existing post you have created. You'll see the option to add ``tags`` to your post now and you'll have a dropdown menu to choose from. No more guessing what the tag should be... is it NodeJS, or Node.Js, maybe just Node?
 
@@ -227,14 +227,14 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
    To do this, go into the **Roles & Permissions** section of the Strapi dashboard, select the **Public** role and you'll see a list of permissions by feature and content type. By default, they're all disabled. For our demo, let's enable the **count**, **find**, and **findOne** permissions for the **Posts** and **Tags** collections.
 
    .. image:: /images/strapi/strapi-access-via-api.png
-        :alt: Strapi Access via API
+      :alt: Strapi Access via API
 
    Now if you navigate to ``localhost:1337/posts`` or ``localhost:1337:tags`` you'll see your content delivered in JSON format.
 
    To access our content via GraphQL, we'll need to enable the GraphQL plugin. Navigate to the **Marketplace** tab in the Strapi dashboard and download the GraphQL plugin. It will take a couple of minutes to download and install the plugin. Once it is installed, you can access all of your content by navigating to ``localhost:1337/graphql``. You'll have to ensure that the Roles & Permissions for the different collections are available, but if you've done the RESTful example above they will be.
 
    .. image:: /images/strapi/strapi-access-via-graphql.png
-        :alt: Strapi Access via GraphQL
+      :alt: Strapi Access via GraphQL
 
    We get everything we'd expect with the GraphQL plugin. We can view our entire schema and docs, run queries and mutations and it all just works. Now we can easily consume this data with any front-end. Say we're building an app with `Gatsby <https://www.gatsbyjs.org/>`__ or `Next.js <https://nextjs.org/>`__, we can call our endpoint, get all the data and generate all the pages ahead of time, giving us best-in-class performance as well as content management.
 

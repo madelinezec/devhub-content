@@ -189,7 +189,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Now, within the Compass UI, I will navigate to the **Validation** tab. As expected, there are currently no validation rules in place, meaning our database will accept any document as long as it is valid BSON. Hit the **Add a Rule** button and you'll see a user interface for creating your own validation rules.
 
    .. image:: /images/schema-validation/blog-valid-schema.png
-        :alt: Valid Document Schema
+      :alt: Valid Document Schema
 
    By default, there are no rules, so any document will be marked as passing. Let's add a rule to require the ``author`` property. It will look like this:
 
@@ -205,7 +205,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Now we'll see that our initial post, that does not have an ``author`` field has failed validation, while the post that does have the ``author`` field is good to go.
    
    .. image:: /images/schema-validation/blog-invalid-schema.png
-        :alt: Invalid Document Schema
+      :alt: Invalid Document Schema
 
    We can go further and add validations to individual fields as well. Say for SEO purposes we wanted all the titles of the blog posts to be a minimum of 20 characters and have a maximum length of 80 characters. We can represent that like this:
 
@@ -228,7 +228,7 @@ Do You Need Mongoose When Developing Node.js and MongoDB Applications?
    Now if we try to insert a document into our ``posts`` collection either via the Node.js Driver or via Compass, we will get an error.
 
    .. image:: /images/schema-validation/blog-validation-error.png
-        :alt: Validation Error
+      :alt: Validation Error
    
    There are many more rules and validations you can add. Check out the full list `here <https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/#json-schema>`__. For a more advanced guided approach, check out the articles on `schema validation with arrays <https://www.mongodb.com/blog/post/json-schema-validation--checking-your-arrays>`__ and `dependencies <https://www.mongodb.com/blog/post/json-schema-validation--dependencies-you-can-depend-on>`__.
 
