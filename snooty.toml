@@ -8,7 +8,7 @@ pgp-version = "{+version+}"
 
 [page_groups]
 "home" = ["/article/johns-hopkins-university-covid-19-data-atlas", "/quickstart/golang-multi-document-acid-transactions", "/quickstart/csharp-crud-tutorial", "/how-to/graphql-support-atlas-stitch"]
-"learn" = ["/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci", "/article/map-terms-concepts-sql-mongodb", "/article/build-newsletter-website-mongodb-data-platform"]
+"learn" = ["/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci", "/how-to/5-ways-reduce-costs-atlas", "/article/build-newsletter-website-mongodb-data-platform"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]

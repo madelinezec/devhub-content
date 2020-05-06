@@ -1,0 +1,178 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Explore five ways to reduce MongoDB Atlas costs.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: 5 Ways to Reduce Costs With MongoDB Atlas
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB graphic pattern
+
+   Learn about 5 Ways to Reduce Costs With MongoDB Atlas
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/5-ways-reduce-costs-atlas
+   :title: 5 Ways to Reduce Costs With MongoDB Atlas
+   :image: /images/social/open-graph/og-green-pattern.png
+   :type: article
+
+   Learn about 5 Ways to Reduce Costs With MongoDB Atlas
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-05-06
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/generic/green2.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================================
+5 Ways to Reduce Costs With MongoDB Atlas
+=========================================
+
+.. introduction::
+
+   Now more than ever, businesses are looking for ways to reduce or
+   eliminate costs wherever possible. As a cloud service, MongoDB Atlas is
+   a platform that enables enhanced scalability and reduces dependence on
+   the kind of fixed costs businesses experience when they deploy on
+   premises instances of MongoDB. This article will help you understand
+   ways you can reduce costs with your MongoDB Atlas deployment.
+
+.. content::
+
+   #1 Pause Your Cluster
+   ---------------------
+
+   Pausing a cluster essentially brings the cluster down so if you still
+   have active applications depending on this cluster, it's probably not a
+   good idea. However, pausing the cluster leaves the infrastructure and
+   data in place so that it's available when you're ready to return to
+   business. You can pause a cluster for up to 30 days but if you do not
+   resume the cluster within 30 days, Atlas automatically resumes the
+   cluster. Clusters that have been paused are billed at a different, lower
+   rate than active clusters. Read more about `pausing clusters in our
+   documentation <https://docs.atlas.mongodb.com/pause-terminate-cluster/>`__,
+   or check out this great article by `Joe
+   Drumgoole <https://www.linkedin.com/in/jdrumgoole/?originalSubdomain=ie>`__,
+   on `automating the process of pausing and restarting your
+   clusters <https://www.mongodb.com/blog/post/pause-resume-atlas-clusters>`__.
+
+   #2 Scale Your Cluster Down
+   --------------------------
+
+   MongoDB Atlas was designed with scalability in mind and while scaling
+   down is probably the last thing on our minds as we prepare for launching
+   a Startup or a new application, it's a reality that we must all face.
+
+   Fortunately, the engineers at MongoDB that created MongoDB Atlas, our
+   online database as a service, created the solution with bidirectional
+   scalability in mind. The process of scaling a MongoDB Cluster will
+   change the underlying infrastructure associated with the hosts on which
+   your database resides. Scaling up to larger nodes in a cluster is the
+   very same process as scaling down to smaller clusters.
+
+   #3 Enable Elastic Scalability
+   -----------------------------
+
+   Another great feature of MongoDB Atlas is the ability to
+   programmatically control the size of your cluster based on its use.
+   MongoDB Atlas offers scalability of various components of the platform
+   including Disk, and Compute. With `compute
+   auto-scaling <https://docs.atlas.mongodb.com/cluster-autoscaling/index.html>`__,
+   you have the ability to configure your cluster with a maximum and
+   minimum cluster size. You can enable compute auto-scaling through either
+   the UI or the `public API <https://docs.atlas.mongodb.com/api/>`__.
+   Auto-scaling is available on all clusters M10 and higher on Azure and
+   GCP, and on all "General" class clusters M10 and higher on AWS. To
+   enable auto-scaling from the UI, select the Auto-scale "Cluster tier"
+   option, and choose a maximum cluster size from the available options.
+
+   .. image:: /images/how-to/atlas-auto-scaling.png
+      :alt: Auto Scaling a cluster in MongoDB Atlas
+      :align: center
+
+   Atlas analyzes the following cluster metrics to determine when to scale
+   a cluster, and whether to scale the cluster tier up or down:
+
+   -   CPU Utilization
+   -   Memory Utilization
+
+   To learn more about how to monitor cluster metrics, see `View Cluster
+   Metrics <https://docs.atlas.mongodb.com/monitor-cluster-metrics/#monitor-cluster-metrics>`__.
+
+   Once you configure auto-scaling with both a minimum and a maximum
+   cluster size, Atlas checks that the cluster would not be in a tier
+   outside of your specified Cluster Size range. If the next lowest cluster
+   tier is within your Minimum Cluster Size range, Atlas scales the cluster
+   down to the next lowest tier if both of the following are true:
+
+   -   The average CPU Utilization and Memory Utilization over the past 72
+       hours is below 50%, and
+   -   The cluster has not been scaled down (manually or automatically) in
+       the past 72 hours.
+
+   To learn more about downward auto-scaling behavior, see `Considerations
+   for Downward
+   Auto-Scaling <https://docs.atlas.mongodb.com/cluster-autoscaling/index.html#downward-scaling-considerations>`__.
+
+   #4 Cleanup and Optimize
+   -----------------------
+
+   You may also be leveraging old datasets that you no longer need. Conduct
+   a thorough analysis of your clusters, databases, and collections to
+   remove any duplicates, and old, outdated data. Also, remove sample
+   datasets if you're not using them. Many developers will load these to
+   explore and then leave them.
+
+   #5 Terminate Your Cluster
+   -------------------------
+
+   As a last resort, you may want to remove your cluster by terminating it.
+   Please be aware that terminating a cluster is a destructive operation -
+   once you terminate a cluster, it is gone. If you want to get your data
+   back online and available, you will need to restore it from a backup.
+   You can restore backups from `cloud provider
+   snapshots <https://docs.atlas.mongodb.com/restore/restore-cluster-cloud-provider-snapshot/>`__
+   or `from continuous
+   backups <https://docs.atlas.mongodb.com/restore/restore-cluster-cloud-provider-snapshot/>`__.
+
+   .. image:: /images/how-to/cluster-termination-warning.png
+      :alt: MongoDB Atlas cluster termination warning
+      :align: center
+
+   Be sure you download and secure your backups before terminating as you
+   will no longer have access to them once you terminate.
+
+.. summary::
+
+   I hope you found this information valuable and that it helps you reduce
+   or eliminate unnecessary expenses. If you have questions, please feel
+   free to reach out. You will find me in the `MongoDB
+   Community <https://community.mongodb.com/>`__ or on Twitter
+   `@mlynn <https://twitter.com/mlynn>`__. Please let me know if I can help in
+   any way.
+
+   .. include:: /includes/callouts/atlas-signup.rst
