@@ -1,6 +1,6 @@
 # Developer Hub - Blog
 
-This repository contains the content of the [DevHub blog](https://developer.mongodb.com/).
+This repository holds the content of the [DevHub blog](https://developer.mongodb.com/).
 
 ## How to publish a blog post?
 
