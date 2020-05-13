@@ -18,7 +18,7 @@
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
 
 .. og::
-   :url: http://developer.mongodb.com/article/3-things-to-know-switch-from-sql-mongodb
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays
    :type: article
    :title: MongoDB Schema Design Anti-Pattern: Massive Arrays
    :image: /images/social/open-graph/og-schema-design-patterns.png

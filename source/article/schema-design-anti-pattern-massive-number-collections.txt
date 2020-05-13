@@ -1,0 +1,362 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Number of Collections
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: MongoDB Schema Design Anti-Pattern: Massive Number of Collections
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Number of Collections
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Massive Number of Collections
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Number of Collections
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-05-13
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `The Bucket Pattern <https://developer.mongodb.com/how-to/bucket-pattern>`__
+   * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=============================
+Massive Number of Collections
+=============================
+ 
+.. introduction:: 
+
+   In the first post in this MongoDB Schema Design Anti-Patterns series, we discussed how we should avoid massive arrays when designing our schemas.  But what about having a massive number of `collections <https://docs.mongodb.com/manual/reference/glossary/#term-collection>`__?  Turns out, they're not great either.  In this post, we'll examine why.
+
+.. content::
+
+   Massive Number of Collections
+   -----------------------------
+
+   Let's begin by discussing why having a massive number of collections is an anti-pattern.  If storage is relatively cheap, who cares how many collections you have?
+
+   Every collection in MongoDB `automatically has an index on the _id field <https://docs.mongodb.com/manual/indexes/#default-id-index>`__.  While the size of this index is pretty small for empty or small collections, thousands of empty or unused indexes can begin to drain resources.  Collections will typically have a few more indexes to support efficient queries.  All of these indexes add up.
+
+   Additionally, `the WiredTiger storage engine <https://docs.mongodb.com/manual/core/wiredtiger/>`__ (MongoDB's default storage engine) stores a file for each collection and a file for each index.  WiredTiger will open all files upon startup, so performance will decrease when an excessive number of collections and indexes exist.
+
+   In general, we recommend limiting collections to 10,000 per `replica set <https://docs.mongodb.com/manual/reference/glossary/#term-replica-set>`__.  When users begin exceeding 10,000 collections, they typically see decreases in performance.
+
+   To avoid this anti-pattern, examine your database and remove unnecessary collections.  If you find that you have an increasing number of collections, consider remodeling your data so you have a consistent set of collections.
+   
+   Example
+   -------
+
+   Let's take an example from the greatest tv show ever created:  Parks and Recreation.  Leslie is passionate about maintaining the parks she oversees, and, at one point, she takes it upon herself to remove the trash in the Pawnee River.  
+
+   Let's say she wants to keep a minute-by-minute record of the water level and temperature of the Pawnee River, the Eagleton River, and the Wamapoke River, so she can look for trends.  She could send her coworker Jerry to put 30 sensors in each river and then begin storing the sensor data in a MongoDB database.
+
+   One way to store the data would be to create a new collection every day to store sensor data.  Each collection would contain documents that store information about one reading for one sensor.
+
+   .. code-block:: javascript
+
+      // 2020-05-01 collection
+      {
+         "_id": ObjectId("5eac643e64faf3ff31d70d35"),
+         "river": "PawneeRiver",
+         "sensor": 1
+         "timestamp": "2020-05-01T00:00:00Z",
+         "water-level": 61.56,
+         "water-temperature": 72.1
+      },
+      {
+         "_id": ObjectId("5eac643e64faf3ff31d70d36"),
+         "river": "PawneeRiver",
+         "sensor": 2
+         "timestamp": "2020-05-01T00:00:00Z",
+         "water-level": 61.55,
+         "water-temperature": 72.1
+      },
+      ...
+      {
+         "_id": ObjectId("5eac643e64faf3ff31d70dfc"),
+         "river": "WamapokeRiver",
+         "sensor": 90
+         "timestamp": "2020-05-01T23:59:00Z",
+         "water-level": 72.03,
+         "water-temperature": 64.1
+      }
+      
+      // 2020-05-02 collection
+      {
+         "_id": ObjectId("5eac644c64faf3ff31d90775"),
+         "river": "PawneeRiver",
+         "sensor": 1
+         "timestamp": "2020-05-02T00:00:00Z",
+         "water-level": 63.12,
+         "water-temperature": 72.8
+      },
+         {
+         "_id": ObjectId("5eac644c64faf3ff31d90776"),
+         "river": "PawneeRiver",
+         "sensor": 2
+         "timestamp": "2020-05-02T00:00:00Z",
+         "water-level": 63.11,
+         "water-temperature": 72.7
+      },
+      ...
+      {
+         "_id": ObjectId("5eac644c64faf3ff31d9079c"),
+         "river": "WamapokeRiver",
+         "sensor": 90
+         "timestamp": "2020-05-02T23:59:00Z",
+         "water-level": 71.58,
+         "water-temperature": 66.2
+      }
+
+   Let's say that Leslie wants to be able to easily query on the ``river`` and ``sensor`` fields, so she creates an index on each field.
+
+   If Leslie were to store hourly data throughout all of 2019 and create two indexes in each collection (in addition to the default index on ``_id``), her database would have the following stats:
+   
+   - Database size:  5.2 GB
+   - Index size:  1.07 GB
+   - Total Collections:  365
+
+   Each day she creates a new collection and two indexes.  As Leslie continues to collect data and her number of collections exceeds 10,000, the performance of her database will decline.  
+
+   Also, when Leslie wants to look for trends across weeks and months, she'll have a difficult time doing so since her data is spread across multiple collections.  
+
+   .. figure:: /images/article/anti-patterns/massive-collections/leslie-grimace.gif
+      :alt: Leslie grimaces 
+      :align: center
+
+   Let's say Leslie realizes this isn't a great schema, so she decides to restructure her data.  This time, she decides to keep all of her data in a single collection.  She'll `bucket her information <https://docs.mongodb.com/manual/tutorial/model-time-data/#use-buckets-for-time-series-data>`__, so she stores one hour's worth of information from one sensor in each document.  
+
+   .. code-block:: javascript
+
+      // data collection
+      {
+         "_id": "PawneeRiver-1-2019-05-01T00:00:00.000Z",
+         "river": "PawneeRiver",
+         "sensor": 1,
+         "readings": [
+            {
+               "timestamp": "2019-05-01T00:00:00.000+00:00",
+               "water-level": 61.56,
+               "water-temperature": 72.1
+            },
+            {
+               "timestamp": "2019-05-01T00:01:00.000+00:00",
+               "water-level": 61.56,
+               "water-temperature": 72.1
+            },
+            ...
+            {
+               "timestamp": "2019-05-01T00:59:00.000+00:00",
+               "water-level": 61.55,
+               "water-temperature": 72.0
+            }
+         ]
+      },
+      ...
+      {
+         "_id": "PawneeRiver-1-2019-05-02T00:00:00.000Z",
+         "river": "PawneeRiver",
+         "sensor": 1,
+         "readings": [
+            {
+               "timestamp": "2019-05-02T00:00:00.000+00:00",
+               "water-level": 63.12,
+               "water-temperature": 72.8
+            },
+            {
+               "timestamp": "2019-05-02T00:01:00.000+00:00",
+               "water-level": 63.11,
+               "water-temperature": 72.8
+            },
+            ...
+            {
+               "timestamp": "2019-05-02T00:59:00.000+00:00",
+               "water-level": 63.10,
+               "water-temperature": 72.7
+            }
+         ]
+      }
+      ...
+      
+   Leslie wants to query on the ``river`` and ``sensor`` fields, so she creates two new indexes for this collection.
+
+   If Leslie were to store hourly data for all of 2019 using this updated schema, her database would have the following stats:
+
+   - Database size:  3.07 GB
+   - Index size:  27.45 MB
+   - Total Collections:  1
+
+   By restructuring her data, she sees a massive reduction in her index size (1.07 GB initially to 27.45 MB!).  She now has a single collection with three indexes.  
+
+   With this new schema, she can more easily look for trends in her data because it's stored in a single collection.  Also, she's using the default index on ``_id`` to her advantage by storing the hour the water level data was gathered in this field.  If she wants to query by hour, she already has an index to allow her to efficiently do so.
+
+   .. figure:: /images/article/anti-patterns/massive-collections/ron-canoe.gif
+      :alt: Ron canoeing in clean water
+      :align: center
+
+   For more information on modeling time-series data in MongoDB, see `Building with Patterns: The Bucket Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern>`__.
+
+   Removing Unnecessary Collections
+   --------------------------------
+
+   In the example above, Leslie was able to remove unnecessary collections by changing how she stored her data.  
+
+   Sometimes, you won't immediately know what collections are unnecessary, so you'll have to do some investigating yourself.  If you find an empty collection, you can drop it.  If you find a collection whose size is made up mostly of indexes, you can probably move that data into another collection and drop the original.  You might be able to use `$merge <https://docs.mongodb.com/manual/reference/operator/aggregation/merge/#pipe._S_merge>`__ to move data from one collection to another.
+
+   Below are a few ways you can begin your investigation.
+
+   .. figure:: /images/article/anti-patterns/massive-collections/sherlock_traeger.gif
+      :alt: Sherlock Traeger
+      :align: center
+
+   Using MongoDB Atlas
+   ~~~~~~~~~~~~~~~~~~~
+
+   If your database is hosted in `Atlas <https://cloud.mongodb.com/>`__, navigate to the `Atlas Data Explorer <https://docs.atlas.mongodb.com/data-explorer/#data-explorer>`__.  The Data Explorer allows you to browse a list of your databases and collections.  Additionally, you can get stats on your database including the database size, index size, and number of collections.  
+
+
+   .. figure:: /images/article/anti-patterns/massive-collections/atlas_data_explorer.png
+      :alt: Screenshot of the Atlas Data Explorer
+      :align: center
+   
+      The Atlas Data Explorer displays the database size, index size, and total number of collections for the riverstats database.
+
+   If you are using an M10 cluster or larger on Atlas, you can also use the `Real-Time Performance Panel <https://docs.atlas.mongodb.com/real-time-performance-panel/#real-time-metrics-status-tab>`__ to check if your application is actively using a collection you're considering dropping.
+
+   Using MongoDB Compass
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   Regardless of where your MongoDB database is hosted, you can use `MongoDB Compass <https://www.mongodb.com/products/compass>`__, MongoDB's desktop GUI.  Similar to the Data Explorer, you can browse your databases and collections so you can check for unused collections.  You can also get stats at the database and collection levels.
+
+
+   .. figure:: /images/article/anti-patterns/massive-collections/compass_databases.png
+      :alt: Screenshot of Compass displaying information about the databases
+      :align: center
+   
+      Caption: Compass shows the storage size, number of collections, and number of indexes for databases.
+
+
+   .. figure:: /images/article/anti-patterns/massive-collections/compass_collections.png
+      :alt: Screenshot of Compass displaying information about collections in the database
+      :align: center
+   
+      Compass shows the number of documents, average document size, total document size, number of indexes, and total index size for collections in the riverstats database.
+   
+   Using the Mongo Shell
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   If you prefer working in a terminal instead of a GUI, connect to your database using the `mongo shell <https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo>`__.  
+
+   To see a list of collections, run ``db.getCollectionNames()``.  Output like the following will be displayed:
+
+   .. code-block:: javascript
+
+      [
+         "2019-01-01",
+         "2019-01-02",
+         "2019-01-03",
+         "2019-01-04",
+         "2019-01-05",
+         ...
+      ]
+
+   To retrieve stats about your database, run ``db.stats()``.  Output like the following will be displayed:
+   
+   .. code-block:: javascript
+
+      {
+         "db" : "riverstats",
+         "collections" : 365,
+         "views" : 0,
+         "objects" : 47304000,
+         "avgObjSize" : 118,
+         "dataSize" : 5581872000,
+         "storageSize" : 1249677312,
+         "numExtents" : 0,
+         "indexes" : 1095,
+         "indexSize" : 1145790464,
+         "scaleFactor" : 1,
+         "fsUsedSize" : 5312217088,
+         "fsTotalSize" : 10726932480,
+         "ok" : 1,
+         "$clusterTime" : {
+            "clusterTime" : Timestamp(1588795184, 3),
+            "signature" : {
+               "hash" : BinData(0,"orka3bVeAiwlIGdbVoP+Fj6N01s="),
+               "keyId" : NumberLong("6821929184550453250")
+            }
+         },
+         "operationTime" : Timestamp(1588795184, 3)
+      }
+
+   You can also run ``db.collection.stats()`` to see information about a particular collection.  
+
+.. summary::
+
+   Summary
+   -------
+
+   Be mindful of creating a massive number of collections as each collection likely has a few indexes associated with it.  
+   An excessive number of collections and their associated indexes can drain resources and impact your database's performance.  In general, try to 
+   limit your replica set to 10,000 collections. 
+
+   Come back soon for the next post in this anti-patterns series!
+
+   .. blockquote::
+
+      When you're ready to build a schema in MongoDB, check out `MongoDB Atlas <http://bit.ly/MDB_Atlas>`__,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB. With a forever-free tier and promo code
+      LAUREN200 for when you're ready to move beyond the free tier, you're on
+      your way to realizing the full value of MongoDB.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Reduce Number of Collections <https://docs.atlas.mongodb.com/schema-advisor/too-many-collections/>`__
+   - `MongoDB Docs: Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
+   - `MongoDB Docs: Use Buckets for Time-Series Data <https://docs.mongodb.com/manual/tutorial/model-time-data/#use-buckets-for-time-series-data>`__
+   - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+

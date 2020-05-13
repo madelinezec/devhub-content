@@ -13,4 +13,4 @@ pgp-version = "{+version+}"
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
 "Schema Design Patterns" = ["/how-to/polymorphic-pattern", "/how-to/attribute-pattern", "/how-to/bucket-pattern", "/how-to/outlier-pattern", "/how-to/computed-pattern", "/how-to/subset-pattern"]
-
+"MongoDB Schema Design Anti-Patterns" = ["/article/schema-design-anti-pattern-massive-arrays", "/article/schema-design-anti-pattern-massive-number-collections"]
