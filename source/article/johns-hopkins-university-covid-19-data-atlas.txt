@@ -39,7 +39,7 @@
 
 .. pubdate:: 2020-04-20
 
-.. updated-date:: 2020-05-06
+.. updated-date:: 2020-05-13
 
 .. type:: article
 
@@ -97,6 +97,11 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    Updates
    -------
+
+   May 13th
+   ~~~~~~~~
+
+   - Renamed the field "city" to "county" and "cities" to "counties" where appropriate. They contains the data from the column "Admin2" in JHU CSVs.
 
    May 6th
    ~~~~~~~
@@ -577,7 +582,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
       	// Location:
       	CombinedName string `bson:"combined_name"`
-      	City         string
+      	County       string
       	State        string
       	Country      string
       	CountryCode  int32  `bson:"country_code"`
@@ -626,7 +631,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
       }
 
       // recentCountryStats prints the most recent 10 stats for a country.
-      // Note that this won't work for "US" because that data is broken down by city & state.
+      // Note that this won't work for "US" because that data is broken down by county & state.
       func recentCountryStats(global_and_us *mongo.Collection, country string) {
       	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
       	defer cancel()
