@@ -45,10 +45,6 @@
 
 .. atf-image:: /images/atf-images/quickstart/bson.png
 
-.. related::
-
-   * ``:doc:`Decimal128 </quickstart/bson-data-types-decimal128>```
-
 .. ---------------------------------------------------------------
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------

@@ -1,0 +1,120 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kenwalger
+   :title: Quick Start: BSON Data Types - Date
+   :image: /images/social/twitter/twitter-blue-pattern.png
+   :image-alt: MongoDB Blue Pattern
+
+   Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/bson-data-types-date
+   :title: Quick Start: BSON Data Types - Date
+   :image: /images/social/open-graph/og-blue-pattern.png
+   :type: article
+
+   Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/alger-ken.rst
+
+.. pubdate:: 2020-05-14
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. tags::
+
+   * BSON
+
+.. atf-image:: /images/atf-images/quickstart/bson.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===================================
+Quick Start: BSON Data Types - Date
+===================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-bson.png
+      :alt: BSON Quickstart badge
+      :scale: 30%
+      :align: right
+
+   Dates and times in programming can be a challenge. Which Time Zone is the event happening in? What date format is
+   being used? Is it ``MM/DD/YYYY`` or ``DD/MM/YYYY``? Settling on a standard is important for data storage and then
+   again when displaying the date and time. The recommended way to store dates in MongoDB is to use the BSON Date data
+   type.
+
+.. content::
+
+   The `BSON Specification <http://bsonspec.org/spec.html>`__ refers to the ``Date`` type as the *UTC datetime* and is a
+   64-bit integer. It represents the number of milliseconds since the `Unix epoch <https://en.wikipedia.org/wiki/Unix_time>`__,
+   which was 00:00:00 UTC on 1 January 1970. This provides a lot of flexibilty in past and future dates. With a 64-bit
+   integer in use, we are able to represent dates *roughly* 290 million years before and after the epoch. As a signed
+   64-bit integer we are able to represent dates *prior* to 1 Jan 1970 with a negative number and positive numbers
+   represent dates *after* 1 Jan 1970.
+
+   Why & Where to Use
+   ------------------
+
+   You'll want to use the ``Date`` data type whenever you need to store date and/or time values in MongoDB. You may have
+   seen a ``timestamp`` data type as well and thought "Oh, that's what I need." However, the ``timestamp`` data type
+   should be left for **internal** usage in MongoDB. The ``Date`` type is the data type we'll want to use for
+   application development.
+
+   How to Use
+   ----------
+
+   There are some benefits to using the ``Date`` data type in that it comes with some handy features and methods. Need
+   to assign a ``Date`` type to a variable? We have you covered there:
+
+   .. code-block:: javascript
+
+      var newDate = new Date();
+
+   What did that create exactly?
+
+   .. code-block:: none
+
+      > newDate;
+      ISODate("2020-05-11T20:14:14.796Z")
+
+   Very nice, we have a date and time wrapped as an ISODate. If we need that printed in a ``string`` format, we can use
+   the ``toString()`` method.
+
+   .. code-block:: none
+
+      > newDate.toString();
+      Mon May 11 2020 13:14:14 GMT-0700 (Pacific Daylight Time)
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   .. blockquote::
+
+      Get started exploring BSON types, like Date, with `MongoDB
+      Atlas <https://www.mongodb.com/cloud/atlas>`__ today!
+
+   The ``date`` field is the recommended data type to use when you want to store date and time information in MongoDB.
+   It provides the flexibility to store date and time values in a consistent format that can easily be stored and
+   retrieved by your application. Give the BSON ``Date`` data type a try for your applications

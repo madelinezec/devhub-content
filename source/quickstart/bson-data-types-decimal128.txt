@@ -43,10 +43,6 @@
 
 .. atf-image:: /images/atf-images/quickstart/bson.png
 
-.. related::
-
-   * ``:doc:`/quickstart/bson-data-types-objectid```
-
 .. ---------------------------------------------------------------
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------
