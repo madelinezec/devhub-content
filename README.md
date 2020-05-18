@@ -11,3 +11,4 @@ You need to:
 - send a PR to 10gen/devhub-content master branch.
 
 More information and details [in the wiki](https://wiki.corp.mongodb.com/display/DEVREL/Writing+Content+for+MongoDB).
+ 
