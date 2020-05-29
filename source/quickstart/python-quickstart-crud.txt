@@ -36,8 +36,6 @@
 .. type:: quickstart
 
 .. level:: beginner
-
-.. tags::
    
 .. languages::
 

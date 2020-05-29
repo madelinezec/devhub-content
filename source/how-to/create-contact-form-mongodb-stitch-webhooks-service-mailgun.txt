@@ -6,7 +6,7 @@
 
 .. meta-description:: 
 
-   Learn how to create a contact form and send emails from it using MongoDB Stitch webhooks and Mailgun transactional emails.
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
 
 .. twitter::
    :site: @mongodb
@@ -15,7 +15,7 @@
    :image: /images/social/twitter/Twitter-Green-pattern.png
    :image-alt: MongoDB
 
-   Learn how to create a contact form and send emails from it using MongoDB Stitch webhooks and Mailgun transactional emails.
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
 
 .. og::
    :url: http://developer.mongodb.com/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun
@@ -23,7 +23,7 @@
    :title: Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
    :image: /images/social/open-graph/og-green-pattern.png
 
-   Learn how to create a contact form and send emails from it using MongoDB Stitch webhooks and Mailgun transactional emails.
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -58,14 +58,14 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
 
 .. introduction::
 
-    If you’ve ever built a website, at some point in time you’ve probably
+    If you've ever built a website, at some point in time you've probably
     needed to include a way for users to contact you. Do you expose your
     email address to the internet by hard-coding it onto the page and hoping
-    that you don’t end up in a SPAM list, or do you create your own contact
-    form? If you’re creating your own contact form, how do you get it to
-    actually send emails if you’re only hosting a static website?
+    that you don't end up in a SPAM list, or do you create your own contact
+    form? If you're creating your own contact form, how do you get it to
+    actually send emails if you're only hosting a static website?
 
-    These are questions that I’ve personally asked myself hundreds of times
+    These are questions that I've personally asked myself hundreds of times
     over the years.
 
     A solution to this problem is to use Functions as a Service (FaaS),
@@ -74,15 +74,15 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     so hosting a web application is probably overkill. Executing a function
     a few times a day is often easier and less expensive for such a task.
 
-    In this tutorial, we’re going to see how to use `MongoDB
+    In this tutorial, we're going to see how to use `MongoDB
     Stitch <https://www.mongodb.com/cloud/stitch>`__ to send emails using
     the `Mailgun <https://www.mailgun.com/>`__ transactional email service.
 
 .. prerequisites::
 
     Just a quick note before we dive into the technical material. While
-    we’re going to use Mailgun as the transactional email service, the
-    assumption is that you’re already aware of their pricing model and have
+    we're going to use Mailgun as the transactional email service, the
+    assumption is that you're already aware of their pricing model and have
     already configured your account in their portal. Mailgun is one of many
     different transactional email services that would work with this
     example.
@@ -92,9 +92,9 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     Building a Contact Form with HTML, JavaScript, and Tailwind CSS
     ---------------------------------------------------------------
 
-    To get us started, we’re going to want to have a contact form created
+    To get us started, we're going to want to have a contact form created
     and ready to go. This can be accomplished with simple JavaScript, HTML,
-    and CSS. However, we’re going to use
+    and CSS. However, we're going to use
     `Tailwind <https://tailwindcss.com/>`__ to make the form a little more
     attractive.
 
@@ -178,16 +178,16 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
             </body>
         </html>
 
-    I won’t get into the details on how Tailwind works, but the above code
+    I won't get into the details on how Tailwind works, but the above code
     is essentially a styled HTML form that includes a sender name, sender
-    email, and a message to be sent. You’ll notice that the ``<button>`` has
-    an ``onclick`` attribute for a ``sendMessage()`` function. We haven’t
+    email, and a message to be sent. You'll notice that the ``<button>`` has
+    an ``onclick`` attribute for a ``sendMessage()`` function. We haven't
     created that function yet, but when we do, it will be responsible for
     actually interacting with our MongoDB Stitch function.
 
     .. image:: /images/how-to/mailgun-email-form.png
 
-    With HTML in place, let’s take a look at the JavaScript that will be
+    With HTML in place, let's take a look at the JavaScript that will be
     used to interact with our future Stitch function.
 
     Within the ``<script>`` tag, we can create a ``sendMessage()`` function
@@ -219,27 +219,27 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
             }
         </script>
 
-    In the above example we’re using the ``fetch`` function that exists in
+    In the above example we're using the ``fetch`` function that exists in
     modern JavaScript. The destination URL will eventually be replaced with
     a Stitch webhook URL, but for now each of the elements are put into
     place.
 
     While this example just prints the result of the HTTP request to the
     browser console, a more elegant UX manipulation could be made to show
-    the message was sent. I’ll leave this to your own imagination.
+    the message was sent. I'll leave this to your own imagination.
 
     Creating a Webhook Function in MongoDB Stitch to Receive Form Data and Send Emails
     ----------------------------------------------------------------------------------
 
-    When it comes to transactional email services, most won’t allow you to
+    When it comes to transactional email services, most won't allow you to
     send emails directly from your client-facing application. Even if you
-    could, you probably shouldn’t because such a feature could easily be
+    could, you probably shouldn't because such a feature could easily be
     abused.
 
-    To send our emails, we’re going to create a webhook service in Stitch.
+    To send our emails, we're going to create a webhook service in Stitch.
     Within the `MongoDB Cloud <https://cloud.mongodb.com>`__, choose the
-    **Stitch** tab and create a new application if you don’t already have
-    one that you wish to use. For this particular example, we don’t need to
+    **Stitch** tab and create a new application if you don't already have
+    one that you wish to use. For this particular example, we don't need to
     connect the application to an Atlas cluster.
 
     .. image:: /images/how-to/stitch-third-party-services.png
@@ -253,7 +253,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
 
     When choosing to create a webhook, we need to give it a name, define the
     authentication necessary, and the type of HTTP requests it should listen
-    for. Because we’re sending data from our HTML page, it makes sense to
+    for. Because we're sending data from our HTML page, it makes sense to
     use the POST method.
 
     At this point, we can add our function logic, the code that will be
@@ -288,12 +288,12 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
 
         };
 
-    So let’s break down what’s happening in the above code.
+    So let's break down what's happening in the above code.
 
-    The first thing we’re doing is parsing the payload that came from the
-    client, which in this case is our feedback form. Next, we’re creating an
+    The first thing we're doing is parsing the payload that came from the
+    client, which in this case is our feedback form. Next, we're creating an
     HTTP request that includes the Mailgun API URL along with the private
-    API token that Mailgun provides. Because we’re using an authorization
+    API token that Mailgun provides. Because we're using an authorization
     header, the token needs to be base64 encoded.
 
     The Mailgun API expects the data to be multi-part form data rather than
@@ -305,7 +305,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     function should work. However, hard-coding sensitive values in your
     function is probably not a good idea.
 
-    We’re going to want to do two things to keep our sensitive information
+    We're going to want to do two things to keep our sensitive information
     safe.
 
     Within the Stitch dashboard, click the **Values & Secrets** tab,
@@ -319,7 +319,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
 
     .. image:: /images/how-to/stitch-values.png
 
-    You’ll want to give the **Value** a name, which we’ll use directly
+    You'll want to give the **Value** a name, which we'll use directly
     within the function. Make sure it is a **Secret** type and is linked to
     the secret that we had created in the previous step.
 
@@ -363,7 +363,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     Host the Contact Form Website on MongoDB Stitch
     -----------------------------------------------
 
-    We’re going to take our example a step further. Rather than figuring out
+    We're going to take our example a step further. Rather than figuring out
     where to host our static website and contact form, we can actually host
     it directly on MongoDB Stitch.
 
@@ -393,7 +393,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
         `MongoDB Atlas <https://cloud.mongodb.com>`__ can be used for FREE when launching 
         M0 sized clusters.
 
-    Sending emails with functions isn’t limited to just Mailgun. If the
+    Sending emails with functions isn't limited to just Mailgun. If the
     transactional email service has an API, it could easily be substituted.
 
     For services that don't have a REST API, but offer a JavaScript package, 
