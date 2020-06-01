@@ -31,9 +31,9 @@
 
 .. include:: /includes/authors/mcallister-shane.rst
 
-.. pubdate:: 2019-12-17
+.. pubdate:: 2020-05-29
 
-.. updated-date:: 2020-05-18
+.. updated-date:: 2020-06-01
 
 .. type:: article
 
@@ -51,7 +51,6 @@
    * Java
    * JavaScript
    * Swift
-   * SwiftUI
 
 .. products::
 
