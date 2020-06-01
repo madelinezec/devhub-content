@@ -1,0 +1,160 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Explaining Realm Database 6.0 and Frozen Objects
+
+.. twitter::
+   :site: @mongodb
+   :creator: @shaneymac
+   :title: Realm Database 6.0: A New Architecture and Frozen Objects
+   :image: /images/social/twitter/twitter-realm-mobilesync.jpg
+   :image-alt: MongoDBRealm 
+
+   New Realm Database 6.0 - Archtitecture and Frozen Objects 
+
+.. og::
+   :url: http://developer.mongodb.com/article/realm-database-and-frozen-objects 
+   :title: Realm Core 6.0 release and support for frozen objects
+   :image: /images/social/open-graph/og-realm-mobilesync.jpg
+   :type: article
+
+   Realm Core 6.0 release and support for frozen objects
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/mcallister-shane.rst
+
+.. pubdate:: 2019-12-17
+
+.. updated-date:: 2020-05-18
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags::
+
+   * Analytics
+   * API
+   * iOS 
+   * Realm 
+
+.. languages::
+
+   * Java
+   * JavaScript
+   * Swift
+   * SwiftUI
+
+.. products::
+
+   * MongoDB
+   * Realm 
+
+.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================================================
+Realm Database 6.0: A New Architecture and Frozen Objects
+=========================================================
+
+.. introduction::
+
+   TL;DR
+   -----
+
+   Realm is an easy-to-use, offline-first database that lets mobile developers build better apps faster.
+   
+   Since the acquisition by MongoDB of Realm in May 2019, MongoDB has continued investing in building an updated version of our mobile database – Realm Database 6.0. 
+   
+   We’re thrilled to announce that it’s now out of beta, and released, meaning we’ve hit a major milestone on our MongoDB Realm Roadmap. Realm Database 6.0 is now included in the Realm Java 7.0, Cocoa 5.0, and JS/RN 6.0 SDKs and will follow later in .NET/Xamarin 5.0.
+
+	
+.. content::
+   
+   A New Architecture
+ 
+   This effort lays a new foundation that further increases the stability of the Realm Database and allows us to quickly release new features in the future.
+
+   We’ve also increased performance with further optimizations still to come. We’re most excited that:
+
+   - The new architecture makes it faster to look up objects based on a primary key
+   - iOS benchmarks show faster insertions, twice as fast sorting, and ten times faster deletions
+   - Code simplifications yielded a ten percent reduction in total lines of code and a smaller library
+   - Realm files are now much smaller when storing big blobs or large transactions
+
+   Frozen Objects
+   --------------
+
+   With this release, we’re also thrilled to announce that Realm now supports Frozen Objects, making it easier to use Realm with reactive frameworks.
+
+   Since our initial release of the Realm database, our concept of live, thread-confined objects has been key to reducing the code that mobile developers need to write. Objects are the data, so when the local database is updated for a particular thread, all objects are automatically updated too. This design ensures you have a consistent view of your data and makes it extremely easy to hook the local database up to the UI. But it historically came at a cost for developers using reactive frameworks.
+   
+   Now, Frozen Objects allow you to work with immutable data without needing to extract it from the database. Instead, Frozen Objects act like immutable objects, meaning they won’t change. They allow you to freeze elements of your data and hand it over to other threads and operations, without throwing an exception - so it’s simple to use Realm when working with platforms like RxJava.
+
+   Using Frozen Objects
+   ~~~~~~~~~~~~~~~~~~~~
+
+   Freeze any ‘Realm’, ‘RealmList’, or ‘RealmObject’ and it will not be possible to modify them in any way. These Frozen Objects have none of the threading restrictions that live objects have, meaning they can be read and queried across all threads.
+   
+   As an example, consider what it would look like if you were listening to changes on a live Realm using kotlin, and then wanted to freeze query results before sending them on for further processing:
+
+   .. code-block:: kotlin
+
+      val realm: Realm = Realm.getDefaultInstance();
+      val results: RealmResults<Person> = realm.where<Person>().beginsWith("name", "Jane").findAllAsync()
+      results.addChangeListener { liveResults ->
+         val frozenResults: RealmResults<Person> = liveResults.freeze()
+         val t  = Thread(Runnable {
+            assertTrue(frozenResults.isFrozen())
+
+            // It is now possible to read objects on another thread
+            val person: Person = frozenResults.first()
+            person.name
+         })
+         t.start()
+         t.join()
+      }
+   
+
+   Since Java needs immutable objects, we also updated our Java support so all Realm Observables and Flowables now emit frozen objects by default. This means that it should be possible to use all operators available in RxJava without either using Realm.copyFromRealm() or running into an IllegalStateException:
+
+   .. code-block:: java 
+
+      val realm = Realm.getDefaultInstance()
+      val stream: Disposable = realm.where<Person>().beginsWith("name", "Jane").findAllAsync().asFlowable()
+         .flatMap { frozenPersons ->
+            Flowable.fromIterable(frozenPersons)
+                   .filter { person -> person.age > 18 }
+                   .map { person -> PersonViewModel(person.name, person.age) }
+                   .toList()
+                   .toFlowable()
+         }
+         .subscribeOn(Schedulers.computation())
+         .observeOn(AndroidSchedulers.mainThread)
+         .subscribe { updateUI(it) }
+         }
+
+
+   If you have feedback please post it in Github and the Realm team will check it out!
+
+.. summary::
+
+   A Strong Foundation for the Future
+   ----------------------------------
+
+   With the Realm Database 6.0 now released with Frozen Objects, we’re now focused on hitting the next milestones on our roadmap as we bring MongoDB Realm to public beta and we will be revealing more on June 9th & 10th at `MongoDB .Live <https://www.mongodb.com/world>`__
+
+   Want to learn more? Review the `documentation <https://realm.io/docs>`__
+
+   Ready to get started? Get `Realm Core 6.0 and the SDK's <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__
