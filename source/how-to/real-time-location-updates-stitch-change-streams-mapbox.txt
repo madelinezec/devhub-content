@@ -11,7 +11,7 @@
 .. twitter::
    :site: @mongodb
    :creator: @nraboy
-   :title: Real-Time Location Changes with MongoDB Stitch, Change Streams, and Mapbox
+   :title: Real-Time Location with MongoDB Stitch, Change Streams, and Mapbox
    :image: /images/social/twitter/Twitter-Green-pattern.png
    :image-alt: MongoDB
 
@@ -20,7 +20,7 @@
 .. og::
    :url: http://developer.mongodb.com/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun
    :type: article
-   :title: Real-Time Location Changes with MongoDB Stitch, Change Streams, and Mapbox
+   :title: Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
    :image: /images/social/open-graph/og-green-pattern.png
 
    Learn how to use change streams with MongoDB Stitch to update location on a Mapbox map in real-time.
@@ -53,7 +53,7 @@
 .. ---------------------------------------------------------------
 
 ==========================================================================
-Real-Time Location Changes with MongoDB Stitch, Change Streams, and Mapbox
+Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 ==========================================================================
 
 .. introduction::
