@@ -72,9 +72,9 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     change streams. These change streams can be used in any of the drivers,
     including front-end applications with MongoDB Stitch.
 
-    In this tutorial, we’re going to leverage `MongoDB
+    In this tutorial, we're going to leverage `MongoDB
     Stitch <https://www.mongodb.com/cloud/stitch>`__ change streams. When
-    the location data in our NoSQL documents change, we’re going to update
+    the location data in our NoSQL documents change, we're going to update
     the information on an interactive map powered by
     `Mapbox <https://www.mapbox.com>`__.
 
@@ -83,7 +83,7 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     .. image:: /images/how-to/mapbox-mongodb-change-streams.gif
 
     Rather than building an Internet of Things (IoT) device to track and
-    submit GPS data, we’re going to simulate the experience by directly
+    submit GPS data, we're going to simulate the experience by directly
     changing our documents in MongoDB. When the update operations are
     complete, the front-end application with the interactive map is watching
     for those changes and responding appropriately.
@@ -93,16 +93,16 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     The Requirements
     ----------------
 
-    To be successful with this example, you’ll need to have a few things
+    To be successful with this example, you'll need to have a few things
     ready to go prior:
 
     -  A MongoDB Atlas cluster
     -  A MongoDB Stitch application
     -  A Mapbox account
 
-    For this example, the data will exist in MongoDB Atlas. Since we’re
+    For this example, the data will exist in MongoDB Atlas. Since we're
     planning on interacting with our data using a front-end application,
-    we’ll be using MongoDB Stitch. A Stitch application should be created
+    we'll be using MongoDB Stitch. A Stitch application should be created
     within the MongoDB Cloud and connected to the MongoDB Atlas cluster
     prior to exploring this tutorial.
 
@@ -112,10 +112,10 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
         Cloud <https://cloud.mongodb.com>`__.
 
     Mapbox will be used as our interactive map. Since Mapbox is a service,
-    you’ll need to have created an account and have access to your access
+    you'll need to have created an account and have access to your access
     token.
 
-    In the animated image, I’m using the `MongoDB Visual Studio Code
+    In the animated image, I'm using the `MongoDB Visual Studio Code
     plugin <https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode>`__
     for interacting with the documents in my collection. You can do the same
     or use another tool such as Compass, the CLI, or the data explorer
@@ -126,8 +126,8 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     Understanding the Document Model for the Location Tracking Example
     ------------------------------------------------------------------
 
-    Because we’re only planning on moving a marker around on a map, the data
-    model that we use doesn’t need to be extravagant. For this example, the
+    Because we're only planning on moving a marker around on a map, the data
+    model that we use doesn't need to be extravagant. For this example, the
     following is more than acceptable:
 
     .. code-block:: json
@@ -143,23 +143,23 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 
     In the above example, the coordinates array has the first item
     representing the longitude and the second item representing the
-    latitude. We’re including a username to show that we are going to watch
+    latitude. We're including a username to show that we are going to watch
     for changes based on a particular document field. In a polished
-    application, all users probably wouldn’t be watching for changes for all
-    documents. Instead they’d probably be watching for changes of documents
+    application, all users probably wouldn't be watching for changes for all
+    documents. Instead they'd probably be watching for changes of documents
     that belong to them.
 
     While we could put authorization rules in place for users to access
     certain documents, it is out of the scope of this example. Instead,
-    we’re going to mock it.
+    we're going to mock it.
 
     Building a Real-Time Location Tracking Application with Mapbox and the Stitch SDK
     ---------------------------------------------------------------------------------
 
-    Now we’re going to build our client-facing application which consists of
+    Now we're going to build our client-facing application which consists of
     Mapbox, some basic HTML and JavaScript, and MongoDB Stitch.
 
-    Let’s start by adding the following boilerplate code:
+    Let's start by adding the following boilerplate code:
 
     .. code-block:: auto
 
@@ -180,9 +180,9 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 
     The above code sets us up by including the Mapbox and MongoDB Stitch
     SDKs. When it comes to querying MongoDB and interacting with the map,
-    we’re going to be doing that from within the ``<script>`` tags.
+    we're going to be doing that from within the ``<script>`` tags.
 
-    Within the ``<script>`` tags, let’s get started by adding the following:
+    Within the ``<script>`` tags, let's get started by adding the following:
 
     .. code-block:: javascript
 
@@ -193,11 +193,11 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
         var currentLocationMarker;
 
     The above lines of code are useful for the initialization of our services.
-    You’ll want to swap the app id with your actual Stitch app id and the
+    You'll want to swap the app id with your actual Stitch app id and the
     Mapbox access token with your actual Mapbox access token. Both of these
     can be found within each of the services dashboards.
 
-    For this example, I’m going to assume you’re using a
+    For this example, I'm going to assume you're using a
     **location_services** database within MongoDB Atlas and a **tracking**
     collection within that database.
 
@@ -238,9 +238,9 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     Inside the ``load`` event, we are doing anonymous authentication with
     MongoDB Stitch. Remember, we could very easily use a stronger
     authentication method and have authorization rules, but for this example
-    it’s out of the scope.
+    it's out of the scope.
 
-    Once we’re authenticated to Stitch, we execute a ``findOne`` operation
+    Once we're authenticated to Stitch, we execute a ``findOne`` operation
     based on the mock ``username`` field on our document. The only data we
     care about is the coordinates, but we want to make sure it comes from
     the correct ``username`` field.
@@ -249,7 +249,7 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     update the marker position.
 
     Up until now, we are just setting the marker to the last known position.
-    This is because when we start watching with a change stream, we won’t
+    This is because when we start watching with a change stream, we won't
     receive an initial document. This is why we are doing the ``findOne``
     first.
 
@@ -266,7 +266,7 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 
     For this particular change stream, we are only watching for documents
     where the ``username`` field matches. In a more polished and realistic
-    example, you could use this to watch for only your own documents. We’re
+    example, you could use this to watch for only your own documents. We're
     mocking this by hard-coding the value.
 
     When documents with the ``username`` field experience some kind of
@@ -286,12 +286,12 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 
     .. blockquote::
 
-        If you’d like to give MongoDB Atlas and MongoDB Stitch a try, there’s
+        If you'd like to give MongoDB Atlas and MongoDB Stitch a try, there's
         a forever FREE tier available through the `MongoDB
         Cloud <https://cloud.mongodb.com>`__.
 
-    When it comes to location data and MongoDB, there’s so much more you can
-    do. If you’d like to learn how to create and manage geofences, check out
+    When it comes to location data and MongoDB, there's so much more you can
+    do. If you'd like to learn how to create and manage geofences, check out
     my previous tutorial titled, `Location Geofencing with MongoDB, Stitch,
     and
     Mapbox <https://developer.mongodb.com/how-to/location-geofencing-stitch-mapbox>`__.

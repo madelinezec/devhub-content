@@ -7,7 +7,7 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun", "/article/schema-design-anti-pattern-unnecessary-indexes", "/article/johns-hopkins-university-covid-19-data-atlas", "/article/Realm-Database-and-frozen-objects"]
+"home" = ["/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun", "/article/schema-design-anti-pattern-unnecessary-indexes", "/article/johns-hopkins-university-covid-19-data-atlas", "/article/realm-database-and-frozen-objects"]
 "learn" = ["/how-to/5-ways-reduce-costs-atlas", "/article/schema-design-anti-pattern-massive-number-collections", "/quickstart/bson-data-types-date"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]

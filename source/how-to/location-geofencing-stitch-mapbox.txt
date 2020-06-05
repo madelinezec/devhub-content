@@ -59,9 +59,9 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
 .. introduction::
 
     For a lot of organizations, when it comes to location, geofencing is
-    often a very desirable or required feature. In case you’re unfamiliar,
+    often a very desirable or required feature. In case you're unfamiliar,
     a geofence can be thought of as a virtual perimeter for a geographic
-    area. Often, you’ll want to know when something enters or exits that
+    area. Often, you'll want to know when something enters or exits that
     geofence so that you can apply your own business logic. Such logic might
     include sending a notification or updating something in your database.
 
@@ -71,28 +71,28 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     When it comes to geofencing, why would you want to use a database like
     MongoDB rather than defining boundaries directly within your client-facing 
     application? Sure, it might be easy to define and manage one or
-    two boundaries, but when you’re working at scale, checking to see if
+    two boundaries, but when you're working at scale, checking to see if
     something has exited or entered one of many boundaries could be a
     hassle.
 
-    In this tutorial, we’re going to explore the
+    In this tutorial, we're going to explore the
     `$near <https://docs.mongodb.com/manual/reference/operator/query/near/#op._S_near>`__
     and
     `$geoIntersects <https://docs.mongodb.com/manual/reference/operator/query/geoIntersects/#op._S_geoIntersects>`__
-    operators within MongoDB to define geofences and see if we’re within the
-    fences. For the visual aspect of things, we’re going to make use of
+    operators within MongoDB to define geofences and see if we're within the
+    fences. For the visual aspect of things, we're going to make use of
     `Mapbox <https://www.mapbox.com/>`__ for showing our geofences and our
     location.
 
-    To get an idea of what we’re going to build, take a look at the
+    To get an idea of what we're going to build, take a look at the
     following animated image:
 
     .. image:: /images/how-to/mapbox-mongodb-geofence.gif
 
-    We’re going to implement functionality where a map is displayed and
+    We're going to implement functionality where a map is displayed and
     polygon shapes are rendered based on data from within MongoDB. When we
     move the marker around on the map to simulate actual changes in
-    location, we’re going to determine whether or not we’ve entered or
+    location, we're going to determine whether or not we've entered or
     exited a geofence.
 
 .. prerequisites::
@@ -110,7 +110,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     with shapes and markers, an account is necessary. For this example,
     everything can be accomplished within the Mapbox free tier.
 
-    Because we’ll be using MongoDB Stitch in connection with Mapbox, we’ll
+    Because we'll be using MongoDB Stitch in connection with Mapbox, we'll
     need to be using MongoDB Atlas.
 
     .. blockquote::
@@ -132,7 +132,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     is a specific schema that must be followed. To learn more about GeoJSON,
     visit the `specification documentation <https://geojson.org/>`__.
 
-    For our example, we’re going to be working with Polygon and Point data.
+    For our example, we're going to be working with Polygon and Point data.
     Take the following document model:
 
     .. code-block:: json
@@ -173,13 +173,13 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
             }
         }
 
-    We’re naming any of our possible fenced regions. This could be useful to
-    a lot of organizations. For example, maybe you’re a business with
+    We're naming any of our possible fenced regions. This could be useful to
+    a lot of organizations. For example, maybe you're a business with
     several franchise locations. You could geofence the location and name it
     something like the address, store number, etc.
 
     To get the performance we need from our geospatial data and to be able
-    to use certain operators, we’re going to need to create an index on our
+    to use certain operators, we're going to need to create an index on our
     collection. The index looks something like the following:
 
     .. code-block:: javascript
@@ -193,12 +193,12 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     ---------------------------------------------------------------------
 
     Rather than creating a backend application to interact with the
-    database, we’re going to make use of MongoDB Stitch. Essentially, the
+    database, we're going to make use of MongoDB Stitch. Essentially, the
     client-facing application will use the Stitch SDK to authenticate before
     interacting with the data.
 
     Within the `MongoDB Cloud <https://cloud.mongodb.com>`__, choose to
-    create a new Stitch application if you don’t already have one that you
+    create a new Stitch application if you don't already have one that you
     wish to use. Make sure that the application is using the cluster that
     has your geofencing data.
 
@@ -209,9 +209,9 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     example, the **Users can only read all data** permission template is
     fine.
 
-    Next, we’ll want to choose an authentication mechanism. In the **Users**
+    Next, we'll want to choose an authentication mechanism. In the **Users**
     tab, choose **Providers**, and enable the anonymous authentication
-    provider. In a more realistic production scenario, you’ll likely want to
+    provider. In a more realistic production scenario, you'll likely want to
     create geofences that have stricter users and rules design.
 
     .. image:: /images/how-to/geofence-stitch-anonymous-auth.png
@@ -246,7 +246,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
             </body>
         </html>
 
-    In the above HTML, we’re importing the Mapbox and MongoDB Stitch SDKs,
+    In the above HTML, we're importing the Mapbox and MongoDB Stitch SDKs,
     and we are defining an HTML container to hold our interactive map.
     Interacting with MongoDB and the map will be done in the ``<script>``
     tag that follows.
@@ -312,7 +312,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
 
     In the above ``load`` event, we are creating a marker somewhere outside
     the center of the map and one single polygon shape. The thing is, we
-    don’t want to hard-code our polygon shapes that represent geofence
+    don't want to hard-code our polygon shapes that represent geofence
     regions. Instead, add the GeoJSON data to MongoDB along with other
     possible fences.
 
@@ -346,8 +346,8 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
 
     In the above code, we query our collection for all documents and add
     them each as a layer on the map. We can do better though. In the above
-    example, the geofences amount could be quite large and it doesn’t
-    necessarily make sense to show all the fences that aren’t even remotely
+    example, the geofences amount could be quite large and it doesn't
+    necessarily make sense to show all the fences that aren't even remotely
     close to the current location. This would slow down the application for
     the client.
 
@@ -367,9 +367,9 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
             }
         }).asArray();
 
-    In the above code, we’re saying that we only want geofence results that
+    In the above code, we're saying that we only want geofence results that
     are within 50,000 meters of our center point coordinate set. While our
-    example doesn’t have many documents, this could be very beneficial in
+    example doesn't have many documents, this could be very beneficial in
     terms of performance.
 
     Depending on the geofence data in MongoDB, you likely have some polygons
@@ -403,7 +403,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
 
     If there is an intersection, we just print out the first result to an
     alert. We do this because there could be overlapping geofences and for
-    the scope of this example, we don’t need to worry about that.
+    the scope of this example, we don't need to worry about that.
 
 .. summary::
 

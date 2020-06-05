@@ -11,7 +11,7 @@
 .. twitter::
    :site: @mongodb
    :creator: @nraboy
-   :title: Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
+   :title: Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
    :image: /images/social/twitter/Twitter-Green-pattern.png
    :image-alt: MongoDB
 
