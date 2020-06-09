@@ -7,10 +7,11 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun", "/article/schema-design-anti-pattern-unnecessary-indexes", "/article/johns-hopkins-university-covid-19-data-atlas", "/article/realm-database-and-frozen-objects"]
+"home" = ["/how-to/atlas-data-lake-federated-queries-out-aws-s3", "/article/johns-hopkins-university-covid-19-data-atlas", "/article/realm-database-and-frozen-objects", "/how-to/real-time-location-updates-stitch-change-streams-mapbox"]
 "learn" = ["/how-to/5-ways-reduce-costs-atlas", "/article/schema-design-anti-pattern-massive-number-collections", "/quickstart/bson-data-types-date"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
 "Schema Design Patterns" = ["/how-to/polymorphic-pattern", "/how-to/attribute-pattern", "/how-to/bucket-pattern", "/how-to/outlier-pattern", "/how-to/computed-pattern", "/how-to/subset-pattern"]
 "MongoDB Schema Design Anti-Patterns" = ["/article/schema-design-anti-pattern-massive-arrays", "/article/schema-design-anti-pattern-massive-number-collections", "/article/schema-design-anti-pattern-unnecessary-indexes"]
+"COVID-19" = ["/article/coronavirus-map-live-data-tracker-charts", "/article/johns-hopkins-university-covid-19-data-atlas"]
