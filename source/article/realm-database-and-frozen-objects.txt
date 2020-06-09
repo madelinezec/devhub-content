@@ -31,9 +31,11 @@
 
 .. include:: /includes/authors/mcallister-shane.rst
 
+.. include:: /includes/authors/maughan-katherine.rst
+
 .. pubdate:: 2020-05-29
 
-.. updated-date:: 2020-06-01
+.. updated-date:: 2020-06-05
 
 .. type:: article
 
@@ -70,16 +72,18 @@ Realm Database 6.0: A New Architecture and Frozen Objects
    TL;DR
    -----
 
-   Realm is an easy-to-use, offline-first database that lets mobile developers build better apps faster.
+   `Realm <https://www.mongodb.com/realm>`__ is an easy-to-use, offline-first database that lets mobile developers build better apps faster.
    
-   Since the acquisition by MongoDB of Realm in May 2019, MongoDB has continued investing in building an updated version of our mobile database - Realm Database 6.0.
+   Since the acquisition by MongoDB of Realm in May 2019, MongoDB has continued investing in building an updated version of our mobile database, Realm Database 6.0. 
    
-   We're thrilled to announce that it's now out of beta, and released, meaning we've hit a major milestone on our MongoDB Realm Roadmap. Realm Database 6.0 is now included in the Realm Java 7.0, Cocoa 5.0, and JS/RN 6.0 SDKs and will follow later in .NET/Xamarin 5.0.
+   We're thrilled to announce that it's now out of beta, and released, meaning we've hit a major milestone on our `MongoDB Realm Roadmap <https://www.mongodb.com/realm#roadmap>`__. Realm Database 6.0 is now included in the Realm Java 7.0, Cocoa 5.0, and JS/RN 6.0 SDKs and will follow later in .NET/Xamarin 5.0. Access the release details `here <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__.
+
 
 	
 .. content::
    
    A New Architecture
+   ------------------
  
    This effort lays a new foundation that further increases the stability of the Realm Database and allows us to quickly release new features in the future.
 
@@ -124,7 +128,7 @@ Realm Database 6.0: A New Architecture and Frozen Objects
       }
    
 
-   Since Java needs immutable objects, we also updated our Java support so all Realm Observables and Flowables now emit frozen objects by default. This means that it should be possible to use all operators available in RxJava without either using Realm.copyFromRealm() or running into an IllegalStateException:
+   Since Java needs immutable objects, we also updated our Java support so all Realm Observables and Flowables now emit frozen objects by default. This means that it should be possible to use all operators available in RxJava without either using ``Realm.copyFromRealm()`` or running into an ``IllegalStateException:``
 
    .. code-block:: java 
 
@@ -150,8 +154,8 @@ Realm Database 6.0: A New Architecture and Frozen Objects
    A Strong Foundation for the Future
    ----------------------------------
 
-   With the Realm Database 6.0 now released with Frozen Objects, we're now focused on hitting the next milestones on our roadmap as we bring MongoDB Realm to public beta and we will be revealing more on June 9th & 10th at `MongoDB .Live <https://www.mongodb.com/world>`__
+   With the Realm Database 6.0 now released with Frozen Objects, we're now focused on hitting the next milestones on our roadmap as we bring MongoDB Realm to public beta and we will be revealing more on June 9th & 10th at `MongoDB .Live <https://www.mongodb.com/world>`__.
 
-   Want to learn more? Review the `documentation <https://realm.io/docs>`__
+   Want to learn more? Review the `documentation <https://realm.io/docs>`__.
 
-   Ready to get started? Get `Realm Core 6.0 and the SDK's <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__
+   Ready to get started? Get `Realm Core 6.0 and the SDK's <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__.
