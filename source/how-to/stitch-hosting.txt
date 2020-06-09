@@ -53,7 +53,7 @@ Stitch Hosting: A Drag-and-Drop Delight
 
 .. content::
 
-      .. include:: /includes/callouts/realm-release.rst
+    .. include:: /includes/callouts/realm-release.rst
 
     In case you missed it, Stitch Hosting recently became `generally
     available <https://www.mongodb.com/blog/post/mongodb-stitch-static-hosting-is-ga-ready-for-all-of-your-web-applications>`__!
