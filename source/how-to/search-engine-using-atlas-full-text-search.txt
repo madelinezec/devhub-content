@@ -49,7 +49,7 @@
 
 .. products::
 
-   * Stitch
+   * Realm
    * Atlas
 
 .. atf-image:: /images/atf-images/illustrations/build.png
@@ -63,6 +63,8 @@ Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search in 10 Minutes
 ================================================================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
       
    .. blockquote::
 

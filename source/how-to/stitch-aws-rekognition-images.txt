@@ -47,7 +47,7 @@
 
 .. products::
 
-   * Stitch
+   * Realm
 
 .. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
@@ -60,6 +60,8 @@ Using AWS Rekognition to Analyse and Tag Uploaded Images Using Stitch
 =====================================================================
 
 .. content::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    Computers can now look at a video or image and know what's going on and,
    sometimes, who's in it. Amazon Web Service Rekognition gives your

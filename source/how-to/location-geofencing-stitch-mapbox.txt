@@ -43,8 +43,7 @@
 
 .. products::
 
-   * MongoDB
-   * Stitch
+   * Realm
 
 .. atf-image:: /images/atf-images/generic/green.png
 
@@ -57,6 +56,8 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
 ====================================================
 
 .. introduction::
+
+    .. include:: /includes/callouts/realm-release.rst
 
     For a lot of organizations, when it comes to location, geofencing is
     often a very desirable or required feature. In case you're unfamiliar,

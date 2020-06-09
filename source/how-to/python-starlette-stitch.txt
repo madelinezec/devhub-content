@@ -50,9 +50,8 @@
 
 .. products::
 
-   * Stitch
+   * Realm
    * Atlas
-   * MongoDB
 
 
 .. ---------------------------------------------------------------
@@ -64,6 +63,8 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 ====================================================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    As developers we often have the ability to choose our own tools to get the job done. If you're like me, any time a new framework builds up a reputation for high performance, you jump right in to see what the developer experience is like. In today's article, I want to look at building a web application with a Python ASGI framework called `Starlette <https://www.starlette.io/>`__ that promises blazing fast performance and developer productivity. We'll put Starlette to the test by integrating `MongoDB <https://www.mongodb.com/atlas>`__, `Stitch <https://www.mongodb.com/stitch>`__, and `Twilio <https://twilio.com>`__ into the mix to build an AirBnB-type property booking application.
 

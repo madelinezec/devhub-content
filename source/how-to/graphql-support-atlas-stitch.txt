@@ -40,14 +40,15 @@
 
 .. products::
 
-    * MongoDB
-    * Stitch
+    * Realm
 
 ========================================================
 Introducing GraphQL Support in MongoDB Atlas with Stitch
 ========================================================
 
 .. content::
+
+    .. include:: /includes/callouts/realm-release.rst
 
     We're pleased to announce that you can now interact with your MongoDB
     documents using the GraphQL standard in your JavaScript applications by
