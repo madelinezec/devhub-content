@@ -423,7 +423,7 @@ MongoDB Atlas Data Lake Tutorial: Federated Queries and $out to AWS S3
 
    MongoDB Atlas Data Lake is now production-ready and generally available starting today.
 
-   If you have a lot of infrequently access data in your Atlas cluster but you still need to be able to query it and access it easily once you've archived it to S3, Atlas Data Lake and the new Federated Query feature will help you save tons of money. If you're looking for an automated way to archive your data from Atlas Clusters to fully-managed S3 storage, then check out our new `Atlas Online Archive feature <https://docs.atlas.mongodb.com/online-archive/manage-online-archive.html>`__!
+   If you have a lot of infrequently access data in your Atlas cluster but you still need to be able to query it and access it easily once you've archived it to S3, Atlas Data Lake and the new Federated Query feature will help you save tons of money. If you're looking for an automated way to archive your data from Atlas Clusters to fully-managed S3 storage, then check out our new `Atlas Online Archive feature <https://docs.atlas.mongodb.com/online-archive/manage-online-archive/>`__!
 
    Storage on S3 is a lot cheaper than scaling up your MongoDB Atlas cluster because your cluster is full of cold data and needs more RAM & storage size to operate correctly.
 
