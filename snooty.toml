@@ -15,3 +15,4 @@ pgp-version = "{+version+}"
 "Schema Design Patterns" = ["/how-to/polymorphic-pattern", "/how-to/attribute-pattern", "/how-to/bucket-pattern", "/how-to/outlier-pattern", "/how-to/computed-pattern", "/how-to/subset-pattern"]
 "MongoDB Schema Design Anti-Patterns" = ["/article/schema-design-anti-pattern-massive-arrays", "/article/schema-design-anti-pattern-massive-number-collections", "/article/schema-design-anti-pattern-unnecessary-indexes"]
 "COVID-19" = ["/article/coronavirus-map-live-data-tracker-charts", "/article/johns-hopkins-university-covid-19-data-atlas"]
+"Maps and Geospatial Data" = ["/how-to/location-geofencing-stitch-mapbox", "/how-to/real-time-location-updates-stitch-change-streams-mapbox", "/how-to/searching-nearby-points-interest-mapbox"]
