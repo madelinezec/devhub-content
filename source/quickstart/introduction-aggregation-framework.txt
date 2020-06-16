@@ -41,7 +41,7 @@
 
    * Aggregation Framework
 
-.. atf-image:: /images/atf-images/generic/green2.png
+.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
 
 .. ---------------------------------------------------------------
 .. ARTICLE CONTENT
@@ -52,6 +52,11 @@ Introduction to the MongoDB Aggregation Framework
 =================================================
 
 .. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-aggregation-framework.png
+      :alt: BSON Quickstart badge
+      :scale: 30%
+      :align: right
 
    One of the difficulties when storing any data is knowing how it will be accessed in the future. What reports need to
    be run on it? What information is "hidden" in there that will allow for meaningful insights for your business? After
