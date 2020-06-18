@@ -1,4 +1,5 @@
 .NET
+Aggregation Framework
 Analytics
 API
 AWS
@@ -12,6 +13,7 @@ Full-Text Search
 HapiJS
 GatsbyJS
 GraphQL
+iOS
 IoT
 Kafka
 Kubernetes

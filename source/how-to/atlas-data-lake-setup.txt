@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @kenwalger
    :title: Learn how to setup MongoDB Atlas Datalake
-   :image: /images/social/twitter/Twitter-docs.png
+   :image: /images/social/twitter/twitter-datalake.png
    :image-alt: MongoDB Data Lake
 
    Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
@@ -21,7 +21,7 @@
    :url: http://developer.mongodb.com/how-to/atlas-data-lake-setup
    :type: article
    :title: Learn how to setup MongoDB Atlas Datalake
-   :image: /images/social/open-graph/og-docs.png
+   :image: /images/social/open-graph/og-datalake.png
 
    Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
 

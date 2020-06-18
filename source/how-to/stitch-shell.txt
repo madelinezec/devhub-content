@@ -49,7 +49,7 @@
 
 .. products::
 
-   * Stitch
+   * Realm
    * Atlas
 
 .. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
@@ -63,6 +63,8 @@ Working with MongoDB Stitch Through the mongo Shell - MongoDB Wire Protocol Supp
 ===================================================================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    The `Stitch SDK <https://docs.mongodb.com/stitch/client-sdks/>`__ is the
    best way to access `MongoDB Stitch <https://docs.mongodb.com/stitch/>`__

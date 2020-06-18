@@ -38,7 +38,7 @@
 
 .. products::
 
-   * Stitch
+   * Realm
 
 .. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
@@ -47,6 +47,8 @@ Stitch Triggers Get Scheduled
 =============================
 
 .. content::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    Stitch Triggers are powerful tools letting you run functions
    automatically when some change happens in your database or when a

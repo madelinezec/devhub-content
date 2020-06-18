@@ -1,0 +1,185 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to optimize and fine tune your MongoDB performance with hidden indexes. 
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: Optimize and Tune MongoDB Performance with Hidden Indexes
+   :image: /images/social/twitter/Twitter-docs.png
+   :image-alt: Optimize and Tune MongoDB Performance with Hidden Indexes
+
+   Learn how to optimize and fine tune your MongoDB performance with hidden indexes.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
+   :title: Optimize and Tune MongoDB Performance with Hidden Indexes
+   :image: /images/social/open-graph/og-docs.png
+   :type: article
+
+   Learn how to optimize and fine tune your MongoDB performance with hidden indexes.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. atf-image:: /images/atf-images/illustrations/docs.png
+
+.. pubdate:: 2020-06-16
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * MongoDB 4.4
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================================================
+Optimize and Tune MongoDB Performance with Hidden Indexes
+=========================================================
+
+.. introduction::
+
+   MongoDB 4.4 is the biggest release of MongoDB to date and is available in `beta right now <https://www.mongodb.com/blog/post/announcing-mongodb-44--mongodb-cloud>`__. You can try out it out in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ or `download <https://www.mongodb.com/try/download/community>`__ the development release. There is so much `new stuff <https://www.mongodb.com/collateral/mongodb-4.4-guide>`__ to talk about ranging from new features like custom aggregation expressions, improvements to existing functionality like refinable shard keys, and much more.
+
+   In this post, we are going to look at a new feature coming to MongoDB 4.4 that will help you better optimize and fine-tune the performance of your queries as your application evolves called hidden indexes.
+
+   Hidden indexes, as the name implies, allows you to hide an `index <https://docs.mongodb.com/manual/indexes/>`__ from the query planner without removing it, allowing you to assess the impact of not using that specific index. 
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial you'll need:
+
+   * `MongoDB 4.4 <https://www.mongodb.com/cloud/atlas>`__
+
+.. content::
+
+   Hidden Indexes in MongoDB 4.4
+   -----------------------------
+
+   Most database technologies, and MongoDB is no different, rely on indexes to speed up performance and efficiently execute queries. Without an index, MongoDB would have to perform a collection scan, meaning scanning every document in a collection to filter out the ones the query asked for. 
+   
+   With an index, and often times with a correct index, this process is greatly sped up. But choosing the right data to index is an art and a science of its own. If you'd like to learn a bit more about indexing best practices, check out this `blog post <https://www.mongodb.com/blog/post/performance-best-practices-indexing>`__. Building, maintaining, and dropping indexes can be resource-intensive and time-consuming, especially if you're working with a large dataset.
+   
+   `Hidden indexes <https://docs.mongodb.com/master/core/index-hidden/index.html>`__ is a new feature coming to MongoDB 4.4 that allows you to easily measure the impact an index has on your queries without actually deleting it and having to rebuild it if you find that the index is in fact required and improves performance. 
+   
+   The awesome thing about hidden indexes is that besides being hidden from the query planner, meaning they won't be used in the execution of the query, they behave exactly like a normal index would. This means that hidden indexes are still updated and maintained even while hidden (but this also means that a hidden index continues to consume disk space and memory so if you find that hiding an index does not have an impact on performance, consider dropping it), hidden unique indexes still apply the unique constraint to documents, and hidden TTL indexes still continue to expire documents.
+
+   There are some limitations on hidden indexes. The first is that you cannot hide the default ``_id`` index. The second is that you cannot perform a `cursor.hint() <https://docs.mongodb.com/master/reference/method/cursor.hint/#cursor.hint>`__ on a hidden index to force MongoDB to use the hidden index.   
+
+   Creating Hidden Indexes in MongoDB
+   ----------------------------------
+
+   To create a hidden index in MongoDB 4.4 you simply pass a ``hidden`` parameter and set the value to ``true`` within the ``db.collection.createIndex()`` options argument. For a more concrete example, let's assume we have a ``movies`` collection that stores documents on individual films. The documents in this collection may look something like this:
+
+   .. code-block::
+
+      {
+        "_id": ObjectId("573a13b2f29313caabd3ac0d"),
+        "title": "Toy Story 3",
+        "plot": "The toys are mistakenly delivered to a day-care center instead of the attic right before Andy leaves for college, and it's up to Woody to convince the other toys that they weren't abandoned and to return home.",
+        "genres": ["Animation", "Adventure", "Comedy"],
+        "runtime": 103,
+        "metacritic": 92,
+        "rated": "G",
+        "cast": ["Tom Hanks", "Tim Allen", "Joan Cusack", "Ned  Beatty"],
+        "directors": ["Lee Unkrich"],
+        "poster": "https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_SY1000_SX677_AL_.jpg",
+        "year": 2010,
+        "type": "movie"
+      }
+
+   Now let's assume we wanted to create a brand new index on the title of the movie and we wanted it to be hidden by default. To do this, we'd execute the following command:
+
+   .. code-block:: bash
+
+      db.movies.createIndex( { title: 1 }, { hidden: true })
+
+   This command will create a new index that will be hidden by default. This means that if we were to execute a query such as ``db.movies.find({ "title" : "Toy Story 3" })`` the query planner would perform a collection scan. Using `MongoDB Compass <https://www.mongodb.com/products/compass>`__, I'll confirm that that's what happens.
+
+   .. image:: /images/hidden-indexes/compass-collscan.png
+      :alt: MongoDB Compass Collscan
+
+   From the screenshot, we can see that ``collscan`` was used and that the actual query execution time took 8ms. If we navigate to the Indexes tab in MongoDB Compass, we can also confirm that we do have a ``title_1`` index created, that's consuming 315.4kb, and has been used 0 times.   
+   
+   .. image:: /images/hidden-indexes/compass-indexes.png
+      :alt: MongoDB Compass Indexes
+
+   This is the expected behavior as we created our index as hidden from the get-go. Next, we'll learn how to unhide the index we created and see if we get improved performance.
+
+   Unhiding Indexes in MongoDB 4.4
+   -------------------------------
+
+   To measure the impact an index has on our query performance, we'll unhide it. We have a couple of different options on how to accomplish this. We can, of course, use ``db.runCommand()`` in conjunction with ``collMod``, but we also have a number of mongo shell helpers that I think are much easier and less verbose to work with. In this section, we'll use the latter.
+
+   To unhide an index, we can use the ``db.collection.unhideIndex()`` method passing in either the name of the index, or the index keys. Let's unhide our title index using the index keys. To do this we'll execute the following command:
+
+   .. code-block:: bash
+
+      db.movies.unhideIndex({title: 1})   
+   
+   Our response will look like this:
+
+   .. image:: /images/hidden-indexes/unhide-index.png
+      :alt: MongoDB Unhide Index
+
+   If we were to execute our query to find **Toy Story 3** in MongoDB Compass now and view the Explain Plan, we'd see that instead of a ``collscan`` or collection scan our query will now use the ``ixscan`` or index scan, meaning it's going to use the index. We get the same results back, but now our actual query execution time is 0ms. 
+
+   .. image:: /images/hidden-indexes/compass-ixscan.png
+      :alt: MongoDB Compass Ixscan
+
+   Additionally, if we look at our Indexes tab, we'll see that our ``title_1`` index was used one time.
+
+   Working with Existing Indexes in MongoDB 4.4
+   --------------------------------------------
+
+   When you create an index in MongoDB 4.4, by default it will be created with the ``hidden`` property set to false, which can be overwritten to create a hidden index from the get-go as we did in this tutorial. But what about existing indexes? Can you hide and unhide those? You betcha!
+
+   Just like the ``db.collection.unhideIndex()`` helper method, there is a ``db.collection.hideIndex()`` helper method, and it allows you to hide an existing index via its name or index keys. Or you can use the ``db.runCommand()`` in conjunction with ``collMod``. Let's hide our title index, this time using the ``db.runCommand()``.
+
+   .. code-block:: bash
+
+      db.runCommand({
+        collMod : "movies"
+        index: {
+          keyPattern: {title:1},
+          hidden: true
+        }
+      })
+   
+   Executing this command will once again hide our ``title_1`` index from the query planner so when we execute queries and search for movies by their title, MongoDB will perform the much slower ``collscan`` or collection scan.
+
+   .. image:: /images/hidden-indexes/hide-runcommand.png
+      :alt: MongoDB Hide Index
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   Hidden indexes in MongoDB 4.4 make it faster and more efficient for you to tune performance as your application evolves. Getting indexes right is one-half art, one-half science, and with hidden indexes you can make better and more informed decisions much faster. 
+
+   Regardless of whether you use the hidden indexes feature or not, please be sure to create and use indexes in your collections as they will have a significant impact on your query performance. Check out the free `M201 <https://university.mongodb.com/courses/M201/about>`__ MongoDB University course to learn more about MongoDB performance and indexes.
+
+   .. include:: /includes/callouts/safe-harbor.rst

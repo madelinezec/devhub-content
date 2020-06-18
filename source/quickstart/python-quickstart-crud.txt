@@ -1,0 +1,550 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to perform CRUD operations using Python for MongoDB databases.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @judy2k
+   :title: QuickStart: CRUD Operations in Python
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Learn how to do MongoDB CRUD operations in #python.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/python-quickstart-crud
+   :title: QuickStart: Basic Operations in Python
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
+
+   Learn how to do MongoDB CRUD operations in Python.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-05-20
+
+.. type:: quickstart
+
+.. level:: beginner
+   
+.. languages::
+
+   * Python
+
+.. atf-image:: /images/atf-images/quickstart/python.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==================================
+Basic MongoDB Operations in Python
+==================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-python.png
+      :scale: 30%
+      :alt: Python badge
+      :align: right
+
+   Like Python? Want to get started with MongoDB? Welcome to this quick
+   start guide! I'll show you how to set up an Atlas database with some
+   sample data to explore. Then you'll create some data and learn how to
+   read, update and delete it.
+
+.. prerequisites::
+
+   Prerequisites
+   =============
+
+   You'll need the following installed on your computer to follow along
+   with this tutorial:
+
+   -  An up-to-date version of Python 3. I wrote the code in this tutorial
+      in Python 3.8, but it should run fine in version 3.6+.
+   -  A code editor of your choice. I recommend either
+      `PyCharm <https://www.jetbrains.com/pycharm/>`__ or the free `VS
+      Code <https://code.visualstudio.com/>`__ with the official `Python
+      extension <https://marketplace.visualstudio.com/items?itemName=ms-python.python>`__.
+
+.. content::
+
+   Start a MongoDB cluster on Atlas
+   ================================
+
+   Now you've got your local environment set up, it's time to create a
+   MongoDB database to work with, and to load in some sample data you can
+   explore and modify.
+
+   You could create a database on your development machine, but it's easier
+   to get started on the Atlas hosted service without having to learn how
+   to configure a MongoDB cluster.
+
+   .. blockquote:: 
+
+      Get started with an M0 cluster on
+      `Atlas <https://bit.ly/mdb-atlas-python>`__ today. It's free forever,
+      and it's the easiest way to try out the steps in this blog series.
+
+   You'll need to create a new cluster and load it with sample data. My
+   awesome colleague `Maxime
+   Beugnet <https://www.linkedin.com/in/maximebeugnet>`__ has created a
+   `video
+   tutorial <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__
+   to help you out.
+
+   If you don't want to watch the video, the steps are:
+
+   -  Click "Get started free".
+   -  Enter your details and accept the Terms of Service.
+   -  Create a *Starter* cluster.
+
+      -  Select the same cloud provider you're used to, or just leave it
+         as-is. Pick a region that makes sense for you.
+      -  You can change the name of the cluster if you like. I've called
+         mine "PythonQuickstart".
+
+   It will take a couple of minutes for your cluster to be provisioned, so
+   while you're waiting you can move on to the next step.
+
+   Set up your environment
+   =======================
+
+   You should set up a Python virtualenv which will contain the libraries
+   you install during this quick start. There are several different ways to
+   set up virtualenvs, but to simplify things we'll use the one included
+   with Python. First, create a directory to hold your code and your
+   virtualenv. Open your terminal, ``cd`` to that directory and then run
+   the following command:
+
+   .. code:: bash
+
+      # Note:
+      # On Debian & Ubuntu systems you'll first need to install virtualenv with:
+      # sudo apt install python3-venv
+      python3 -m venv venv
+
+   The command above will create a virtualenv in a directory called
+   ``venv``. To activate the new virtualenv, run one of the following
+   commands, according to your system:
+
+   .. code:: bash
+
+      # Run the following on OSX & Linux:
+      source venv/bin/activate
+
+      # Run the following on Windows:
+      .\\venv\\Scripts\\activate
+
+   To write Python programs that connect to your MongoDB database (don't
+   worry - you'll set that up in a moment!) you'll need to install a Python
+   driver - a library which knows how to talk to MongoDB. In Python, you
+   have two choices! The recommended driver is
+   `PyMongo <https://docs.mongodb.com/drivers/pymongo>`__ - that's what
+   I'll cover in this quick start. If you want to write *asyncio* programs
+   with MongoDB, however, you'll need to use a library called
+   `Motor <https://docs.mongodb.com/drivers/motor>`__, which is also fully
+   supported by MongoDB.
+
+   To install PyMongo, run the following command:
+
+   .. code:: bash
+
+      python -m pip install pymongo[srv]==3.10.1
+
+   For this tutorial we'll also make use of a library called
+   ``python-dotenv`` to load configuration, so run the command below as
+   well to install that:
+
+   .. code:: bash
+
+      python -m pip install python-dotenv==0.13.0
+
+   Set up your MongoDB instance
+   ============================
+
+   Hopefully, your MongoDB cluster should have finished starting up now and
+   has probably been running for a few minutes.
+
+   The following instructions were correct at the time of writing, but may
+   change, as we're always improving the Atlas user interface:
+
+   In the Atlas web interface, you should see a green button at the
+   bottom-left of the screen, saying "Get Started". If you click on it,
+   it'll bring up a checklist of steps for getting your database set up.
+   Click on each of the items in the list (including the optional "Load
+   Sample Data" item), and it'll help you through the steps to get set up.
+
+   Create a user
+   -------------
+
+   Following the "Get Started" steps, create a user with "Read and write
+   access to any database". You can give it a username and password of your
+   choice - take a copy of them, you'll need them in a minute. Use the
+   "autogenerate secure password" button to ensure you have a long random
+   password which is also safe to paste into your connection string later.
+
+   Whitelist an IP address
+   -----------------------
+
+   When deploying an app with sensitive data, you should only whitelist the
+   IP address of the servers which need to connect to your database. To
+   whitelist the IP address of your development machine, select "Network
+   Access", click the "Add IP Address" button and then click "Add Current
+   IP Address" and hit "Confirm".
+
+   Connect to your database
+   ========================
+
+   The last step of the "Get Started" checklist is "Connect to your
+   Cluster". Select "Connect your application" and select "Python" with a
+   version of "3.6 or later".
+
+   Ensure Step 2 has "Connection String only" highlighted, and press the
+   "Copy" button to copy the URL to your pasteboard. Save it to the same
+   place you stored your username and password. Note that the URL has
+   ``<password>`` as a placeholder for your password. You should paste your
+   password in here, replacing the whole placeholder including the '<' and
+   '>' characters.
+
+   Now it's time to actually write some Python code to connect to your
+   MongoDB database!
+
+   In your code editor, create a Python file in your project directory
+   called ``basic_operations.py``. Enter in the following code:
+
+   .. code:: python
+
+      from dotenv import load_dotenv
+      from pymongo import MongoClient
+
+      # Load config from a .env file:
+      load_dotenv()
+      MONGODB_URI = os.environ['MONGODB_URI']
+
+      # Connect to your MongoDB cluster:
+      client = MongoClient(MONGODB_URI)
+
+      # List all the databases in the cluster:
+      for db_info in client.list_database_names():
+         print(db_info)
+
+   In order to run this, you'll need to set the MONGODB_URI environment
+   variable to the connection string you obtained above. You can do this two ways.
+   You can:
+
+   * Run an ``export`` (or ``set`` on Windows) command to set the environment variable each time you set up your session.
+   * Save the URI in a configuration file which should *never* be added to revision control.
+
+   I'm going to show you how to take the second approach.
+   Remember it's very important not to accidentally publish your credentials to git or anywhere else,
+   so add ``.env`` to your ``.gitignore`` file if you're using git.
+   The ``python-dotenv`` library loads configuration from a file in the current directory called ``.env``.
+   Create a ``.env`` file in the same directory as your code and paste in the configuration below,
+   replacing the placeholder URI with your own MongoDB URI.
+
+   .. code:: none
+
+      # Unix:
+      export MONGODB_URI='mongodb+srv://yourusername:yourpasswordgoeshere@pythonquickstart-123ab.mongodb.net/test?retryWrites=true&w=majority'
+
+   The URI contains your username and password (so keep it safe!) and the hostname of a DNS server which will provide information to PyMongo about your cluster.
+   Once PyMongo has retrieved the details of your cluster, it will connect to the primary MongoDB server and start making queries.
+
+   Now if you run the Python script you should see output similar to the
+   following:
+
+   .. code:: bash
+
+      $ python basic_operations.py
+      sample_airbnb
+      sample_analytics
+      sample_geospatial
+      sample_mflix
+      sample_supplies
+      sample_training
+      sample_weatherdata
+      twitter_analytics
+      admin
+      local
+
+   You just connected your Python program to MongoDB and listed the
+   databases in your cluster! If you don't see this list then you may not
+   have successfully loaded sample data into your cluster; You may want to
+   go back a couple of steps until running this command shows the list
+   above.
+
+   In the code above, you used the ``list_database_names`` method to list
+   the database names in the cluster. The ``MongoClient`` instance can also
+   be used as a mapping (like a ``dict``) to get a reference to a specific
+   database. Here's some code to have a look at the collections inside the
+   ``sample_mflix`` database. Paste it at the end of your Python file:
+
+   .. code:: python
+
+      # Get a reference to the 'sample_mflix' database:
+      db = client['sample_mflix']
+
+      # List all the collections in 'sample_mflix':
+      collections = db.list_collection_names()
+      for collection in collections:
+         print(collection)
+
+   Running this piece of code should output the following:
+
+   .. code:: bash
+
+      $ python basic_operations.py
+      movies
+      sessions
+      comments
+      users
+      theaters
+
+   A database also behaves as a mapping of collections inside that
+   database. A collection is a bucket of documents, in the same way as a
+   table contains rows in a traditional relational database. The following
+   code looks up a single document in the ``movies`` collection:
+
+   .. code:: python
+
+      # Import the `pprint` function to print nested data:
+      from pprint import pprint
+
+      # Get a reference to the 'movies' collection:
+      movies = db['movies']
+
+      # Get the document with the title 'Blacksmith Scene':
+      pprint(movies.find_one({'title': 'Blacksmith Scene'}))
+
+   When you run the code above it will look up a document called
+   "Blacksmith Scene" in the 'movies' collection. It looks a bit like this:
+
+   .. code:: python
+
+      {'_id': ObjectId('573a1390f29313caabcd4135'),
+      'awards': {'nominations': 0, 'text': '1 win.', 'wins': 1},
+      'cast': ['Charles Kayser', 'John Ott'],
+      'countries': ['USA'],
+      'directors': ['William K.L. Dickson'],
+      'fullplot': 'A stationary camera looks at a large anvil with a blacksmith '
+                  'behind it and one on either side. The smith in the middle draws '
+                  'a heated metal rod from the fire, places it on the anvil, and '
+                  'all three begin a rhythmic hammering. After several blows, the '
+                  'metal goes back in the fire. One smith pulls out a bottle of '
+                  'beer, and they each take a swig. Then, out comes the glowing '
+                  'metal and the hammering resumes.',
+      'genres': ['Short'],
+      'imdb': {'id': 5, 'rating': 6.2, 'votes': 1189},
+      'lastupdated': '2015-08-26 00:03:50.133000000',
+      'num_mflix_comments': 1,
+      'plot': 'Three men hammer on an anvil and pass a bottle of beer around.',
+      'rated': 'UNRATED',
+      'released': datetime.datetime(1893, 5, 9, 0, 0),
+      'runtime': 1,
+      'title': 'Blacksmith Scene',
+      'tomatoes': {'lastUpdated': datetime.datetime(2015, 6, 28, 18, 34, 9),
+                  'viewer': {'meter': 32, 'numReviews': 184, 'rating': 3.0}},
+      'type': 'movie',
+      'year': 1893}
+
+   It's a one-minute movie filmed in 1893 - it's like a YouTube video from
+   nearly 130 years ago! The data above is a single document. It stores
+   data in fields that can be accessed by name, and you should be able to
+   see that the ``title`` field contains the same value as we looked up in
+   our call to ``find_one`` in the code above. The structure of every
+   document in a collection can be different from each other, but it's
+   usually recommended to follow the same or similar structure for all the
+   documents in a single collection.
+
+   A quick diversion about BSON
+   ----------------------------
+
+   MongoDB is often described as a JSON database, but there's evidence in
+   the document above that it *doesn't* store JSON. A MongoDB document
+   consists of data stored as all the types that JSON can store, including
+   booleans, integers, floats, strings, arrays, and objects (we call them
+   subdocuments). However, if you look at the ``_id`` and ``released``
+   fields, these are types that JSON cannot store. In fact, MongoDB stores
+   data in a binary format called BSON, which also includes the
+   ``ObjectId`` type as well as native types for decimal numbers, binary
+   data, and timestamps (which are converted by PyMongo to Python's native
+   ``datetime`` type.)
+
+   Create a document in a collection
+   =================================
+
+   The ``movies`` collection contains a lot of data - 23539 documents, but
+   it only contains movies up until 2015. One of my favourite movies, the
+   Oscar-winning "Parasite", was released in 2019, so it's not in the
+   database! You can fix this glaring omission with the code below:
+
+   .. code:: python
+
+      # Insert a document for the movie 'Parasite':
+      insert_result = movies.insert_one({
+            "title": "Parasite",
+            "year": 2020,
+            "plot": "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. "
+            "But their easy life gets complicated when their deception is threatened with exposure.",
+            "released": datetime(2020, 2, 7, 0, 0, 0),
+         })
+
+      # Save the inserted_id of the document you just created:
+      parasite_id = insert_result.inserted_id
+      print("_id of inserted document: {parasite_id}".format(parasite_id=parasite_id))
+
+   If you're inserting more than one document in one go, it can be much
+   more efficient to use the ``insert_many`` method, which takes an array
+   of documents to be inserted. (If you're just loading documents into your
+   database from stored JSON files, then you should take a look at
+   `mongoimport <https://docs.mongodb.com/manual/reference/program/mongoimport/>`__
+
+   Read documents from a collection
+   ================================
+
+   Running the code above will insert the document into the collection and
+   print out its ID, which is useful, but not much to look at. You can
+   retrieve the document to prove that it was inserted, with the following
+   code:
+
+   .. code:: python
+
+      import bson # <- Put this line near the start of the file if you prefer.
+
+      # Look up the document you just created in the collection:
+      print(movies.find_one({'_id': bson.ObjectId(parasite_id)}))
+
+   The code above will look up a single document that matches the query
+   (in this case it's looking up a specific ``_id``). If you want to look
+   up *all* the documents that match a query, you should use the ``find``
+   method, which returns a ``Cursor``. A Cursor will load data in batches,
+   so if you attempt to query all the data in your collection, it will
+   start to yield documents immediately - it doesn't load the whole
+   Collection into memory on your computer! You can loop through the
+   documents returned in a Cursor with a ``for`` loop. The following query
+   should print one or more documents - if you've run your script a few
+   times you will have inserted one document for this movie each time you
+   ran your script! (Don't worry about cleaning them up - I'll show you how
+   to do that in a moment.)
+
+   .. code:: python
+
+      # Look up the documents you've created in the collection:
+      for doc in movies.find({"title": "Parasite"}):
+         pprint(doc)
+
+   Many methods in PyMongo, including the find methods, expect a MongoDB
+   query as input. MongoDB queries, unlike SQL, are provided as data
+   structures, not as a string. The simplest kind of matches look like the
+   ones above: ``{ 'key': 'value' }`` where documents containing the field
+   specified by the ``key`` are returned if the provided ``value`` is the
+   same as that document's value for the ``key``. MongoDB's `query
+   language <https://docs.mongodb.com/manual/reference/operator/query/>`__
+   is rich and powerful, providing the ability to match on different
+   criteria across multiple fields. The query below matches all movies
+   produced before 1920 with 'Romance' as one of the genre values:
+
+   .. code:: python
+
+      {
+         'year': {
+            '$lt': 1920
+         }, 
+         'genres': 'Romance'
+      }
+
+   Even more complex queries and aggregations are possible with MongoDB
+   Aggregations, accessed with PyMongo's ``aggregate`` method - but that's
+   a topic for a later quick start post.
+
+   Update documents in a collection
+   ================================
+
+   I made a terrible mistake! The document you've been inserting for
+   Parasite has an error. Although Parasite was released in 2020 it's
+   actually a *2019* movie. Fortunately for us, MongoDB allows you to
+   update documents in the collection. In fact, the ability to atomically
+   update parts of a document without having to update a whole new document
+   is a key feature of MongoDB!
+
+   Here's some code which will look up the document you've inserted and
+   update the ``year`` field to 2019:
+
+   .. code:: python
+
+      # Update the document with the correct year:
+      update_result = movies.update_one({ '_id': parasite_id }, {
+         '$set': {"year": 2019}
+      })
+
+      # Print out the updated record to make sure it's correct:
+      pprint(movies.find_one({'_id': ObjectId(parasite_id)}))
+
+   As mentioned above, you've probably inserted *many* documents for this
+   movie now, so it may be more appropriate to look them all up and change
+   their ``year`` value in one go. The code for that looks like this:
+
+   .. code:: python
+
+      # Update *all* the Parasite movie docs to the correct year:
+      update_result = movies.update_many({"title": "Parasite"}, {"$set": {"year": 2019}})
+
+   Delete documents from the collection
+   ====================================
+
+   Now it's time to clean up after yourself! The following code will delete
+   all the matching documents from the collection - using the same broad
+   query as before - all documents with a ``title`` of "Parasite":
+
+   .. code:: python
+
+      movies.delete_many(
+         {"title": "Parasite",}
+      )
+
+   Once again, PyMongo has an equivalent ``delete_one`` method which will
+   only delete the first matching document the database finds, instead of
+   deleting *all* matching documents.
+
+   Further reading
+   ===============
+
+   .. blockquote::
+
+      Did you enjoy this quick start guide? Want to learn more? We have a great
+      `MongoDB University course <https://university.mongodb.com/courses/M220P/about>`__
+      I think you'll love!
+
+      If that's not for you, we have `lots of other courses
+      <https://university.mongodb.com/courses/catalog>`__ covering all aspects of
+      hosting and developing with MongoDB.
+
+
+   This quick start has only covered a small part of PyMongo and MongoDB's
+   functionality, although I'll be covering more in later Python quick
+   starts! Fortunately, in the meantime the documentation for MongoDB and
+   using Python with MongoDB is really good. I recommend bookmarking the
+   following for your reading pleasure:
+
+   -  `PyMongo Documentation <https://pymongo.readthedocs.io/en/stable/>`__
+      provides thorough documentation describing how to use PyMongo with
+      your MongoDB cluster, including comprehensive `reference
+      documentation <https://pymongo.readthedocs.io/en/stable/api/index.html>`__
+      on the ``Collection`` class that has been used extensively in this
+      quick start.
+   -  `MongoDB Query
+      Document <https://docs.mongodb.com/manual/tutorial/query-documents/>`__
+      documentation details the full power available for querying MongoDB
+      collections.

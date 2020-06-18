@@ -1,0 +1,200 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-05-28
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=============================
+Unnecessary Indexes
+=============================
+ 
+.. introduction:: 
+
+   So far in this MongoDB Schema Design Anti-Patterns series, we've discussed avoiding  `massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__ as well as a massive number of `collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__.
+
+   Today, let's talk about indexes.  Indexes are great (seriously!), but it's easy to get carried away and make indexes that you'll never actually use.  Let's examine why an index may be unnecessary and what the consequences of keeping it around are.
+
+
+.. content::
+
+   Unnecessary Indexes
+   -------------------
+
+   Before we go any further, we want to emphasize that `indexes <https://docs.mongodb.com/manual/indexes/>`__ are good.  Indexes allow MongoDB to efficiently query data.  If a query does not have an index to support it, MongoDB performs a collection scan, meaning that it scans *every* document in a collection.  Collection scans can be very slow.  If you frequently execute a query, make sure you have an index to support it.
+
+   Now that we have an understanding that indexes are good, you might be wondering, "Why are unnecessary indexes an anti-pattern?  Why not create an index on every field just in case I'll need it in the future?"
+
+   We've discovered three big reasons why you should remove unnecessary indexes:
+
+   #. **Indexes take up space**.  Each index is at least 8 kB and grows with the number of documents associated with it.  Thousands of indexes can begin to drain resources.
+   #. **Indexes can impact the storage engine's performance**.  As we discussed in the `previous post in this series about the Massive Number of Collections Anti-Pattern <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__, `the WiredTiger storage engine <https://docs.mongodb.com/manual/core/wiredtiger/>`__ (MongoDB's default storage engine) stores a file for each collection and for each index.  WiredTiger will open all files upon startup, so performance will decrease when an excessive number of collections and indexes exist. 
+   #. **Indexes can impact write performance**.  Whenever a document is created, updated, or deleted, any index associated with that document must also be updated.  These index updates negatively impact write performance.
+
+   In general, we recommend limiting your collection to a maximum of 50 indexes.
+
+   To avoid the anti-pattern of unnecessary indexes, examine your database and identify which indexes are truly necessary.  Unnecessary indexes typically fall into one of two categories:
+
+   #. The index is rarely used or not at all.
+   #. The index is redundant because another `compound index <https://docs.mongodb.com/manual/core/index-compound/>`__ covers it.
+   
+   Example
+   -------
+
+   Consider Leslie from the incredible TV show Parks and Recreation.  Leslie often looks to other powerful women for inspiration.
+
+   Let's say Leslie wants to inspire others, so she creates a website about her favorite inspirational women.  The website allows users to search by full name, last name, or hobby.
+
+   Leslie chooses to use `MongoDB Atlas <https://cloud.mongodb.com/>`__ to create her database.  She creates a collection named ``InspirationalWomen``.  Inside of that collection, she creates a document for each inspirational woman.  Below is a document she created for Sally Ride.
+
+   .. code-block:: javascript
+
+      // InspirationalWomen collection
+
+      {
+         "_id": {
+            "$oid": "5ec81cc5b3443e0e72314946"
+         },
+         "first_name": "Sally",
+         "last_name": "Ride",
+         "birthday": 1951-05-26T00:00:00.000Z,
+         "occupation": "Astronaut",
+         "quote": "I would like to be remembered as someone who was not afraid to do what 
+                   she wanted to do, and as someone who took risks along the way in order 
+                   to achieve her goals.",
+         "hobbies": [
+            "Tennis",
+            "Writing children's books"
+         ]
+      }
+
+   Leslie eats several sugar-filled Nutriyum bars, and, riding her sugar high, creates an index for every field in her collection.  
+
+   .. figure:: /images/article/anti-patterns/unnecessary-indexes/nutriyum.gif
+      :alt: There's a secret ingredient in these Nutriyum bars that make me feel so good.
+      :align: center
+
+   She also creates a compound index on the last_name and first_name fields, so that users can search by full name.  Leslie now has one collection with eight indexes:
+
+   #. ``_id`` is indexed by default (see the `MongoDB Docs <https://docs.mongodb.com/manual/indexes/#default-id-index>`__ for more details)
+   #. ``{ first_name: 1 }``
+   #. ``{ last_name: 1 }``
+   #. ``{ birthday: 1 }``
+   #. ``{ occupation: 1 }``
+   #. ``{ quote: 1 }``
+   #. ``{ hobbies: 1 }``
+   #. ``{ last_name: 1, first_name: 1}``
+
+   Leslie launches her website and is excited to be helping others find inspiration.  Users are discovering new role models as they search by full name, last name, and hobby.
+   
+   Removing Unnecessary Indexes
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Leslie decides to fine-tune her database and wonders if all of those indexes she created are really necessary.  
+
+   She opens the Atlas Data Explorer and navigates to the Indexes pane.  She can see that the only two indexes that are being used are the compound index named ``last_name_1_first_name_1`` and the ``hobbies_1`` index.  She realizes that this makes sense.  
+
+   Her queries for inspirational women by full name are covered by the ``last_name_1_first_name_1`` index.  Additionally, her query for inspirational women by last name is covered by the same ``last_name_1_first_name_1`` compound index since the index has a ``last_name`` `prefix <https://docs.mongodb.com/manual/core/index-compound/#prefixes>`__.  Her queries for inspirational women by hobby are covered by the ``hobbies_1`` index.  Since those are the only ways that users can query her data, the other indexes are unnecessary.  
+
+   .. figure:: /images/article/anti-patterns/unnecessary-indexes/indexes-data-explorer-cropped.png
+      :alt: Screenshot of the Atlas Data Explorer's Indexes pane 
+      :align: center
+   
+      The Atlas Data Explorer displays index usage and allows users to delete indexes.
+
+   In the Data Explorer, Leslie has the option of dropping all of the other unnecessary indexes.  Since MongoDB requires an index on the ``_id`` field, she cannot drop this index.
+
+   In addition to using the Data Explorer, Leslie also has the option of using `MongoDB Compass <https://www.mongodb.com/products/compass>`__ to check for unnecessary indexes.  When she navigates to the Indexes pane for her collection, she can once again see that the ``last_name_1_first_name_1`` and the ``hobbies_1`` indexes are the only indexes being used regularly.  Just as she could in the Atlas Data Explorer, Leslie has the option of dropping each of the indexes except for ``_id``.
+
+   .. figure:: /images/article/anti-patterns/unnecessary-indexes/indexes-compass.png
+      :alt: Screenshot of Compass's Indexes pane 
+      :align: center
+   
+      Compass displays index usage and allows users to delete indexes.
+
+   Leslie decides to drop all of the unnecessary indexes.  After doing so, her collection now has the following indexes:
+
+   #. ``_id`` is indexed by default
+   #. ``{ hobbies: 1 }``
+   #. ``{ last_name: 1, first_name: 1}``
+
+   Summary
+   -------
+
+   Creating indexes that support your queries is good.  Creating unnecessary indexes is generally bad.  
+
+   Unnecessary indexes reduce performance and take up space.  An index is considered to be unnecessary if (1) it is not frequently used by a query or (2) it is `redundant because another compound index covers it <https://docs.mongodb.com/manual/core/index-compound/#prefixes>`__.
+
+   You can use the Atlas Data Explorer or MongoDB Compass to help you discover how frequently your indexes are being used.  When you discover an index is unnecessary, remove it.
+
+   Be on the lookout for the next post in this anti-patterns series!
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Remove Unnecessary Indexes <https://docs.atlas.mongodb.com/schema-advisor/too-many-indexes/#indexes-anti-pattern>`__
+   - `MongoDB Docs: Indexes <https://docs.mongodb.com/manual/indexes/>`__
+   - `MongoDB Docs: Compound Indexes — Prefixes <https://docs.mongodb.com/manual/core/index-compound/#prefixes>`__
+   - `MongoDB Docs:  Indexing Strategies <https://docs.mongodb.com/manual/applications/indexes/>`__
+   - `MongoDB Docs: Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
+   - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `MongoDB University M201: MongoDB Performance <https://university.mongodb.com/courses/M201/about>`__
+   - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+
+

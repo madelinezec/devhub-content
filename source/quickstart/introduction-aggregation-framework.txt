@@ -1,0 +1,260 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn about MongoDB's aggregation framework and aggregation operators.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kenwalger
+   :title: Introduction to the MongoDB Aggregation Framework
+   :image: /images/agg-framework/agg-framework-pipeline.gif
+   :image-alt: MongoDB Aggregation Framework Pipeline
+
+   Learn about MongoDB's aggregation framework and aggregation operators.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/introduction-aggregation-framework
+   :title: Introduction to the MongoDB Aggregation Framework
+   :image: /images/agg-framework/agg-framework-pipeline.gif
+   :type: article
+
+   Learn about MongoDB's aggregation framework and aggregation operators.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/alger-ken.rst
+
+.. pubdate:: 2020-05-29
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. tags::
+
+   * Aggregation Framework
+
+.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=================================================
+Introduction to the MongoDB Aggregation Framework
+=================================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-aggregation-framework.png
+      :alt: BSON Quickstart badge
+      :scale: 30%
+      :align: right
+
+   One of the difficulties when storing any data is knowing how it will be accessed in the future. What reports need to
+   be run on it? What information is "hidden" in there that will allow for meaningful insights for your business? After
+   spending the time to `design your data schema <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   in an appropriate fashion for your application, one needs to be able to retrieve it. In MongoDB, there are two basic
+   ways that data retrieval can be done: through queries with the `find() <https://docs.mongodb.com/manual/reference/method/db.collection.find/>`__
+   command, and through analytics using the aggregation framework and the `aggregate() <https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/>`__ command.
+
+   ``find()`` allows for the querying of data based on a condition. One can filter results, do basic document transformations,
+   sort the documents, limit the document result set, etc. The ``aggregate()`` command opens the door to a whole new world
+   with the `aggregation framework <https://docs.mongodb.com/manual/aggregation/>`__. In this series of posts, I'll take
+   a look at some of the reasons why using the aggregation framework is so powerful, and how to harness that power.
+
+.. content::
+
+   Why Aggregate with MongoDB?
+   ---------------------------
+
+   A frequently asked question is why do aggregation inside MongoDB at all? From the MongoDB documentation:
+
+   .. blockquote::
+
+      Aggregation operations process data records and return computed results. Aggregation operations group values from
+      multiple documents together, and can perform a variety of operations on the grouped data to return a single result.
+
+   By using the built-in aggregation operators available in MongoDB, we are able to do analytics on a cluster of servers
+   we're already using without having to move the data to another platform, like Apache `Spark <https://spark.apache.org/>`__
+   or `Hadoop <https://hadoop.apache.org/>`__. While those, and similar, platforms are fast, the data transfer from
+   MongoDB to them can be slow and potentially expensive. By using the aggregation framework the work is done inside
+   MongoDB and then the final results can be sent to the application typically resulting in a smaller amount of data
+   being moved around. It also allows for the querying of the **LIVE** version of the data and not an older copy of data
+   from a batch.
+
+   Aggregation in MongoDB allows for the transforming of data and results in a more powerful fashion than from using the
+   ``find()`` command. Through the use of multiple stages and expressions, you are able to build a "pipeline" of
+   operations on your data to perform analytic operations. What do I mean by a "pipeline"? The aggregation framework is
+   conceptually similar to the ``*nix`` command line pipe, ``|``. In the ``*nix`` command line pipeline, a pipe transfers the
+   standard output to some other destination. The output of one command is sent to another command for further processing.
+
+   .. image:: /images/agg-framework/nix-pipeline.gif
+      :alt: *nix pipeline example
+      :align: center
+
+   In the aggregation framework, we think of stages instead of commands. And the stage "output" is documents. Documents
+   go into a stage, some work is done, and documents come out. From there they can move onto another stage or provide
+   output.
+
+   Aggregation Stages
+   --------------------------
+
+   At the time of this writing, there are twenty-eight different aggregation stages available. These different stages provide
+   the ability to do a wide variety of tasks. For example, we can build an aggregation pipeline that *matches* a set of
+   documents based on a set of criteria, *groups* those documents together, *sorts* them, then returns that result set
+   to us.
+
+   .. image:: /images/agg-framework/agg-framework-pipeline.gif
+      :alt: MongoDB Aggreggation Pipeline example
+      :align: center
+
+   Or perhaps our pipeline is more complicated and the document flows through the ``$match``, ``$unwind``, ``$group``,
+   ``$sort``, ``$limit``, ``$project``, and finally a ``$skip`` stage.
+
+   This can be confusing and some of these concepts are worth repeating. Therefore, let's break this down a bit further:
+
+   * A pipeline starts with documents
+   * These documents come from a collection, a view, or a specially designed stage
+   * In each stage, documents enter, work is done, and documents exit
+   * The stages themselves are defined using the document syntax
+
+   Let's take a look at an example pipeline. Our documents are from the `Sample Data <https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/>`__ that's available in MongoDB Atlas
+   and the ``routes`` collection in the ``sample_training`` database. Here's a sample document:
+
+   .. code-block:: auto
+
+      {
+      "_id":{
+          "$oid":"56e9b39b732b6122f877fa31"
+      },
+      "airline":{
+         "id":{
+             "$numberInt":"410"
+         },
+         "name":"Aerocondor"
+         ,"alias":"2B"
+         ,"iata":"ARD"
+      },
+      "src_airport":"CEK",
+      "dst_airport":"KZN",
+      "Codeshare":"",
+      "stops":{
+          "$numberInt":"0"
+      },
+      "airplane":"CR2"
+      }
+
+   .. include:: /includes/callouts/atlas-signup.rst
+
+   For this example query, let's find the top three airlines that offer the most direct flights out of the airport in
+   Portland, Oregon, USA (PDX). To start with, we'll do a ``$match`` stage so that we can concentrate on doing work only
+   on those documents that meet a base of conditions. In this case, we'll look for documents with a ``src_airport``, or
+   source airport, of PDX and that are direct flights, i.e. that have zero stops.
+
+   .. code-block:: auto
+
+      {
+        $match: {
+          "src_airport": "PDX",
+          "stops": 0
+        }
+      }
+
+   That reduces the number of documents in our pipeline down from 66,985 to 113. Next, we'll group by the airline name
+   and count the number of flights:
+
+   .. code-block:: auto
+
+      {
+          $group: {
+              _id: {
+                  "airline name": "$airline.name"
+              },
+              count: {
+                  $sum: 1
+              }
+          }
+      }
+
+   With the addition of the ``$group`` stage, we're down to 16 documents. Let's sort those with a ``$sort`` stage and
+   sort in descending order:
+
+   .. code-block:: auto
+
+      {
+          $sort: {
+              count: -1
+      }
+
+
+   Then we can add a ``$limit`` stage to just have the top three airlines that are servicing Portland, Oregon:
+
+   .. code-block:: auto
+
+      {
+         $limit: 3
+      }
+
+   After putting the documents in the ``sample_training.routes`` collection through this aggregation pipeline, our
+   results show us that the top three airlines offering non-stop flights departing from PDX are Alaska, American, and
+   United Airlines with 39, 17, and 13 flights, respectively.
+
+   How does this look in code? It's fairly straightforward with using the ``db.aggregate()`` function. For example, in
+   Python you would do something like:
+
+   .. code-block:: python
+
+      from pymongo import MongoClient
+
+      # Requires the PyMongo package.
+      # The dnspython package is also required to use a mongodb+src URI string
+      # https://api.mongodb.com/python/current
+
+      client = MongoClient('YOUR-ATLAS-CONNECTION-STRING')
+      result = client['sample_training']['routes'].aggregate([
+          {
+              '$match': {
+                  'src_airport': 'PDX',
+                  'stops': 0
+              }
+          }, {
+              '$group': {
+                  '_id': {
+                      'airline name': '$airline.name'
+                  },
+                  'count': {
+                      '$sum': 1
+                  }
+              }
+          }, {
+              '$sort': {
+                  'count': -1
+              }
+          }, {
+              '$limit': 3
+          }
+      ])
+
+   The aggregation code is pretty similar in other languages as well.
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   The MongoDB aggregation framework is an extremely powerful set of tools. The processing is done on the server itself
+   which results in less data being sent over the network. In the example used here, instead of pulling **all** of the
+   documents into an application and processing them in the application, the aggregation framework allows for only the
+   three documents we wanted from our query to be sent back to the application.
+
+   This was just a brief introduction to some of the operators available. Over the course of this series, I'll take a
+   closer look at some of the most popular aggregation framework operators as well as some interesting, but less used
+   ones. I'll also take a look at performance considerations of using the aggregation framework.

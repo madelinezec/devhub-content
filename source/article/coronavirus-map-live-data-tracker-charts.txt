@@ -51,7 +51,6 @@
 
    * Atlas
    * Charts
-   * Stitch
 
 .. atf-image:: /images/atf-images/illustrations/covid19.png
 

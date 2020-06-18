@@ -43,8 +43,7 @@
 
 .. products::
 
-   * MongoDB
-   * Stitch
+   * Realm
 
 .. atf-image:: /images/atf-images/generic/green.png
 
@@ -57,6 +56,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
 ==========================================================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    `MongoDB Stitch <https://www.mongodb.com/cloud/stitch>`__ can do quite a
    few things, some of which `include

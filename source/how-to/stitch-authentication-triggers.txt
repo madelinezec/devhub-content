@@ -50,7 +50,7 @@
 
 .. products::
 
-   * Stitch
+   * Realm
    * Atlas
 
 .. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
@@ -70,6 +70,8 @@ MongoDB Stitch Authentication Triggers
 ======================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    `MongoDB Stitch <https://docs.mongodb.com/stitch>`__ makes it a breeze
    to use third-party services such as

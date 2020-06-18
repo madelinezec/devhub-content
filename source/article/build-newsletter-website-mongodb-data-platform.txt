@@ -43,8 +43,7 @@
 
 .. products::
 
-   * MongoDB
-   * Stitch
+   * Realm
    * Charts
 
 .. atf-image:: /images/atf-images/generic/purple2.png
@@ -58,6 +57,8 @@ Build a Newsletter Website With the MongoDB Data Platform
 =========================================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/realm-release.rst
 
    "This'll be simple", I thought.
 

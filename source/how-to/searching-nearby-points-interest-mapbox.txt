@@ -1,0 +1,358 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @nraboy
+   :title: Searching for Nearby Points of Interest with MongoDB and Mapbox
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/searching-nearby-points-interest-mapbox
+   :type: article
+   :title: Searching for Nearby Points of Interest with MongoDB and Mapbox
+   :image: /images/social/open-graph/og-green-pattern.png
+
+   Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-06-11
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Realm
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===============================================================
+Searching for Nearby Points of Interest with MongoDB and Mapbox
+===============================================================
+
+.. introduction::
+
+    When it comes to location data, MongoDB's ability to work with GeoJSON
+    through geospatial queries is often under-appreciated. Being able to
+    query for intersecting or nearby coordinates while maintaining
+    performance is functionality a lot of organizations are looking for.
+
+    Take the example of maintaining a list of business locations or even a
+    fleet of vehicles. Knowing where these locations are, relative to a
+    particular position isn't an easy task when doing it manually.
+
+    In this tutorial we're going to explore the ``$near`` operator within a
+    MongoDB Realm application to find stored points of interest within a
+    particular proximity to a position. These points of interest will be
+    rendered on a map using the Mapbox service.
+
+    To get a better idea of what we're going to accomplish, take the
+    following animated image for example:
+
+    .. image:: /images/how-to/mapbox-mongodb-points-of-interest.gif
+
+    We're going to pre-load our MongoDB database with a few points of
+    interest that are formatted using the GeoJSON specification. When
+    clicking around on the map, we're going to use the ``$near`` operator to
+    find new points of interest that are within range of the marker.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    There are numerous components that must be accounted for to be
+    successful with this tutorial:
+
+    -  A MongoDB Atlas free tier cluster or better to store the data.
+    -  A MongoDB Realm application to access the data from a client-facing application.
+    -  A Mapbox free tier account or better to render the data on a map.
+
+    The assumption is that MongoDB Atlas has been properly configured and
+    that MongoDB Realm is using the MongoDB Atlas cluster.
+
+    .. blockquote::
+
+        MongoDB Atlas can be used for FREE with a M0 sized cluster. Deploy
+        MongoDB in minutes within the `MongoDB
+        Cloud <https://cloud.mongodb.com>`__.
+
+    In addition to Realm being pointed at the Atlas cluster, `anonymous
+    authentication <https://docs.mongodb.com/stitch/authentication/anonymous/>`__ for the Realm application should be enabled and an
+    `access rule <https://docs.mongodb.com/stitch/mongodb/define-roles-and-permissions/>`__ should be defined for the collection. All users should be
+    able to read all documents for this tutorial.
+
+    In this example, Mapbox is a third-party service for showing interactive
+    map tiles. An account is necessary and an access token to be used for
+    development should be obtained. You can learn how in the `Mapbox documentation <https://docs.mapbox.com/help/how-mapbox-works/access-tokens/>`__.
+
+.. content::
+
+    MongoDB Geospatial Queries and the GeoJSON Data Model
+    -----------------------------------------------------
+
+    Before diving into geospatial queries and creating an interactive
+    client-facing application, a moment should be taken to understand the
+    data and indexes that must be created within MongoDB.
+
+    Take the following example document:
+
+    .. code-block:: json
+
+        {
+            "_id": "5ec6fec2318d26b626d53c61",
+            "name": "WorkVine209",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -121.4123,
+                    37.7621
+                ]
+            }
+        }
+
+    Let's assume that documents that follow the above data model exist in a
+    **location_services** database and a **points_of_interest** collection.
+
+    To be successful with our queries, we only need to store the location
+    type and the coordinates. This ``location`` field makes up a
+    `GeoJSON <https://geojson.org/>`__ feature, which follows a specific
+    format. The ``name`` field, while useful isn't an absolute requirement.
+    Some other optional fields might include an ``address`` field,
+    ``hours_of_operation``, or similar.
+
+    Before being able to execute the geospatial queries that we want, we
+    need to create a special index.
+
+    The following index should be created:
+
+    .. code-block:: none
+
+        db.points_of_interest.createIndex({ location: "2dsphere" });
+
+    The above index can be created numerous ways, for example, you can
+    create it using the MongoDB shell, Atlas, Compass, and a few other ways.
+    Just note that the ``location`` field is being classified as a
+    ``2dsphere`` for the index.
+
+    With the index created, we can execute a query like the following:
+
+    .. code-block:: none
+
+        db.points_of_interest.find({
+            "location": {
+                "$near": {
+                    "$geometry": {
+                        "type": "Point",
+                        "coordinates": [-121.4252, 37.7397]
+                    },
+                    "$maxDistance": 2500
+                }
+            }
+        });
+
+    Notice in the above example, we're looking for documents that have a
+    ``location`` field within 2,500 meters of the point provided in the
+    filter.
+
+    With an idea of how the data looks and how the data can be accessed,
+    let's work towards creating a functional application.
+
+    Interacting with Places using MongoDB Realm and Mapbox
+    -------------------------------------------------------
+
+    Like previously mentioned, you should already have a Mapbox account and
+    MongoDB Realm should already be configured.
+
+    On your computer, create an **index.html** file with the following
+    boilerplate code:
+
+    .. code-block:: auto
+
+        <!DOCTYPE html>
+        <head>
+            <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+            <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+            <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.6.0/stitch.js"></script>
+        </head>
+        <html>
+            <body style="margin: 0">
+                <div id="map" style="width: 100vw; height: 100vh"></div>
+                <script>
+                    // Logic here ...
+                </script>
+            </body>
+        </html>
+
+    In the above code, we're including both the Mapbox library as well as
+    the MongoDB Realm SDK. We're creating a ``map`` placeholder component
+    which will show our map, and it is lightly styled with CSS.
+
+    You can run this file locally, serve it, or host it on `MongoDB Realm <https://www.mongodb.com/realm>`__.
+
+    Within the ``<script>`` tags, we can initialize a few things with the
+    following lines of code:
+
+    .. code-block:: javascript
+
+        const client = stitch.Stitch.initializeDefaultAppClient("MONGODB_REALM_APP_ID_HERE);
+        const db = client.getServiceClient(stitch.RemoteMongoClient.factory, "mongodb-atlas").db("location_services");
+        mapboxgl.accessToken = "MAPBOX_ACCESS_TOKEN_HERE";
+
+        var currentLocationMarker = new mapboxgl.Marker({ color: "red" }).setLngLat([-121.4252, 37.7397]);
+        var placeMarkers = [];
+
+        let map = new mapboxgl.Map({
+            container: "map",
+            style: "mapbox://styles/mapbox/streets-v11",
+            center: [-121.4252, 37.7397],
+            zoom: 13
+        });
+
+        map.doubleClickZoom.disable();
+
+    In the above code we're telling both MongoDB Realm and Mapbox which
+    tokens to use. We're also defining some basic configuration information
+    for our map and which database to use for Realm.
+
+    The ``currentLocationMarker`` will represent a mock of our location and
+    the ``placesMarkers`` will represent any nearby points of interest.
+
+    It should be noted, that we haven't yet connected to MongoDB in our
+    code. We want to wait until the map is ready, so we have to make use of
+    event listeners.
+
+    Take the following code for example:
+
+    .. code-block:: javascript
+
+        map.on("load", async () => {
+            await client.auth.loginWithCredential(new stitch.AnonymousCredential());
+            currentLocationMarker.addTo(map);
+            // Find points of interest near marker
+        });
+
+    When the map is considered ready, we do anonymous authentication to
+    MongoDB Realm and we add our current location to the map as a marker.
+    When the map is loaded, we're also going to want to find any points of
+    interest near our marker. This is where our geospatial query comes into
+    play.
+
+    Outside of the event listener, create the following function:
+
+    .. code-block:: javascript
+
+        const getPointsOfInterest = async (position) => {
+            let places = await db.collection("points_of_interest").find({
+                "location": {
+                    "$near": {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": position
+                        },
+                        "$maxDistance": 2500
+                    }
+                }
+            }).toArray();
+            return places.map(place => (new mapboxgl.Marker().setLngLat(place.location.coordinates)).setPopup(new mapboxgl.Popup({ offset: 25 }).setText(place.name)));
+        };
+
+    Most of the function should look familiar. We're accepting a position
+    array and using it within the ``$near`` operation of the query. The
+    results of the query are loaded into an array and the results are then
+    transformed into map markers that include a popup. The popup will show
+    the name information for the point of interest.
+
+    With the above function in place, we can go back into the ``load`` event
+    listener and change it to the following:
+
+    .. code-block:: javascript
+
+        map.on("load", async () => {
+            await client.auth.loginWithCredential(new stitch.AnonymousCredential());
+            currentLocationMarker.addTo(map);
+            placeMarkers = await getPointsOfInterest([-121.4252, 37.7397]);
+            placeMarkers.forEach(marker => marker.addTo(map));
+        });
+
+    Each marker returned from the ``getPointsOfInterest`` function will be
+    added to the map.
+
+    This is great, but we can take it a step further by interacting with the
+    map and continuously doing queries based on our new location. Let's add
+    another event listener:
+
+    .. code-block:: javascript
+
+        map.on("dblclick", async (e) => {
+            currentLocationMarker.setLngLat([e.lngLat.lng, e.lngLat.lat]);
+            placeMarkers.forEach(marker => marker.remove());
+            placeMarkers = await getPointsOfInterest([e.lngLat.lng, e.lngLat.lat]);
+            placeMarkers.forEach(marker => marker.addTo(map));
+        });
+
+    When the map is double clicked, the marker location is updated, all
+    previous markers are removed, and new points of interest are queried
+    for.
+
+    Want to search for specific points of interest that might be nearby? You
+    can take your ``getPointsOfInterest`` function a bit further by having a
+    ``find`` operation like the following:
+
+    .. code-block:: javascript
+
+        let places = await db.collection("points_of_interest").find({
+            "location": {
+                "$near": {
+                    "$geometry": {
+                        "type": "Point",
+                        "coordinates": position
+                    },
+                    "$maxDistance": 2500
+                }
+            },
+            "name": "Target"
+        }).toArray();
+
+    Notice that in the above code we're saying that the ``location`` has to
+    be near our point and the ``name`` has to be **Target**. The odds of
+    having multiple **Target** stores within our range is slim, but imagine
+    if **Starbucks** was used, or if your example included different kinds
+    of data.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to use the ``$near`` operator to potentially find
+    points of interest with geospatial queries in MongoDB. To make this
+    example more exciting, we rendered our results on a map using Mapbox,
+    and linked the client-facing Mapbox application to our database with
+    MongoDB Realm.

@@ -1,0 +1,401 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @nraboy
+   :title: Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun
+   :type: article
+   :title: Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
+   :image: /images/social/open-graph/og-green-pattern.png
+
+   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-05-21
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * Realm
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==========================================================================
+Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
+==========================================================================
+
+.. introduction::
+
+    .. include:: /includes/callouts/realm-release.rst
+
+    If you've ever built a website, at some point in time you've probably
+    needed to include a way for users to contact you. Do you expose your
+    email address to the internet by hard-coding it onto the page and hoping
+    that you don't end up in a SPAM list, or do you create your own contact
+    form? If you're creating your own contact form, how do you get it to
+    actually send emails if you're only hosting a static website?
+
+    These are questions that I've personally asked myself hundreds of times
+    over the years.
+
+    A solution to this problem is to use Functions as a Service (FaaS),
+    often referred to as Serverless. It is unlikely that any contact form
+    will be used more than a few times per day, at least for most websites,
+    so hosting a web application is probably overkill. Executing a function
+    a few times a day is often easier and less expensive for such a task.
+
+    In this tutorial, we're going to see how to use `MongoDB
+    Stitch <https://www.mongodb.com/cloud/stitch>`__ to send emails using
+    the `Mailgun <https://www.mailgun.com/>`__ transactional email service.
+
+.. prerequisites::
+
+    Just a quick note before we dive into the technical material. While
+    we're going to use Mailgun as the transactional email service, the
+    assumption is that you're already aware of their pricing model and have
+    already configured your account in their portal. Mailgun is one of many
+    different transactional email services that would work with this
+    example.
+
+.. content::
+
+    Building a Contact Form with HTML, JavaScript, and Tailwind CSS
+    ---------------------------------------------------------------
+
+    To get us started, we're going to want to have a contact form created
+    and ready to go. This can be accomplished with simple JavaScript, HTML,
+    and CSS. However, we're going to use
+    `Tailwind <https://tailwindcss.com/>`__ to make the form a little more
+    attractive.
+
+    Create an HTML file on your computer and add the following:
+
+    .. code-block:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+            </head>
+            <body>
+                <div class="p-3">
+                    <form class="w-full max-w-sm">
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/3">
+                                <label 
+                                    class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" 
+                                    for="name">
+                                    Name
+                                </label>
+                            </div>
+                            <div class="md:w-2/3">
+                                <input 
+                                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                    id="name" 
+                                    type="text" 
+                                    placeholder="Name">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/3">
+                                <label 
+                                    class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" 
+                                    for="email">
+                                    Email
+                                </label>
+                            </div>
+                            <div class="md:w-2/3">
+                                <input 
+                                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                    id="email" 
+                                    type="text" 
+                                    placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/3">
+                                <label 
+                                    class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" 
+                                    for="message">
+                                    Message
+                                </label>
+                            </div>
+                            <div class="md:w-2/3">
+                                <textarea 
+                                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                    id="message" 
+                                    type="text" 
+                                    placeholder="Message">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center">
+                            <div class="md:w-1/3"></div>
+                            <div class="md:w-2/3">
+                                <button 
+                                    class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" 
+                                    type="button" 
+                                    onclick="sendMessage()">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    // Sending logic here...
+                </script>
+            </body>
+        </html>
+
+    I won't get into the details on how Tailwind works, but the above code
+    is essentially a styled HTML form that includes a sender name, sender
+    email, and a message to be sent. You'll notice that the ``<button>`` has
+    an ``onclick`` attribute for a ``sendMessage()`` function. We haven't
+    created that function yet, but when we do, it will be responsible for
+    actually interacting with our MongoDB Stitch function.
+
+    .. image:: /images/how-to/mailgun-email-form.png
+
+    With HTML in place, let's take a look at the JavaScript that will be
+    used to interact with our future Stitch function.
+
+    Within the ``<script>`` tag, we can create a ``sendMessage()`` function
+    that retrieves the value of the form elements before making an HTTP
+    request. It would look something like this:
+
+    .. code-block:: javascript
+
+        <script>
+            const sendMessage = () => {
+                let name = document.getElementById("name").value;
+                let email = document.getElementById("email").value;
+                let message = document.getElementById("message").value;
+                fetch("https://STITCH_WEBHOOK_URL_HERE", {
+                    "method": "POST",
+                    "headers": {
+                        "content-type": "application/json"
+                    },
+                    "body": JSON.stringify({
+                        name,
+                        email,
+                        message
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                });
+            }
+        </script>
+
+    In the above example we're using the ``fetch`` function that exists in
+    modern JavaScript. The destination URL will eventually be replaced with
+    a Stitch webhook URL, but for now each of the elements are put into
+    place.
+
+    While this example just prints the result of the HTTP request to the
+    browser console, a more elegant UX manipulation could be made to show
+    the message was sent. I'll leave this to your own imagination.
+
+    Creating a Webhook Function in MongoDB Stitch to Receive Form Data and Send Emails
+    ----------------------------------------------------------------------------------
+
+    When it comes to transactional email services, most won't allow you to
+    send emails directly from your client-facing application. Even if you
+    could, you probably shouldn't because such a feature could easily be
+    abused.
+
+    To send our emails, we're going to create a webhook service in Stitch.
+    Within the `MongoDB Cloud <https://cloud.mongodb.com>`__, choose the
+    **Stitch** tab and create a new application if you don't already have
+    one that you wish to use. For this particular example, we don't need to
+    connect the application to an Atlas cluster.
+
+    .. image:: /images/how-to/stitch-third-party-services.png
+
+    Within the Stitch dashboard for your application, choose to create a new
+    service from the **3rd Party Services** tab. Because we wish to listen
+    for requests on a public-facing URL, we need to create an HTTP service
+    to contain any webhooks that we wish to use.
+
+    .. image:: /images/how-to/stitch-http-webhook-service.png
+
+    When choosing to create a webhook, we need to give it a name, define the
+    authentication necessary, and the type of HTTP requests it should listen
+    for. Because we're sending data from our HTML page, it makes sense to
+    use the POST method.
+
+    At this point, we can add our function logic, the code that will be
+    executed when we make an HTTP request from our HTML feedback form.
+
+    Within the **Function Editor** add the following:
+
+    .. code-block:: javascript
+
+        exports = async function (payload, response) {
+
+            const body = JSON.parse(payload.body.text());
+
+            let secret = context.values.get("api:MAILGUN_PRIVATE_API_KEY");
+
+            const result = await context.http.post(
+                {
+                    url: "https://api.mailgun.net/v3/DOMAIN_NAME_HERE/messages",
+                    headers: {
+                        "authorization": [`Basic ${(new Buffer(secret)).toString("base64")}`]
+                    },
+                    form: {
+                        from: `${body.name} <${body.email}>`,
+                        to: "test@example.com",
+                        subject: "New Contact Form",
+                        text: `${body.message}`
+                    }
+                }
+            )
+
+            return result;
+
+        };
+
+    So let's break down what's happening in the above code.
+
+    The first thing we're doing is parsing the payload that came from the
+    client, which in this case is our feedback form. Next, we're creating an
+    HTTP request that includes the Mailgun API URL along with the private
+    API token that Mailgun provides. Because we're using an authorization
+    header, the token needs to be base64 encoded.
+
+    The Mailgun API expects the data to be multi-part form data rather than
+    JSON, hence the use of the ``form`` field in the HTTP request. Each form
+    field matches the requirements found in the `Mailgun
+    documentation <https://documentation.mailgun.com/en/latest/quickstart-sending.html#send-via-api>`__.
+
+    If you swap the Mailgun URL and the private API key with your own, the
+    function should work. However, hard-coding sensitive values in your
+    function is probably not a good idea.
+
+    We're going to want to do two things to keep our sensitive information
+    safe.
+
+    Within the Stitch dashboard, click the **Values & Secrets** tab,
+    followed by the **Secrets** tab.
+
+    .. image:: /images/how-to/stitch-secrets.png
+
+    Enter the name of your secret followed by the value that is actually to
+    be kept a secret. Because we plan to use this value within our function,
+    we also need to link it to the **Values** tab.
+
+    .. image:: /images/how-to/stitch-values.png
+
+    You'll want to give the **Value** a name, which we'll use directly
+    within the function. Make sure it is a **Secret** type and is linked to
+    the secret that we had created in the previous step.
+
+    When this is done, we can go back into the **Function Editor** and make
+    use of the secret rather than hard-coding the sensitive data into our
+    function:
+
+    .. code-block:: javascript
+
+        exports = async function (payload, response) {
+
+            const body = JSON.parse(payload.body.text());
+
+            let secret = context.values.get("MAILGUN_PRIVATE_API_KEY");
+
+            const result = await context.http.post(
+                {
+                    url: "https://api.mailgun.net/v3/DOMAIN_NAME_HERE/messages",
+                    headers: {
+                        "authorization": [`Basic ${(new Buffer(secret)).toString("base64")}`]
+                    },
+                    form: {
+                        from: `${body.name} <${body.email}>`,
+                        to: "test@example.com",
+                        subject: "New Contact Form",
+                        text: `${body.message}`
+                    }
+                }
+            )
+
+            return result;
+
+        };
+
+    After deploying the webhook function, you can get the public URL and add
+    it to the HTML file that contains the feedback form. Submitting the form
+    should send the data to the function and the function should make an
+    HTTP request to the Mailgun API, at which point, an email is sent to the
+    recipient address.
+
+    Host the Contact Form Website on MongoDB Stitch
+    -----------------------------------------------
+
+    We're going to take our example a step further. Rather than figuring out
+    where to host our static website and contact form, we can actually host
+    it directly on MongoDB Stitch.
+
+    Within the MongoDB Stitch dashboard, choose the **Hosting** tab.
+
+    .. image:: /images/how-to/stitch-hosting.png
+
+    After enabling hosting, upload the HTML file and wait for the website to
+    be created. While this was not a necessary step to test our webhook
+    function with our contact form, it is a major convenience, in the long
+    run, to be able to host your website as well as take advantage of FaaS.
+
+    Conclusion
+    ----------
+
+    You just saw how to use `MongoDB
+    Stitch <https://www.mongodb.com/cloud/stitch>`__ and webhook functions
+    to act as a feedback collection solution for your static HTML websites.
+    Rather than exposing your email address directly in your website, you
+    can have Stitch communicate with an external transactional email service
+    such as Mailgun to send emails. This protects your email address and
+    prevents you from having to write your own always-running web
+    application.
+
+    .. blockquote::
+
+        `MongoDB Atlas <https://cloud.mongodb.com>`__ can be used for FREE when launching 
+        M0 sized clusters.
+
+    Sending emails with functions isn't limited to just Mailgun. If the
+    transactional email service has an API, it could easily be substituted.
+
+    For services that don't have a REST API, but offer a JavaScript package, 
+    NPM can be used to obtain those dependencies within Stitch.
