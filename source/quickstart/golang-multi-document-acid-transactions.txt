@@ -32,6 +32,7 @@
 .. include:: /includes/authors/raboy-nic.rst
 
 .. pubdate:: 2020-03-27
+.. updated-date:: 2020-06-16
 
 .. type:: quickstart
 
@@ -197,9 +198,15 @@ Multi-Document ACID Transactions in MongoDB with Go
 
             database := client.Database("quickstart")
             episodesCollection := database.Collection("episodes")
+
+            database.RunCommand(context.TODO(), bson.D{{"create", "episodes"}})
         }
 
-    Now let's also assume that you've correctly included the MongoDB Go
+    The collection must exist prior to working with transactions. 
+    When using the ``RunCommand``, if the collection already exists, an error will be returned. For this example, the error is 
+    not important to us since we just want the collection to exist, even if that means creating it.
+    
+    Now let's assume that you've correctly included the MongoDB Go
     driver as seen in a previous tutorial titled, `How to Get Connected to
     Your MongoDB Cluster with
     Go <https://www.mongodb.com/blog/post/quick-start-golang--mongodb--starting-and-setup>`__.
