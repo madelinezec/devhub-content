@@ -1,0 +1,479 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Explaining the MongoDB Atlas Sample Data and diving into its various datasets
+
+.. twitter::
+   :site: @mongodb
+   :creator: @eoinbrazil
+   :title: Explaining the MongoDB Atlas Sample Data
+   :image: /images/social/twitter/Twitter-docs.png
+   :image-alt: MongoDB Atlas Sample Data
+
+   Explaining the MongoDB Atlas Sample Data and diving into its various datasets
+
+.. og::
+   :url: http://developer.mongodb.com/article/atlas-sample-datasets
+   :type: article
+   :title: Explaining the MongoDB Atlas Sample Data
+   :image: /images/social/open-graph/og-docs.png
+ 
+   Explaining the MongoDB Atlas Sample Data and diving into its various datasets
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/brazil-eoin.rst
+
+.. pubdate:: 2020-06-19
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Data
+
+.. products::
+
+   * Atlas
+
+.. atf-image:: /images/atf-images/illustrations/docs.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=================================
+The MongoDB Atlas Sample Datasets
+=================================
+
+
+.. introduction:: 
+
+   Did you know that MongoDB Atlas provides a complete set of example data
+   to help you learn faster? The `Load Sample Data <https://docs.atlas.mongodb.com/sample-data/>`__
+   feature enables you to load eight datasets into your database to 
+   explore. You can use this with the MongoDB Atlas M0 "free tier" to try 
+   out MongoDB Atlas and MongoDB's features. The sample data helps you 
+   tryout features such as indexing, querying including geospatial, 
+   aggregations as well as using MongoDB Tooling such as MongoDB 
+   Charts or MongoDB Compass. 
+   
+   In the rest of this post, we'll explore why it was created, how to 
+   firstly load the sample data and then we'll outline what the datasets 
+   contain.
+
+   Table of Contents
+   -----------------
+
+   -  :ref:`atlas-sample-data-why-created`
+   -  :ref:`atlas-sample-data-loading`
+   -  :ref:`atlas-sample-data-deeper-dive`
+
+      - :ref:`atlas-sample-airbnb-listing-dataset`
+      - :ref:`atlas-sample-analytics-listing-dataset`
+      - :ref:`atlas-sample-geospatial-listing-dataset`
+      - :ref:`atlas-sample-mflix-listing-dataset`
+      - :ref:`atlas-sample-restaurants-listing-dataset`
+      - :ref:`atlas-sample-supply-store-listing-dataset`
+      - :ref:`atlas-sample-training-listing-dataset`
+      - :ref:`atlas-sample-weather-listing-dataset`
+
+   -  :ref:`atlas-sample-data-wrap`
+
+
+.. content::
+
+   .. _atlas-sample-data-why-created:
+
+   Why did we create the sample data set ?
+   ---------------------------------------
+
+   Before diving into how we load the sample data, it's worth highlighting
+   why we built the feature in the first place. We built this feature 
+   because often people would create a new empty Atlas cluster and they'd
+   then have to wait until they wrote their application or imported data
+   into it before they were able to learn and explore the platform. Atlas's
+   Sample Data was the solution, it removes this roadblock and quickly 
+   allows you to get a feel for how MongoDB works with different types of
+   data.
+
+   .. _atlas-sample-data-loading:
+
+   Loading the Sample Data Set into your Atlas Cluster
+   ---------------------------------------------------
+
+   Loading the Sample Data requires an existing Atlas cluster and 
+   `three steps <https://docs.atlas.mongodb.com/sample-data/>`__.
+   
+   - In your left navigation pane in Atlas, click Clusters, then 
+     choose which cluster you want to load the data into. 
+   
+   - For that cluster, click the Ellipsis (...) button.
+   
+   .. figure:: /images/article/atlas-sample-data/load_sample_data_step_1.png
+      :alt: Selecting the additional options (...) for your Atlas cluster
+      :align: center
+
+   - Then click the button "Load Sample Dataset".
+
+   .. figure:: /images/article/atlas-sample-data/load_sample_data_step_2.png
+      :alt: Selecting the option "Load Sample Dataset"
+      :align: center
+
+   - Click the correspondingly named button "Load Sample Dataset".
+
+   .. figure:: /images/article/atlas-sample-data/load_sample_data_step_3.png
+      :alt: Click the button "Load Sample Dataset"
+      :align: center
+
+   This process will take a few minutes to complete so let's look at 
+   exactly what kind of data we're going to load. Once the process is
+   completed you should see a banner on your Atlas cluster similar to this image
+   below.
+
+   .. figure:: /images/article/atlas-sample-data/load_sample_data_step_4.png
+      :alt: The Atlas Sample Data loading process will show this banner if successful.
+      :align: center
+
+
+   .. _atlas-sample-data-deeper-dive:
+
+   A deeper dive into the Atlas Sample Data
+   ----------------------------------------
+
+   The Atlas Sample Datasets comprise of eight databases and their 
+   associated collections. Each individual dataset is documented to
+   illustrate the schema, the collections, the indexes and a sample
+   document from each collection. 
+
+   
+   .. _atlas-sample-airbnb-listing-dataset:
+
+   Sample AirBnB Listings Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+   This dataset consists of a single collection of AirBnB reviews and listings. 
+   There are indexes on the ``property type``, ``room type``, ``bed``,  
+   ``name``, and on the ``location`` fields as well as on the ``_id`` of the 
+   documents. 
+   
+   The data is a randomized subset of the original publicly available 
+   AirBnB dataset. It covers several different cities around the world. This 
+   dataset is used extensively in `MongoDB University courses <https://university.mongodb.com/courses/catalog>`__.
+
+   You can find more details on the `Sample AirBnB Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-airbnb/>`__.
+
+
+   .. _atlas-sample-analytics-listing-dataset:
+
+   Sample Analytics Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+   This dataset consists of three collections of randomly generated financial
+   services data. There are no additional indexes beyond the ``_id`` index on
+   each collection. The collections represent accounts, transactions, and 
+   customers. 
+   
+   The transactions collection uses `the Bucket Pattern <https://developer.mongodb.com/how-to/bucket-pattern>`__
+   to hold a set of transactions for a period. It was built for `MongoDB's private training <https://www.mongodb.com/products/training/private>`__, 
+   specifically for `the MongoDB for Data Analysis course <https://www.mongodb.com/products/training/instructor-led>`__.
+   
+   The advantages in using this pattern are a reduction in index size when 
+   compared to storing each transaction in a single document. It can 
+   potentially simplify queries and it provides the ability to use 
+   pre-aggregated data in our documents.
+
+   .. code-block:: json
+
+      // transaction collection document example
+      {
+      "account_id": 794875,
+      "transaction_count": 6,
+      "bucket_start_date": {"$date": 693792000000},
+      "bucket_end_date": {"$date": 1473120000000},
+      "transactions": [
+         {
+            "date": {"$date": 1325030400000},
+            "amount": 1197,
+            "transaction_code": "buy",
+            "symbol": "nvda",
+            "price": "12.7330024299341033611199236474931240081787109375",
+            "total": "15241.40390863112172326054861"
+         },
+         {
+            "date": {"$date": 1465776000000},
+            "amount": 8797,
+            "transaction_code": "buy",
+            "symbol": "nvda",
+            "price": "46.53873172406391489630550495348870754241943359375",
+            "total": "409401.2229765902593427995271"
+         },
+         {
+            "date": {"$date": 1472601600000},
+            "amount": 6146,
+            "transaction_code": "sell",
+            "symbol": "ebay",
+            "price": "32.11600884852845894101847079582512378692626953125",
+            "total": "197384.9903830559086514995215"
+         },
+         {
+            "date": {"$date": 1101081600000},
+            "amount": 253,
+            "transaction_code": "buy",
+            "symbol": "amzn",
+            "price": "37.77441226157566944721111212857067584991455078125",
+            "total": "9556.926302178644370144411369"
+         },
+         {
+            "date": {"$date": 1022112000000},
+            "amount": 4521,
+            "transaction_code": "buy",
+            "symbol": "nvda",
+            "price": "10.763069758141103449133879621513187885284423828125",
+            "total": "48659.83837655592869353426977"
+         },
+         {
+            "date": {"$date": 936144000000},
+            "amount": 955,
+            "transaction_code": "buy",
+            "symbol": "csco",
+            "price": "27.992136535152877030441231909207999706268310546875",
+            "total": "26732.49039107099756407137647"
+         }
+      ]
+      }
+
+   You can find more details on the `Sample Analytics Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-analytics/>`__.
+
+   .. _atlas-sample-geospatial-listing-dataset:
+
+   Sample Geospatial Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+   This dataset consists of a single collection with information on shipwrecks. 
+   It has an additional index on the ``coordinates`` field (GeoJSON). This 
+   index is a Geospatial 2dsphere index. This dataset was created to help 
+   explore the possibility of geospatial queries within MongoDB.
+
+   The image below was created in `MongoDB Charts <https://www.mongodb.com/products/charts>`__ 
+   and shows all of the shipwrecks on the eastern seaboard of North America.
+
+   .. figure:: /images/article/atlas-sample-data/sample-data-shipwrecks.png
+      :alt: A visualisation in MongoDB Charts of the shipwrecks collection in the Geospatial dataset
+      :align: center
+
+   You can find more details on the `Sample Geospatial Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-geospatial/>`__.
+
+   .. _atlas-sample-mflix-listing-dataset:
+
+   Sample Mflix Dataset
+   ~~~~~~~~~~~~~~~~~~~~
+
+   This dataset consists of five collections with information on movies, 
+   movie theatres, movie metadata, and user movie reviews and their ratings
+   for specific movies. The data is a subset of the IMDB dataset. There are 
+   three additional indexes beyond ``_id``, on the sessions collection on the 
+   ``user_id`` field, on the theatres collection on the ``location.geo`` field,
+   and on the users collection on the ``email`` field. You can see this dataset 
+   used in this `MongoDB Charts tutorial <https://docs.mongodb.com/charts/saas/tutorial/movie-details/movie-details-tutorial-overview/>`__.
+   
+   The `Atlas Search Movies site <https://www.atlassearchmovies.com/>`__ uses
+   this data and `MongoDB's Atlas Search <https://docs.atlas.mongodb.com/atlas-search/>`__ 
+   to provide a searchable movie catalog.
+
+   This dataset is the basis of our `Atlas Search tutorial <https://docs.atlas.mongodb.com/reference/atlas-search/tutorial/>`__.
+
+   You can find more details on the `Sample Mflix Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-mflix/>`__.
+
+   .. _atlas-sample-restaurants-listing-dataset:
+
+   Sample Restaurants Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   This dataset consists of two collections with information on restaurants and
+   neighbourhoods in New York. There are no additional indexes. This dataset is
+   the basis of our `Geospatial tutorial <https://docs.mongodb.com/manual/tutorial/geospatial-tutorial/>`__.
+   The restaurant document only contains the location and the name for a given
+   restaurant.
+
+   .. code-block:: json
+
+      // restaurants collection document example
+      {
+         location: {
+            type: "Point",
+            coordinates: [-73.856077, 40.848447]
+         },
+         name: "Morris Park Bake Shop"
+      }
+
+   In order to use the collections for geographical searching, we need to add an
+   index, specifically a `2dsphere index <https://docs.mongodb.com/manual/core/2dsphere/index.html>`__.
+   We can add this index and then search for all restaurants in a one kilometer
+   radius of a given location with the results being sorted by those closest to
+   those furtherest away. The mongo consists of a nine  code below creates the index, then add a 
+   helper variable to represent 1km and our query then uses these details with the
+   `$nearSphere <https://docs.mongodb.com/manual/reference/operator/query/nearSphere/index.html>`__
+   criteria to return the list of restaurants within 1km of that location.
+
+   .. code-block:: javascript
+
+      db.restaurants.createIndex({ location: "2dsphere" })
+      var ONE_KILOMETER = 1000
+      db.restaurants.find({ location: { $nearSphere: { $geometry: { type: "Point", coordinates: [ -73.93414657, 40.82302903 ] }, $maxDistance: ONE_KILOMETER } } })
+
+   You can find more details on the `Sample Restaurants Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-restaurants/>`__.
+
+   .. _atlas-sample-supply-store-listing-dataset:
+
+   Sample Supply Store Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   This dataset consists of a single collection with information on mock sales
+   data for a hypothetical office supplies company. There are no additional 
+   indexes. This is the second dataset used in the `MongoDB Chart tutorials <https://docs.mongodb.com/charts/saas/tutorial/order-data/order-data-tutorial-overview/>`__.
+   
+   The sales collection uses `the Extended Reference pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__
+   to hold both the items sold and their details as well as information on the
+   customer who purchased these items. This pattern includes frequently accessed
+   fields in the main document to improve performance at the cost of additional
+   data duplication.
+
+   .. code-block:: json
+
+      // sales collection document example
+      {
+         "_id": {
+            "$oid": "5bd761dcae323e45a93ccfe8"
+         },
+         "saleDate": {
+            "$date": { "$numberLong": "1427144809506" }
+         },
+         "items": [
+            {
+               "name": "notepad",
+               "tags": [ "office", "writing", "school" ],
+               "price": { "$numberDecimal": "35.29" },
+               "quantity": { "$numberInt": "2" }
+            },
+            {
+               "name": "pens",
+               "tags": [ "writing", "office", "school", "stationary" ],
+               "price": { "$numberDecimal": "56.12" },
+               "quantity": { "$numberInt": "5" }
+            },
+            {
+               "name": "envelopes",
+               "tags": [ "stationary", "office", "general" ],
+               "price": { "$numberDecimal": "19.95" },
+               "quantity": { "$numberInt": "8" }
+            },
+            {
+               "name": "binder",
+               "tags": [ "school", "general", "organization" ],
+               "price": { "$numberDecimal": "14.16" },
+               "quantity": { "$numberInt": "3" }
+            }
+         ],
+         "storeLocation": "Denver",
+         "customer": {
+            "gender": "M",
+            "age": { "$numberInt": "42" },
+            "email": "cauho@witwuta.sv",
+            "satisfaction": { "$numberInt": "4" }
+         },
+         "couponUsed": true,
+         "purchaseMethod": "Online"
+      }
+
+   You can find more details on the `Sample Supply Store Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-supplies/>`__.
+
+   .. _atlas-sample-training-listing-dataset:
+
+   Sample Training Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~
+
+   This dataset consists of nine collections with no additional indexes. It 
+   represents a selection of realistic data and is used in the `MongoDB private training courses <https://www.mongodb.com/products/training/private>`__. 
+   
+   It includes a number of public well known data sources such as the 
+   `OpenFlights <https://openflights.org/data.html>`__, 
+   `NYC's OpenData <https://opendata.cityofnewyork.us/>`__, 
+   and `NYC's Citibike Data <https://www.citibikenyc.com/system-data>`__.
+   
+   The routes collection uses `the Extended Reference pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__
+   to hold  `OpenFlights <https://openflights.org/data.html>`__ data on airline
+   routes between airports. It references airline information in the ``airline``
+   sub document, which has details about the specific plane on the route. This 
+   is another example of improving performance at the cost of minor data 
+   duplication for fields that are likely to be frequently accessed.
+
+   .. code-block:: json
+
+      // routes collection document example
+      {
+         "_id": {
+            "$oid": "56e9b39b732b6122f877fa5c"
+         },
+         "airline": {
+               "alias": "2G",
+               "iata": "CRG",
+               "id": 1654,
+               "name": "Cargoitalia"
+         },
+         "airplane": "A81",
+         "codeshare": "",
+         "dst_airport": "OVB",
+         "src_airport": "BTK",
+         "stops": 0
+      }
+
+   You can find more details on the `Sample Training Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-training/>`__.
+
+   .. _atlas-sample-weather-listing-dataset:
+
+   Sample Weather Dataset
+   ~~~~~~~~~~~~~~~~~~~~~~
+
+   This dataset consist of a single collection with no additional indexes. It
+   represents detailed weather reports from locations across the world. It 
+   holds geospatial data on the locations in the form of legacy coordinate pairs.
+
+   You can find more details on the `Sample Weather Documentation page <https://docs.atlas.mongodb.com/sample-data/sample-weather/>`__.
+
+   If you have ideas or suggestions for new datasets, we are always interested.
+   Let us know on the `developer community website <https://community.mongodb.com/>`__.
+
+.. summary::
+
+   .. _atlas-sample-data-wrap:
+
+   Wrap Up
+   -------
+
+   These datasets offer a wide selection of data that you can use to both 
+   explore MongoDB's features and prototype your next project without having
+   to worry about where you'll find the data.
+
+   Checkout the documentation on `Load Sample Data <https://docs.atlas.mongodb.com/sample-data/>`__ 
+   to learn more on these datasets and load it into your Atlas Cluster 
+   today to start exploring it!
+
+   To learn more about schema patterns and MongoDB, please checkout our
+   blog series `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   and the free MongoDB University Course `M320: Data Modeling <http://bit.ly/M320_DataModeling>`__
+   to level up your schema design skills.
+
+   If you have questions, please head to our `developer community website <https://community.mongodb.com/>`__
+   where the MongoDB engineers and the MongoDB community will help you
+   build your next big idea with MongoDB.
+

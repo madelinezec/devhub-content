@@ -50,6 +50,7 @@
    * Analytics
    * API
    * BI
+   * Data
    * Data Visualization
    * GraphQL
    * Node.js
