@@ -1,4 +1,4 @@
-name = invalid
+name = "devhub-test"
 default_domain = "devhub"
 
 [constants]
