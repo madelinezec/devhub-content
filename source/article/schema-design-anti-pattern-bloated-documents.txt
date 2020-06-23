@@ -1,0 +1,222 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Bloated Documents
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: MongoDB Schema Design Anti-Pattern: Bloated Documents
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Bloated Documents
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Bloated Documents
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Bloated Documents
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-06-23
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=================
+Bloated Documents
+=================
+ 
+.. introduction:: 
+
+   Welcome (or welcome back!) to the MongoDB Schema Anti-Patterns series!  We're halfway through the series.  So far, we've discussed three anti-patterns:  `massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__, `massive number of collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__, and `unnecessary indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__.
+
+   Today, let's discuss document size.  MongoDB has a `16 MB document size limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__.  But should you use all 16 MBs?  Probably not.  Let's find out why.
+
+
+.. content::
+
+   Bloated Documents
+   -----------------
+
+   Chances are pretty good that you want your queries to be blazing fast.  MongoDB wants your queries to be blazing fast too.  
+
+   To keep your queries running as quickly as possible, `WiredTiger <https://docs.mongodb.com/manual/core/wiredtiger/>`__ (the default storage engine for MongoDB) keeps all of the indexes plus the documents that are accessed the most frequently in memory.  We refer to these frequently accessed documents and index pages as the working set.  When the working set fits in the RAM allotment, MongoDB can query from memory instead of from disk.  Queries from memory are faster, so the goal is to keep your most popular documents small enough to fit in the RAM allotment.  
+
+   The working set's RAM allotment is the larger of:
+
+   - 50% of (RAM - 1 GB)
+   - 256 MB.
+
+   For more information on the storage specifics, see `Memory Use <https://docs.mongodb.com/manual/core/wiredtiger/#memory-use>`__.  If you're using MongoDB Atlas to host your database, see `Atlas Sizing and Tier Selection:  Memory <https://docs.atlas.mongodb.com/sizing-tier-selection/#memory>`__. 
+
+   One of the rules of thumb you'll hear frequently when discussing MongoDB schema design is *data that is accessed together should be stored together*.  Note that it doesn't say *data that is related to each other should be stored together*.
+
+   Sometimes data that is related to each other isn't actually accessed together.  You might have large, bloated documents that contain information that is related but not actually accessed together frequently.  In that case, separate the information into smaller documents in separate collections and use `references <https://docs.mongodb.com/manual/reference/database-references>`__ to connect those documents together.
+
+   The opposite of the Bloated Documents Anti-Pattern is the Subset Pattern.  The Subset Pattern encourages the use of smaller documents that contain the most frequently accessed data.  Check out `this post on the Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__ to learn more about how to successfully leverage this pattern.
+   
+   
+   Example
+   -------
+   
+   Let's revisit Leslie's website for inspirational women that we discussed in the `previous post <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__.  Leslie updates the home page to display a list of the names of 100 randomly selected inspirational women.  When a user clicks on the name of an inspirational woman, they will be taken to a new page with all of the detailed biographical information about the woman they selected.  Leslie fills the website with 4,704 inspirational women—including herself.
+
+   .. figure:: /images/article/anti-patterns/bloated-docs/inspiration.gif
+      :alt: I am big enough to admit that I am often inspired by myself. 
+      :align: center
+
+   Initially, Leslie decides to create one collection named InspirationalWomen, and creates a document for each inspirational woman.  The document contains all of the information for that woman.  Below is a document she creates for Sally Ride. 
+
+   .. code-block:: none
+
+      // InspirationalWomen collection
+
+      {
+         "_id": {
+            "$oid": "5ec81cc5b3443e0e72314946"
+         },
+         "first_name": "Sally",
+         "last_name": "Ride",
+         "birthday": 1951-05-26T00:00:00.000Z,
+         "occupation": "Astronaut",
+         "quote": "I would like to be remembered as someone who was not afraid to do
+                   what she wanted to do, and as someone who took risks along the 
+                   way in order to achieve her goals.",
+         "hobbies": [
+            "Tennis",
+            "Writing children's books"
+         ],
+         "bio": "Sally Ride is an inspirational figure who... ", 
+         ...
+      }
+
+   Leslie notices that her home page is lagging.  The home page is the most visited page on her site, and, if the page doesn't load quickly enough, visitors will abandon her site completely.
+
+   Leslie is hosting her database on `MongoDB Atlas <https://cloud.mongodb.com>`__ and is using an `M10 dedicated cluster <https://docs.atlas.mongodb.com/cluster-tier/>`__.  With an M10, she gets 2 GB of RAM.  She does some quick calculations and discovers that her working set needs to fit in 0.5 GB.  (Remember that her working set can be up to 50% of (2 GB RAM - 1 GB) = 0.5 GB or 256 MB, whichever is larger).  
+
+   Leslie isn't sure if her working set will currently fit in 0.5 GB of RAM, so she navigates to the `Atlas Data Explorer <https://docs.atlas.mongodb.com/data-explorer/databases-collections/>`__.  She can see that her InspirationalWomen collection is 580.29 MB and her index size is 196 KB.  When she adds those two together, she can see that she has exceeded her 0.5 GB allotment.
+
+   .. figure:: /images/article/anti-patterns/bloated-docs/original-docs.png
+      :alt: Screenshot of the Atlas Data Explorer
+   
+      The Atlas Data Explorer shows the size of the InspirationalWomen collection is 580.29 MB and the size of its three associated indexes is 196 KB.
+
+   Leslie has two choices:  she can restructure her data according to `the Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__ to remove the bloated documents, or she can move up to a M20 dedicated cluster, which has 4 GB of RAM.  Leslie considers her options and decides that having the home page and the most popular inspirational women's documents load quickly is most important.  She decides that having the less frequently viewed women's pages take slightly longer to load is fine.
+
+   She begins determining how to restructure her data to optimize for performance.  The query on Leslie's homepage only needs to retrieve each woman's first name and last name.  Having this information in the working set is crucial.  The other information about each woman (including a lengthy bio) doesn't necessarily need to be in the working set.  
+
+   To ensure her home page loads at a blazing fast pace, she decides to break up the information in her ``InspirationalWomen`` collection into two collections:  ``InspirationalWomen_Summary`` and ``InspirationalWomen_Details``.  She creates a `manual reference <https://docs.mongodb.com/manual/reference/database-references/#manual-references>`__ between the matching documents in the collections.  Below are her new documents for Sally Ride.
+
+   .. code-block:: none
+
+      // InspirationalWomen_Summary collection
+
+      {
+         "_id": {
+            "$oid": "5ee3b2a779448b306938af0f" 
+         },
+         "inspirationalwomen_id": {
+            "$oid": "5ec81cc5b3443e0e72314946"
+         },
+         "first_name": "Sally",
+         "last_name": "Ride"
+      }
+   
+   .. code-block:: none
+   
+      // InspirationalWomen_Details collection
+
+      {
+         "_id": {
+            "$oid": "5ec81cc5b3443e0e72314946"
+         },
+         "first_name": "Sally",
+         "last_name": "Ride",
+         "birthday": 1951-05-26T00:00:00.000Z,
+         "occupation": "Astronaut",
+         "quote": "I would like to be remembered as someone who was not afraid to do
+                   what she wanted to do, and as someone who took risks along the 
+                   way in order to achieve her goals.",
+         "hobbies": [
+            "Tennis",
+            "Writing children's books"
+         ],
+         "bio": "Sally Ride is an inspirational figure who... ", 
+         ...
+      }
+
+   Leslie updates her query on the home page that retrieves each woman's first name and last name to use the ``InspirationalWomen_Summary`` collection.  When a user selects a woman to learn more about, Leslie's website code will query for a document in the ``InspirationalWomen_Details`` collection using the id stored in the ``inspirationalwomen_id`` field. 
+
+   Leslie returns to Atlas and inspects the size of her databases and collections.  She can see that the total index size for both collections is 276 KB (180 KB + 96 KB).  She can also see that the size of her ``InspirationalWomen_Summary`` collection is about 455 KB.  The sum of the indexes and this collection is about 731 KB, which is significantly less than her working set's RAM allocation of 0.5 GB.  Because of this, many of the most popular documents from the ``InspirationalWomen_Details`` collection will also fit in the working set.
+
+
+   .. figure:: /images/article/anti-patterns/bloated-docs/updated-docs.png
+      :alt: Screenshot of the Atlas Data Explorer
+   
+      The Atlas Data Explorer shows the total index size for the entire database is 276 KB and the size of the InspirationalWomen_Summary collection is 454.78 KB.
+
+   In the example above, Leslie is duplicating all of the data from the ``InspirationalWomen_Summary`` collection in the ``InspirationalWomen_Details`` collection.  You might be cringing at the idea of data duplication.  Historically, data duplication has been frowned upon due to space constraints as well as the challenges of keeping the data updated in both collections.  Storage is relatively cheap, so we don't necessarily need to worry about that here.  Additionally, the data that is duplicated is unlikely to change very often.
+
+   In most cases, you won't need to duplicate all of the information in more than one collection; you'll be able to store some of the information in one collection and the rest of the information in the other.  It all depends on your use case and how you are using the data.
+
+.. summary::
+
+   Summary
+   -------
+
+   Be sure that the indexes and the most frequently used documents fit in the RAM allocation for your database in order to get blazing fast queries.  If your working set is exceeding the RAM allocation, check if your documents are bloated with extra information that you don't actually need in the working set.  Separate frequently used data from infrequently used data in different collections to optimize your performance.
+
+   Check back soon for the next post in this schema design anti-patterns series!
+
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Reduce the Size of Large Documents <https://docs.atlas.mongodb.com/schema-advisor/reduce-document-size/>`__
+   - `MongoDB Docs:  16 MB Document Size Limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__
+   - `MongoDB Docs: Atlas Sizing and Tier Selection <https://docs.atlas.mongodb.com/sizing-tier-selection/>`__
+   - `MongoDB Docs: Model One-to-Many Relationships with Document References <https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/>`__
+   - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   - `Blog: The Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__
+
+
