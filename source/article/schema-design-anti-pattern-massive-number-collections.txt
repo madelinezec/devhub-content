@@ -65,7 +65,7 @@ Massive Number of Collections
  
 .. introduction:: 
 
-   In the first post in this MongoDB Schema Design Anti-Patterns series, we discussed how we should avoid massive arrays when designing our schemas.  But what about having a massive number of `collections <https://docs.mongodb.com/manual/reference/glossary/#term-collection>`__?  Turns out, they're not great either.  In this post, we'll examine why.
+   In the `first post in this MongoDB Schema Design Anti-Patterns series <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__, we discussed how we should avoid massive arrays when designing our schemas.  But what about having a massive number of `collections <https://docs.mongodb.com/manual/reference/glossary/#term-collection>`__?  Turns out, they're not great either.  In this post, we'll examine why.
 
 .. content::
 
