@@ -345,13 +345,13 @@ if __name__ == '__main__':
 
     blog_posts = []
     with os.scandir('../source/article') as f:
-        for file in f:
+        for file in filter(lambda x: x.path.endswith(".txt"), f):
             blog_posts.append(file)
     with os.scandir('../source/how-to') as f:
-        for file in f:
+        for file in filter(lambda x: x.path.endswith(".txt"), f):
             blog_posts.append(file)
     with os.scandir('../source/quickstart') as f:
-        for file in f:
+        for file in filter(lambda x: x.path.endswith(".txt"), f):
             blog_posts.append(file)
 
     file_tags = []
@@ -397,7 +397,7 @@ if __name__ == '__main__':
     blog_posts_and_authors = list(blog_posts)
 
     with os.scandir('../source/includes/authors') as f:
-        for file in f:
+        for file in filter(lambda x: x.path.endswith(".rst"), f):
             blog_posts_and_authors.append(file)
 
     for file in blog_posts_and_authors:
@@ -406,11 +406,11 @@ if __name__ == '__main__':
 
     all_images = []
     for (dirpath, dirnames, filenames) in os.walk('../source/images'):
-        all_images += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
+        all_images += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames if not file.endswith('.DS_STORE')]
 
     all_includes = []
     for (dirpath, dirnames, filenames) in os.walk('../source/includes'):
-        all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames]
+        all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames if not file.endswith('.DS_STORE')]
 
     check_thing_not_used('images', all_images, images_used)
     check_thing_not_found('images', all_images, images_used)
