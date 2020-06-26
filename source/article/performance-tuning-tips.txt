@@ -1,0 +1,449 @@
+:template: devhub-article
+
+.. meta-description::
+
+   Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @MongoDB
+   :title: MongoDB Performance Tuning Questions
+   :image: /images/social/twitter/twitter-tuning.png
+   :image-alt: Mongoose vs NodeJS Driver
+
+   Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
+
+.. og::
+   :url: http://developer.mongodb.com/article/performance-tuning-tips
+   :title: MongoDB Performance Tuning Questions
+   :image: /images/social/open-graph/og-tuning.png
+   :type: article
+
+   Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
+
+.. include:: /includes/authors/mongodb.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: article
+
+.. level:: beginner
+
+.. products::
+
+   * Atlas
+
+.. atf-image:: /images/atf-images/illustrations/tuning.png
+
+====================================
+MongoDB Performance Tuning Questions
+====================================
+
+.. introduction::
+
+   Most of the challenges related to keeping a MongoDB cluster running at
+   top speed can be addressed by asking a small number of fundamental
+   questions and then using a few crucial metrics to answer them.
+
+   By keeping an eye on the metrics related to query performance, database
+   performance, throughput, resource utilization, resource saturation, and
+   other critical "assertion" errors it's possible to find problems that
+   may be lurking in your cluster. Early detection allows you to stay ahead
+   of the game, resolving issues before they affect performance.
+
+   These fundamental questions apply no matter how MongoDB is used, whether
+   through `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__, the managed service available on all major cloud
+   providers, or through MongoDB Community or Enterprise editions, which
+   are run in a self-managed manner on-premise or in the cloud.
+
+   Each type of MongoDB deployment can be used to support databases at
+   scale with immense transaction volumes and that means performance tuning
+   should be a constant activity.
+
+   But the good news is that the same metrics are used in the tuning
+   process no matter how MongoDB is used.
+
+   However, as we'll see, the tuning process is much easier in the cloud
+   using `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ where everything is more automatic and
+   prefabricated.
+
+.. content::
+
+   Here are the key questions you should always be asking about MongoDB
+   performance tuning and the metrics that can answer them.
+
+   Are all queries running at top speed?
+   -------------------------------------
+
+   Query problems are perhaps the lowest hanging fruit when it comes to
+   debugging MongoDB performance issues. Finding problems and fixing them
+   is generally straightforward. This section covers the metrics that can
+   reveal query performance problems and what to do if you find slow
+   queries.
+
+   **Slow Query Log.** The time elapsed and the method used to execute each
+   query is captured in MongoDB log files, which can be searched for slow
+   queries. In addition, queries over a certain threshold can be logged
+   explicitly by the `MongoDB Database
+   Profiler <https://docs.mongodb.com/manual/tutorial/manage-the-database-profiler>`__.
+
+   -  When a query is slow, first look to see if it was a `collection scan
+      rather than an index scan <https://docs.mongodb.com/manual/reference/explain-results/#collection-scan-vs-index-use>`__.
+
+      -  Collection scans means all documents in a collection must be read.
+      -  Index scans limit the number of documents that must be inspected.
+
+   -  `Consider adding an index when you see a lot of collection
+      scans <https://docs.mongodb.com/manual/tutorial/analyze-query-plan/>`__.
+   -  But remember: indexes have a cost when it comes to writes and
+      updates. Too many indexes that are underutilized can slow down the
+      modification or insertion of new documents. Depending on the nature
+      of your workloads, this may or may not be a problem.
+
+   **Scanned vs Returned** is a metric that `can be found in Cloud
+   Manager <https://www.mongodb.com/blog/post/check-your-query-and-index-performance-with-the#:~:text=%E2%80%9CScanned%2Freturned%E2%80%9D%20refers%20to,for%20MongoDB%202.4%20and%20newer.>`__
+   and in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ that indicates how many documents had to be scanned
+   in order to return the documents meeting the query.
+
+   -  In the absence of indexes, a rarely met ideal for this ratio is 1/1,
+      meaning all documents scanned were returned — no wasted scans. Most
+      of the time however, when scanning is done, documents are scanned
+      that are not returned meaning the ratio is greater than 1.
+   -  When indexes are used, this ratio can be less than 1 or even 0,
+      meaning you have a `covered
+      query <https://docs.mongodb.com/manual/core/query-optimization/#covered-query>`__.
+      When no documents needed to be scanned, producing a ratio of 0, that
+      means all the data needed was in the index.
+   -  Scanning huge amounts of documents is inefficient and could indicate
+      problems regarding missing indexes or indicate a need for `query
+      optimization <https://docs.mongodb.com/manual/core/query-optimization/>`__.
+
+   **Scan and Order** is an index related metric that can be found in Cloud
+   Manager and `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__.
+
+   -  A high Scan and Order number, say 20 or more, indicates that the
+      server is having to sort query results to get them in the right
+      order. This takes time and increases the memory load on the server.
+   -  Fix this by making sure indexes are sorted in the order in which the
+      queries need the documents, or by adding missing indexes.
+
+   **WiredTiger Ticket Number** is a key indicator of the performance of
+   the `WiredTiger <https://docs.mongodb.com/manual/core/wiredtiger/>`__
+   storage engine, which, since release 3.2, has been the storage engine
+   for MongoDB.
+
+   -  WiredTiger has a concept of read or write tickets that are created
+      when the database is accessed. The WiredTiger ticket number should
+      always be at 128.
+   -  If the value goes below 128 and stays below that number, that means
+      the server is waiting on something and it's an indication of a
+      problem.
+   -  The remedy is then to find the operations that are going too slowly
+      and start a debugging process.
+   -  Deployments of MongoDB using releases older than 3.2 will certainly
+      get a performance boost from migrating to a later version that uses
+      WiredTiger.
+
+   **Document Structure Antipatterns** aren't revealed by a metric but can
+   be something to look for when debugging slow queries. Here are two of
+   the most notorious bad practices that hurt performance.
+
+   **Unbounded arrays:** In a MongoDB document, if an array can grow
+   without a size limit, it could cause a performance problem because every
+   time you update the array, MongoDB has to rewrite the array into the
+   document. If the array is huge, this can cause a performance problem.
+   Learn more at `Avoid Unbounded
+   Arrays <https://docs.atlas.mongodb.com/schema-advisor/avoid-unbounded-arrays/>`__
+   and `Performance Best Practices: Query Patterns and
+   Profiling <https://www.mongodb.com/blog/post/performance-best-practices-query-patterns-and-profiling>`__.
+
+   **Subdocuments without bounds:** The same thing can happen with respect
+   to subdocuments. MongoDB supports inserting documents within documents,
+   with up to 128 levels of nesting. Each MongoDB document, including
+   subdocuments, also has a size limit of 16MB. If the number of
+   subdocuments becomes excessive, performance problems may result.
+
+   One common fix to this problem is to move some or all of the
+   subdocuments to a separate collection and then refer to them from the
+   original document. You can learn more about this topic in :doc:`this blog post </article/schema-design-anti-pattern-bloated-documents>`.
+
+   Is the database performing at top speed?
+   ----------------------------------------
+
+   MongoDB, like most advanced database systems, has thousands of metrics
+   that track all aspects of database performance which includes reading,
+   writing, and querying the database, as well as making sure background
+   maintenance tasks like backups don't gum up the works.
+
+   The metrics described in this section all indicate larger problems that
+   can have a variety of causes. Like a warning light on a dashboard, these
+   metrics are invaluable high-level indicators that help you start looking
+   for the causes before the database has a catastrophic failure.
+
+   .. blockquote::
+
+      Note: Various ways to get access to all of these metrics are covered
+      below in the :ref:`getting-access-metrics` section.
+
+   **Replication lag** occurs when a secondary member of a replica set
+   falls behind the primary. A detailed examination of the OpLog related
+   metrics can help get to the bottom of the problems but the causes are
+   often:
+
+   -  A networking issue between the primary and secondary, making nodes
+      unreachable
+   -  A secondary node applying data slower than the primary node
+   -  Insufficient write capacity in which case you should add more shards
+   -  Slow operations on the primary node, blocking replication
+
+   **Locking performance** problems are indicated when the number of
+   available read or write tickets remaining reaches zero, which means new
+   read or write requests will be queued until a new read or write ticket
+   is available.
+
+   -  MongoDB's internal locking system is used to support simultaneous
+      queries while avoiding write conflicts and inconsistent reads.
+   -  Locking performance problems can indicate a variety of problems
+      including suboptimal indexes and poor schema design patterns, 
+      both of which can lead to locks being held longer than necessary.
+
+   **Number of open cursors rising** without a corresponding growth of
+   traffic is often symptomatic of poorly indexed queries or the result of
+   long running queries due to large result sets.
+
+   -  This metric can be another indicator that the kind of query
+      optimization techniques mentioned in the first section are in order.
+
+   Is the cluster overloaded?
+   --------------------------
+
+   A large part of performance tuning is recognizing when your total
+   traffic, the throughput of transactions through the system, is rising
+   beyond the planned capacity of your cluster. By keeping track of growth
+   in throughput, it's possible to expand the capacity in an orderly
+   manner. Here are the metrics to keep track of.
+
+   **Read and Write Operations** is the fundamental metric that indicates
+   how much work is done by the cluster. The ratio of reads to writes is
+   highly dependent on the nature of the workloads running on the cluster.
+
+   -  Monitoring read and write operations over time allows normal ranges
+      and thresholds to be established.
+   -  As trends in read and write operations show growth in throughput,
+      capacity should be gradually increased.
+
+   **Document Metrics** and **Query Executor** are good indications of
+   whether the cluster is actually too busy. These metrics can be found in
+   Cloud Manager and in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__. As with read and write operations,
+   there is no right or wrong number for these metrics, but having a good
+   idea of what's normal helps you discern whether poor performance is
+   coming from large workload size or attributable to other reasons.
+
+   -  Document metrics are updated anytime you return a document or insert
+      a document. The more documents being returned, inserted, updated or
+      deleted, the busier your cluster is.
+
+      -  Poor performance in a cluster that has plenty of capacity usually
+         points to query problems.
+
+   -  The query executor tells how many queries are being processed through
+      two data points:
+
+      -  Scanned - The average rate per second over the selected sample
+         period of index items scanned during queries and query-plan
+         evaluation.
+      -  Scanned objects - The average rate per second over the selected
+         sample period of documents scanned during queries and query-plan
+         evaluation.
+
+   **Hardware and Network metrics** can be important indications that
+   throughput is rising and will exceed the capacity of computing
+   infrastructure. These metrics are gathered from the operating system and
+   networking infrastructure. To make these metrics useful for diagnostic
+   purposes, you must have a sense of what is normal.
+
+   -  In `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__, or when using Cloud Manager, these metrics are
+      easily displayed. If you are running on-premise, it depends on your
+      operating system.
+   -  There's a lot to track but at a minimum have a baseline range for
+      metrics like:
+
+      -  Disk latency
+      -  Disk IOPS
+      -  Number of Connections
+
+   Is the cluster running out of key resources?
+   --------------------------------------------
+
+   A MongoDB cluster makes use of a variety of resources that are provided
+   by the underlying computing and networking infrastructure. These can be
+   monitored from within MongoDB as well as from outside of MongoDB at the
+   level of computing infrastructure as described in the previous section.
+   Here are the crucial resources that can be easily tracked from within
+   Mongo, especially through Cloud Manager and `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__.
+
+   **Current number of client connections** is usually an effective metric
+   to indicate total load on a system. Keeping track of normal ranges at
+   various times of the day or week can help quickly identify spikes in
+   traffic.
+
+   -  A related metric, percentage of connections used, can indicate when
+      MongoDB is getting close to running out of available connections.
+
+   **Storage metrics** track how MongoDB is using persistent storage. In
+   the WiredTiger storage engine, each collection is a file and so is each
+   index. When a document in a collection is updated, the entire document
+   is re-written.
+
+   -  If memory space metrics (dataSize, indexSize, or storageSize) or the
+      number of objects show a significant unexpected change while the
+      database traffic stays within ordinary ranges, it can indicate a
+      problem.
+   -  A sudden drop in dataSize may indicate a large amount of data
+      deletion, which should be quickly investigated if it was not
+      expected.
+
+   **Memory metrics** show how MongoDB is using the virtual memory of the
+   computing infrastructure that is hosting the cluster.
+
+   -  An increasing number of page faults or a growing amount of dirty data
+      — data changed but not yet written to disk — can indicate problems
+      related to the amount of memory available to the cluster.
+   -  Cache metrics can help determine if the working set is outgrowing the
+      available cache.
+
+   Are critical errors on the rise?
+   --------------------------------
+
+   `MongoDB asserts <https://docs.mongodb.com/manual/reference/command/serverStatus/#asserts>`__
+   are documents created, almost always because of an
+   error, that are captured as part of the MongoDB logging process.
+
+   -  Monitoring the number of asserts created at various levels of
+      severity can provide a first level indication of unexpected problems.
+      Asserts can be message asserts, the most serious kind, or warning
+      assets, regular asserts, and user asserts.
+   -  Examining the asserts can provide clues that may lead to the
+      discovery of problems.
+
+   .. _getting-access-metrics:
+
+   Getting Access to Metrics and Setting Up Monitoring
+   ---------------------------------------------------
+
+   Making use of metrics is far easier if you know the data well: where it
+   comes from, how to get at it, and what it means.
+
+   As the MongoDB platform has evolved, it has become far easier to monitor
+   clusters and resolve common problems. In addition, the performance
+   tuning monitoring and analysis has become increasingly automated. For
+   example, `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ through Performance Advisor will now suggest
+   adding indexes if it detects a query performance problem.
+
+   But it's best to know the whole story of the data, not just the pretty
+   graphs produced at the end.
+
+   Data Sources for MongoDB Metrics
+   --------------------------------
+
+   The sources for metrics used to monitor MongoDB are the logs created
+   when MongoDB is running and the commands that can be run inside of the
+   MongoDB system. These commands produce the detailed statistics that
+   describe the state of the system.
+
+   `Monitoring MongoDB performance metrics
+   (WiredTiger) <https://www.datadoghq.com/blog/monitoring-mongodb-performance-metrics-wiredtiger/>`__
+   contains an excellent categorization of the metrics available for
+   different purposes and the commands that can be used to get them. These
+   commands provide a huge amount of detailed information in raw form that
+   looks something like the following screenshot:
+
+   .. image:: /images/migration-campaign/wiredtiger-screenshot.png
+      :align: center
+      :alt: WiredTiger Screenshot
+
+   This information is of high quality but difficult to use.
+
+   Monitoring Environments for MongoDB Metrics
+   -------------------------------------------
+
+   As MongoDB has matured as a platform, specialized interfaces have been
+   created to bring together the most useful metrics.
+
+   -  `Ops Manager <https://www.mongodb.com/products/ops-manager>`__ is a
+      management platform for on-premise and private cloud deployments of
+      MongoDB that includes extensive monitoring and alerting capabilities.
+   -  `Cloud Manager <https://www.mongodb.com/cloud/cloud-manager>`__ is a
+      management platform for self-managed cloud deployments of MongoDB that
+      also includes extensive monitoring and alerting capabilities. (Remember
+      this screenshot reflects the user interface at the time of writing.)
+
+   .. image:: /images/migration-campaign/cloud-manager.png
+      :align: center
+      :alt: MongoDB Cloud Manager
+
+   -  `Real Time Performance
+      Panel <https://docs.atlas.mongodb.com/real-time-performance-panel/index.html>`__,
+      part of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ or MongoDB Ops Manager (requires MongoDB Enterprise
+      Advanced subscription), provides graph or table views of dozens of metrics and
+      is a great way to keep track of many aspects of performance,
+      including most of the metrics discussed earlier.
+   -  Commercial products like `New Relic <https://newrelic.com/>`__, `Sumo Logic <https://www.sumologic.com/>`__,
+      and `DataDog <https://www.datadoghq.com/>`__ all
+      provide interfaces designed for monitoring and alerting on MongoDB
+      clusters. A variety of open source platforms such as
+      `mtools <https://github.com/rueckstiess/mtools>`__ can be used as
+      well.
+
+   Performance Management Tools for MongoDB Atlas
+   ----------------------------------------------
+
+   `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ has taken advantage of the standardized APIs and massive
+   amounts of data available on cloud platforms to break new ground in
+   automating performance tuning. Also, in addition to the `Real Time Performance
+   Panel <https://docs.atlas.mongodb.com/real-time-performance-panel/index.html>`__
+   mentioned above, the `Performance
+   Advisor <https://docs.atlas.mongodb.com/performance-advisor/>`__ for
+   `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ analyzes queries that you are actually making on your
+   data, determines what's slow and what's not, and makes recommendations
+   for when to add indexes that take into account the indexes already in
+   use.
+
+   The Professional Services Option
+   --------------------------------
+
+   In a sense, the questions covered in this article represent a playbook
+   for running a performance tuning process. If you're already running such
+   a process, perhaps some new ideas have occurred to you based on the
+   analysis.
+
+   Resources like this article can help you achieve or refine your goals if
+   you know the questions to ask and some methods to get there. But if you
+   don't know the questions to ask or the best steps to take, it's wise to
+   avoid trial and error and ask someone with experience. With broad
+   expertise in tuning large MongoDB deployments, `professional
+   services <https://www.mongodb.com/products/consulting>`__ can help
+   identify the most effective steps to take to improve performance right
+   away.
+
+   Once any immediate issues are resolved, professional services can guide
+   you in creating an ongoing streamlined performance tuning process to
+   keep an eye on and action the metrics important to your deployment.
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   We hope this article has made it clear that with a modest amount of
+   effort, it's possible to keep your MongoDB cluster in top shape. No
+   matter what types of workloads are running or where the deployment is
+   located, use the ideas and tools mentioned above to know what's
+   happening in your cluster and address performance problems before they
+   become noticeable or cause major outages.
+
+   .. blockquote::
+
+      See the difference with `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__.
+
+      Ready for `Professional Services <https://www.mongodb.com/contact/consulting>`__?
