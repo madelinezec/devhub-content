@@ -1,0 +1,250 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: Set Global Read and Write Concerns in MongoDB 4.4
+   :image: /images/social/twitter/Twitter-docs.png
+   :image-alt: MongoDB documents
+
+   Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/global-read-write-concerns
+   :title: Set Global Read and Write Concerns in MongoDB 4.4
+   :image: /images/social/open-graph/og-docs.png
+   :type: article
+
+   Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. atf-image:: /images/atf-images/illustrations/docs.png
+
+.. pubdate:: 2020-06-26
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * MongoDB 4.4
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=================================================
+Set Global Read and Write Concerns in MongoDB 4.4
+=================================================
+
+.. introduction::
+
+   MongoDB is very flexible when it comes to both reading and writing data. When it comes to writing data, a MongoDB `write concern <https://docs.mongodb.com/manual/reference/write-concern/>`__ allows you to set the level of acknowledgment for a desired write operation. Likewise, the `read concern <https://docs.mongodb.com/manual/reference/read-concern/>`__ allows you to control the consistency and isolation properties of the data read from your replica sets. Finding the right values for the read and write concerns is pivotal as your application evolves and with the latest release of MongoDB adding global read isolation and write durability defaults is now possible.
+   
+   MongoDB 4.4 is available in `beta right now <https://www.mongodb.com/blog/post/announcing-mongodb-44--mongodb-cloud>`__. You can try it out in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ or `download <https://www.mongodb.com/try/download/community>`__ the development release. In this post, we are going to look at how we can set our read isolation and write durability defaults globally and also how we can override these global settings on a per client or per operation basis when needed.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial you'll need:
+
+   * `MongoDB 4.4 <https://www.mongodb.com/try/download/community>`__
+   * `MongoDB shell <https://docs.mongodb.com/manual/mongo/>`__
+
+   .. blockquote::
+
+      Setting global read and write concerns is currently unavailable on MongoDB Atlas. If you wish to follow along with this tutorial, you'll need your own instance of MongoDB 4.4 installed.
+
+.. content::
+
+   Read and Write Concerns
+   -----------------------
+
+   Before we get into how we can set these features globally, let's quickly examine what it is they actually do, what benefits they provide, and why we should even care.
+
+   We'll start with the MongoDB `write concern <https://docs.mongodb.com/manual/reference/write-concern/>`__ functionality. By default, when you send a write operation to a MongoDB database, it has a write concern of ``w:1``. What this means is that the write operation will be acknowledged as successful when the primary in a replica set has successfully executed the write operation. 
+   
+   Let's assume you're working with a 3-node replicate set, which is the default when you create a `free MongoDB Atlas cluster <https://www.mongodb.com/cloud/atlas>`__. Sending a write command such as ``db.collection('test').insertOne({name:"Ado"})`` will be deemed successful when the primary has acknowledged the write. This ensures that the data doesn't violate any database constraints and has successfully been written to the database in memory. We can improve this write concern durability, by increasing the number of nodes we want to acknowledge the write.
+
+   Instead of ``w:1``, let's say we set it to ``w:2``. Now when we send a write operation to the database, we wouldn't hear back until both the primary, and one of the two secondary nodes acknowledged the write operation was successful. Likewise, we could also set the acknowledgement value to 0, i.e ``w:0``, and in this instance we wouldn't ask for acknowledgement at all. I wouldn't recommend using ``w:0`` for any important data, but in some instances it can be a valid option. Finally, if we had a three member replica set and we set the w value to 3, i.e ``w:3``, now the primary and both of the secondary nodes would need to acknowledge the write. I wouldn't recommend this approach either, because if one of the secondary members become unavailable, we wouldn't be able to acknowledge write operations, and our system would no longer be highly available.
+
+   Additionally, when it comes to write concern, we aren't limited to setting a numeric value. We can set the value of w to `"majority" <https://docs.mongodb.com/manual/reference/write-concern/#writeconcern._dq_majority_dq_>`__ for example, which will wait for the write operation to propagate to a majority of the nodes or even `write our own custom write concern <https://docs.mongodb.com/manual/reference/write-concern/#writeconcern.%3Ccustom-write-concern-name%3E>`__.
+
+   MongoDB `read concern <https://docs.mongodb.com/manual/reference/read-concern/>`__  allows you to control the consistency and isolation properties of the data read from replica sets and replica set shards. Essentially what this means is that when you send a read operation to the database such as a `db.collection.find() <https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html>`__, you can specify how durable the data that is returned must be. Note that read concern should not be confused with `read preference <https://docs.mongodb.com/manual/core/read-preference/>`__, which specifies which member of a replica set you want to read from. 
+
+   There are multiple levels of read concern including `local <https://docs.mongodb.com/manual/reference/read-concern-local/>`__, `available <https://docs.mongodb.com/manual/reference/read-concern-available/>`__, `majority <https://docs.mongodb.com/manual/reference/read-concern-majority/>`__, `linearizable <https://docs.mongodb.com/manual/reference/read-concern-linearizable/>`__, and `snapshot <https://docs.mongodb.com/manual/reference/read-concern-snapshot/>`__. Each level is complex enough that it can be an article itself, but the general idea is similar to that of the write concern. Setting a read concern level will allow you to control the type of data read. Defaults for read concerns can vary and you can find what default is applied when `here <https://docs.mongodb.com/manual/reference/mongodb-defaults/>`__. Default read concern reads the most recent data, rather than data that's been majority committed.
+
+   Through the effective use of `write concerns <https://docs.mongodb.com/manual/reference/write-concern/>`__ and `read concerns <https://docs.mongodb.com/manual/reference/read-concern/>`__, you can adjust the level of consistency and availability defaults as appropriate for your application.
+
+   Setting Global Read and Write Concerns
+   --------------------------------------
+
+   So now that we know a bit more about why these features exist and how they work, let's see how we can change the defaults globally. In MongoDB 4.4, we can use the `db.adminCommand() <https://docs.mongodb.com/master/reference/method/db.adminCommand/index.html>`__ to configure our isolation and durability defaults.
+
+   .. blockquote::
+
+      Setting global read and write concerns is currently unavailable on MongoDB Atlas. If you wish to follow along with this tutorial, you'll need your own instance of MongoDB 4.4 installed. 
+
+   We'll use the ``db.adminCommand()`` to set a default read and write concern of majority. In the `MongoDB shell <https://docs.mongodb.com/manual/mongo/>`__, execute the following command:
+
+   .. code-block:: bash
+
+      db.adminCommand({
+        setDefaultRWConcern: 1,
+        defaultReadConcern: { level : "majority" },
+        defaultWriteConcern: { w: "majority" }
+      })
+
+   Note that to execute this command you need to have a `replica set <https://docs.mongodb.com/manual/tutorial/deploy-replica-set/>`__ and the command will need to be sent to the primary node. Additionally, if you have a sharded cluster, the command will need to be run on the ``mongos``. If you have a standalone node, you'll get an error. The final requirement to be able to execute the ``setDefaultRWConcern`` command is having the `correct privilege <https://docs.mongodb.com/master/reference/privilege-actions/#getDefaultRWConcern>`__.
+
+   When setting default read and write concerns, you don't have to set both a default read concern and a default write concern, you are allowed to set only a default read concern or a default write concern as you see fit. For example, say we only wanted to set a default write concern, it would look something like this:
+
+   .. code-block:: bash
+
+      db.adminCommand({
+        setDefaultRWConcern: 1,
+        defaultWriteConcern: { w: 2 }
+      })
+
+   The above command would set just a default write concern of 2, meaning that the write would succeed when the primary and one secondary node acknowledged the write.
+
+   When it comes to default write concerns, in addition to specifying the acknowledgment, you can also set a ``wtimeout`` period for how long an operation has to wait for an acknowledgement. To set this we can do this:
+
+   .. code-block:: bash
+
+      db.adminCommand({
+        setDefaultRWConcern: 1,
+        defaultWriteConcern: { w: 2, wtimeout: 5000 }
+      })
+
+   This will set a timeout of 5000ms so if we don't get an acknowledgement within 5 seconds, the write operation will return an ``writeConcern`` timeout error.
+
+   To unset either a default read or write concern, you can simply pass into it an empty object.
+
+   .. code-block:: bash
+
+      db.adminCommand({
+        setDefaultRWConcern: 1,
+        defaultReadConcern: { },
+        defaultWriteConcern: { }
+      })
+
+   This will return the read concern and the write concern to their `MongoDB defaults <https://docs.mongodb.com/manual/reference/mongodb-defaults/>`__. You can also easily check and see what defaults are currently set for your global read and write concerns using the `getDefaultRWConcern command <https://docs.mongodb.com/master/reference/command/getDefaultRWConcern/#dbcmd.getDefaultRWConcern>`__. When you run this command against the ``admin`` database like so:
+
+   .. code-block:: bash
+
+      db.adminCommand({
+        getDefaultRWConcern: 1
+      })
+
+   You will get a response like the one below showing you your global settings:
+
+   .. code-block::
+
+      {
+        "defaultWriteConcern" : {
+          "w" : "majority"
+        },
+        "defaultReadConcern" : {
+          "level" : "majority"
+        },
+        "updateOpTime" : Timestamp(1586290895, 1),
+        "updateWallClockTime" : ISODate("2020-04-07T20:21:41.849Z"),
+        "localUpdateWallClockTime" : ISODate("2020-04-07T20:21:41.862Z"),
+        "ok" : 1,
+        "$clusterTime" : { ... }
+        "operationTime" : Timestamp(1586290925, 1)
+      }
+
+   In the next section, we'll take a look at how we can override these global settings when needed.  
+
+   Overriding Global Read and Write Concerns
+   ------------------------------------------
+
+   MongoDB is a very flexible database. The default read and write concerns allow you to set reasonable defaults for how clients interact with your database cluster-wide, but as your application evolves a specific client may need a different read isolation or write durability default. This can be accomplished using any of the `MongoDB drivers <https://docs.mongodb.com/drivers/>`__.
+
+   We can override read and write concerns at:
+
+   - the client connection layer when connecting to the MongoDB database,
+   - the database level,
+   - the collection level,
+   - an individual operation or query.
+
+   However, note that `MongoDB transactions <https://docs.mongodb.com/manual/core/transactions/>`__ can span multiple databases and collections, and since all operations within a transaction must use the same write concern, transactions have their own hierarchy of:
+
+   - the client connection layer,
+   - the session level,
+   - the transaction level.
+
+   A diagram showing this inheritance is presented below to help you understand what read and write concern takes precedence when multiple are declared:
+
+   .. image:: /images/read-write-concerns/read-write-concerns-diagram.png
+      :alt: Read and Write Concerns Diagram
+   
+   We'll take a look at a couple of examples where we override the read and write concerns. For our examples we'll use the `Node.js Driver <http://mongodb.github.io/node-mongodb-native/>`__.
+
+   Let's see an example of how we would overwrite our read and write concerns in our Node.js application. The first example we'll look at is how to override read and write concerns at the database level. To do this our code will look like this:
+
+   .. code-block:: js
+     
+      const MongoClient = require('mongodb').MongoClient;
+      const uri = "{YOUR-CONNECTION-STRING}";
+      const client = new MongoClient(uri, { useNewUrlParser: true });
+
+      client.connect(err => {
+        const options = {w:"majority", readConcern: {level: "majority"}};
+
+        const db = client.db("test", options);
+      });
+
+   When we specify the database we want to connect to, in this case the database is called ``test``, we also pass an ``options`` object with the read and write concerns we wish to use. For our first example, we are using the **majority** concern for both read and write operations.
+   
+   If we already set defaults globally, then overriding in this way may not make sense, but we may still run into a situation where we want a specific `collection <https://mongodb.github.io/node-mongodb-native/3.6/api/Db.html#collection>`__ to execute read and write operations at a specific read or write concern. Let's declare a collection with a **majority** write concern and a read concern "majority".
+
+   .. code-block:: js
+     
+      const options = {w:"majority", readConcern: {level: "majority"}};
+
+      const collection = db.collection('documents', options);
+
+   Likewise we can even scope it down to a specific operation. In the following example we'll use the **majority** read concern for just one specific query.
+
+   .. code-block:: js
+     
+      const collection = db.collection('documents');
+      
+      collection.insertOne({name:"Ado Kukic"}, {w:"majority", wtimeout: 5000})
+
+   The code above will execute a write query and try to insert a document that has one field titled **name**. For the query to be successful, the write operation will have to be acknowledged by the primary and one secondary, assuming we have a three member replica set.
+
+   Being able to set the default read and write concerns is important to providing developers the ability to set defaults that make sense for their use case, but also the flexibility to easily override those defaults when needed.
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   Global read or write concerns allow developers to set default read isolation and write durability defaults for their database cluster-wide. As your application evolves, you are able to override the global read and write concerns at the client level ensuring you have flexibility when you need it and customized defaults when you don't. It is available in MongoDB 4.4, which is available in `beta today <https://www.mongodb.com/blog/post/announcing-mongodb-44--mongodb-cloud>`__.
+
+   .. include:: /includes/callouts/safe-harbor.rst
