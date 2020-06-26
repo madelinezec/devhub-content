@@ -31,7 +31,7 @@
 
 .. include:: /includes/authors/smith-mark.rst
 
-.. pubdate:: 2020-06-22
+.. pubdate:: 2020-06-26
 
 .. type:: quickstart
 
@@ -811,3 +811,4 @@ Quick Start: Up and Running with Rust and MongoDB
 
    There will be more Rust Quick Start posts on `MongoDB Developer Hub <https://developer.mongodb.com/>`__,
    covering different parts of MongoDB and the MongoDB Rust Driver, so keep checking back!
+
