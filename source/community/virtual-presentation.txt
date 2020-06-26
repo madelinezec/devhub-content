@@ -1,0 +1,150 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: Running Virtual Presentations
+   :image: /images/social/twitter/twitter-virtual-presentation.png
+   :image-alt: Running Virtual Presentations
+
+   Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
+
+.. og::
+   :url: http://developer.mongodb.com/community/virtual-presentation
+   :title: Running Virtual Presentations
+   :image: /images/social/twitter/twitter-virtual-presentation.png
+   :type: article
+
+   Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/virtual-presentation.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+========================================
+Prepare and Deliver Remote Presentations
+========================================
+
+.. introduction::
+
+   When we talk about delivering a presentation we assume a stage or at least people physically sitting in a room. While this has some challenges on its own giving a presentation remotely from your desk is different. You don't have the immediate reaction of the audience like people laughing about your jokes. On the other side of the screen people can leave much more easily. It's simple to close the stream compared to sneaking out of a session room. You'll need to adopt your presentation to these circumstances.
+
+.. content::
+
+   Planning the Talk
+   -----------------
+
+   .. image:: /images/community/virtual-presentation/plan.jpg
+      :alt: note book with plan          
+      :align: center 
+   
+   **Plan for a strong start**
+
+   The beginning of a presentation is much more important in a virtual environment. It's easier to leave a virtual presentation than to leave a room at a conference. Starting with a story or with information that captures the attention of the audience will make it more likely for them to stay through the rest of the presentation.
+
+   **Appealing slides** 
+
+   Staring at a screen for one hour can be quite tiring. Therefore it is even more important for a remote presentation to not just show boring slides (for example, just slides with bullet points), but more interesting or interactive ones. Often people only see your slides and hear your voice. Even a tiny camera feed doesn't make a huge difference. So be sure to put in a little more effort on your slides!
+
+   **Be interactive**
+
+   At a presentation on stage you can ask for a "show of hands". How about in virtual talks? You can still do that and you should. It helps you connecting with your audience. Not only that, you can imagine a lot of people watching the presentation will nod but it also reminds you that you're not doing that talk just for yourself or for a machine, but for many others.
+
+   Some platforms let you do live polls. Ask questions, give people the possibility to pick an answer on screen, and share the results with the audience. It helps make your presentation much more engaging.
+
+   **Look for a Co-Presenter**
+
+   The dynamic when presenting with two people is often very different than presenting alone. It helps you sound more natural and engaging. This, of course, can cause some issues in handing over the control for the slides or screen sharing but it can improve the overall experience.
+
+   **Animations**
+
+   Animations require quite some internet bandwidth (on the presenter and the attendee side). Avoid complicated animations if you want a smooth experience.
+
+   Prepare for Delivery / Recording
+   --------------------------------
+
+   .. image:: /images/community/virtual-presentation/recording.jpg
+      :alt: microphone in front of a laptop          
+      :align: center 
+
+   **Camera**
+
+   Some virtual conference platforms and screen capture software offers you to use your camera so people can see you while you give your presentation. Use those. It makes your presentation more interactive and the audience feels more connected. Some things to look after: clean up your office or the room you present from. Try to find a background that doesn't attract people's attention too much. Your content is what matters, not the cool picture behind you!
+
+   **No interruptions**
+
+   This seems obvious but you've probably seen this video: 
+   
+   .. youtube:: Mh4f9AYRCZY
+   
+   Make sure you don't get interrupted by your co-workers or family members during your presentation or the recording of it. Tell co-workers or your family to not enter the room for an hour and put a sign at your door. 
+
+   **No background noise**
+
+   Turn off washing machines, automatic vacuum cleaner, and everything else that makes noise when presenting from home. Turn your phone into flight mode and (as said) close your door. 
+
+   **Your connection**
+
+   Have a stable internet connection. If you do this more often you should think about buying a larger package or having a second internet provider to switch to. Make sure your family is not streaming HD movies at the same time. You might need all the bandwidth.
+
+   **Be ready**
+
+   * Reboot your home router
+   * Reboot your laptop
+   * Close all apps you don't need for the presentation. Especially everything that has notifications, like Slack or Mattermost.
+   * On MacOS: Turn off all your notifications (System Preferences → Notifications)
+   * On Windows: Turn off all your notifications (Windows Key + R → "presentationsettings.exe")
+   * Be ready to go 30 mins before you are set to go live. Use this time to check your connection, slides etc. 
+
+   Remote Q&A
+   ----------
+
+   .. image:: /images/community/virtual-presentation/virtual_q_a.jpg
+      :alt: person typing          
+      :align: center 
+   
+
+   At conferences people can catch you after your talk in the hallway to ask questions, in addition to the Q&A on stage. This is not possible for remote presentations. Make room for Q&A if the platform allows for it.
+
+   On a virtual platform, questions usually stream in during the talk. Some platforms allow attendees to upvote questions: concentrate on your talk and do not read questions in between. You could plan for some breaks to answer the most recent ones. Make sure your presentation flow is not affected too much by this and try to address the questions after your talk.
+
+   **At the end**
+
+   This is the standard for virtual presentations: answering questions at the end. The great thing about virtual platforms is that you usually can answer EVERY question:
+
+   * Have a moderator pick questions and read them to you
+   * Read out the question and answer those with the most votes
+   * Answer other (not so highly voted) questions afterwards on the platform or on a public page
+
+   **Answer questions during the talk**
+
+   Instead of you answering questions directly during the talk, a co-worker can answer questions as they come into the Q&A screen. This actually adds value to a virtual live presentation compared to watching a talk on YouTube.
+
+   Another tactic is to pre-record your talk, stream it, and answer questions yourself (via chat or Q&A screen) as they come in. It can come across a bit strange since it looks like you're answering questions while also giving your presentation, so be clear about this or answer them by logging in with a different user name.

@@ -16,3 +16,5 @@ pgp-version = "{+version+}"
 "MongoDB Schema Design Anti-Patterns" = ["/article/schema-design-anti-pattern-massive-arrays", "/article/schema-design-anti-pattern-massive-number-collections", "/article/schema-design-anti-pattern-unnecessary-indexes", "/article/schema-design-anti-pattern-bloated-documents"]
 "COVID-19" = ["/article/coronavirus-map-live-data-tracker-charts", "/article/johns-hopkins-university-covid-19-data-atlas"]
 "Maps and Geospatial Data" = ["/how-to/location-geofencing-stitch-mapbox", "/how-to/real-time-location-updates-stitch-change-streams-mapbox", "/how-to/searching-nearby-points-interest-mapbox"]
+"Speaker Program" = ["/community/community-speaker-grant","/community/apply-to-speak","/community/art-of-creating-talk","/community/creating-stunning-slides","/community/surviving-the-stage","/community/virtual-presentation"]
+"learnPageExclude" =["/community/apply-to-speak","/community/art-of-creating-talk","/community/community-speaker-grant","/community/creating-stunning-slides","/community/speaker-program","/community/surviving-the-stage","/community/virtual-presentation"]

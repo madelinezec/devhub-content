@@ -1,0 +1,116 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: MongoDB Speaker Grant - The Rules
+   :image: /images/social/twitter/twitter-speaker-grant.png
+   :image-alt: Appy for Speaker Grant
+
+   You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
+
+.. og::
+   :url: http://developer.mongodb.com/community/community-speaker-grant
+   :title: Speaker Grant - The Rules
+   :image: /images/social/twitter/twitter-speaker-grant.png
+   :type: article
+
+   You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/speaker-grant.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================
+Speaker Grant - The Rules
+=========================
+
+.. introduction::
+
+   The MongoDB Community Speakers Program is designed to help build opportunity and visibility for MongoDB community members who are interested in speaking at non-MongoDB events about MongoDB technologies. If you are interested in applying for a grant via the MongoDB Community Speakers Program, please click on the link below and apply.
+   
+   .. blockquote::
+      You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us! `Apply now <https://forms.gle/6T7wqgwaoVJYdwV49>`__!
+
+.. content::
+
+   What's the Deal?
+   ----------------
+
+   You'll get up to $1,000 USD per person per event towards travel and lodging. For reimbursement, you'll need to submit documentation of your travel expenses to MongoDB after the event. Please note that the payment can take up to 2 weeks to process. If selected for this award, you will receive instructions on how to submit documentation.
+
+   .. image:: /images/community/speaker-grant/event.png
+      :alt: event          
+      :align: center 
+
+   What are the event requirements?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   You should already have an event in mind you'd like to speak at. We've written down some requirements for type and size of events that qualify for this program:
+
+   * The conference/event must be a tech industry conference of reasonable size (~500 attendees or more)
+   * The conference theme must be related, in some way, to MongoDB technologies (i.e. databases, mobile development, DevOps, IT-ops, programming languages, data science, etc.)
+   * The conference/event has a code of conduct the align with `MongoDB's Community Code of Conduct <https://www.mongodb.com/community-code-of-conduct>`__
+   * The conference/event doesn't already provide reimbursement or compensation for travel and expenses
+   * The conference/event is not hosted by MongoDB (MongoDB World, .local, etc.)
+
+   .. image:: /images/community/speaker-grant/speaker.png
+      :alt: event          
+      :align: center 
+
+   What are the speaker requirements?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   We want to strengthen our community with this program. That's why we set up some requirements for you as a speaker:
+
+   * You are not a MongoDB employee (permanent or temporary/contract)
+   * You are an active, positive contributor to the MongoDB community
+   * You are willing to mention that you were sponsored by the MongoDB Community and wear MongoDB Community SWAG on stage.
+   * You **don't** have to be a frequent speaker at events. Check out the resources in the :doc:`Community Speaker Program</community/speaker-program>`.
+   
+   .. image:: /images/community/speaker-grant/session.png
+      :alt: event          
+      :align: center 
+
+   What are the requirements for the session?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * Your session will be recorded and shared online (either by you or the event organizers)
+   * Your session is at least 25 minutes in length
+   * Your session covers a topic beneficial to the MongoDB Community and its members (e.g. using MongoDB tech to solve problems or answer big questions, cool projects you've done using MongoDB tech, how to get started with MongoDB, etc.)
+
+.. summary::
+
+   Sounds Good, What's Next?
+   -------------------------
+   
+   Simply apply for a speaker grant today. Applications will be reviewed by the MongoDB Community team and recipients of the grants will be notified. If you accept the grant award, you will be required to provide additional information, such as your mailing address. All grant awards are subject to review and approval by the MongoDB Community team.
+
+   We strongly encourage people who identify as part of an underrepresented group in the tech industry to apply.
+
+   .. blockquote::
+      `Apply here today <https://forms.gle/6T7wqgwaoVJYdwV49>`__

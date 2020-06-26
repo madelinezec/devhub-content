@@ -1,0 +1,195 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: Creating Stunning Slides
+   :image: /images/social/twitter/twitter-creating-slides.png
+   :image-alt: Creating Stunning Slides
+
+   Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
+
+.. og::
+   :url: http://developer.mongodb.com/community/creating-stunning-slides
+   :title: Creating Stunning Slides
+   :image: /images/social/twitter/twitter-creating-slides.png
+   :type: article
+
+   Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/creating-slides.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+========================
+Creating Stunning Slides
+========================
+
+.. introduction::
+
+   Let's face it: The most important thing for a great presentation is the story. So why spend so much time on a good looking slide deck? It helps your audience to capture and remember the most important messages from your talk.
+
+   What is a good slide deck? How do you create one with minimum design efforts? It's simple: Use the MongoDB slide template and follow our tips on how to create stunning slides.
+
+.. content::
+
+   The Deck
+   --------
+   We've actually created two slide decks:
+
+   #. A template containing lots of example slides
+   #. A style guide with assets and guidelines
+   
+   We know that slide creators normally work on their presentation deck while copying over pictures and icons. That's why we decided to have a 2nd deck for assets like icons, illustrations and logos.
+
+   Download
+   --------
+
+   .. blockquote::
+
+      `Download the PowerPoint template, style guide and fonts <https://mongodb.getbynder.com/web/15f1943b1f3a0382/new-mdb-templates/>`__.
+
+.. content::
+
+   .. blockquote::
+
+      Use the `Google Slides Template <https://docs.google.com/presentation/d/1rkVDPlOQx_NdIEtR7TMkLOeXpis7fmwYy9kDbtFSTTw/edit?usp=sharing>`__ and `Google Slides Style Guide <https://docs.google.com/presentation/d/1VELBaE1bgKl_2kLlW5EOsQt7vqYDpFDhtvSDl2PZ1eM/edit?usp=sharing>`__ .
+ 
+.. content::
+
+   Tips For Stunning Slides
+   ------------------------
+   
+   General
+   ~~~~~~~
+   
+   - Think about your story first.
+   - Presentations are about 3 things: The story, the slides, and the delivery. 
+   - Our template doesn't have a bio slide example. We think that a lot of speakers are spending too much time talking about themselves in the beginning of their presentation. We want them to start directly with content - this is what the audience came for! If you want to shortly introduce yourself you can do this with the title slide. If required you can still add your own bio slide. No problem.
+   - Don't repeat the agenda slide for every chapter of your talk. Good presentations have a natural flow. There should be no need to stop and show where you are in the agenda.
+   
+   .. youtube:: YE3V0p9T41w
+
+   Text on Slides
+   ~~~~~~~~~~~~~~
+
+   - With too much text on a slide, the message gets lost.
+   - Avoid sentences. A slide is not a document that need to be 100% grammatically correct. Try to find single words that support your message and put those on your slide.
+   - In general: Write less text on slides.
+   
+   Bullet points on slides:
+
+   - Avoid bullet points if possible. The template provides you with a lot of examples to use instead. A good practice is to combine your bullet points (or talking points) with icons or illustrations. This can help you to make a better visual impression and a memorable talk.
+   - Bullet points shouldn't act as a script: Put your script in the speaker notes, in your head, or even on physical index cards. Please keep your slides clean.
+   
+   Attendees like to read all the text on your slide once you show it. They are constantly trying to figure out what topic on the slide you're currently talking about.
+
+   - Don't show all your text at once. Gradually reveal text. Use animation to show one talking point at a time.
+   - Read out all the text on your slide. Don't say: "You can read it yourself". It's a presentation, not a reading exercise.
+
+   .. youtube:: _gr0umE2MQA
+
+   Visuals
+   ~~~~~~~
+
+   Use visuals wherever possible to support your message.
+
+   - We provide a lot of icons and MongoDB logos in the style guide. Use those.
+   - Full slide pictures can make a great impression.
+   - Use a semi transparent overlay for text on pictures. It can improve the contrast and readability of your text.
+   - If you can't find an icon in our style guide you could also take a look at free icon libraries like `The Noun Project <https://thenounproject.com/>`__.
+   - We don't have a stock photo repository yet. You can use free photo libraries like `Pexels <https://www.pexels.com/>`__, `Unsplash <https://unsplash.com/>`__, and `Nappy <https://www.nappy.com/>`__. Please don't simply copy pictures from the Internet to avoid copyright infringements.
+
+   .. youtube:: UwZyiFvKGpc
+
+   Code on Slides
+   ~~~~~~~~~~~~~~
+
+   Lets' face it: Code is not made for slides. Here are some tips how you can make it less painful:
+
+   - Use the syntax highlighting from your IDE. When copying code from your source code editor and paste it on slides the colors should also be copied. For PowerPoint use Edit → Paste Special → HTML
+   - Don't show a full method or function on a slide. Just highlight the parts of the code you want to explain.
+   - The code you show doesn't have to be compilable, really.
+   - Consider shortening variable names for readability.
+   - We offer a dark slide for code in the template. If you prefer to use a white slide you can create your own.
+   - We recommend using the font "FIRA Mono" for code.
+
+   .. youtube:: 7UeYDRmyvmk
+
+   Colors
+   ~~~~~~
+
+   Slides can look amazing when the colors you use fit together. They can look strange when not. Please use the MongoDB color scheme in our style guide.
+
+   .. youtube:: mFO5xb01KUI
+
+   Numbers
+   ~~~~~~~
+   For proving a point you can use numbers, statistics, graphs, charts, etc. Often, we just show all of the data we have and assume that the attendees will be able to filter out the unessential details. Instead, keep these tips in mind to get your point across in a clearer way:
+
+   - What is the message you want to share that lies behind the data? For example, if you show the market share of browsers: Do you need to show the top 10 browsers or do you just want to highlight that Chrome is dominating that list? You could simply create a graph with just Chrome and "other browsers".
+   - Maybe a pie chart or bar chart doesn't help you to tell your story. In the example of sharing the market share of browsers: Just simply put on the slide that Chrome is dominating the market by xx%.
+   - Get to the heart of your message instead of hiding it behind numbers.
+
+   .. youtube:: HUJse1HWDdE
+
+   Screenshots
+   ~~~~~~~~~~~
+
+   - Take full screen screenshots (for mac users: cmd+shift+3 / for window users: windows + PrtScn).
+   - For web apps: hide browser controls, bookmark bars, and tabs before taking the screenshot.
+   - Zoom into the app, especially if you're taking a screenshot from a high resolution screen. Navigate to the important part of the screen that you're planning to highlight.
+
+   .. youtube:: fDjfi_K6sPY
+
+   Demos
+   ~~~~~
+
+   - Prepare your demos thoroughly. Test those over and over again - especially on the day of your talk.
+   - Keep in mind: demos can fail and they actually do all the time at tech conferences. There can be various reasons: something in your developer environment has changed, you're nervous on stage, or the internet does not work.
+
+   Have a backup plan for your demo:
+   
+   - Prepare screenshots with specific states of your demo. You can show those in case your demo doesn't run smooth.
+   - Prepare a video of you running the demo and embed this into your slide deck. You can show the video and explain what you've been doing live.
+
+   .. youtube:: p7RTq1nF5r4
+
+   Other Things
+   ~~~~~~~~~~~~
+
+   - Don't overuse animations: Animations should have a purpose like moving a document from one database to another. Don't use animations just for the purpose of using an animation. Too much motion on your slides can distract from the story you want to tell.
+   - Don't put important information on the lower 1/3 of your slides and don't assume that everyone in the audience can see the whole slide. Often the setup of the chairs doesn't allow for an unobstructed view of your slides. If you put important information into the lower third of your slides you'll see the heads moving left and right trying to get the information on that slide.
+   - Use an empty dark slide for attention: There are different strategies for getting the attendees immediate attention. One is using a dark slide with nothing on it. People will immediately look at you and you can tell your story. No distractions from your slides. Funny story: At one conference the AV team got nervous because it looked to the them that the project was not working anymore.
+
+   .. youtube:: JDnYVXyl02E
+
+   .. blockquote::
+      Now go and create a stunning slide deck.

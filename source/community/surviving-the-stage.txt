@@ -1,0 +1,216 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: Surviving the Stage
+   :image: /images/social/twitter/twitter-surviving-stage.png
+   :image-alt: Surviving the Stage
+
+   Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
+
+.. og::
+   :url: http://developer.mongodb.com/community/surviving-the-stage
+   :title: Surviving the Stage
+   :image: /images/social/twitter/twitter-surviving-stage.png
+   :type: article
+
+   Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/surviving-stage.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===================
+Surviving the Stage
+===================
+
+.. introduction::
+
+   Most speakers are nervous before they go on stage - even the speakers that are doing this almost every day. Being in front of hundreds of people that watch you and listen to every word you say is not a usual situation. This guide hopefully helps you to be well prepared for this. We want you just to concentrate on one thing: delivering a great talk!
+   
+   Remember: The audience wants you to succeed. They came to your talk to learn something. Most people are probably happy to sit comfortably and enjoy your talk instead of staying on the stage. Keep that in mind: The audience is full of supportive, friendly people.
+
+.. content::
+
+   Before the Talk
+   ---------------
+
+   .. image:: /images/community/surviving-the-stage/empty-seats.jpg
+      :alt: empty seats          
+      :align: center 
+
+   Speaking Time
+   ~~~~~~~~~~~~~
+   Please double or even triple check the agenda. When is your talk? Sometimes conference organizers change the agenda last minute and forget to inform the speakers. Check again and find out what time your talk is scheduled for, even on the very same day of your presentation.
+
+   Room
+   ~~~~
+   The same applies to your room. Often the organizers of a conference pick rooms based on the people showing interest in your presentation. This can be through an app or on a webpage. Based on the popularity of the sessions that happen at the same time, they might change the room for your talk.
+   To calm your nerves you should also check out where the room is in the building at least one hour before your talk is happening. It could also be a good idea to take a look at the room during a break. How does the setup look like? What microphone do they provide? How many seats are there? What does the stage look like? How bright are the lights? All of this can help you get more comfortable with the speaking situation.
+
+   Be There on Time
+   ~~~~~~~~~~~~~~~~
+   A rule of thumb is to be in the room at least 15 minutes before your presentation starts. It could take some time to get your microphone adjusted, to connect your laptop, to try out your clicker, etc. There's often a 10+ minute break between talks. Pro tip: Don't wait outside the room if there's a presentation still going on in there. You don't want to lose setup time by letting the attendees out while you can't enter.
+
+   The Setup
+   ~~~~~~~~~
+   Here's a typical conference setup: a headset mic or one to put on your shirt. Handheld mics are very rare these days. It's also hard to carry a handheld mic in one hand and a clicker in the other hand for a 45 minute presentation. There's usually a technician that helps you put on the mic. Make sure the cable from the mic to the transmitter is not visible (on the back or under your shirt). It would be good to wear something with a pocket or a belt for the transmitter, which is normally the size of a box of playing cards.
+   Furthermore you connect your laptop to the projector cable. These days HDMI is the standard and VGA is very rarely used anymore. Ask the organizers before the event what adapter cable you should bring. Often the conference sends you that information a week before you go.
+
+   You put your laptop on a podium or desk. At larger stages you have a confidence monitor: a TV that is showing your actual slide. If you need to see the speaker notes on the "presenter display" of your slide software, these will be on your laptop screen for 95% of all conferences. Only large keynote stages offer the opportunity to attach another confidence monitor that shows your "presenter display".
+
+   Some other things to remember when setting up:
+   
+   - connect your clicker and try it out
+   - bring extra batteries for your clicker and/or a second clicker
+   - connect your laptop to power - even if you have enough power. Some laptop models put out a stronger video signal when connected to power
+   - turn your phone onto flight mode - you don't want to get calls on stage and the phone signal can interfere with the microphone transmitter
+   - take off your badge - it looks unprofessional to wear a badge on stage. When you wear a MongoDB shirt, make sure the logo is visible and not hidden behind a badge
+   - jewellery - avoid large earrings when you have a headset or bulky necklaces that may bump into a lavalier mic (those that clip onto your clothing)
+    
+   Don't Panic
+   ~~~~~~~~~~~
+   A lot of speakers are asking themselves right before their talk "Why am I doing this? I could sit in the audience and listen to someone's presentation instead!" That's normal. Breathe and calm down.
+
+   Here are some other tips:
+
+   * Bring some friends: It's always good to see a friendly, familiar face in the audience. Talk to your friend right before you go on stage so your mind is not focused too much on the challenge ahead of you.
+   * Find friendly faces: Look around in the audience and find some friendly faces. You can use those attendees later in the talk to get visual confirmation that you're doing great.
+   * Talk to people at the entrance or in the first row: have a casual conversation or just say hi. Connecting to the audience helps you to not think of them as strangers that are going to raise critical questions.
+
+   .. blockquote::
+
+      Always remember: The audience wants you to succeed with your talk. They came to learn something. They don't want you to fail. The audience is full of friends that wants to support you.
+    
+   The Talk
+   --------
+
+   .. image:: /images/community/surviving-the-stage/speaker-on-stage.jpg
+      :alt: speaker on stage        
+      :align: center 
+   
+   So it's time for your talk. Someone gives you a sign or you decide to start the presentation. You go on stage. Take a deep breath. All people are looking at you. Music turns off. Silence. You start speaking. Do you have sweaty palms by just reading these lines? Here's my pro tip:
+
+   Practice the first 5 minutes of your talk very intensely. You must be so well prepared that someone can wake you up in the middle of the night and you give the first 5 minutes of your presentation without thinking. If you are at that stage you can deliver the first 5 minutes of your talk without thinking about your content or looking for words. It's like putting you on auto pilot. During this first 5 minutes you get the feeling that everything works well and you'll also rock the rest of your talk. It really works. Try it.
+
+   Speed
+   ~~~~~
+
+   I once saw a speaker giving a 40 minute presentation in 15 minutes. Talking very fast. Without a pause. You know your content: the audience doesn't. They hear everything for the first time and need some time to process the information. Slow down.
+
+   Pause
+   ~~~~~
+   Use pauses for your advantage. When you stop speaking for 2-3 seconds there can be this awkward silence. Guess what: with that you get everyone's attention. People will look at you and wait to see what is coming next. Use pauses when you have something really important to say and you want everyone to hear it.
+
+   Prepare or Improvise?
+   ~~~~~~~~~~~~~~~~~~~~~
+   Unless you are a super natural speaker that feels comfortable on stage, don't improvise. There are not a lot of presenters that are really good at this. For all others I have one advice: stick to your script. It's not a problem that you've given the same talk before and the recording is freely available. Believe it or not: not a lot of conference participants are watching conference talks online. What's the value of improvising?
+
+   Ohh ohh - Black Out?
+   ~~~~~~~~~~~~~~~~~~~~
+   The show must go on. If you stumble or you don't know how to proceed:
+
+   - make a short break
+   - take a deep breath
+   - skip the current slide and progress with the next one
+
+   Yes, you should skip it. No one knows your script and will recognize that something is missing. Just go on with your next bullet point or slide.
+
+   Don't Talk About the Talk
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+   Some presenters start with: I worked on the slides late night, I just flew in, I added this chapter this morning, etc. The presentation is about the topic, not about how you've put together the slides or about what you did this morning.
+  
+   Find the Nodder
+   ~~~~~~~~~~~~~~~
+   Believe it or not: there's always someone in the audience that nods to every argument you have. To make eye contact with this person during your talk is super motivating. It builds up your self confidence. Find the nodder.
+
+   Use the Stage
+   ~~~~~~~~~~~~~
+   The stage is there for a reason. Try not to hide behind the podium. Of course if you're running a demo you have to be at your laptop on the podium. If you feel comfortable use the non-demo part to move around.
+
+   Don't Turn Your Back to the Audience
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   If you need to read something from your slide, don't turn around. Normally there is a monitor on the stage showing your current slide. If not, go to your laptop and read. But don't turn your back to the audience, even if you want to point something out on your slides.
+  
+   Q&A
+   ---
+
+   .. image:: /images/community/surviving-the-stage/raise-hand.jpg
+      :alt: person raises hand          
+      :align: center 
+
+   You can prepare for your talk, but how about Q&A? Some speakers are afraid of Q&A sessions especially those with imposter syndrome: What if they find out that I'm not a true expert? What if I get a mean question? What if I don't know the answer? Q&A is often not under our control and this can be scary.
+
+   You Don't Have To
+   ~~~~~~~~~~~~~~~~~
+   A lot of organizers are asking to reserve a few minutes for Q&A at the end of your talk. It makes every presentation more interactive. That's why people go to conferences instead of just watching a webinar. Here are some tips to avoid the Q&A situation:
+
+   - use the full session time - This requires some training and you need to watch the clock. If you use all the time for your presentation you can end with: "I'm out of time but I'm happy to answer questions 1:1 in the hallway"
+   - ask the organizers if it's alright to skip Q&A and offer to take questions 1:1 after your talk. I guess most organizers are fine with that.
+  
+   Say "I don't know"
+   ~~~~~~~~~~~~~~~~~~
+   If you don't know the answer say it. There is no need to pretend. Ask the attendee for their contact information and follow up afterwards.
+
+   Include the Audience
+   ~~~~~~~~~~~~~~~~~~~~
+   If you don't know the answer maybe someone in the audience does. Don't be shy to pass the question on to the audience. This is another great advantage of conferences.
+
+   Prepare
+   ~~~~~~~
+   Guess the questions in advance. Prepare FAQs and write down the answers. If you've given a talk a few times you'll also know possible questions.
+
+   People That Want to Argue or Don't Stop Speaking
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   You've got the mic. Say that you two can continue the conversation afterwards.
+
+   Repeat the Question
+   ~~~~~~~~~~~~~~~~~~~
+   If there's no mic for the audience to ask questions, make sure to repeat the question.
+
+   Didn't Get the Question?
+   ~~~~~~~~~~~~~~~~~~~~~~~~
+   Obviously, if you couldn't hear the question well, ask to repeat the question. If you didn't understand what the person is asking, ask them to reframe the question. If you're unsure you got it right, ask the question in your own words.
+  
+   Leave the Stage
+   ---------------
+
+   .. image:: /images/community/surviving-the-stage/exit.jpg
+      :alt: exit sign          
+      :align: center 
+  
+   Pack & Answer
+   ~~~~~~~~~~~~~
+   Don't forget your stuff: Laptop, power supply, clicker, adapter, and take off the mic. Double check if you have everything before leaving the stage. Often people are waiting after your talk to ask questions. Pack your stuff before you answer those so the next speaker can set up their technical equipment. If there's a tight schedule leave the room and take all the people with you that have questions. Continue the conversation in the hallway.
+
+   Improve the Talk
+   ~~~~~~~~~~~~~~~~
+   After answering all the questions take some time to reflect on your talk. What went well, which parts felt really good, which didn't? Write those down. If you consider giving this talk at other events, work on those improvements. Q&A is also a great indicator for which parts of the talk you could expand on.

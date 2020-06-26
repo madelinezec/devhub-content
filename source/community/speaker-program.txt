@@ -1,0 +1,139 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: The MongoDB Community Speaker Program
+   :image: /images/social/twitter/twitter-surviving-stage.png
+   :image-alt: MongoDB Speaker Program
+
+   Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
+
+.. og::
+   :url: http://developer.mongodb.com/community/speaker-program
+   :title: Community Speaker Program
+   :image: /images/social/twitter/twitter-surviving-stage.png
+   :type: article
+
+   Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
+
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/community-card.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================
+Community Speaker Program
+=========================
+
+.. introduction::
+   The MongoDB Community Speakers Program is designed to help build opportunity and visibility for MongoDB community members who are interested in speaking at events and user groups about MongoDB technologies.
+
+   We're putting together a ton of resources to help new and seasoned community speakers succeed including finding the right event and topic, creating stunning slides with our template, and surviving a Q&A session. Check out the links below so you can level up your public speaking skills.
+
+.. content::
+
+   .. image:: /images/community/apply-to-speak.png
+      :scale: 50%
+      :alt: Apply to speak           
+      :align: center
+
+   We've heard from brand new and infrequent presenters that they often don't know where to start, so we've put together these resources and coaching programs to help with common challenges. We are also offering travel grants for speakers from our community.
+
+   Apply for Travel Grant
+   ----------------------
+   
+   The MongoDB Community team is thrilled to offer up to $1,000 USD grants towards travel expenses to help our community members access opportunities to speak about MongoDB-related topics. `Check out the conditions and apply </community/community-speaker-grant>`__.
+
+   .. blockquote::
+      We pay your travel bills if you speak about MongoDB technologies at a non-MongoDB event `Learn about our Speaker Grant program </community/community-speaker-grant>`__.
+
+   Writing a Conference Abstract
+   -----------------------------
+   
+   How can you turn your talk idea into a conference pitch? Learn how to write a submission that will be accepted by a conference.
+   
+   `Learn more about writing abstracts </community/apply-to-speak>`__
+
+   Get Feedback On Your Abstract
+   ------------------------------
+   
+   A great abstract is your entry ticket for speaking at a conference. We're here to help. Upload your abstract and get feedback from our experienced conference speakers before sending it to a conference.
+
+   `Submit your abstract for feedback <https://jira.mongodb.org/servicedesk/customer/portal/33/create/444>`__
+
+   .. image:: /images/community/prepare-your-talk.png
+     :scale: 50%
+     :alt: Prepare your talk          
+     :align: center
+
+   Preparing your talk can be very time consuming. In order to get the story right and to shine with your delivery, we've put together a few articles and resources that will make you one of the star speakers of a conference and help you speed up the preparation process.
+
+   Crafting a Talk
+   ---------------
+
+   Where do you start? How do you get the story aligned? How do you make your talk exciting? What is the best flow? There are a lot of questions. Here are some tips and tricks on how to put together a great talk.
+
+   `Learn more the art of creating a talk <community/art-of-creating-talk>`__
+   
+   Creating Stunning Slides
+   ------------------------
+   
+   Use the latest MongoDB slide template and learn how to create stunning slides. Sure, your story is important but good slides can take your presentation to the next level.
+   
+   `Get the MongoDB slide template and tips for stunning slides <community/creating-stunning-slides>`__
+
+   Book a Speaking Coach Session
+   -----------------------------
+   
+   We offer an hour long coaching session for your MongoDB related talk. Please come prepared to run through your deck and get immediate feedback from a professional speaker.
+   
+   `Book a coaching session <https://calendly.com/svenpet/rehearse>`__
+
+   .. image:: /images/community/present.png
+      :scale: 50%
+      :alt: Present         
+      :align: center
+
+   Standing on a stage in front of hundreds of people sounds scary to most of us. We can help you to manage the FOPS (fear of public speaking). Check out our resources so you're well prepared for your talk and the Q&A.
+
+   Surviving the Stage
+   -------------------
+
+   The stage can be scary. We give you some tips on how to make it less stressful and still deliver a memorable talk.
+
+   `Read article: Surviving the Stage </community/surviving-the-stage>`__
+
+   Preparing for Remote Presentations
+   ----------------------------------
+
+   Presenting remotely or doing a recording of a presentation in front of your laptop is different than standing on a stage. Learn how to build up energy, prevent interruptions, and make your delivery more dynamic.
+
+   `Read article: Prepare and Deliver Remote Presentations </community/virtual-presentation>`__

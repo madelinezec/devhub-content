@@ -1,0 +1,159 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to write a successful conference pitch: Come up with a successful talk title, develop a compelling abstract, and win over the program committee.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: How to write compelling event submissions
+   :image: /images/social/twitter/twitter-write-abstract.png
+   :image-alt: Apply to Speak
+
+   Learn how to write a successful conference pitch and win over the program committee.
+
+.. og::
+   :url: http://developer.mongodb.com/community/apply-to-speak
+   :title: Apply to speak
+   :image: /images/social/twitter/twitter-write-abstract.png
+   :type: article
+
+   Learn how to write a successful conference pitch and win over the program committee.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/write-abstract.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+========================================
+How to Write Compelling Event Submissons
+========================================
+
+.. introduction::
+
+   There are two methods to becoming a speaker at a conference: you either reach out and apply for speaking, or the event organizers reach out and ask you to speak.
+
+.. content::
+
+   Call For Speakers
+   -----------------
+
+   .. image:: /images/community/apply-to-speak/call-for-speaker.png
+      :scale: 10%
+      :alt: Call for speakers           
+      :align: left
+
+   Public conferences often have a Call for Papers / Call for Speaker / Call for Proposals / Call for Submissions or something similar for a specific period of time. During this period potential speakers can send in their talk ideas (often called abstracts). Different conferences have varying submission periods, but these are normally in the range of 3 to 8 weeks. A program committee or the organizers of the event will look through the idea submissions and select their speakers for the conference. Usually it takes 1-2 months after submissions close for a conference to send out acceptance or decline notifications.
+   Some events limit the number of proposals a single speaker can submit. I would recommend not sending in more than 3-5 proposals depending on the size of the conference and how many different topics you'd like to pitch. It is better to spend your time nailing one or two great proposals instead of having six mediocre ones.
+
+   Conference Invitation
+   ---------------------
+
+   .. image:: /images/community/apply-to-speak/speaker-invite.png
+      :scale: 10%
+      :alt: Invite ticket          
+      :align: left
+
+   Conferences may also invite speakers directly - some don't even have an open call for speakers. Even though you have been invited to speak, you still need to write an abstract for your talk. The abstract is used for the attendees to get a better idea what your talk will cover and advertise your presentation online.
+
+   You should write the abstract before you start thinking about the outline of your talk. You might think something is a great topic to speak about, but maybe the program committee or conference organizers won't agree. 
+
+   Spend your time making your abstract sound great and nail the pitch. Don't invest time in crafting slides or working on the story details before you get accepted. You'll usually get an acceptance notification 3-5 months before you have to deliver your talk. That leaves a lot of time to craft your story, create your deck, and work on your demos.
+
+   Does Your Topic Fit?
+   --------------------
+
+   Conferences are usually looking for topics that are:
+
+   * **New** - Is your talk about a new hot technology or method that everyone is speaking about right now? Committees love to have those talks in the program since they attract mostly senior attendees and those are the ones that often get the budget to go to a conference. Nevertheless you could also try to apply with more generalized / beginner-friendly talks or workshops like "Git 101" or "Document Based Databases Explained". There should be always room at conferences for these types of talks.
+   * **Unique** - If you're not THE well known expert for a hot topic it's usually harder to get accepted. If you're among 10 submissions on a new technology the competition is pretty tough. Try to find a unique topic that you're passionate about.
+   * **Fit the track** - For a lot of conferences you're supposed to pick a track when submitting. Read the track description. Would your talk idea fit to the description? Program committees often split up efforts so different tracks are reviewed by different people. There's a chance of a low score by reviewers with the comment "Doesn't fit" when submitting to the wrong track. Even though a lot of reviewers just change the track by themselves, those submissions can fall through the cracks.
+
+   Some tracks might be more popular than others. If you're an expert on many fields you could consider submitting to less popular tracks. At the moment technology conferences get a lot of submissions in Methodology, Programming Languages, and Software Architecture tracks.
+
+   The Title
+   ---------
+
+   .. image:: /images/community/apply-to-speak/talk-title.jpg
+      :scale: 100%
+      :alt: Hola sign           
+      :align: center
+
+   The title is the first thing a reviewer sees. Even though most reviewers are also reading the abstract to make a final call, the title gives them a first (and important) direction. Attendees often only read the title. Have a killer title if you want a packed room.
+
+   What makes a good title? Here are some hints:
+
+   * It should summarize your content. What's the talk about? Don't try to be too creative with the title if this sacrifices the meaning of your talk. Titles like "Make Databases Great Again" might sound cool but don't say anything about the talk.
+   * Keep it short and snappy. Don't create titles that people have to read 3 times in order to understand what the talk is about. Don't try to explain your whole talk in the title. Titles like "10 Things: How to Be More Productive with Kotlin" are clear and easy to understand.
+   * Don't be boring. Make your title interesting so people want to know more. Don't just say: "Our Experience Using Kubernetes". Try to find the interesting things you learned and name the talk "Things You Shouldn't Do With Kubernetes".
+   
+   Puns, creative word play, and "hooks" in titles are okay, but if in doubt work on the three things above.
+
+   Write down 3-5 different titles and run those by your co-workers. Which talk would they like to visit? Spend time on getting the title right - it's your first impression. When the program committee discusses the submissions it's a plus to have an easy, understandable, and memorable title.
+
+   The Abstract
+   ------------
+   Great, you got the program committee's attention with your title and they ended up wanting to know more about your talk. An abstract should still be written as a pitch or description, not as a casual conversation with the readers. Yes, people are really doing this. They write: "I'll first talk about ... after that I will explain ... in depth. I'll also have a lot of examples of ...". No, don't do that.
+
+   An abstract serves two purposes: First: The committee decides to accept your talk based on the abstract. Second: The abstract is posted in the conference program and attendees might use it to decide on attending your talk.
+
+   Here are some things that can help you write a good abstract:
+   
+   * Describe the problem. Why should people care? What is the real world issue that your talk is trying to improve? What is the pain that people are experiencing. Make it obvious that they have a problem and that you're here to solve it.
+   * Describe why your solution will solve the problem. Please be concrete: What's new with your solution? How does it solve the problem? What's unique?
+   * Give examples. This is missing from a lot of submissions. Examples makes your talk look more practical. You're showing that you're not just talking about the theory but also giving some practical advice. The committee is more likely to accept a talk that has good substance and not just buzz words.
+   * Will you do live coding? Will the session be interactive? You may want to consider give people hints about the format of your talk (if it's more than just slides).
+   * Wrap up and share how much impact the talk can have on daily developer life for people that are already using the solution / technology and for those who should use it or switch to it.
+   
+   You should run the abstract by a couple of people. Does your audience understand what you will talk about? For non-native English speakers, run your abstract through a grammar checker or ask a native speaker friend to review your description.
+
+   Your Presentation Skills
+   ------------------------
+
+   .. image:: /images/community/apply-to-speak/presentation-skills.jpg
+      :scale: 100%
+      :alt: Presenter on stage           
+      :align: center
+
+   A lot of conferences ask for videos of you presenting or would like to see previous slide decks. If you're a frequent speaker this won't be a problem,  but what if you want to enter the speaker circle? Just do a quick 2-5 minute video of you presenting. It doesn't have to be high quality. Make sure the audio is on an OK level (e.g. not too much echo) and you come across loud and clear.
+
+   I've often asked new speakers to send me a video if the topic was super interesting but I wasn't sure that the presentation skills were already good enough for a big stage.
+
+   A short recording is a great way to prove that your language level is good enough for a conference, especially if you're planning to present in English and you're not a native speaker.
+
+   Message to the Committee
+   ------------------------
+   It seems you've made an impact if reviewers are looking at additional fields like the message to the committee. Use that to your advantage - give your submission the last push and win the committee over. Talk about your reputation and your knowledge in the specific field. Share additional insights on how the talk will look like. You could also add an outline of your talk. Explain why you think your topic is relevant for the audience and why the conference will be much more interesting for having your talk in the program.
+
+   Your Bio
+   --------
+   Bios are often written in the third person, especially for conferences, events, and books. Use your full name in the first sentence and refer to an accomplishment to help people remember who you are. Keep it short and interesting so people get all the key information before they stop reading.
+  
+.. summary::
+
+   Don't Miss the One Opportunity
+   ------------------------------
+   Don't think that your topic on its own will convince the committee. Invest some time in writing a well balanced abstract. Provide all the information the conference organizers need to make a decision. Read others people's abstract for inspiration, find out why you like them, and implement those things into yours.

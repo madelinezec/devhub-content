@@ -353,7 +353,9 @@ if __name__ == '__main__':
     with os.scandir('../source/quickstart') as f:
         for file in filter(lambda x: x.path.endswith(".txt"), f):
             blog_posts.append(file)
-
+    with os.scandir('../source/community') as f:
+        for file in f:
+            blog_posts.append(file)
     file_tags = []
     file_products = []
     file_languages = []

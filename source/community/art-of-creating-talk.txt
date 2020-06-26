@@ -1,0 +1,170 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to put together exciting talks.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @svenpet
+   :title: The Art of Creating a Talk
+   :image: /images/social/twitter/twitter-creating-talk.png
+   :image-alt: The Art of Creating a Talk
+
+   Learn how to put together exciting talks.
+
+.. og::
+   :url: http://developer.mongodb.com/community/art-of-creating-talk
+   :title: The Art of Creating a Talk
+   :image: /images/social/twitter/twitter-creating-talk.png
+   :type: article
+
+   Learn how to put together exciting talks.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/peters-sven.rst
+
+.. pubdate:: 2020-06-26
+
+.. type:: community
+
+.. level:: beginner
+
+.. tags::
+
+   * Public Speaking
+   * Speaker Program
+
+.. atf-image:: /images/atf-images/illustrations/creating-talk.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==========================
+The Art of Creating a Talk
+==========================
+
+.. introduction::
+
+   You should watch a lot of talks - the internet is full of great content! Get inspired by how other people build the flow for their talks. Have you seen a talk that you thought was really great? Try to analyze that one, write down the outline, note when you got excited, when you were entertained, and try to find the overall message.
+
+.. content::
+
+   Where to Start
+   --------------
+
+   Some people recommend starting with a talk outline, but this should really be step 3. The first step should be to nail one thing:
+
+
+
+   **"What do I want the audience to take away?"**
+
+   Think deeply about this. When people get back to work the next day, what do you want them to remember from your conference talk?
+
+   .. blockquote::
+      You really can't teach a new technology in 45 minutes. You can make people interested, show some hints for how they can get started, and inspire them with the value this provides.
+   
+   Plan the Flow
+   -------------
+  
+   Before you plan the flow, do your research. What topics would be interesting for your talk? Where can you find good examples? Where do you get inspiration?
+
+   * Search articles from the internet that cover a similar topic.
+   * Talk to people. e.g. schedule video interviews with experts for your talk.
+   * Think deeply. What stories can you tell? What have you experienced yourself?
+   
+   Here's a trick that a lot of well known speakers do: Put every idea, example, anecdote, demo, etc on a sticky note. You may have 100 sticky notes. Don't try to think of an order in which the different topics appear in your talk for now. Just write everything down.
+
+   In the next step try to group those sticky notes. What notes belong with each other? What are the topics that connect the different sticky notes? Try to use a whiteboard so you can add additional thoughts. Often a white board gets too small so maybe you need to use a wall in your office.
+
+
+   Great, but how do you stitch the different parts together? Here are three criteria:
+
+   * How exciting is the topic compared to the other stuff you want to say?
+   * What could be a natural flow that leads to great transitions between the sections and plays along with the overall message?
+   * How do you want to end your talk? Hint: Always on a high note.
+
+   .. image:: /images/community/art-creating-talk/talk-flow.jpg
+      :alt: Sticky notes on a whiteboard modelling the flow of a talk           
+      :align: center
+   
+   Build Up Excitement
+   -------------------
+
+   We all wish that the interest and excitement of the audience is constantly at a high level. This is pretty hard to achieve and maybe also not what you want: there should be a dynamic in your talk where you surprise, inspire, and educate your audience.
+
+   .. image:: /images/community/art-creating-talk/talk-excitement-curve.jpg
+      :alt: A cruve showing the excitement of the talk over time           
+      :align: center 
+    
+   Create an excitement curve. How does the excitement change during your talk? Think about the audience: what would excite them? You don't want to give away all of your cool things at the beginning, or people may be bored throughout the rest of the presentation. You also don't want to leave all the cool stuff for the end: people will leave the room before you come to the best part.
+
+   A good rule of thumb is to start with something exciting, let the energy maybe drop a bit, and then pick it up again at the end. If you just think about your excitement curve and adjust the flow a bit (if possible), you're doing probably 80% more than the rest of the speakers at conferences.
+
+   The First 5 Minutes
+   -------------------
+    
+   .. image:: /images/community/art-creating-talk/start-talk.jpg
+      :alt: A laptop showing the word Just Start           
+      :align: center 
+
+   It's very important to capture the audience right from the start. The first few minutes are important -- that's where people decide if this is going to be interesting or not. It's harder to convince an audience later that the topic and the presentation matters to them. You might have lost the listeners by then.
+
+   What is the best way to start a presentation? With why the topic matters. Don't start with your speaker details, the agenda of the talk, or that you've been working on the slides the whole night. The audience didn't come for that.
+
+   Some thoughts here on traditional starts of presentations:
+
+   * Bio - Start with the topic and after that explain why you're qualified to speak about it. Don't mention every stop in your career or technologies that don't have anything to do with the topic you're presenting.
+   * Agenda - Maybe tell the audience what to expect. Make the agenda short and don't come back to it in the talk. Guide your audience through the talk and work on better transitions from section to section rather than repeating the agenda slide over and over again.
+
+   I normally start with a short story, often something that I experienced myself or something that everyone can relate to. Pick a story or intro that really resonates with most of the people in the audience. Touch on a pain point that the audience might also have experienced.
+
+   Another way to intro your talk is the absolute opposite: start with a story everyone disagrees with. This can be powerful when everyone doesn't really know whether you're sarcastic or really mean what you're saying. The relaxed moment when you reveal that this is not your opinion can really wake up the audience.
+
+   Inspirational and Practical
+   ---------------------------
+
+   Don't just present your solution. Make it real. Make it matter. Tell stories that resonate with the audience. My talks follow mostly a simple flow:
+
+   Before
+   ~~~~~~
+
+   When explaining a certain topic I always start out with the problem. I try to find a story people can relate to and a pain that everyone feels. It's also very powerful to be honest and tell a story of a failure or struggle. Make the frustration real.
+
+   After
+   ~~~~~
+
+   After that, introduce your solution. This works great with new features of a product or a new way of working. Explain in detail how this new thing works, a step by step guide on how to do it. Mix this with stories about how your solution makes the life or work of the audience better. Be concrete. Inspire people with a success story.
+
+   If you look at some important presentation or speeches: this is the recipe to follow. The bigger the gap between Before and After, the larger the a-ha effect. The secret is always to be real. To admit failure. Tell an honest story about the success.
+
+   Telling Stories
+   ---------------
+   
+   .. image:: /images/community/art-creating-talk/fire-story.jpg
+      :alt: people sitting around a campfire         
+      :align: center 
+
+   When telling stories your audience should be able to dive into it. Make them feel that they've been a part of it. Simply follow (some of) these rules:
+
+   * Time - have time references in your story. It could be something like "it was 2008 when we first tried" or even better "it was right after the iPhone was launched". People can relate better to stories when they have some kind of connection to it. They remember when they first heard about the iPhone, where they lived, and maybe the feeling of the time.
+   * Place - have place references in your story. "I was working at a startup near Central Park" or "I was cycling the Golden Gate Bridge when I had the idea to...". This helps people get a better feeling for the story. It makes it more real.
+   * Emotional - be angry, funny, surprised, etc. Show your feelings. This also makes a real story. Tell the audience how frustrated you were when things didn't went so well. Not everyone is a born actor but you can talk about your feelings.
+
+   For a long time stories were the only way for humans to pass on our knowledge to others. They were mostly told around a fireplace. Conferences usually don't let you present at a fireplace but stories are still a good way to teach people something new that they'll remember. Use this ancient technique for your advantage.
+
+   The Ending
+   ----------
+
+   Ending on a high note leaves the audience with a good feeling and some thoughts. To achieve this, summarize your talk into a single statement, a single slide, or reveal your conclusion that you worked towards during the whole presentation.
+
+   Let the people leave your talk with some thoughts on how or why they should follow your advice.
+   

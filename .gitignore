@@ -2,3 +2,5 @@
 .DS_Store
 gibuild_scripts/
 .idea/
+.gitpod.yml
+
