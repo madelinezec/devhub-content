@@ -1,0 +1,813 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to perform CRUD operations using Rust for MongoDB databases.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @judy2k
+   :title: QuickStart: CRUD Operations in Rust
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Learn how to do MongoDB CRUD operations in #rustlang.
+
+.. og::
+   :url: https://developer.mongodb.com/quickstart/rust-crud-tutorial
+   :title: QuickStart: CRUD Operations in Rust
+   :image: /images/social/open-graph/og-mdb-developer.png
+   :type: article
+
+   Learn how to do MongoDB CRUD operations in Rust.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-06-22
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. products::
+
+   * Atlas
+   
+.. languages::
+
+   * Rust
+
+.. atf-image:: /images/atf-images/quickstart/rust.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=================================================
+Quick Start: Up and Running with Rust and MongoDB
+=================================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-rust.png
+      :scale: 30%
+      :alt: Rust badge
+      :align: right
+
+   This Quick Start post will help you connect your Rust application to
+   a MongoDB cluster. It will then show you how to do Create, Read, Update,
+   and Delete (CRUD) operations on a collection. Finally, it'll cover how
+   to use `serde <https://serde.rs/>`__ to map between MongoDB's BSON documents and Rust structs.
+
+.. prerequisites::
+
+   Series Tools & Versions
+   -----------------------
+
+   This series assumes that you have a recent version of the Rust
+   toolchain installed (v1.44+), and that you're comfortable with Rust syntax.
+   It also assumes that you're reasonably comfortable using the command-line
+   and your favourite code editor.
+
+   .. blockquote::
+
+      Rust is a powerful systems programming language with high performance and
+      low memory usage which is suitable for a wide variety of tasks. Although
+      currently a niche language for working with data, its popularity is
+      quickly rising!
+
+.. content::
+
+   If you use Rust and want to work with MongoDB, this blog series is the
+   place to start! I'm going to show you how to do the following:
+
+   -  Install the MongoDB Rust driver. The Rust driver is the `mongodb <https://crates.io/crates/mongodb>`__
+      crate which allows you to communicate with a MongoDB cluster.
+   -  Connect to a MongoDB instance.
+   -  Create, Read, Update & Delete (CRUD) documents in your database.
+
+   Later blog posts in the series will cover things like *Change Streams*,
+   *Transactions* and the amazing *Aggregation Pipeline* feature which
+   allows you to run advanced queries on your data.
+
+   Prerequisites
+   -------------
+
+   I'm going to assume you have a working knowledge of Rust. I won't use
+   any complex Rust code - this is a MongoDB tutorial, not a Rust tutorial
+   - but you'll want to know the basics of error-handling and borrowing in
+   Rust, at least! You may want to run ``rustup update`` if you haven't
+   since March 2020 because I'll be working with a recent release.
+
+   You'll need the following:
+
+   -  An up-to-date Rust toolchain, version 1.44+. I recommend you install
+      it with `Rustup <https://rustup.rs/>`__ if you haven't already.
+   -  A code editor of your choice. I recommend either `IntelliJ
+      Rust <https://intellij-rust.github.io/>`__ or the free `VS
+      Code <https://code.visualstudio.com/>`__ with the `official Rust
+      plugin <https://marketplace.visualstudio.com/items?itemName=rust-lang.rust>`__
+
+   The MongoDB Rust driver uses Tokio by default - and this tutorial
+   will do that too. If you're interested in running under async-std, or synchronously, the
+   changes are straightforward. I'll cover them
+   `at the end <#when-you-don-t-want-to-run-under-tokio>`__
+
+   Creating your database
+   ----------------------
+
+   You'll use MongoDB Atlas to host a MongoDB cluster, so you don't need to
+   worry about how to configure MongoDB itself.
+
+   .. blockquote ::
+
+      Get started with an M0 cluster on
+      `Atlas <https://bit.ly/mdb-atlas-rust>`__. It's free forever, and
+      it's the easiest way to try out the steps in this blog series. You
+      won't even need to provide payment details.
+
+   You'll need to create a new cluster and load it with sample data My
+   awesome colleague `Maxime
+   Beugnet <https://www.linkedin.com/in/maximebeugnet>`__ has created a
+   :doc:`video tutorial </quickstart/free-atlas-cluster>`
+   to help you out, but I also explain the steps below:
+
+   -  Click `"Start free" <https://www.mongodb.com/cloud/atlas/signup>`__
+      on the MongoDB homepage.
+   -  Enter your details, or just sign up with your Google account, if you
+      have one.
+   -  Accept the Terms of Service
+   -  Create a *Starter* cluster.
+
+      -  Select the same cloud provider you're used to, or just leave it
+         as-is. Pick a region that makes sense for you.
+      -  You can change the name of the cluster if you like. I've called
+         mine "RustQuickstart".
+
+   It will take a couple of minutes for your cluster to be provisioned, so
+   while you're waiting you can move on to the next step.
+
+   Starting your project
+   ---------------------
+
+   In your terminal, change to the directory where you keep your coding
+   projects and run the following command:
+
+   .. code-block:: bash
+
+      cargo new --bin rust_quickstart
+
+   This will create a new directory called ``rust_quickstart`` containing a
+   new, nearly-empty project. In the directory, open ``Cargo.toml`` and
+   change the ``[dependencies]`` section so it looks like this:
+
+   .. code-block:: toml
+
+      [dependencies]
+      mongodb = "1.0.0"
+
+   Now you can download and build the dependencies by running:
+
+   .. code-block:: bash
+
+      cargo run
+
+   You should see *lots* of dependencies downloaded and compiled. Don't
+   worry, most of this only happens the first time you run it! At the end,
+   if everything went well, it should print "Hello, World!" in your
+   console.
+
+   Set up your MongoDB instance
+   ----------------------------
+
+   Your MongoDB cluster should have been set up and running for a little
+   while now, so you can go ahead and get your database set up for the next
+   steps.
+
+   In the Atlas web interface, you should see a green button at the
+   bottom-left of the screen, saying "Get Started". If you click on it,
+   it'll bring up a checklist of steps for getting your database set up.
+   Click on each of the items in the list (including the optional "Load
+   Sample Data" item), and it'll help you through the steps to get set up.
+
+   Create a User
+   ~~~~~~~~~~~~~
+
+   Following the "Get Started" steps, create a user with "Read and write
+   access to any database". You can give it a username and password of your
+   choice - take a note of them, you'll need them in a minute. Use the
+   "autogenerate secure password" button to ensure you have a long random
+   password which is also safe to paste into your connection string later.
+
+   Whitelist an IP address
+   ~~~~~~~~~~~~~~~~~~~~~~~
+
+   When deploying an app with sensitive data, you should only whitelist the
+   IP address of the servers which need to connect to your database. Click
+   the 'Add IP Address' button, then click 'Add Current IP Address' and
+   finally, click 'Confirm'. You can also set a time-limit on a whitelist
+   entry, for added security. Note that sometimes your IP address may
+   change, so if you lose the ability to connect to your MongoDB cluster
+   during this tutorial, go back and repeat these steps.
+
+   Connecting to MongoDB
+   ---------------------
+
+   Now you've got the point of this tutorial - connecting your Rust code
+   to a MongoDB database! The last step of the "Get Started" checklist is
+   "Connect to your Cluster". Select "Connect your application".
+
+   Usually, in the dialog that shows up, you'd select "Rust" in the "Driver" menu,
+   but because the Rust driver has only just been released,
+   it may not be in the list!
+   You should select "Python" with a version of "3.6 or later".
+
+   Ensure Step 2 has "Connection String only" highlighted, and press the
+   "Copy" button to copy the URL to your pasteboard (just storing it
+   temporarily in a text file is fine). Paste it to the same place you
+   stored your username and password. Note that the URL has ``<password>``
+   as a placeholder for your password. You should paste your password in
+   here, replacing the whole placeholder including the '<' and '>'
+   characters.
+
+   Back in your Rust project, open ``main.rs`` and replace the contents
+   with the following:
+
+   .. code-block:: rust
+   
+      use mongodb::bson::{self, doc, Bson};
+      use std::env;
+      use std::error::Error;
+      use tokio;
+
+      #[tokio::main]
+      async fn main() -> Result<(), Box<dyn Error>> {
+         // Load the MongoDB connection string from an environment variable:
+         let client_uri =
+            env::var("MONGODB_URI").expect("You must set the MONGODB_URI environment var!");
+
+         // A Client is needed to connect to MongoDB:
+         let client = mongodb::Client::with_uri_str(client_uri.as_ref()).await?;
+
+         // Print the databases in our MongoDB cluster:
+         println!("Databases:");
+         for name in client.list_database_names(None, None).await? {
+            println!("- {}", name);
+         }
+
+         Ok(())
+      }
+
+   In order to run this, you'll need to set the MONGODB_URI environment
+   variable to the connection string you obtained above. Run one of the
+   following in your terminal window, depending on your platform:
+
+   .. code-block:: bash
+
+      # Unix (including MacOS):
+      export MONGODB_URI='mongodb+srv://yourusername:yourpasswordgoeshere@rustquickstart-123ab.mongodb.net/test?retryWrites=true&w=majority'
+
+      # Windows CMD shell:
+      set MONGODB_URI='mongodb+srv://yourusername:yourpasswordgoeshere@rustquickstart-123ab.mongodb.net/test?retryWrites=true&w=majority'
+
+      # Powershell:
+      $Env:MONGODB_URI='mongodb+srv://yourusername:yourpasswordgoeshere@rustquickstart-123ab.mongodb.net/test?retryWrites=true&w=majority'
+
+   Once you've done that, you can ``cargo run`` this code, and the result
+   should look like this:
+
+   .. code-block:: none
+
+      $ cargo run
+         Compiling rust_quickstart v0.0.1 (/Users/judy2k/development/rust_quickstart)
+         Finished dev [unoptimized + debuginfo] target(s) in 3.35s
+         Running `target/debug/rust_quickstart`
+      Database: sample_airbnb
+      Database: sample_analytics
+      Database: sample_geospatial
+      Database: sample_mflix
+      Database: sample_supplies
+      Database: sample_training
+      Database: sample_weatherdata
+      Database: admin
+      Database: local
+
+   **Congratulations!** You just connected your Rust program to MongoDB and
+   listed the databases in your cluster. If you don't see this list then
+   you may not have successfully loaded sample data into your cluster -
+   you'll want to go back a couple of steps until running this command
+   shows the list above.
+
+   BSON - How MongoDB understands data
+   -----------------------------------
+
+   Before you go ahead querying & updating your database, it's useful to
+   have an overview of BSON and how it relates to MongoDB. BSON is the
+   binary data format used by MongoDB to store all your data. BSON is also
+   the format used by the MongoDB query language and aggregation pipelines
+   (I'll get to these later).
+
+   It's analogous to JSON and handles all the same core types, such as
+   numbers, strings, arrays, and objects (which are called Documents in
+   BSON), but BSON supports more types than JSON. This includes things like
+   dates & decimals, and it has a special ObjectId type usually used for
+   identifying documents in a MongoDB collection. Because BSON is a binary
+   format it's not human readable - usually when it's printed to the screen
+   it'll be printed to look like JSON.
+
+   Because of the mismatch between BSON's dynamic schema and Rust's static
+   type system, dealing with BSON in Rust can be tricky. Fortunately the
+   ``bson`` crate provides some useful tools for dealing with BSON data,
+   including the ``doc!`` macro for generating BSON documents, and it
+   implements `serde <https://serde.rs/>`__ for the ability to serialize and
+   deserialize between Rust structs and BSON data.
+
+   Creating a document structure using the ``doc!`` macro looks like this:
+
+   .. code-block:: rust
+
+      let new_doc = doc! {
+         "title": "Parasite",
+         "year": 2020,
+         "plot": "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. But their easy life gets complicated when their deception is threatened with exposure.",
+         "released": Utc.ymd(2020, 2, 7).and_hms(0, 0, 0),
+      };
+
+   If you use ``println!`` to print the value of ``new_doc`` to the
+   console, you should see something like this:
+
+   .. code-block:: none
+
+      { title: "Parasite", year: 2020, plot: "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. But their easy life gets complicated when their deception is threatened with exposure.", released: Date("2020-02-07 00:00:00 UTC") }
+
+   (Incidentally, Parasite is an absolutely amazing movie. It isn't already
+   in the database you'll be working with because it was released in 2020
+   but the dataset was last updated in 2015.)
+
+   Although the above output looks a bit like JSON, this is just the way
+   the BSON library implements the ``Display`` trait. The data is still
+   handled as binary data under the hood.
+
+   Creating Documents
+   ------------------
+
+   The following examples all use the
+   `sample_mflix <https://docs.atlas.mongodb.com/sample-data/sample-mflix/>`__
+   dataset that you loaded into your Atlas cluster. It contains a fun
+   collection called ``movies``, with the details of a whole load of movies
+   with releases dating back to 1903, from IMDB's database.
+
+   The
+   `Client <https://docs.rs/mongodb/0.9.2/mongodb/struct.Client.html>`__
+   type allows you to get the list of databases in your cluster, but not
+   much else. In order to actually start working with data, you'll need to
+   get a
+   `Database <https://docs.rs/mongodb/0.9.2/mongodb/struct.Database.html>`__
+   using either Client's ``database`` or ``database_with_options`` methods.
+   You'll do this in the next section.
+
+   The code in the last section constructs a Document in memory, and now
+   you're going to persist it in the movies database. The first step before
+   doing anything with a MongoDB collection is to obtain a
+   `Collection <https://docs.rs/mongodb/1.0.0/mongodb/struct.Collection.html>`__
+   object from your database.
+   This is done as follows:
+
+   .. code-block:: rust
+
+      // Get the 'movies' collection from the 'sample_mflix' database:
+      let movies = client.database("sample_mflix").collection("movies");
+
+   If you've browsed the movies collection with
+   `Compass <https://www.mongodb.com/products/compass>`__ or the
+   "Collections" tab in Atlas, you'll see that most of the records have
+   more fields than the document I built above using the ``doc!`` macro.
+   Because MongoDB doesn't enforce a schema within a collection by default, this is
+   perfectly fine, and I've just cut down the number of fields for
+   readability. Once you have a reference to your MongoDB collection, you
+   can use the ``insert_one`` method to insert a single document:
+
+   .. code-block:: rust
+
+      let insert_result = movies.insert_one(new_doc.clone(), None).await?;
+      println!("New document ID: {}", insert_result.inserted_id);
+
+   The ``insert_one`` method returns the type ``Result<InsertOneResult>``
+   which can be used to identify any problems inserting the document, and
+   can be used to find the id generated for the new document in MongoDB. If
+   you add this code to your main function, when you run it, you should see
+   something like the following:
+
+   .. code-block:: none
+
+      New document ID: ObjectId("5e835f3000415b720028b0ad")
+
+   This code inserts a single ``Document`` into a collection. If you want
+   to insert multiple Documents in bulk then it's more efficient to use
+   ``insert_many`` which takes an ``IntoIterator`` of Documents which will
+   be inserted into the collection.
+
+   Retrieve Data from a Collection
+   -------------------------------
+
+   Because I know there are no other documents in the collection with the
+   name Parasite, you can look it up by title using the following code,
+   instead of the ID you retrieved when you inserted the record:
+
+   .. code-block:: rust
+
+      // Look up one document:
+      let movie = movies
+         .find_one(
+            doc! {
+                  "title": "Parasite"
+            },
+            None,
+         ).await?
+         .expect("Missing 'Parasite' document.");
+      println!("Movie: {}", movie);
+
+   This code should result in output like the following:
+
+   .. code-block:: none
+
+      Movie: { _id: ObjectId("5e835f3000415b720028b0ad"), title: "Parasite", year: 2020, plot: "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. But their easy life gets complicated when their deception is threatened with exposure.", released: Date("2020-02-07 00:00:00 UTC") }
+
+   It's very similar to the output above, but when you inserted the record, the MongoDB driver generated a unique ObjectId for you to identify this document.
+   Every document in a MongoDB collection has a unique ``_id`` value.
+   You can provide a value yourself if you have a value that is guaranteed to be unique, or MongoDB will generate one for you, as it did in this case.
+   It's usually good practice to explicitly set a value yourself.
+
+   The `find_one <https://docs.rs/mongodb/1.0.0/mongodb/struct.Collection.html#method.find_one>`__ method is useful to retrieve a single document from a
+   collection, but often you will need to search for multiple records. In
+   this case, you'll need the `find <https://docs.rs/mongodb/1.0.0/mongodb/struct.Collection.html#method.find>`__ method, which takes similar options
+   as this call, but returns a ``Result<Cursor>``. The ``Cursor`` is used
+   to iterate through the list of returned data.
+
+   The find operations, along with their accompanying filter documents are
+   very powerful, and you'll probably use them a lot. If you need more
+   flexibility than ``find`` and ``find_one`` can provide, then I recommend
+   you check out the documentation on `Aggregation
+   Pipelines <https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/#db.collection.aggregate>`__
+   which are super-powerful and, in my opinion, one of MongoDB's most
+   powerful features. I'll write another blog post in this series just on
+   that topic - I'm looking forward to it!
+
+   Update Documents in a Collection
+   --------------------------------
+
+   Once a document is stored in a collection, it can be updated in various
+   ways. If you would like to completely replace a document with another
+   document, you can use the
+   `find_one_and_replace <https://docs.rs/mongodb/latest/mongodb/struct.Collection.html#method.find_one_and_replace>`__
+   method, but it's more common to update one or more parts of a document,
+   using
+   `update_one <https://docs.rs/mongodb/latest/mongodb/struct.Collection.html#method.update_one>`__
+   or
+   `update_many <https://docs.rs/mongodb/latest/mongodb/struct.Collection.html#method.update_many>`__.
+   Each separate document update is atomic, which can be a useful feature to keep your
+   data consistent within a document.
+   Bear in mind though that ``update_many`` is not itself an atomic operation
+   - for that you'll need to use
+   `multi-document ACID Transactions <https://docs.mongodb.com/manual/core/transactions/>`__,
+   available in MongoDB since version 4.0
+   (and available for sharded collections since 4.2).
+   Version 1.0 of the Rust driver doesn't yet support transactions, but it's coming soon.
+
+   To update a single document in MongoDB, you need two BSON Documents: The
+   first describes the
+   `query <https://docs.mongodb.com/manual/tutorial/query-documents/>`__ to
+   find the document you'd like to update; The second Document describes
+   the `update
+   operations <https://docs.mongodb.com/manual/reference/operator/update/>`__
+   you'd like to conduct on the document in the collection. Although the
+   "release" date for Parasite was in 2020, I think this refers to the
+   release in the USA. The *correct* year of release was 2019, so here's
+   the code to update the record accordingly:
+
+   .. code-block:: rust
+
+      // Update the document:
+      let update_result = movies.update_one(
+         doc! {
+            "_id": &insert_result.inserted_id,
+         },
+         doc! {
+            "$set": { "year": 2019 }
+         },
+         None,
+      ).await?;
+      println!("Updated {} document", update_result.modified_count);
+
+   When you run the above, it should print out "Updated 1 document". If it
+   doesn't then something has happened to the movie document you inserted
+   earlier. Maybe you've deleted it? Just to check that the update has
+   updated the year value correctly, here's a ``find_one`` command you can
+   add to your program to see what the updated document looks like:
+
+   .. code-block:: rust
+
+      // Look up the document again to confirm it's been updated:
+      let movie = movies
+         .find_one(
+            doc! {
+                  "_id": &insert_result.inserted_id,
+            },
+            None,
+         ).await?
+         .expect("Missing 'Parasite' document.");
+      println!("Updated Movie: {}", &movie);
+
+   When I ran these blocks of code, the result looked like the text below.
+   See how it shows that the year is now 2019 instead of 2020.
+
+   .. code-block:: none
+
+      Updated 1 document
+      Updated Movie: { _id: ObjectId("5e835f3000415b720028b0ad"), title: "Parasite", year: 2019, plot: "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. But their easy life gets complicated when their deception is threatened with exposure.", released: Date("2020-02-07 00:00:00 UTC") }
+
+   Delete Documents from a Collection
+   ----------------------------------
+
+   In the above sections you learned how to create, read and update
+   documents in the collection. If you've run your program a few times,
+   you've probably built up quite a few documents for the movie Parasite!
+   It's now a good time to clear that up using the ``delete_many`` method.
+   The MongoDB rust driver provides 3 methods for deleting documents:
+
+   -  ``find_one_and_delete`` will delete a single document from a
+      collection and return the document that was deleted, if it existed.
+   -  ``delete_one`` will find the documents matching a provided filter and
+      will delete the first one found (if any).
+   -  ``delete_many``, as you might expect, will find the documents
+      matching a provided filter, and will delete *all* of them.
+
+   In the code below, I've used ``delete_many`` because you may have
+   created several records when testing the code above. The filter just
+   searches for the movie by name, which will match and delete *all* the
+   inserted documents, whereas if you searched by an ``_id`` value it would
+   delete just one, because ids are unique.
+
+   If you're constantly filtering or sorting on a field, you should consider
+   adding an index to that field to improve performance as your collection grows.
+   Check out the `MongoDB Manual <https://docs.mongodb.com/manual/indexes/>`__ for more details.
+
+   .. code-block:: rust
+
+      // Delete all documents for movies called "Parasite":
+      let delete_result = movies.delete_many(
+         doc! {
+            "title": "Parasite"
+         },
+         None,
+      ).await?;
+      println!("Deleted {} documents", delete_result.deleted_count);
+
+   You did it! Create, read, update and delete operations are the core
+   operations you'll use again and again for accessing and managing the
+   data in your MongoDB cluster. After the taster that this tutorial
+   provides, it's definitely worth reading up in more detail on the
+   following:
+
+   -  `Query
+      Documents <https://docs.mongodb.com/manual/tutorial/query-documents/>`__
+      which are used for all read, update and delete operations.
+   -  `The MongoDB crate <https://crates.io/crates/mongodb>`__ and
+      `docs <https://docs.rs/mongodb/0.9.2/mongodb/index.html>`__ which
+      describe all of the operations the MongoDB driver provides for
+      accessing and modifying your data.
+   -  `The bson crate <https://crates.io/crates/bson>`__ and its
+      accompanying `docs <https://docs.rs/bson/0.14.1/bson/index.html>`__
+      describe how to create and map data for insertion or retrieval from
+      MongoDB.
+   -  `The serde crate <https://serde.rs/>`__ provides the framework for
+      mapping between Rust data types and BSON with the bson crate, so it's
+      important to learn how to take advantage of it.
+
+   Using ``serde`` to Map Data into Structs
+   ----------------------------------------
+
+   One of the features of the bson crate which may not be readily apparent
+   is that it provides a BSON data format for the ``serde`` framework. This
+   means you can take advantage of the serde crate to map between Rust
+   datatypes and BSON types for persistence in MongoDB.
+
+   For an example of how this is useful, see the following example of how
+   to access the ``title`` field of the ``new_movie`` document (*without*
+   serde):
+
+   .. code-block:: rust
+
+      // Working with Document can be verbose:
+      if let Ok(title) = new_doc.get_str("title") {
+         println!("title: {}", title);
+      } else {
+         println!("no title found");
+      }
+
+   The first line of the code above retrieves the value of ``title`` and
+   then attempts to retrieve it *as a string* (``Bson::as_str`` returns
+   ``None`` if the value is a different type). There's quite a lot of
+   error-handling and conversion involved. The serde framework provides the
+   ability to define a struct like the one below, with fields that match
+   the document you're expecting to receive.
+
+   .. code-block:: rust
+
+      // You use `serde` to create structs which can serialize & deserialize between BSON:
+      #[derive(Serialize, Deserialize, Debug)]
+      struct Movie {
+         #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+         id: Option<bson::oid::ObjectId>,
+         title: String,
+         year: i32,
+      }
+
+   Note the use of the ``Serialize`` and ``Deserialize`` macros which tell
+   serde that this struct can be serialized and deserialized. The ``serde``
+   attribute is also used to tell serde that the ``id`` struct field should
+   be serialized to BSON as ``_id``, which is what MongoDB expects it to be
+   called. The parameter ``skip_serializing_if = "Option::is_none"`` also
+   tells serde that if the optional value of ``id`` is ``None`` then it
+   should not be serialized at all. (If you provide ``_id: None`` BSON to
+   MongoDB it will store the document with an id of ``NULL``, whereas if
+   you do not provide one, then an id will be generated for you, which is
+   usually the behaviour you want.)
+
+   The code below creates an instance of the ``Movie`` struct for the
+   Captain Marvel movie. (Wasn't that a great movie? I loved that movie!)
+   After creating the struct, before you can save it to your collection, it
+   needs to be converted to a BSON *document*. This is done in two steps:
+   First it is converted to a Bson value with ``bson::to_bson``, which
+   returns a ``Bson`` instance; then it's converted specifically to a
+   ``Document`` by calling ``as_document`` on it. It is safe to call
+   ``unwrap`` on this result because I already know that serializing a
+   struct to BSON creates a BSON document type.
+
+   Once your program has obtained a bson ``Document`` instance, you can
+   call ``insert_one`` with it in exactly the same way as you did in the
+   section above called `Creating Documents <#creating-documents>`__.
+
+   .. code-block:: rust
+
+      // Initialize struct to be inserted:
+      let captain_marvel = Movie {
+         id: None,
+         title: "Captain Marvel".to_owned(),
+         year: 2019,
+      };
+
+      // Convert `captain_marvel` to a Bson instance:
+      let serialized_movie = bson::to_bson(&captain_marvel)?;
+      let document = serialized_movie.as_document().unwrap();
+
+      // Insert into the collection and extract the inserted_id value:
+      let insert_result = movies.insert_one(document.to_owned(), None).await?;
+      let captain_marvel_id = insert_result
+         .inserted_id
+         .as_object_id()
+         .expect("Retrieved _id should have been of type ObjectId");
+      println!("Captain Marvel document ID: {:?}", captain_marvel_id);
+
+   When I ran the code above, the output looked like this:
+
+   .. code-block:: none
+
+      Captain Marvel document ID: ObjectId(5e835f30007760020028b0ae)
+
+   It's great to be able to create data using Rust's native datatypes, but
+   I think it's even more valuable to be able to deserialize data into
+   structs. This is what I'll show you next. In many ways, this is the same
+   process as above, but in reverse.
+
+   The code below retrieves a single movie document, converts it into a
+   ``Bson::Document`` value, and then calls ``from_bson`` on it, which will
+   deserialize it from BSON into whatever type is on the left-hand side of
+   the expression. This is why I've had to specify that ``loaded_movie`` is
+   of type ``Movie`` on the left-hand side, rather than just allowing the
+   rust compiler to derive that information for me. An alternative is to
+   use the `turbofish <https://turbo.fish/>`__ notation on the ``from_bson`` call, explicitly calling
+   ``from_bson::<Movie>(loaded_movie)``.
+   At the end of the day, as in many things Rust, it's your choice.
+
+   .. code-block:: rust
+
+      // Retrieve Captain Marvel from the database, into a Movie struct:
+      // Read the document from the movies collection:
+      let loaded_movie = movies
+         .find_one(Some(doc! { "_id":  captain_marvel_id.clone() }), None)
+         .await?
+         .expect("Document not found");
+
+      // Deserialize the document into a Movie instance
+      let loaded_movie_struct: Movie = bson::from_bson(Bson::Document(loaded_movie))?;
+      println!("Movie loaded from collection: {:?}", loaded_movie_struct);
+
+   And finally, here's what I got when I printed out the debug
+   representation of the Movie struct (this is why I derived ``Debug`` on
+   the struct definition above):
+
+   .. code-block:: none
+
+      Movie loaded from collection: Movie { id: Some(ObjectId(5e835f30007760020028b0ae)), title: "Captain Marvel", year: 2019 }
+   
+   You can check out the full Tokio code example `on github <https://github.com/mongodb-developer/rust-quickstart-code/tree/tokio>`__.
+
+   When You Don't Want To Run Under Tokio
+   --------------------------------------
+
+   Async-std
+   ~~~~~~~~~
+
+   If you prefer to use ``async-std`` instead of ``tokio``, you're in luck! The changes
+   are trivial. First, you'll need to disable the defaults features and enable the
+   ``async-std-runtime`` feature:
+
+   .. code-block:: none
+
+      [dependencies]
+      mongodb = { version = "1.0.0", default-features = false, features=["async-std-runtime"] }
+
+   The only changes you'll need to make to your rust code is to add ``use async_std;`` to the
+   imports and tag your async main function with ``#[async_std::main]``. All the rest of your
+   code should be identical to the Tokio example.
+
+   .. code-block:: rust
+
+      use async_std;
+
+      #[async_std::main]
+      async fn main() -> Result<(), Box<dyn Error>> {
+         // Your code goes here.
+      }
+
+   You can check out the full async-std code example `on github <https://github.com/mongodb-developer/rust-quickstart-code/tree/async-std>`__.
+
+
+   Synchronous Code
+   ~~~~~~~~~~~~~~~~
+
+   If you don't want to run under an async framework, you can enable the sync feature.
+   In your ``Cargo.toml`` file, disable the default features and enable ``sync``:
+
+   .. code-block:: none
+
+      [dependencies]
+      mongodb = { version = "1.0.0", default-features = false, features=["sync"] }
+
+   You won't need your enclosing function to be an ``async fn`` any more. You'll need
+   to use a different ``Client`` interface, defined in ``mongodb::sync`` instead, and
+   you don't need to await the result of any of the IO functions:
+
+   .. code-block:: rust
+
+      // Use mongodb::sync::Client, instead of mongodb::Client:
+      let client = mongodb::sync::Client::with_uri_str(client_uri.as_ref())?;
+
+      // .insert_one().await? becomes .insert_one()?
+      let insert_result = movies.insert_one(new_doc.clone(), None)?;
+
+   You can check out the full synchronous code example `on github <https://github.com/mongodb-developer/rust-quickstart-code/tree/sync>`__.
+
+   Further Reading
+   ---------------
+
+   The documentation for the MongoDB Rust Driver is very good.
+   Because the BSON crate is also leveraged quite heavily,
+   it's worth having the docs for that on-hand too.
+   I made lots of use of them writing this quick start.
+
+   * `Rust Driver Crate <https://crates.io/crates/mongodb>`__
+   * `Rust Driver Reference Docs <https://docs.rs/mongodb/1.0.0/mongodb/index.html>`__
+   * `Rust Driver GitHub Repository <https://github.com/mongodb/mongo-rust-driver>`__
+   * `BSON Crate <https://crates.io/crates/bson>`__
+   * `BSON Reference Docs <https://docs.rs/bson/1.0.0/bson/>`__
+   * `BSON GitHub Repository <https://github.com/mongodb/bson-rust>`__
+   * `The BSON Specification <http://bsonspec.org/>`__
+   * `Serde Documentation <https://serde.rs/>`__
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   Phew! That was a pretty big tutorial, wasn't it? The operations
+   described here will be ones you use again and again, so it's good to get
+   comfortable with them.
+
+   What *I* learned writing the code for this tutorial is how much value
+   the ``bson`` crate provides to you and the mongodb driver - it's worth
+   getting to know that at least as well as the ``mongodb`` crate, as
+   you'll be using it for data generation and conversion *a lot* and it's a
+   deceptively rich library.
+
+   There will be more Rust Quick Start posts on `MongoDB Developer Hub <https://developer.mongodb.com/>`__,
+   covering different parts of MongoDB and the MongoDB Rust Driver, so keep checking back!

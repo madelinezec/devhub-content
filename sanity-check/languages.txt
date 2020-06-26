@@ -9,5 +9,6 @@ PHP
 Python
 R
 Ruby
+Rust
 Scala
 Swift
