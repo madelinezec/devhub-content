@@ -1,0 +1,421 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: MongoDB Schema Design Anti-Pattern: Separated Data
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-separated-data
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-06-30
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
+   * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================================
+Separating Data That is Accessed Together
+=========================================
+ 
+.. introduction:: 
+
+   We're breezing through the MongoDB schema design anti-patterns.  So far in this series, we've discussed four of the six anti-patterns:
+
+   - `Massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   - `Massive number of collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   - `Unnecessary indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
+   - `Bloated documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
+
+   `Normalizing data <https://en.wikipedia.org/wiki/Database_normalization>`__ and splitting it into different pieces to optimize for space and reduce data duplication can feel like second nature to those with a relational database background.  However, separating data that is frequently accessed together is actually an anti-pattern in MongoDB.  In this post, we'll find out why and discuss what you should do instead.
+
+.. content::
+
+   Separating Data That is Accessed Together
+   -----------------------------------------
+
+   Much like you would use a ``join`` to combine information from different tables in a relational database, MongoDB has a `$lookup <https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup>`__ operation that allows you to join information from more than one `collection <https://docs.mongodb.com/manual/reference/glossary/#term-collection>`__.  ``$lookup`` is great for infrequent, rarely used operations or analytical queries that can run overnight without a time limit.  However, ``$lookup`` is not so great when you're frequently using it in your applications.  Why?
+
+   ``$lookup`` operations are slow and resource-intensive compared to operations that don't need to combine data from more than one collection.
+
+   The rule of thumb when modeling your data in MongoDB is:
+   
+   .. blockquote::
+
+      Data that is accessed together should be stored together.  
+      
+   Instead of separating data that is frequently used together between multiple collections, leverage embedding and arrays to keep the data together in a single collection.
+
+   For example, when modeling a `one-to-one relationship <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-one-relationships-between-documents/#data-modeling-example-one-to-one>`__, you can embed a document from one collection as a subdocument in a document from another.  When modeling a `one-to-many relationship <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/#data-modeling-example-one-to-many>`__, you can embed information from multiple documents in one collection as an array of documents in another.  
+
+   Keep in mind the other anti-patterns we've already discussed as you begin combining data from different collections together.   `Massive, unbounded arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__ and `bloated documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__ can both be problematic.  
+
+   If combining data from separate collections into a single collection will result in massive, unbounded arrays or bloated documents, you may want to keep the collections separate and duplicate some of the data that is used frequently together in both collections.  You could use the `Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__ to duplicate a subset of the documents from one collection in another.  You could also use the `Extended Reference Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__ to duplicate a portion of the data in each document from one collection in another.  In both patterns, you have the option of creating `references <https://docs.mongodb.com/manual/reference/database-references/>`__ between the documents in both collections.  Keep in mind that whenever you need to combine information from both collections, you'll likely need to use ``$lookup``.  Also, whenever you duplicate data, you are responsible for ensuring the duplicated data stays in sync.
+
+   As we have said throughout this series, each use case is different.  As you model your schema, carefully consider how you will be querying the data and what the data you will be storing will realistically look like.
+
+   Example
+   -------
+
+   What would an Anti-Pattern post be without an example from Parks and Recreation?  I don't even want to think about it.  So let's return to Leslie.
+
+   Leslie decides to organize a `Model United Nations <https://en.wikipedia.org/wiki/Model_United_Nations>`__ for local high school students and recruits some of her coworkers to participate as well.  Each participant will act as a delegate for a country during the event.  She assigns Andy and Donna to be delegates for Finland.
+
+   Leslie decides to store information related to the Model United Nations in a MongoDB database.  She wants to store the following information in her database:
+
+   - Basic stats about each country
+   - A list of resources that each country has available to trade
+   - A list of delegates for each country
+   - Policy statements for each country
+   - Information about each Model United Nations event she runs
+
+   With this information, she wants to be able to quickly generate the following reports: 
+
+   - A country report that contains basic stats, resources currently available to trade, a list of delegates, the names and dates of the last five policy documents, and a list of all of the Model United Nations events in which this country has participated
+   - An event report that contains information about the event and the names of the countries who participated
+
+   The Model United Nations event begins, and Andy is excited to participate.  He decides he doesn't want any of his country's "boring" resources, so he begins trading with other countries in order to acquire all of the world's lions.
+
+   .. figure:: /images/article/anti-patterns/separating-data/lions.gif
+      :alt: "I've just traded all of Finland's boring stuff for every other country's lions. I've definitely got more lions than any other country in the world right now."
+      :align: center
+
+   Leslie decides to create collections for each of the categories of information she needs to store in her database.  After Andy is done trading, Leslie has documents like the following.
+
+   .. code-block:: javascript
+
+      //  Countries collection
+
+      {
+         "_id": "finland",
+         "official_name": "Republic of Finland",
+         "capital": "Helsinki",
+         "languages": [
+            "Finnish",
+            "Swedish",
+            "Sámi"
+         ],
+         "population": 5528737
+      }
+   
+   .. code-block:: javascript
+
+      // Resources collection
+
+      {
+         "_id":  ObjectId("5ef0feeb0d9314ac117d2034"),
+         "country_id": "finland",
+         "lions": 32563,
+         "military_personnel": 0,
+         "pulp": 0,
+         "paper": 0
+      }
+   
+   .. code-block:: javascript
+
+      // Delegates collection
+
+      {
+         "_id": ObjectId("5ef0ff480d9314ac117d2035"),
+         "country_id": "finland",
+         "first_name": "Andy",
+         "last_name": "Fryer"
+      },
+      {
+         "_id": ObjectId("5ef0ff710d9314ac117d2036"),
+         "country_id": "finland",
+         "first_name": "Donna",
+         "last_name": "Beagle"
+      }
+   
+   .. code-block:: javascript
+
+      // Policies collection
+   
+      {
+         "_id": ObjectId("5ef34ec43e5f7febbd3ed7fb"),
+         "date-created": ISODate("2011-11-09T04:00:00.000+00:00"),
+         "status": "draft",
+         "title": "Country Defense Policy",
+         "country_id": "finland",
+         "policy": "Finland has formally decide to use lions in lieu of military for all self defense..."
+      }
+   
+   .. code-block:: javascript
+
+      // Events collection
+
+      {
+         "_id": ObjectId("5ef34faa3e5f7febbd3ed7fc"),
+         "event-date": ISODate("2011-11-10T05:00:00.000+00:00"),
+         "location": "Pawnee High School",
+         "countries": [
+            "Finland",
+            "Denmark",
+            "Peru",
+            "The Moon"
+         ],
+         "topic": "Global Food Crisis",
+         "award-recipients": [
+            "Allison Clifford",
+            "Bob Jones"
+         ]
+      }
+
+   When Leslie wants to generate a report about Finland, she has to use ``$lookup`` to combine information from all five collections.  She wants to optimize her database performance, so she decides to leverage embedding to combine information from her five collections into a single collection.
+
+   Leslie begins working on improving her schema incrementally.  As she looks at her schema, she realizes that she has a one-to-one relationship between documents in her ``Countries`` collection and her ``Resources`` collection.  She decides to embed the information from the ``Resources`` collection as sub-documents in the documents in her ``Countries`` collection. 
+
+   Now the document for Finland looks like the following.
+
+   .. code-block:: javascript
+
+      //  Countries collection
+
+      {
+         "_id": "finland",
+         "official_name": "Republic of Finland",
+         "capital": "Helsinki",
+         "languages": [
+            "Finnish",
+            "Swedish",
+            "Sámi"
+         ],
+         "population": 5528737,
+         "resources": {
+            "lions": 32563,
+            "military_personnel": 0,
+            "pulp": 0,
+            "paper": 0
+         }
+      }
+
+   As you can see above, she has kept the information about resources together as a sub-document in her document for Finland.  This is an easy way to keep data organized.
+
+   She has no need for her ``Resources`` collection anymore, so she deletes it.  
+
+   At this point, she can retrieve information about a country and its resources without having to use ``$lookup``.  
+
+   Leslie continues analyzing her schema.  She realizes she has a one-to-many relationship between countries and delegates, so she decides to create an array named ``delegates`` in her ``Countries`` documents.  Each ``delegates`` array will store objects with delegate information.  Now her document for Finland looks like the following:
+
+   .. code-block:: javascript
+
+      //  Countries collection
+
+      {
+         "_id": "finland",
+         "official_name": "Republic of Finland",
+         "capital": "Helsinki",
+         "languages": [
+            "Finnish",
+            "Swedish",
+            "Sámi"
+         ],
+         "population": 5528737,
+         "resources": {
+            "lions": 32563,
+            "military_personnel": 0,
+            "pulp": 0,
+            "paper": 0
+         },
+         "delegates": [
+            {
+               "first_name": "Andy",
+               "last_name": "Fryer"
+            },
+            {
+               "first_name": "Donna",
+               "last_name": "Beagle"
+            }
+         ]
+      }
+
+   Leslie feels confident about storing the delegate information in her country documents since each country will have only a handful of delegates (meaning her array won't grow infinitely), and she won't be frequently accessing information about the delegates separately from their associated countries.
+
+   Leslie no longer needs her ``Delegates`` collection, so she deletes it.  
+
+   Leslie continues optimizing her schema and begins looking at her ``Policies`` collection.  She has a one-to-many relationship between countries and policies.  She needs to include the titles and dates of each country's five most recent policy documents in her report.  She considers embedding the policy documents in her country documents, but the documents could quickly become quite large based on the length of the policies.  She doesn't want to fall into the trap of the `Bloated Documents Anti-Pattern <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__, but she also wants to avoid using ``$lookup`` every time she runs a report. 
+
+   Leslie decides to leverage the `Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__.  She stores the titles and dates of the five most recent policy documents in her country document.  She also creates a reference to the policy document, so she can easily gather all of the information for each policy when needed.  She leaves her ``Policies`` collection as-is.  She knows she'll have to maintain some duplicate information between the documents in the ``Countries`` collection and the ``Policies`` collection, but she decides duplicating a little bit of information is a good tradeoff to ensure fast queries.  
+
+   Her document for Finland now looks like the following:
+
+   .. code-block:: javascript
+
+      //  Countries collection
+
+      {
+         "_id": "finland",
+         "official_name": "Republic of Finland",
+         "capital": "Helsinki",
+         "languages": [
+            "Finnish",
+            "Swedish",
+            "Sámi"
+         ],
+         "population": 5528737,
+         "resources": {
+            "lions": 32563,
+            "military_personnel": 0,
+            "pulp": 0,
+            "paper": 0
+         },
+         "delegates": [
+            {
+               "first_name": "Andy",
+               "last_name": "Fryer"
+            },
+            {
+               "first_name": "Donna",
+               "last_name": "Beagle"
+            }
+         ],
+         "recent-policies": [
+            {
+               "_id": ObjectId("5ef34ec43e5f7febbd3ed7fb"),
+               "date-created": ISODate("2011-11-09T04:00:00.000+00:00"),
+               "title": "Country Defense Policy"
+            },
+            {
+               "_id": ObjectId("5ef357bb3e5f7febbd3ed7fd"),
+               "date-created": ISODate("2011-11-10T04:00:00.000+00:00"),
+               "title": "Humanitarian Food Policy"
+            }
+         ]
+      }
+   
+   Leslie continues examining her query for her report on each country.  The last ``$lookup`` she has combines information from the ``Countries`` collection and the ``Events`` collection.  She has a many-to-many relationship between countries and events.  She needs to be able to quickly generate reports on each event as a whole, so she wants to keep the ``Events`` collection separate.  She decides to use the `Extended Reference Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__ to solve her dilemma.  She includes the information she needs about each event in her country documents and maintains a reference to the complete event document, so she can get more information when she needs to.  She will duplicate the event date and event topic in both the ``Countries`` and ``Events`` collections, but she is comfortable with this as that data is very unlikely to change.
+
+   After all of her updates, her document for Finland now looks like the following:
+
+   .. code-block:: javascript
+
+      //  Countries collection
+
+      {
+         "_id": "finland",
+         "official_name": "Republic of Finland",
+         "capital": "Helsinki",
+         "languages": [
+            "Finnish",
+            "Swedish",
+            "Sámi"
+         ],
+         "population": 5528737,
+         "resources": {
+            "lions": 32563,
+            "military_personnel": 0,
+            "pulp": 0,
+            "paper": 0
+         },
+         "delegates": [
+            {
+               "first_name": "Andy",
+               "last_name": "Fryer"
+            },
+            {
+               "first_name": "Donna",
+               "last_name": "Beagle"
+            }
+         ],
+         "recent-policies": [
+            {
+               "policy-id": ObjectId("5ef34ec43e5f7febbd3ed7fb"),
+               "date-created": ISODate("2011-11-09T04:00:00.000+00:00"),
+               "title": "Country Defense Policy"
+            },
+            {
+               "policy-id": ObjectId("5ef357bb3e5f7febbd3ed7fd"),
+               "date-created": ISODate("2011-11-10T04:00:00.000+00:00"),
+               "title": "Humanitarian Food Policy"
+            }
+         ],
+         "events": [
+            {
+               "event-id": ObjectId("5ef34faa3e5f7febbd3ed7fc"),
+               "event-date": ISODate("2011-11-10T05:00:00.000+00:00"),
+               "topic": "Global Food Crisis"
+            },
+            {
+               "event-id": ObjectId("5ef35ac93e5f7febbd3ed7fe"),
+               "event-date": ISODate("2012-02-18T05:00:00.000+00:00"),
+               "topic": "Pandemic"
+            }
+         ]
+      }
+
+.. summary::
+
+   Summary
+   -------
+
+   Data that is accessed together should be stored together.  If you'll be frequently reading or updating information together, consider storing the information together using nested documents or arrays.  Carefully consider your use case and weigh the benefits and drawbacks of data duplication as you bring data together.
+
+   Be on the lookout for a post on the final MongoDB schema design anti-pattern!
+
+   .. blockquote::
+
+      When you're ready to build a schema in MongoDB, check out `MongoDB Atlas <http://bit.ly/MDB_Atlas>`__,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB and has a generous, forever-free tier.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Reduce $lookup Operations <https://docs.atlas.mongodb.com/schema-advisor/reduce-lookup-operations/>`__
+   - `MongoDB Docs:  Data Model Design <https://docs.mongodb.com/manual/core/data-model-design/>`__
+   - `MongoDB Docs: Model One-to-One Relationships with Embedded Documents <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-one-relationships-between-documents/>`__
+   - `MongoDB Docs: Model One-to-Many Relationships with Embedded Documents <https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/>`__
+   - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `Blog Post:  The Subset Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-subset-pattern>`__
+   - `Blog Post:  The Extended Reference Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern>`__
+   - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+
