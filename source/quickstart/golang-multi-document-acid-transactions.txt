@@ -32,7 +32,7 @@
 .. include:: /includes/authors/raboy-nic.rst
 
 .. pubdate:: 2020-03-27
-.. updated-date:: 2020-06-16
+.. updated-date:: 2020-06-26
 
 .. type:: quickstart
 
@@ -222,6 +222,10 @@ Multi-Document ACID Transactions in MongoDB with Go
         func main() {
             // ...
 
+            wc := writeconcern.New(writeconcern.WMajority())
+            rc := readconcern.Snapshot()
+            txnOpts := options.Transaction().SetWriteConcern(wc).SetReadConcern(rc)
+
             session, err := client.StartSession()
             if err != nil {
                 panic(err)
@@ -229,7 +233,7 @@ Multi-Document ACID Transactions in MongoDB with Go
             defer session.EndSession(context.Background())
 
             err = mongo.WithSession(context.Background(), session, func(sessionContext mongo.SessionContext) error {
-                if err = session.StartTransaction(); err != nil {
+                if err = session.StartTransaction(txnOpts); err != nil {
                     return err
                 }
                 result, err := episodesCollection.InsertOne(
@@ -267,7 +271,11 @@ Multi-Document ACID Transactions in MongoDB with Go
             }
         }
 
-    In the above code, we start by starting a session which will encapsulate
+    In the above code, we start by defining the read and write concerns that will give us the desired level of 
+    isolation in our transaction. To learn more about the available read and write concerns, check out the 
+    `documentation <https://docs.mongodb.com/manual/core/transactions/#read-concern-write-concern-read-preference>`__.
+    
+    After defining the transaction options, we start a session which will encapsulate
     everything we want to do with atomicity. After, we start a transaction
     that we'll use to commit everything in the session.
 
@@ -304,13 +312,17 @@ Multi-Document ACID Transactions in MongoDB with Go
         func main() {
             // ...
 
+            wc := writeconcern.New(writeconcern.WMajority())
+            rc := readconcern.Snapshot()
+            txnOpts := options.Transaction().SetWriteConcern(wc).SetReadConcern(rc)
+
             session, err := client.StartSession()
             if err != nil {
                 panic(err)
             }
             defer session.EndSession(context.Background())
 
-            _, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+            callback := func(sessionContext mongo.SessionContext) (interface{}, error) {
                 result, err := episodesCollection.InsertOne(
                     sessionContext,
                     Episode{
@@ -332,7 +344,9 @@ Multi-Document ACID Transactions in MongoDB with Go
                     return nil, err
                 }
                 return result, err
-            })
+            }
+
+            _, err = session.WithTransaction(context.Background(), callback, txnOpts)
             if err != nil {
                 panic(err)
             }
