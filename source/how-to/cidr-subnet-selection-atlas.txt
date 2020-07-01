@@ -63,8 +63,8 @@ CIDR Subnet Selection for MongoDB Atlas
    Introduction
    ------------
 
-   One of the best features of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas?jmp=blog>`__ is the ability to
-   `peer your host VPC <https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas?jmp=blog>`__ on your
+   One of the best features of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ is the ability to
+   `peer your host VPC <https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas>`__ on your
    own Amazon Web Services (AWS) account to your Atlas VPC. VPC peering provides you with the ability to use the
    private IP range of your hosts and MongoDB Atlas cluster. This allows you to reduce your network exposure and
    improve security of your data.  If you chose to use peering there are some considerations you should think about
@@ -101,7 +101,7 @@ CIDR Subnet Selection for MongoDB Atlas
 
       You cannot create a VPC peering connection between VPCs with matching or overlapping IPv4 CIDR blocks.
 
-   .. image:: /images/Matching_Overlapping_IPv4_CIDR_blocks-39bsv3lb8g.png
+   .. image:: /images/how-to/cidr-subnet/matching_overlapping_ipv4_cidr_blocks.png
       :alt: Cannot create a VPC peering connection between VPCs with matching or overlapping IPv4 CIDR blocks
 
    MongoDB Atlas VPC
@@ -113,21 +113,21 @@ CIDR Subnet Selection for MongoDB Atlas
    default we create a VPC with IP range 192.168.248.0/21. To specify your IP block prior to configuring peering and
    launching your cluster, follow these steps:
 
-   1. Sign up for `MongoDB Atlas`_ and ensure your payment method is completed.
+   1. Sign up for `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ and ensure your payment method is completed.
 
    2. Click on the **Network Access** tab, then select **Peering**. You should see a page such as this which shows you that you have not launched a cluster yet:
 
-      .. image:: /images/vpc.png
+      .. image:: /images/how-to/cidr-subnet/vpc.png
          :alt: Create new peering connection
 
    3. Click on the **New Peering Connection** button. You will be given a new "Peering Connection" window to add your peering details. At the bottom of this page you'll see a section to modify "Your Atlas VPC"
 
-      .. image:: /images/Modify_Atlas_VPC-50q9i3a77j.png
+      .. image:: /images/how-to/cidr-subnet/modify_atlas_vpc.png
          :alt: Modify your Atlas VPC
 
    4. If you would like to specify a different IP range, you may use one of the RFC-1918 ranges with the appropriate subnet and enter it here. It's extremely important to ensure that you choose two distinct RFC-1918 ranges. These two cannot overlap their subnets:
 
-      .. image:: /images/Distinct_RFC.1918_ranges-1yuy4pkhi6.png
+      .. image:: /images/how-to/cidr-subnet/distinct_rfc_1918_ranges.png
          :alt: Choose two distinct RFC-1918 ranges
 
    5. Click on the **Initiate Peering** button and follow the directions to add the appropriate subnet ranges.
