@@ -35,6 +35,8 @@
 
 .. pubdate:: 2020-02-07
 
+.. updated-date:: 2020-07-01
+
 .. type:: how-to
 
 .. level:: beginner
