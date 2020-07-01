@@ -697,23 +697,27 @@ Building Modern Applications with Next.js and MongoDB
 
    Our main component is currently instantiated with an in-memory data model that the rest of our app acts upon. Let's change this. Next.js gives us a couple of different ways to do this. We can always get the data async from our React component, and if you've used React in the past this should be second nature, but since we're using Next.js I think there is a different and perhaps better way to do it.
 
-   Each Next.js page component allows us to fetch data server-side thanks to a function called getInitialProps. When this function is called, the initial page load is rendered server-side, which is great for SEO. The page doesn't render until this function completes. For subsequent loads though, the getInitialProps method can execute client side, thus giving us the best of both worlds. Let's see how we'll implement this in our application. In index.js, we'll make the following changes:
+   Each Next.js page component allows us to fetch data server-side thanks to a function called ``getStaticProps``. When this function is called, the initial page load is rendered server-side, which is great for SEO. The page doesn't render until this function completes. In ``index.js``, we'll make the following changes:
 
    .. code-block:: javascript
 
       import fetch from 'isomorphic-unfetch'
       const Home = ({data}) => { ... }
       
-      Home.getInitialProps = async () => {
-        const res = await fetch('http://localhost:3000/api/daily')
-        const json = await res.json()
-        return { data: json }
+      export async function getStaticProps(context) {
+        const res = await fetch("http://localhost:3000/api/daily");
+        const json = await res.json();
+        return {
+          props: {
+            data: json,
+          },
+        };
       }
       
       export default Home
 
 
-   Install the isomorphic-unfetch library by running ``npm install --save isomorphic-unfetch``, then below your Home component add the getInitialProps method. In this method we're just making a fetch call to our daily API endpoint and storing that json data in a prop called data. Since we created a data prop, we then pass it into our Home component, and at this point, we can go and remove our in-memory data variable. Do that, save the file, and refresh your browser.
+   Install the ``isomorphic-unfetch`` library by running ``npm install --save isomorphic-unfetch``, then below your Home component add the ``getStaticProps`` method. In this method we're just making a fetch call to our daily API endpoint and storing that json data in a prop called data. Since we created a data prop, we then pass it into our Home component, and at this point, we can go and remove our in-memory data variable. Do that, save the file, and refresh your browser.
 
    Congrats! Your data is now coming live from MongoDB. But at the moment, it's only giving us one result. Let's make a few final tweaks so that we can see daily results, as well as update the data and save it in the database.
 
