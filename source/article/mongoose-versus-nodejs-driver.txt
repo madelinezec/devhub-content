@@ -28,6 +28,10 @@
 .. type:: article
 .. level:: beginner
 
+.. languages::
+
+   * JavaScript
+   
 .. tags:: 
 
    * Node.js
