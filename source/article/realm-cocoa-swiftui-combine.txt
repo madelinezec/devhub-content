@@ -1,0 +1,363 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
+
+.. twitter::
+   :site: @mongodb
+   :creator: @realm
+   :title: Realm Cocoa 5.0 - a ground-up rearchitecting of the core database
+   :image: /images/social/twitter/twitter-realm-mobilesync.jpg
+   :image-alt: MongoDB Realm
+
+   Announcing the public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
+
+.. og::
+   :url: http://developer.mongodb.com/article/realm-cocoa-swiftui-combine
+   :title: Realm Cocoa 5.0 - a ground-up rearchitecting of the core database
+   :image: /images/social/open-graph/og-realm-mobilesync.jpg
+   :type: article
+
+   Announcing the public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/goyne-thomas.rst
+
+.. pubdate:: 2020-07-02
+
+.. type:: article
+
+.. level:: intermediate
+
+.. tags::
+
+   * Mobile
+   * Releases
+
+.. languages::
+
+   * Swift
+
+.. products::
+
+   * Realm
+
+.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===============================================================================
+Realm Cocoa 5.0 - Multithreading Support with Integration for SwiftUI & Combine
+===============================================================================
+
+.. introduction::
+
+   After three years of work, we're proud to announce the public release of
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__, with a ground-up
+   rearchitecting of the core database.
+
+   In the time since we first released the Realm Mobile Database to the
+   world in 2014, we've done our best to adapt to how people have wanted to
+   use Realm and help our users build better apps, faster. Some of the
+   difficulties developers ran into came down to some consequences of
+   design decisions we made very early on, so in 2017 we began a project to
+   rethink our core architecture. In the process, we came up with a new
+   design that simplified our code base, improves performance, and lets us
+   be more flexible around multi-threaded usage.
+
+   In case you missed a similar writeup for Realm Java with code examples
+   you can `find it here <https://developer.mongodb.com/article/realm-database-and-frozen-objects#frozen-objects>`__.
+
+.. content::
+
+   Frozen Objects
+   --------------
+
+   One of the big new features this enables is Frozen Objects.
+
+   One of the core ideas of Realm is our concept of live, thread-confined
+   objects that reduce the code mobile developers need to write. Objects
+   are the data, so when the local database is updated for a particular
+   thread, all objects are automatically updated too. This design ensures
+   you have a consistent view of your data and makes it extremely easy to
+   hook the local database up to the UI. But it came at a cost for
+   developers using reactive frameworks.
+
+   Sometimes Live Objects don't work well with `Functional Reactive
+   Programming (FRP) <https://en.wikipedia.org/wiki/Functional_reactive_programming>`__
+   where you typically want a stream of immutable
+   objects. This means that Realm objects have to be confined to a single
+   thread. Frozen Objects solve both of these problems by letting you
+   obtain an immutable snapshot of an object or collection which is fully
+   thread-safe, *without* copying it out of the realm. This is especially
+   important with Apple's release of
+   `Combine <https://developer.apple.com/documentation/combine>`__ and
+   `SwiftUI <https://developer.apple.com/tutorials/swiftui/>`__,
+   which are built around many of the ideas of Reactive programming.
+
+   For example, suppose we have a nice simple list of Dogs in SwiftUI:
+
+   .. code-block:: swift
+
+      class Dog: Object, ObjectKeyIdentifable {
+          @objc dynamic var name: String = ""
+          @objc dynamic var age: Int = 0
+      }
+
+      struct DogList: View {
+          @ObservedObject var dogs: RealmSwift.List<Dog>
+
+          var body: some View {
+              List {
+                  ForEach(dogs) { dog in
+                      Text(dog.name)
+                  }
+              }
+          }
+      }
+
+   If you've ever tried to use Realm with
+   `SwiftUI <https://developer.apple.com/tutorials/swiftui/>`__, you can probably see a
+   problem here: SwiftUI holds onto references to the objects passed to
+   ``ForEach()``, and if you delete an object from the list of dogs it'll crash
+   with an index out of range error. Solving this used to involve
+   complicated workarounds, but with
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ is as simple as
+   freezing the list passed to ``ForEach()``:
+
+   .. code-block:: swift
+
+      struct DogList: View {
+          @ObservedObject var dogs: RealmSwift.List<Dog>
+
+          var body: some View {
+              List {
+                  ForEach(dogs.freeze()) { dog in
+                      Text(dog.name)
+                  }
+              }
+          }
+      }
+
+   Now let's suppose we want to make this a little more complicated, and
+   group the dogs by their age. In addition, we want to do the grouping on
+   a background thread to minimize the amount of work done on the main
+   thread. Fortunately, `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ makes this easy:
+
+   .. code-block:: swift
+
+      struct DogGroup {
+          let label: String
+          let dogs: [Dog]
+      }
+
+      final class DogSource: ObservableObject {
+          @Published var groups: [DogGroup] = []
+
+          private var cancellable: AnyCancellable?
+          init() {
+              cancellable = try! Realm().objects(Dog.self)
+                  .publisher
+                  .subscribe(on: DispatchQueue(label: "background queue"))
+                  .freeze()
+                  .map { dogs in
+                      Dictionary(grouping: dogs, by: { $0.age }).map { DogGroup(label: "\($0)", dogs: $1) }
+                  }
+                  .receive(on: DispatchQueue.main)
+                  .assertNoFailure()
+                  .assign(to: \.groups, on: self)
+          }
+          deinit {
+              cancellable?.cancel()
+          }
+      }
+
+      struct DogList: View {
+          @EnvironmentObject var dogs: DogSource
+
+          var body: some View {
+              List {
+                  ForEach(dogs.groups, id: \.label) { group in
+                      Section(header: Text(group.label)) {
+                          ForEach(group.dogs) { dog in
+                              Text(dog.name)
+                          }
+                      }
+                  }
+              }
+          }
+      }
+
+   Because frozen objects aren't thread-confined, we can subscribe to
+   change notifications on a background thread, transform the data to a
+   different form, and then pass it back to the main thread without any
+   issues.
+
+   Combine Support
+   ---------------
+
+   You may also have noticed the ``.publisher`` in the code sample above.
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ comes with
+   basic built-in support for using Realm objects and
+   collections with `Combine <https://developer.apple.com/documentation/combine>`__.
+   Collections (List, Results, LinkingObjects,
+   and AnyRealmCollection) come with a ``.publisher`` property which emits the
+   collection each time it changes, along with a ``.changesetPublisher``
+   property that emits a ``RealmCollectionChange<T>`` each time the collection
+   changes. For Realm objects, there are similar ``publisher()`` and
+   ``changesetPublisher()`` free functions which produce the equivalent for
+   objects.
+
+   For people who want to use live objects with
+   `Combine <https://developer.apple.com/documentation/combine>`__, we've added a
+   ``.threadSafeReference()`` extension to ``Publisher`` which will let you safely
+   use ``receive(on:)`` with thread-confined types. This lets you write things
+   like the following code block to easily pass thread-confined objects or collections between threads.
+
+   .. code-block:: swift
+
+      publisher(object)
+        .subscribe(on: backgroundQueue)
+        .map(myTransform)
+        .threadSafeReference()
+        .receive(on: .main)
+        .sink {print("\($0)")}
+
+   Queue-confined Realms
+   ---------------------
+
+   Another threading improvement coming in
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ is the ability
+   to confine a realm to a serial dispatch queue rather than a thread. A
+   common pattern in Swift is to use a dispatch queue as a lock which
+   guards access to a variable. Historically, this has been difficult with
+   Realm, where queues can run on any thread.
+
+   For example, suppose you're using URLSession and want to access a Realm
+   each time you get a progress update. In previous versions of Realm you
+   would have to open the realm each time the callback is invoked as it
+   won't happen on the same thread each time. With
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ you can
+   open a realm which is confined to that queue and can be reused:
+
+   .. code-block:: swift
+
+      class ProgressTrackingDelegate: NSObject, URLSessionDownloadDelegate {
+          public let queue = DispatchQueue(label: "background queue")
+          private var realm: Realm!
+
+          override init() {
+              super.init()
+              queue.sync { realm = try! Realm(queue: queue) }
+          }
+
+          public var operationQueue: OperationQueue {
+              let operationQueue = OperationQueue()
+              operationQueue.underlyingQueue = queue
+              return operationQueue
+          }
+
+          func urlSession(_ session: URLSession,
+                          downloadTask: URLSessionDownloadTask,
+                          didWriteData bytesWritten: Int64,
+                          totalBytesWritten: Int64,
+                          totalBytesExpectedToWrite: Int64) {
+              guard let url = downloadTask.originalRequest?.url?.absoluteString else { return }
+              try! realm.write {
+                  let progress = realm.object(ofType: DownloadProgress.self, forPrimaryKey: url)
+                  if let progress = progress {
+                      progress.bytesWritten = totalBytesWritten
+                  } else {
+                      realm.create(DownloadProgress.self, value: [
+                          "url": url,
+                          "bytesWritten": bytesWritten
+                      ])
+                  }
+              }
+          }
+      }
+      let delegate = ProgressTrackingDelegate()
+      let session = URLSession(configuration: URLSessionConfiguration.default,
+                               delegate: delegate,
+                               delegateQueue: delegate.operationQueue)
+
+   You can also have notifications delivered to a dispatch queue rather
+   than the current thread, including queues other than the active one.
+   This is done by passing the queue to the observe function:
+   ``let token = object.observe(on: myQueue) { ... }``.
+
+   Performance
+   -----------
+
+   With `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__,
+   we've greatly improved performance in a few
+   important areas. Sorting Results is roughly twice as fast, and deleting
+   objects from a Realm is as much as twenty times faster than in 4.x.
+   Object insertions are 10-25% faster, with bigger gains being seen for
+   types with primary keys.
+
+   Most other operations should be similar in speed to previous versions.
+
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ should also
+   typically produce smaller Realm files than
+   previous versions. We've adjusted how we store large binary blobs so
+   that they no longer result in files with a large amount of empty space,
+   and we've reduced the size of the transaction log that's written to the
+   file.
+
+   Compatibility
+   -------------
+
+   `Realm Cocoa 5.0 <https://realm.io/docs/swift/latest/>`__ comes with a
+   new version of the Realm file format. Any
+   existing files that you open will be automatically upgraded to the new
+   format, with the exception of read-only files (such as those bundled
+   with your app). Those will need to be manually upgraded, which can be
+   done by opening them in Realm Studio or recreating them through whatever
+   means you originally created the file. The upgrade process is one-way,
+   and realms cannot be converted back to the old file format.
+
+   Only minor API changes have been made, and we expect most applications
+   which did not use any deprecated functions will compile and work with no
+   changes. You may notice some changes to undocumented behavior, such as
+   that deleting objects no longer changes the order of objects in an
+   unsorted ``Results``.
+
+   Pre-1.0 Realms containing ``Date`` or ``Any`` properties can no longer be
+   opened.
+
+   Want to try it out for yourself? Check out our `working demo app using
+   Frozen Objects, SwiftUI, and Combine <https://github.com/realm/realm-cocoa/tree/master/examples/ios/swift/ListSwiftUI>`__.
+
+   - Simply clone the realm-cocoa repo and open ``RealmExamples.xworkspace`` then select the ``ListSwiftUI`` app in Xcode and Build.
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   We're very excited to finally get these features out to you and to see
+   what new things you'll be able to build with them. Stay tuned for more
+   exciting new features to come; the investment in the Realm Database
+   continues.
+
+   Links
+   -----
+
+   Want to learn more? `Review the documentation. <https://realm.io/docs>`__.
+
+   Ready to get started? `Get Realm Core 6.0 and the
+   SDK's <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__.
+
+   Want to ask a question? Head over to our `MongoDB Realm Developer
+   Community Forums <https://developer.mongodb.com/community/forums/c/realm>`__.
