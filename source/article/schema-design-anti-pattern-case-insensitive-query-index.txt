@@ -1,0 +1,388 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: Anti-Pattern: Case-Insensitive Query Without Case-Insensitive Index
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents
+   :type: article
+   :title: MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-07-07
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
+   * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=========================================================
+Case-Insensitive Queries Without Case-Insensitive Indexes
+=========================================================
+ 
+.. introduction:: 
+
+   We've reached the sixth and final (at least for now) MongoDB schema design anti-pattern.  In the first five posts in this series, we've covered the following anti-patterns.
+
+   - `Massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   - `Massive number of collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   - `Unnecessary indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
+   - `Bloated documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
+   - `Separating data that is accessed together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__
+
+   Today, we'll explore the wonderful world of case-insensitive indexes.  Not having a case-insensitive index can create surprising query results and/or slow queries...and make you hate everything.
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/ihateeverything.gif
+      :alt: "I hate everything"
+      :align: center
+
+   Once you know the details of how case-insensitive queries work, the implementation is fairly simple.  Let's dive in!
+
+
+.. content::
+
+   .. _explanation:
+
+   Case-Insensitive Queries Without Case-Insensitive Indexes
+   ---------------------------------------------------------
+
+   MongoDB supports three primary ways to run case-insensitive queries.
+
+   First, you can run a case-insensitive query using `$regex <https://docs.mongodb.com/manual/reference/operator/query/regex/>`__ with the ``i`` option.  These queries will give you the expected case-insensitive results.  However, queries that use ``$regex`` cannot efficiently utilize case-insensitive indexes, so these queries can be very slow depending on how much data is in your collection.
+
+   Second, you can run a case-insensitive query by creating a `case-insensitive index <https://docs.mongodb.com/manual/core/index-case-insensitive/>`__ (meaning it has a `collation strength <https://docs.mongodb.com/manual/reference/collation/>`__ of ``1`` or ``2``) and running a query with the same collation as the index. A `collation <https://docs.mongodb.com/manual/reference/collation/>`__ defines the language-specific rules that MongoDB will use for string comparison.  
+   Indexes can optionally have a `collation with a strength that ranges from 1 to 5 <https://docs.mongodb.com/manual/reference/collation/>`__.  Collation strengths of ``1`` and ``2`` both give you case-insensitivity.  For more information on the differences in collation strengths, see the `MongoDB docs <https://docs.mongodb.com/manual/reference/collation/>`__.  A query that is run with the same collation as a case-insensitive index will return case-insensitive results.   Since these queries are `covered by indexes <https://docs.mongodb.com/manual/core/query-optimization/#covered-query>`__, they execute very quickly.
+
+   Third, you can run a case-insensitive query by setting the default collation strength for queries and indexes to a strength of ``1`` or ``2`` when you create a collection.  All queries and indexes in a collection automatically use the default collation unless you specify otherwise when you execute a query or create an index.  Therefore, when you set the default collation to a strength of ``1`` or ``2``, you'll get case-insensitive queries and indexes by default.  See the ``collation`` option in the `db.createCollection() section of the MongoDB Docs <https://docs.mongodb.com/manual/reference/method/db.createCollection/#db.createCollection>`__ for more details.
+
+   .. blockquote::
+   
+      Warning for queries that do not use ``$regex``:  Your index must have a collation strength of ``1`` or ``2`` and your query must use the same collation as the index in order for your query to be case-insensitive.  
+
+   You can use `MongoDB Compass <https://www.mongodb.com/products/compass>`__ (MongoDB's desktop GUI) or the `MongoDB Shell <https://www.mongodb.com/products/shell>`__ (MongoDB's command-line tool) to test if a query is returning the results you'd expect, see its execution time, and determine if it's using an index.  
+
+   Example
+   -------
+   
+   Let's revisit the example we saw in the `Unnecessary Indexes Anti-Pattern <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__ and the `Bloated Documents Anti-Pattern <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__ posts.  Leslie is creating a website that features inspirational women.  She has created a database with information about 4,700+ inspirational women.  Below are three documents in her ``InspirationalWomen`` collection.
+   
+   .. code-block:: none
+
+      {
+         "_id": ObjectId("5ef20c5c7ff4160ed48d8f83"),
+         "first_name": "Harriet",
+         "last_name": "Tubman",
+         "quote": "I was the conductor of the Underground Railroad for eight years, 
+                   and I can say what most conductors can't say; I never ran my 
+                   train off the track and I never lost a passenger"
+      },
+      {
+         "_id": ObjectId("5ef20c797ff4160ed48d90ea"),
+         "first_name": "HARRIET",
+         "middle_name": "BEECHER",
+         "last_name": "STOWE",
+         "quote": "When you get into a tight place and everything goes against you,
+                   till it seems as though you could not hang on a minute longer, 
+                   never give  up then, for that is just the place and time that 
+                   the tide will turn."
+      },
+      {
+         "_id": ObjectId("5ef20c937ff4160ed48d9201"),
+         "first_name": "Bella",
+         "last_name": "Abzug",
+         "quote": "This woman's place is in the House—the House of Representatives."
+      }
+
+   Leslie decides to add a search feature to her website since the website is currently difficult to navigate.  She begins implementing her search feature by creating an index on the ``first_name`` field.  Then she starts testing a query that will search for women named "Harriet."  
+   
+   Leslie executes the following query in the MongoDB Shell:
+
+   .. code-block:: sh
+
+      db.InspirationalWomen.find({first_name: "Harriet"})
+   
+   She is surprised to only get one document returned since she has two Harriets in her database:   Harriet Tubman and Harriet Beecher Stowe.  She realizes that Harriet Beecher Stowe's name was input in all uppercase in her database.  Her query is case-sensitive, because it is not using a case-insensitive index.
+
+   Leslie runs the same query with `.explain("executionStats") <https://docs.mongodb.com/manual/reference/method/db.collection.explain/index.html>`__ to see what is happening.  
+
+   .. code-block:: sh
+
+      db.InspirationalWomen.find({first_name: "Harriet"}).explain("executionStats")
+   
+   The Shell returns the following output.
+
+   .. code-block:: javascript
+
+      {
+         "queryPlanner": {
+            ...
+            "winningPlan": {
+               "stage": "FETCH",
+               "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                     "first_name": 1
+                  },
+                  "indexName": "first_name_1",
+                  ...
+                  "indexBounds": {
+                     "first_name": [
+                        "[\"Harriet\", \"Harriet\"]"
+                     ]
+                  }
+               }
+            },
+            "rejectedPlans": []
+         },
+         "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 1,
+            "executionTimeMillis": 0,
+            "totalKeysExamined": 1,
+            "totalDocsExamined": 1,
+            "executionStages": {
+               ...
+               }
+            }
+         },
+         ...
+      }
+   
+   She can see that the ``winningPlan`` is using an ``IXSCAN`` (index scan) with her ``first_name_1`` index.  In the ``executionStats``, she can see that only one index key was examined (``executionStats.totalKeysExamined``) and only one document was examined (``executionStats.totalDocsExamined``).  For more information on how to interpret the output from ``.explain()``, see `Analyze Query Performance <https://docs.mongodb.com/manual/tutorial/analyze-query-plan/index.html>`__.
+
+   Leslie opens Compass and sees similar results.
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/compass1.png
+         :alt: Screenshot of the MongoDB Compass Explain Plan view 
+         :align: center
+         
+         MongoDB Compass shows that the query is examining only one index key, examining only one document, and returning only one document.  It also shows that the query used the ``first_name_1`` index.
+
+   Leslie wants all Harriets—regardless of what lettercase is used—to be returned in her query.  She updates her query to use ``$regex`` with option ``i`` to indicate the regular expression should be case-insensitive.  She returns to the Shell and runs her new query:
+
+   .. code-block:: sh
+
+      db.InspirationalWomen.find({first_name: { $regex: /Harriet/i} })
+
+   This time she gets the results she expects:  documents for both Harriet Tubman and Harriet Beecher Stowe.  Leslie is thrilled!  She runs the query again with ``.explain("executionStats")`` to get details on her query execution.  Below is what the Shell returns:
+
+   .. code-block:: javascript
+
+      {
+         "queryPlanner": {
+            ...
+            "winningPlan": {
+               "stage": "FETCH",
+               "inputStage": {
+                  "stage": "IXSCAN",
+                  "filter": {
+                     "first_name": {
+                        "$regex": "Harriet",
+                        "$options": "i"
+                     }
+                  },
+                  "keyPattern": {
+                     "first_name": 1
+                  },
+                  "indexName": "first_name_1",
+                  ...
+                  "indexBounds": {
+                     "first_name": [
+                        "[\"\", {})",
+                        "[/Harriet/i, /Harriet/i]"
+                     ]
+                  }
+               }
+            },
+            "rejectedPlans": []
+         },
+         "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 2,
+            "executionTimeMillis": 3,
+            "totalKeysExamined": 4704,
+            "totalDocsExamined": 2,
+            "executionStages": {
+               ...
+            }
+         },
+         ...
+      }
+   
+   She can see that this query, like her previous one, uses an index (``IXSCAN``).  However, since ``$regex`` queries cannot efficiently utilize case-insensitive indexes, she isn't getting the typical benefits of a query that is covered by an index.  All 4,704 index keys (``executionStats.totalKeysExamined``) are being examined as part of this query, resulting in a slightly slower query (``executionStats.executionTimeMillis: 3``) than one that fully utilizes an index.
+
+   She runs the same query in Compass and sees similar results.  The query is using her ``first_name_1`` index but examining every index key.
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/compass2.png
+      :alt: Screenshot of the MongoDB Compass Explain Plan view 
+      :align: center
+      
+      MongoDB Compass shows that the query is returning two documents as expected.  The ``$regex`` query is using the ``first_name_1`` index but examining every index key.
+
+   Leslie wants to ensure that her search feature runs as quickly as possible.  She uses Compass to create a new case-insensitive index named ``first_name-case_insensitive``.  (She can easily create indexes using other tools as well like the Shell or `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ or even programmatically.)  Her index will be on the ``first_name`` field in ascending order and use a custom collation with a locale of ``en`` and a strength of ``2``.  Recall from the :ref:`previous section <explanation>`
+   that the `collation strength <https://docs.mongodb.com/manual/reference/collation/>`__ must be set to ``1`` or ``2`` in order for the index to be case-insensitive.  
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/compass-create-index.png
+      :alt: Screenshot of the MongoDB Compass Explain Plan view 
+      :align: center
+      
+      Creating a new index in MongoDB Compass with a custom collation that has a locale of ``en`` and a strength of ``2``.
+
+   Leslie runs a query very similar to her original query in the Shell, but this time she specifies the collation that matches her newly-created index:
+
+   .. code-block:: sh
+
+      db.InspirationalWomen.find({first_name: "Harriet"}).collation( { locale: 'en', strength: 2 } )
+
+   This time she gets both Harriet Tubman and Harriet Beecher Stowe.  Success!
+
+   She runs the query with ``.explain("executionStats")`` to double check that the query is using her index:
+
+   .. code-block:: sh
+
+      db.InspirationalWomen.find({first_name: "Harriet"}).collation( { locale: 'en', strength: 2 } ).explain("executionStats")
+
+   The Shell returns the following results.
+
+   .. code-block:: javascript
+
+      {
+         "queryPlanner": {
+            ...
+            "collation": {
+               "locale": "en",
+               ...
+               "strength": 2,
+               ...
+            },
+            "winningPlan": {
+               "stage": "FETCH",
+               "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                     "first_name": 1
+                  },
+                  "indexName": "first_name-case_insensitive",
+                  "collation": {
+                     "locale": "en",
+                     ...
+                     "strength": 2,
+                     ...
+                  },
+                  ...
+                  "indexBounds": {
+                     "first_name": [
+                        "[\"7)KK91O\u0001\u000b\", \"7)KK91O\u0001\u000b\"]"
+                     ]
+                  }
+               }
+            },
+            "rejectedPlans": []
+         },
+         "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 2,
+            "executionTimeMillis": 0,
+            "totalKeysExamined": 2,
+            "totalDocsExamined": 2,
+            "executionStages": {
+               ...
+               }
+            }
+         },
+         ...
+      }
+   
+   Leslie can see that the winning plan is executing an ``IXSCAN`` (index scan) that uses the case-insensitive index she just created.  Two index keys (``executionStats.totalKeysExamined``) are being examined, and two documents (``executionStats.totalDocsExamined``) are being examined.  The query is executing in 0 ms (``executionStats.executionTimeMillis: 0``).  Now that's fast!
+
+   Leslie runs the same query in Compass and specifies the collation the query should use.  
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/compass3.png
+      :alt: Screenshot of the MongoDB Compass Explain Plan view running a query with the collation specified
+      :align: center
+
+   She can see that the query is using her case-insensitive index and the query is executing in 0 ms.  She's ready to implement her search feature.  Time to celebrate!
+
+   .. figure:: /images/article/anti-patterns/case-insensitive/dance.gif
+      :alt: Leslie dances
+      :align: center
+
+   *Note:*  Another option for Leslie would have been to set the default collation strength of her InspirationalWomen collection to ``1`` or ``2`` when she created her collection.  Then all of her queries would have returned the expected, case-insensitive results, regardless of whether she had created an index or not.  She would still want to create indexes to increase the performance of her queries.
+
+.. summary::
+
+   Summary
+   -------
+
+   You have three primary options when you want to run a case-insensitive query:
+
+   #. Use ``$regex`` with the ``i`` option.  Note that this option is not as performant because ``$regex`` cannot fully utilize case-insensitive indexes.
+   #. Create a case-insensitive index with a collation strength of ``1`` or ``2``, and specify that your query uses the same collation.  
+   #. Set the default collation strength of your collection to ``1`` or ``2`` when you create it, and do not specify a different collation in your queries and indexes.
+
+   Alternatively, `MongoDB Atlas Search <https://docs.atlas.mongodb.com/atlas-search/>`__ can be used for more complex text searches.  
+
+   This post is the final anti-pattern we'll cover in this series.  But, don't be too sad—this is not the final post in this series.  Be on the lookout for the next post where we'll summarize all of the anti-patterns and show you a brand new feature in MongoDB Atlas that will help you discover anti-patterns in your database.  You won't want to miss it!
+
+   .. blockquote::
+
+      When you're ready to build a schema in MongoDB, check out `MongoDB Atlas <http://bit.ly/MDB_Atlas>`__,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB and has a generous, forever-free tier.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Docs: Improve Case-Insensitive Regex Queries <https://docs.atlas.mongodb.com/schema-advisor/case-insensitive-regex/>`__
+   - `MongoDB Docs: Case-Insensitive Indexes <https://docs.mongodb.com/manual/core/index-case-insensitive/>`__
+   - `MongoDB Docs: $regex <https://docs.mongodb.com/manual/reference/operator/query/regex/>`__
+   - `MongoDB Docs: Collation <https://docs.mongodb.com/manual/reference/collation/>`__
+   - `MongoDB Docs: db.collection.explain() <https://docs.mongodb.com/manual/reference/method/db.collection.explain/index.html>`__
+   - `MongoDB Docs: Analyze Query Performance <https://docs.mongodb.com/manual/tutorial/analyze-query-plan/index.html>`__
+   - `MongoDB University M201: MongoDB Performance <https://university.mongodb.com/courses/M201/about>`__
