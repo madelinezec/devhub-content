@@ -18,7 +18,7 @@
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
 
 .. og::
-   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-case-insensitive-query-index
    :type: article
    :title: MongoDB Schema Design Anti-Pattern: Case-Insensitive Queries Without Case-Insensitive Indexes
    :image: /images/social/open-graph/og-schema-design-patterns.png
