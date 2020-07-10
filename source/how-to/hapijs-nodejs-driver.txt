@@ -288,9 +288,9 @@ Build a RESTful API with HapiJS and MongoDB
                 url: 'mongodb+srv://{YOUR-USERNAME}:{YOUR-PASSWORD}@main.zxsxp.mongodb.net/sample_mflix?retryWrites=true&w=majority',
                 settings: {
                     useUnifiedTopology: true
-                }
-              },
-              decorate: true
+                },
+                decorate: true
+              }
           });
           
           // Get all movies
