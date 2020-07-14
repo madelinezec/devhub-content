@@ -91,7 +91,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     .. blockquote::
 
-        Get started with an M0 cluster on `Atlas <http://bit.ly/MDB_Atlas>`__
+        Get started with an M0 cluster on `Atlas <https://www.mongodb.com/cloud/atlas/signup?tck=devhub_schaefer_nodecrudtutorial>`__
         today. It's free forever, and it's the easiest way to try out the steps
         in this blog series.
 
@@ -139,7 +139,7 @@ MongoDB and Node.js Tutorial - CRUD Operations
 
     Below are the links I mentioned in the video.
 
-    -  `MongoDB Atlas <https://bit.ly/MDB_Atlas>`__
+    -  `MongoDB Atlas <https://www.mongodb.com/cloud/atlas/signup?tck=devhub_schaefer_nodecrudtutorial>`__
     -  `How to create a free cluster on Atlas <https://youtu.be/rPqRyYJmx2g>`__
     -  `MongoDB University's Data Modeling Course <http://bit.ly/M320_DataModeling>`__
     -  `MongoDB University's Javascript Course <https://bit.ly/M220JS>`__
