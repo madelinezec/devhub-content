@@ -1,0 +1,159 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Get a summary of the six MongoDB Schema Design Anti-Patterns. Plus, learn how MongoDB Atlas can help you
+   spot the anti-patterns in your databases.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: A Summary of Schema Design Anti-Patterns and How to Spot Them
+   :image: /images/social/twitter/twitter-schema-design-patterns.png
+   :image-alt: Schema Design Patterns
+
+   Get a summary of the six MongoDB Schema Design Anti-Patterns. Plus, learn how MongoDB Atlas can help you
+   spot the anti-patterns in your databases.
+
+.. og::
+   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-summary
+   :type: article
+   :title: A Summary of Schema Design Anti-Patterns and How to Spot Them
+   :image: /images/social/open-graph/og-schema-design-patterns.png
+ 
+   Get a summary of the six MongoDB Schema Design Anti-Patterns. Plus, learn how MongoDB Atlas can help you
+   spot the anti-patterns in your databases.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. include:: /includes/authors/coupal-daniel.rst
+
+.. pubdate:: 2020-07-14
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Schema Design
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
+
+.. related::
+
+   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Anti-Pattern: Separating Data That is Accessed Together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__
+   * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=============================================================
+A Summary of Schema Design Anti-Patterns and How to Spot Them
+=============================================================
+ 
+.. introduction:: 
+
+   We've reached the final post in this series on MongoDB schema design anti-patterns.  You're an expert now, right?  We hope so.  But don't worry—even if you fall into the trap of accidentally implementing an anti-pattern, `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ can help you identify it.
+
+   .. figure:: /images/article/anti-patterns/summary/trap.gif
+      :alt: "It's a trap"
+      :align: center
+
+
+.. content::
+
+   The Anti-Patterns
+   -----------------
+
+   Below is a brief description of each of the schema design anti-patterns we've covered in this series.
+
+   - `Massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__:  storing massive, unbounded arrays in your documents.
+   - `Massive number of collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__: storing a massive number of collections (especially if they are unused or unnecessary) in your database.
+   - `Unnecessary indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__: storing an index that is unnecessary because it is (1) rarely used if at all or (2) redundant because another compound index covers it.
+   - `Bloated documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__:  storing large amounts of data together in a document when that data is not frequently accessed together.
+   - `Separating data that is accessed together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__: separating data between different documents and collections that is frequently accessed together.
+   - `Case-insensitive queries without case-insensitive indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-case-insensitive-query-index>`__: frequently executing a case-insensitive query without having a case-insensitive index to cover it.
+
+   Now that you know what **not** to do, let's talk about what you **should** do instead.  Begin by learning the MongoDB schema design patterns.  `Ken Alger <https://twitter.com/kenwalger>`__ and `Daniel Coupal <https://twitter.com/danielcoupal>`__ wrote a fantastic `blog series <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__ that details each of the 12 patterns.  Daniel also co-created a `free MongoDB University Course <https://university.mongodb.com/courses/M320/about>`__ that walks you through how to model your data.
+
+   Once you have built your data modeling foundation on schema design patterns and anti-patterns, carefully consider your use case:
+
+   - What data will you need to store?  
+   - What data is likely to be accessed together?
+   - What queries will be run most frequently?
+   - What data is likely to grow at a rapid, unbounded pace?
+
+   The great thing about MongoDB is that it has a flexible schema.  You have the power to rapidly make changes to your data model when you use MongoDB.  If your initial data model turns out to be not so great or your application's requirements change, you can easily update your data model.  And you can make those updates without any downtime!  Check out the `Schema Versioning Pattern <https://www.mongodb.com/blog/post/building-with-patterns-the-schema-versioning-pattern>`__ for more details.
+
+   If and when you're ready to lock down part or all of your schema, you can add `schema validation <https://docs.mongodb.com/manual/core/schema-validation/>`__.  Don't worry—the schema validation is flexible too.  You can configure it to throw warnings or errors.  You can also choose if the validation should apply to all documents or just documents that already pass the schema validation rules.  All of this flexibility gives you the ability to validate documents with different shapes in the same collection, helping you migrate your schema from one version to the next.
+
+   Spotting Anti-Patterns in Your Database
+   ---------------------------------------
+
+   Hopefully, you'll keep all of the schema design patterns and anti-patterns top-of-mind while you're planning and modifying your database schema.  But maybe that's wishful thinking.  We all make mistakes.
+
+   .. figure:: /images/article/anti-patterns/summary/problem.gif
+      :alt: "Oh my God. I am part of the problem."
+      :align: center
+
+   If your database is hosted on `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__, you can get some help spotting anti-patterns.  Navigate to the Performance Advisor (available in M10 clusters and above) or the Data Explorer (available in all clusters) and look for the Schema Anti-Patterns panel.  These Schema Anti-Patterns panels will display a list of anti-patterns in your collections and provide pointers on how to fix the issues.
+
+   .. figure:: /images/article/anti-patterns/summary/anti-patterns-panel.png
+      :alt: Screenshot of the Schema Anti-Patterns panel in MongoDB Atlas
+      :align: center
+
+      The Schema Anti-Patterns panel in the Atlas Data Explorer shows one issue found:  use case-insensitive indexes.
+
+   To learn more, check out Marissa Jasso's `blog post <https://www.mongodb.com/blog/post/schema-suggestions-atlas-years-best-practices-instantly-available-to-you>`__ that details this handy schema suggestion feature or watch her demo below.
+
+   .. youtube:: XFJcboyDSRA
+
+
+.. summary::
+
+   Summary
+   -------
+
+   Every use case is unique, so every schema will be unique.  No formula exists for determining the "right" model for your data in MongoDB.  
+
+   Give yourself a solid data modeling foundation by learning the MongoDB schema design patterns and anti-patterns.  Then begin modeling your data, carefully considering the details of your particular use case and leveraging the principles of the patterns and anti-patterns.  
+
+   So, get pumped, have fun, and model some data!
+
+   .. figure:: /images/article/anti-patterns/summary/pumped.gif
+      :alt: Leslie pumps herself up:  "Do it. Fierce. Power"
+      :align: center
+
+   .. blockquote::
+
+      When you're ready to build a schema in MongoDB, check out `MongoDB Atlas <http://bit.ly/MDB_Atlas>`__,
+      MongoDB's fully managed database-as-a-service. Atlas is the easiest way
+      to get started with MongoDB and has a generous, forever-free tier.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `Blog Series: Building with Patterns: A Summary <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   - `MongoDB University Course M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
+   - `MongoDB Docs: Schema Validation <https://docs.mongodb.com/manual/core/schema-validation/>`__
+   - `Blog Post: JSON Schema Validation - Locking Down Your Model the Smart Way <https://www.mongodb.com/blog/post/json-schema-validation--locking-down-your-model-the-smart-way>`__
+   - `Blog Post: Schema Suggestions in MongoDB Atlas: Years of Best Practices, Instantly Available To You <https://www.mongodb.com/blog/post/schema-suggestions-atlas-years-best-practices-instantly-available-to-you>`__
+   - `MongoDB Docs: Improve Your Schema <https://docs.atlas.mongodb.com/performance-advisor/schema-advisor/>`__
