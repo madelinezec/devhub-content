@@ -33,7 +33,7 @@
 
 .. pubdate:: 2020-01-08
 
-.. updated-date:: 2020-02-18
+.. updated-date:: 2020-07-14
 
 .. type:: quickstart
 
@@ -57,7 +57,7 @@
 .. related::
 
    * `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
-   * `MongoDB Node.js CRUD Tutorial </quickstart/java-setup-crud-operations>`__
+   * :doc:`MongoDB Node.js CRUD Tutorial </quickstart/node-crud-tutorial>`
    * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
    * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
 
@@ -1020,7 +1020,7 @@ Change Streams & Triggers with Node.js Tutorial
     --------------------------------------------------------
 
     -  `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
-    -  `MongoDB Node.js CRUD Tutorial </quickstart/java-setup-crud-operations>`__
+    -  :doc:`MongoDB Node.js CRUD Tutorial </quickstart/node-crud-tutorial>`
     -  `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
     -  `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
     -  How to react to database changes with change streams and triggers (this post)
