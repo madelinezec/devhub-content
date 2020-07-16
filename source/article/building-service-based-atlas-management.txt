@@ -1,0 +1,222 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Learn how to build Service-Based Atlas Cluster Management webhooks/functionality with Atlas API and MongoDB Realm.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @pavel.duchovny
+   :title: Building Service-Based Atlas Cluster Management
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: Building Service-Based Atlas Cluster Management
+
+   Learn how to build Service Based Atlas management components.
+
+   .. og::
+      :url: https://developer.mongodb.com/article/building-service-based-atlas-management
+      :title: Do You want to learn how to build service based Atlas management components?
+      :image: /images/social/open-graph/og-mdb-developer.png
+      :type: article
+
+   Learn how to build Service Based Atlas management components.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/duchovny-pavel.rst
+
+.. pubdate:: 2020-07-16
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags::
+
+   * Cloud
+   * Security
+   * API
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * Atlas
+   * Realm
+
+.. atf-image:: /images/atf-images/illustrations/dev-tools.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+
+
+===============================================
+Building Service-Based Atlas Cluster Management
+===============================================
+
+.. introduction::
+
+    Developer Productivity
+    ----------------------
+
+    `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ is changing the database industry standards when it comes to database provisioning, maintenance, and scaling, as it just works. However, even superheroes like Atlas know that with Great Power Comes Great Responsibility.
+
+    For this reason, Atlas provides Enterprise-grade security features for your clusters and a set of `user management roles <https://docs.atlas.mongodb.com/reference/user-roles/>`__ that can be assigned to log in users or `programmatic API keys <https://docs.atlas.mongodb.com/configure-api-access/>`__.
+
+    However, since the management roles were built for a wide use case of our customers there are some customers who need more fine-grained permissions for specific teams or user types. Although, at the moment the management roles are predefined, with the help of a simple Realm service and the programmatic API we can allow user access for very specific management/provisioning features without exposing them to a wider sudo all ability.
+
+    To better understand this scenario I want to focus on the specific use case of database user creation for the application teams. In this scenario perhaps each developer per team may need its own user and specific database permissions. With the current Atlas user roles you will need to grant the team a ``Cluster Manager Role``, which allows them to change cluster properties as well as pause and resume a cluster. In some cases this power is unnecessary for your users.
+
+    .. include:: /includes/callouts/atlas-signup.rst
+
+
+.. content::
+
+    Proposed solution
+    -----------------
+
+    Your developers will submit their requests to a pre-built service which will authenticate them and request an input for the user description. Furthermore, the service will validate the input and post it to the Atlas API without exposing any additional information or API keys.
+
+    The user will receive a confirmation that the user was created and ready to use.
+
+    Work Flow
+    ---------
+
+    To make the service more accessible for users I am using a form-based service called `Typeform <https://www.typeform.com/>`__, you can choose many other available form builders (e.g `Google Forms <https://www.google.com/forms/about/>`__). This form will gather the information and password/secret for the service authentication from the user and pass it to the Realm webhook which will perform the action.
+
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/DrawingFlow.png
+       :alt: Flow diagram
+
+       The user fills the form and security information.
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/FormUsers.png
+       :alt: Input Example
+
+
+    The input is an `Atlas API user object <https://docs.atlas.mongodb.com/reference/api/database-users-create-a-user/#request>`__ that we want to create, looking something like the following object:
+
+    .. code-block:: javascript
+
+       {
+         "databaseName": <DB>,
+         "password": <PWD>,
+         "roles": [...],
+         "username":  <USERNAME>
+       }
+
+    For more information please refer to our Atlas Role Based Authentication `documentation <https://docs.atlas.mongodb.com/security-add-mongodb-users/>`__ .
+
+    Webhook backend
+    ---------------
+
+    This section will require you to use an existing Realm Application or `build a new one <https://docs.mongodb.com/realm/procedures/create-realm-app/>`__. MongoDB Realm is a serverless platform and mobile database. In our case we will use the following features:
+    
+    - `Realm webhooks <https://docs.mongodb.com/realm/services/configure/service-webhooks/>`__
+    - `Realm context HTTP Module <https://docs.mongodb.com/realm/functions/context/index.html#context-http>`__
+    - `Realm Values/Secrets <https://docs.mongodb.com/realm/values-and-secrets/>`__
+
+    You will also need to `configure an Atlas API key <https://docs.atlas.mongodb.com/configure-api-access/>`__ for the relevant Project and obtain it's Project Id. This can be done from your Atlas project url (Eg. ``https://cloud.mongodb.com/v2/<PROJECT_ID>#clusters``).
+
+    The main part of the Realm application is to hold the Atlas API keys and information as `private secure secrets <https://docs.mongodb.com/realm/values-and-secrets/define-a-secret/>`__ .
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/Values-secrets.png
+       :alt: Values and secrets declaration
+
+    This is the webhook configuration that will call our Realm Function each time the form is sent:
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/ServiceWebbhok.png
+       :alt: Webhook declaration
+
+       The Webhook should be defined as above.
+
+    The function below receives the request. Fetch the needed API information and sends the Atlas API command. The result of which is returned to the Form.
+
+    .. code-block:: javascript
+
+       // This function is the webhook's request handler.
+       exports = async function(payload, response) {
+            // Get payload
+            const body = JSON.parse(payload.body.text());
+
+            // Get secrets for the Atlas API
+            const username = context.values.get("AtlasPublicKey");
+            const password = context.values.get("AtlasPrivateKey");
+            const projectID = context.values.get("AtlasGroupId");
+
+            //Extract the Atlas user object description
+            const userObject = JSON.parse(body.form_response.answers[0].text);
+
+            // Database users post command
+            const postargs = {
+            scheme: 'https',
+            host: 'cloud.mongodb.com',
+            path: 'api/atlas/v1.0/groups/' + projectID + '/databaseUsers',
+            username: username,
+            password: password,
+            headers: {'Content-Type': ['application/json'], 'Accept': ['application/json']},
+            digestAuth:true,
+            body: JSON.stringify(userObject)};
+
+            var res = await context.http.post(postargs);
+            console.log(JSON.stringify(res));
+
+            // Check status of the user creation and report back to the user.
+            if (res.statusCode == 201)
+            {
+              response.setStatusCode(200)
+              response.setBody(`Successfully created ${userObject.username}.`);
+            } else {
+              // Respond with a malformed request error
+              response.setStatusCode(400)
+              response.setBody(`Could not create user ${userObject.username}.`);
+            }
+      };
+
+    Once the webhook is set and ready we can use it as a webhook url input in the Typeform configuration.
+
+    The Realm webhook url can now be placed in the Typform webhook section. Now the submitted data on the form will be forwarded via Webhook integration to our webhook:
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/Webhook.png
+       :alt: Typform Webhook Integration
+
+    To strengthen the security around our Realm app we can strict the allowed domain for the webhook request origin.
+    Go to Realm application "Manage" - "Settings" > "Allowed Request Origins":
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/AllowOrigins.png
+       :alt: Allow Origins
+
+    We can test the form now by providing an `Atlas API user object <https://docs.atlas.mongodb.com/reference/api/database-users-create-a-user/#request>`__ .
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/RunningExample.png
+       :alt: Typform input example
+
+       Submitting the object will result in a created user in the respectful Atlas Project
+
+    If you go to the Atlas UI under the Database Access tab you will see the created user.
+
+    .. figure:: /images/article/article-building-service-based-atlas-management/UserExample.png
+       :alt: Atlas User
+
+       Atlas Database Access users UI
+
+.. summary::
+
+    Summary
+    ---------
+
+    Now our developers will be able to create users quickly without being exposed to any unnecessary privileges or human errors.
+
+    The webhook code can be converted to a function that can be called from other webhooks or triggers allowing us to build sophisticated controlled and secure provisioning methods. For example, we can configure a scheduled trigger that pulls any newly created clusters and continuously provision any new required users for our applications or edit any existing users to add the needed new set of permissions.
+
+    `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__  and `Realm <https://www.mongodb.com/realm>`__ platforms can work in great synergy allowing us to bring our devops and development cycles to the next level.
