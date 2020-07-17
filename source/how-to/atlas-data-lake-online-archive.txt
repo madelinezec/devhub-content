@@ -1,0 +1,403 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to use MongoDB Atlas Data Lake Online Archive with a time series use case.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mbeugnet
+   :title: Learn how to use MongoDB Atlas Datalake Online Archive.
+   :image: /images/social/twitter/twitter-datalake.png
+   :image-alt: MongoDB Data Lake
+
+   Learn how to use MongoDB Atlas Data Lake Online Archive with a time series use case.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/atlas-data-lake-online-archive
+   :type: article
+   :title: Learn how to use MongoDB Atlas Datalake Online Archive.
+   :image: /images/social/open-graph/og-datalake.png
+
+   Learn how to use MongoDB Atlas Data Lake Online Archive with a time series use case.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/beugnet-maxime.rst
+
+.. pubdate:: 2020-07-17
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. tags::
+
+   * AWS
+   * MongoDB 4.4
+   * Releases
+
+.. products::
+
+   * Atlas
+   * Data Lake
+   * Online Archive
+
+.. atf-image:: /images/atf-images/logos/datalake2.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===============================================================================================
+How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake & Online Archive
+===============================================================================================
+
+.. introduction::
+
+   `MongoDB Atlas Online Archive <https://docs.atlas.mongodb.com/online-archive/manage-online-archive/>`__ is a new feature of the `MongoDB Cloud Data Platform <https://www.mongodb.com/cloud/atlas>`__. It allows you to set a rule to automatically archive data off of your Atlas cluster to fully-managed cloud object storage. In this blog post, I'll demonstrate how you can use Online Archive to tier your data for a cost-effective data management strategy.
+
+   The MongoDB Cloud data platform also provides a serverless and scalable `Atlas Data Lake <https://www.mongodb.com/atlas/data-lake>`__ which allows you to natively query your data across cloud object storage and MongoDB Atlas clusters in-place.
+
+   In this blog post, I will use one of the :doc:`MongoDB Open Data COVID-19 </article/johns-hopkins-university-covid-19-data-atlas>` time series collections to demonstrate how you can combine Online Archive and Atlas Data Lake to save on storage costs while retaining easy access to query all of your data.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial, you will need:
+
+   - a `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ M10 cluster or higher as Online Archive is currently not available for the shared tiers,
+   - `MongoDB Compass <https://www.mongodb.com/products/compass>`__ or `Mongo Shell <https://www.mongodb.com/try/download/shell>`__ to access your cluster.
+
+.. content::
+
+   Let's get some data
+   -------------------
+
+   To begin with, let's retrieve a time series collection. For this tutorial, I will use one of the time series collections that I built for the :doc:`MongoDB Open Data COVID19 project </article/johns-hopkins-university-covid-19-data-atlas>`.
+
+   The ``covid19.global_and_us`` collection is the most complete COVID-19 times series in our open data cluster as it combines all the data that `JHU <https://www.jhu.edu/>`__ keeps into `separated CSV files <https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series>`__.
+
+   As I would like to retrieve the entire collection and its indexes, I will use ``mongodump``.
+
+   .. code-block:: shell
+
+      mongodump --uri="mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19" --collection='global_and_us'
+
+   This will create a ``dump`` folder in your current directory. Let's now import this collection in our cluster.
+
+   .. code-block:: shell
+
+      mongorestore --uri="mongodb+srv://<USER>:<PASSWORD@clustername.1a2bc.mongodb.net"
+
+   Now that our time series collection is here, let's see what a document looks like:
+
+   .. code-block:: json
+
+      {
+        "_id": {
+          "$oid": "5f077868c3bda701aca1a3a7"
+        },
+        "uid": 175,
+        "country_iso2": "YT",
+        "country_iso3": "MYT",
+        "country_code": 175,
+        "state": "Mayotte",
+        "country": "France",
+        "combined_name": "Mayotte, France",
+        "population": 272813,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            45.1662,
+            -12.8275
+          ]
+        },
+        "date": {
+          "$date": "2020-06-03T00:00:00.000Z"
+        },
+        "confirmed": 1993,
+        "deaths": 24,
+        "recovered": 1523
+      }
+
+   .. blockquote::
+
+      Note here that the **date** field is an `IsoDate in extended JSON relaxed notation <https://docs.mongodb.com/manual/reference/mongodb-extended-json/#bson.Date>`__.
+
+   This time series collection is fairly simple. For each day and each place, we have a measurement of the number of ``confirmed``, ``deaths`` and ``recovered`` if it's available. More details in `our documentation <https://github.com/mongodb-developer/open-data-covid-19#collection-global_and_us>`__.
+
+   What's the problem?
+   -------------------
+
+   Problem is, it's a time series! So each day, we add a new entry for each place in the world and our collection will get bigger and bigger every single day. But as time goes on, it's likely that the older data is less important and less frequently accessed so we could benefit from archiving it off of our Atlas cluster.
+
+   Today, July 10th 2020, this collection contains 599760 documents which correspond to 3528 places, time 170 days and it's only 181.5 MB thanks to `WiredTiger compression algorithm <https://docs.mongodb.com/manual/core/wiredtiger/#compression>`__.
+
+   While this would not really be an issue with this trivial example, it will definitely force you to upgrade your MongoDB Atlas cluster to a `higher tier <https://docs.atlas.mongodb.com/cluster-tier/>`__ if an extra GB of data was going in your cluster each day.
+
+   Upgrading to a higher tier would cost more money and maybe you don't need to keep all this cold data in your cluster.
+
+   Online Archive to the Rescue!
+   -----------------------------
+
+   Manually archiving a subset of this dataset is tedious. I actually :doc:`wrote a blog post about this </how-to/atlas-data-lake-federated-queries-out-aws-s3>`.
+
+   It works, but you will need to extract and remove the documents from your MongoDB Atlas cluster yourself and then use the new `$out operator <https://docs.mongodb.com/datalake/reference/pipeline/out>`__ or the `s3.PutObject MongoDB Realm function <https://docs.mongodb.com/realm/services/aws/#id1>`__ to write your documents to S3.
+
+   Lucky for you, MongoDB Atlas Online Archive does this for you automatically!
+
+   Let's head to MongoDB Atlas and click on our cluster to access our cluster details. Currently, Online Archive is not set up on this cluster.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/cluster.png
+      :alt: MongoDB Atlas cluster
+      :scale: 40%
+      :align: center
+
+   Now let's click on **Online Archive** then **Configure Online Archive**.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-menu.png
+      :alt: MongoDB Atlas Online Archive tab menu
+
+   The next page will give you some information and documentation about MongoDB Atlas Online Archive and in the next step you will have to configure your archiving rule.
+
+   In our case, it will look like this:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/archiving-rule.png
+      :alt: MongoDB Atlas Online Archive archiving rule
+
+   As you can see, I'm using the **date** field I mentioned above and if this document is more than 60 days old, it will be automatically moved to my cloud object storage for me.
+
+   Now, for the next step, I need to think about my access pattern. Currently, I'm using this dataset to create :doc:`awesome COVID-19 charts </article/coronavirus-map-live-data-tracker-charts>`.
+
+   And each time, I have to first filter by date to reduce the size of my chart and then optionally I filter by country then state if I want to zoom on a particular country or region.
+
+   As these fields will convert into folder names into my cloud object storage, they need to exist in all the documents. It's not the case for the field "state" because some countries don't have sub-divisions in this dataset.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-partitioning.png
+      :alt: MongoDB Atlas Online Archive partitioning fields
+
+   As the date is always my first filter, I make sure it's at the top. Folders will be named and organised this way in my cloud object storage and folders that don't need to be explored will be eliminated automatically to speed up the data retrieval process.
+
+   Finally, before starting the archiving process, there is a final step: making sure Online Archive can efficiently find and remove the documents that need to be archived.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-index.png
+      :alt: MongoDB Atlas Online Archive query and index
+
+   I already have a few indexes on this collection, let's see if this is really needed. Here are the current indexes:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/current-indexes.png
+      :alt: Current indexes in MongoDB Compass
+
+   As we can see, I don't have the recommended index. I have its opposite: ``{country: 1, date: 1}`` but they are **not** equivalent. Let's see how this query behaves in MongoDB Compass.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/date-index.png
+      :alt: Explain plan with date index only
+
+   We can note several things in here:
+
+   - We are using the **date** index. Which is a good news, at least it's not a collection scan!
+   - The final sort operation is ``{ date: 1, country: 1}``
+   - Our index ``{date:1}`` doesn't contain the information about country so an in-memory sort is required.
+   - Wait a minute... Why do I have 0 documents returned?!
+
+   I have 170 days of data. I'm filtering all the documents older than 60 days so I should match ``3528 places * 111 days = 391608`` documents.
+
+   .. blockquote::
+
+      111 days (not 170-60=110) because we are July 10th when I'm writing this and I don't have today's data yet.
+
+   When I check the raw json output in Compass, I actually see that an error has occurred.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/compass-memory-error.png
+      :alt: MongoDB Compass error in raw json
+
+   Sadly, it's trimmed. Let's run this again in the new `mongosh <https://github.com/mongodb-js/mongosh>`__ to see the complete error:
+
+   .. code-block:: none
+
+      errorMessage: 'Exec error resulting in state FAILURE :: caused by :: Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit.'
+
+   I ran out of RAM...oops! I have a few other collections in my cluster and the 2GB of RAM of my M10 cluster are almost maxed out.
+
+   `In-memory sorts <https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/>`__ actually use a lot of RAM and if you can avoid these, I would definitely recommend that you get rid of them. They are forcing some data from your working set out of your cache and that will result in cache pressure and more `IOPS <https://en.wikipedia.org/wiki/IOPS>`__.
+
+   Let's create the recommended index and see how the situation improves:
+
+   .. code-block:: auto
+
+      db.global_and_us.createIndex({ date: 1, country: 1})
+
+   Let's run our query again in the Compass explain plan:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/compass-explain-plan.png
+      :alt: MongoDB Compass explain plan
+
+   This time, in-memory sort is no longer used, as we can return documents in the same order they appear in our index. 391608 documents are returned and we are using the correct index. This query is **MUCH** more memory efficient than the previous one.
+
+   Now that our index is created, we can finally start the archiving process.
+
+   Just before we start our archiving process, let's run an aggregation pipeline in MongoDB Compass to check the content of our collection.
+
+   .. code-block:: auto
+
+      [
+        {
+          '$sort': {
+            'date': 1
+          }
+        }, {
+          '$group': {
+            '_id': {
+              'country': '$country',
+              'state': '$state',
+              'county': '$county'
+            },
+            'count': {
+              '$sum': 1
+            },
+            'first_date': {
+              '$first': '$date'
+            },
+            'last_date': {
+              '$last': '$date'
+            }
+          }
+        }, {
+          '$count': 'number_places'
+        }
+      ]
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/aggregation-before-archiving.png
+      :alt: Aggregation pipeline in MongoDB Compass
+
+   As you can see, by grouping the documents by country, state and county, we can see:
+
+   - how many days are reported: ``170``,
+   - the first date: ``2020-01-22T00:00:00.000+00:00``,
+   - the last date: ``2020-07-09T00:00:00.000+00:00``,
+   - the number of places being monitored: ``3528``.
+
+   Once started, your Online Archive will look like this:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-pending.png
+      :alt: MongoDB Atlas Online Archive pending
+
+   When the initialisation is done, it will look like this:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-active.png
+      :alt: MongoDB Atlas Online Archive active
+
+   After some times, all your documents will be migrated in the underlying cloud object storage.
+
+   In my case, as I had 599760 in my collection and 111 days have been moved to my cloud object storage, I have ``599760 - 111 * 3528 = 208152`` documents left in my collection in MongoDB Atlas.
+
+   .. code-block:: none
+
+      PRIMARY> db.global_and_us.count()
+      208152
+
+   Good. Our data is now archived and we don't need to upgrade our cluster to a higher cluster tier!
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/the-mask-money.png
+      :alt: The Mask meme holding money
+      :align: center
+
+   How to access my archived data?
+   -------------------------------
+
+   Usually, archiving data rhymes with "bye bye data". The minute you decide to archive it, it's gone forever and you just take it out of the old dusty storage system when the actual production system just burnt to the ground.
+
+   Let me show you how you can keep access to the **ENTIRE** dataset we just archived on my cloud object storage using `MongoDB Atlas Data Lake <https://www.mongodb.com/atlas/data-lake>`__.
+
+   First, let's click on the **CONNECT** button. Either directly in the Online Archive tab:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/online-archive-connect.png
+      :alt: Connect button in the Online Archive tab
+
+   Or head to the Data Lake menu on the left to find your automatically configured Data Lake environment.
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/data-lake-online-archive.png
+      :alt: Data Lake already configured for Online Archive
+
+   Retrieve the connection command line for the Mongo Shell:
+
+   .. image:: /images/how-to/atlas-data-lake-online-archive/connection-string.png
+      :alt: Copy the Mongo Shell connection string
+
+   Make sure you replace the database and the password in the command. Once you are connected, you can run the following aggregation pipeline:
+
+   .. code-block:: auto
+
+      [
+        {
+          '$match': {
+            'country': 'France'
+          }
+        }, {
+          '$sort': {
+            'date': 1
+          }
+        }, {
+          '$group': {
+            '_id': '$uid',
+            'first_date': {
+              '$first': '$date'
+            },
+            'last_date': {
+              '$last': '$date'
+            },
+            'count': {
+              '$sum': 1
+            }
+          }
+        }
+      ]
+
+   And here is the same query in command line - easier for a quick copy & paste.
+
+   .. code-block:: shell
+
+      db.global_and_us.aggregate([ { '$match': { 'country': 'France' } }, { '$sort': { 'date': 1 } }, { '$group': { '_id': { 'country': '$country', 'state': '$state', 'county': '$county' }, 'first_date': { '$first': '$date' }, 'last_date': { '$last': '$date' }, 'count': { '$sum': 1 } } } ])
+
+   Here is the result I get:
+
+   .. code-block:: json
+
+      { "_id" : { "country" : "France", "state" : "Reunion" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "Saint Barthelemy" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "Martinique" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "Mayotte" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "French Guiana" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "Guadeloupe" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "New Caledonia" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "St Martin" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "Saint Pierre and Miquelon" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+      { "_id" : { "country" : "France", "state" : "French Polynesia" }, "first_date" : ISODate("2020-01-22T00:00:00Z"), "last_date" : ISODate("2020-07-09T00:00:00Z"), "count" : 170 }
+
+
+   As you can see, even if our cold data is archived, we can still access our **ENTIRE** dataset even though it was partially archived. The first date is still January 22nd and the last date is still July 9th for a total of 170 days.
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   MongoDB Atlas Online Archive is your new best friend to retire and store your cold data safely in cloud object storage with just a few clicks.
+
+   In this tutorial, I showed you how to set up an Online Archive to automatically archive your data to fully-managed cloud object storage while retaining easy access to query the entirety of the dataset in-place, across sources, using Atlas Data Lake.
+
+   Just in case this blog post didn't make it clear, Online Archive is **NOT** a replacement for backups or a `backup strategy <https://docs.mongodb.com/manual/core/backups/>`__. These are 2 completely different topics and they should not be confused.
+
+   If you have questions, please head to our `developer community website <https://community.mongodb.com/>`__ where the MongoDB engineers and the MongoDB community will help you build your next big idea with MongoDB.
+
+   To learn more about `MongoDB Atlas Data Lake <https://www.mongodb.com/atlas/data-lake>`__, read the other blogs posts in this series below, or check `out the documentation <https://docs.mongodb.com/datalake/>`__.

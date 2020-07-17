@@ -18,7 +18,7 @@
    Learn how to use MongoDB Atlas Data Lake federated queries and $out to S3.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/atlas-data-lake-setup
+   :url: http://developer.mongodb.com/how-to/atlas-data-lake-federated-queries-out-aws-s3
    :type: article
    :title: Learn how to use MongoDB Atlas Datalake.
    :image: /images/social/open-graph/og-datalake.png

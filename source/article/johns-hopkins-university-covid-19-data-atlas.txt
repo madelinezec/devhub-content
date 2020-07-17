@@ -18,7 +18,7 @@
    Making the Johns Hopkins University COVID 19 Data open and accessible to all with MongoDB
 
 .. og::
-   :url: http://developer.mongodb.com/article/open-data-covid19
+   :url: http://developer.mongodb.com/article/johns-hopkins-university-covid-19-data-atlas
    :title: Open and clean COVID-19 dataset from Johns Hopkins University.
    :image: /images/social/open-graph/og-covid19.png
    :type: article
