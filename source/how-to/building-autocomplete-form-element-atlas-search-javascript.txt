@@ -1,0 +1,469 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to create an autocomplete form element that leverages the natural language processing of MongoDB Atlas Search.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @nraboy
+   :title: Build an Autocomplete Form Element with Atlas Search and JavaScript
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to create an autocomplete form element that leverages the natural language processing of MongoDB Atlas Search.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/creating-multiplayer-drawing-game-phaser
+   :type: article
+   :title: Building an Autocomplete Form Element with Atlas Search and JavaScript
+   :image: /images/social/open-graph/og-green-pattern.png
+
+   Learn how to create an autocomplete form element that leverages the natural language processing of MongoDB Atlas Search.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-07-23
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+======================================================================
+Building an Autocomplete Form Element with Atlas Search and JavaScript
+======================================================================
+
+.. introduction::
+
+    When you're developing a web application, a quality user
+    experience can make or break your application. A common application feature is to 
+    allow users to enter text into a search bar to find a specific piece of information. Rather than having the user 
+    enter information
+    and hope it's valid, you can help your users find what they are looking 
+    for by offering autocomplete suggestions as they type.
+
+    So what could go wrong?
+
+    If your users are like me, they'll make multiple spelling mistakes
+    for every one word of text. If you're creating an autocomplete field
+    using regular expressions on your data, programming to account for misspellings and fat fingers is tough!
+
+    In this tutorial, we're going to see how to create a simple web
+    application that surfaces autocomplete suggestions to the user. These suggestions can 
+    be easily created using the full-text search features available in Atlas Search.
+
+    To get a better idea of what we want to accomplish, have a look at the following
+    animated image:
+
+    .. image:: /images/how-to/atlas-search-autocomplete.gif
+        :alt: Autocomplete Example with MongoDB Atlas Search
+
+    In the above image you'll notice that I not only made spelling mistakes,
+    but I also made use of a word that appeared anywhere within the field for
+    any document in a collection.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+   We'll skip the basics of configuring Node.js or MongoDB and assume that you already have a few things installed, configured, and ready to go:
+
+    -  MongoDB Atlas with an M0 cluster or better, with user and network safe-list configurations established
+    -  Node.js installed and configured
+    -  A **food** database with a **recipes** collection established
+
+    We'll be using Atlas Search within MongoDB Atlas. To follow this tutorial, the
+    **recipes** collection (within the **food** database) will expect documents that
+    look like this:
+
+    .. code:: json
+
+        {
+            "_id": "5e5421451c9d440000e7ca13",
+            "name": "chocolate chip cookies",
+            "ingredients": [
+                "sugar",
+                "flour",
+                "chocolate"
+            ]
+        }
+
+    Make sure to create many documents within your **recipes** collection,
+    some of which with similar names. In my example, I used "grilled cheese", 
+    "five cheese lasagna", and "baked salmon".
+
+.. content::
+
+    Configuring MongoDB Atlas with a Search Index
+    ---------------------------------------------
+
+    Before we start creating a frontend or backend, we need to prepare our
+    collection for search by creating a special search index.
+
+    Within the **Collections** tab of your cluster, find the **recipes**
+    collection and then choose the **Search** tab.
+
+    .. image:: /images/how-to/mongodb-atlas-search-index.png
+        :alt: Create a MongoDB Atlas Search Index
+
+    You probably won't have an Atlas Search index created yet, so we'll need
+    to create one. By default, Atlas Search dynamically maps every field in a collection. That means every field in our document will be checked against our search terms. This is great for growing collections where the schema may evolve, and you want to search through many different fields. However it can be resource intensive, as well. For our app, we actually just want to search by one particular field, the "name" field in our recipe documents. To do that, choose "Create Search Index" and change the code to the following:
+
+    .. code:: json
+
+        {
+            "mappings": {
+                "dynamic": false,
+                "fields": {
+                    "name": [
+                        {
+                            "foldDiacritics": false,
+                            "maxGrams": 7,
+                            "minGrams": 3,
+                            "tokenization": "edgeGram",
+                            "type": "autocomplete"
+                        }
+                    ]
+                }
+            }
+        }
+
+    In the above example, we're creating an index on the ``name`` field
+    within our documents using an autocomplete index. Any fields that aren't explicitly mapped, like the ``ingredients`` array, will not be searched.
+
+    Now, click "Create Index". That's it! Just give MongoDB Atlas a few minutes to create your search index.
+
+    If you want to learn more about Atlas Search autocomplete indexes and the various tokenization strategies that can be used, you can find
+    information in the `official
+    documentation <https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/#bson-data-types-autocomplete>`__.
+
+    Create a Node.js with MongoDB Backend for Atlas Search
+    ------------------------------------------------------
+
+    At this point in time, we should have our data collection of recipes, as well as an
+    Atlas Search index created on that data for the ``name`` field. We're now
+    ready to create a backend that will interact with our data using the
+    MongoDB Node.js driver.
+
+    We're only going to brush over the getting started with MongoDB aspect
+    of this backend application. If you want to read something more
+    in-depth, check out Lauren Schaefer's `tutorial
+    series <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
+    on the subject.
+
+    On your computer, create a new project directory with a **main.js** file
+    within that directory. Using the command line, execute the following
+    commands:
+
+    .. code:: bash
+
+        npm init -y
+        npm install mongodb express body-parser cors --save
+
+    The above commands will initialize the **package.json** file and install
+    each of our project dependencies for creating a RESTful API that
+    interacts with MongoDB.
+
+    Within the **main.js** file, add the following code:
+
+    .. code:: javascript
+
+        const { MongoClient, ObjectID } = require("mongodb");
+        const Express = require("express");
+        const Cors = require("cors");
+        const BodyParser = require("body-parser");
+        const { request } = require("express");
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+        const server = Express();
+
+        server.use(BodyParser.json());
+        server.use(BodyParser.urlencoded({ extended: true }));
+        server.use(Cors());
+
+        var collection;
+
+        server.get("/search", async (request, response) => {});
+        server.get("/get/:id", async (request, response) => {});
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("food").collection("recipes");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    Remember when I said I'd be brushing over the getting started with
+    MongoDB stuff? I meant it, but, if you're copying and pasting the above
+    code, make sure you replace the following line in your code:
+
+    .. code:: javascript
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+    I store my MongoDB Atlas information in an environment variable rather
+    than hard-coding it into the application. If you wish to do the same, create an 
+    environment variable on your computer called ``ATLAS_URI`` and set it to your 
+    MongoDB connection string. This connection string will look something like this:
+
+    .. code:: auto
+
+        mongodb+srv://<username>:<password>@cluster0-yyarb.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+    If you need help obtaining it, circle back to that `tutorial
+    <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__ by Lauren Schaefer 
+    that I had suggested.
+
+    What we're interested in for this example are the ``/search`` and
+    ``/get/:id`` endpoints for the RESTful API. The first endpoint will
+    leverage Atlas Search, while the second endpoint will get the document
+    based on its ``_id`` value. This is useful in case you want to search for
+    documents and then get all the information about the selected document.
+
+    So let's expand upon the endpoint for searching:
+
+    .. code:: javascript
+
+        server.get("/search", async (request, response) => {
+            try {
+                let result = await collection.aggregate([
+                    {
+                        "$search": {
+                            "autocomplete": {
+                                "query": `${request.query.query}`,
+                                "path": "name",
+                                "fuzzy": {
+                                    "maxEdits": 2,
+                                    "prefixLength": 3
+                                }
+                            }
+                        }
+                    }
+                ]).toArray();
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    In the above code, we are creating an aggregation pipeline with a single ``$search`` stage, 
+    which will be powered by our Atlas Search index. It will use the user-provided data as the 
+    query and the ``autocomplete`` operator to give them that type-ahead experience. In a
+    production scenario we might want to do further validation on the user
+    provided data, but it's fine for this example. Also note that when using Atlas Search, an aggregation pipeline is required, and the ``$search`` operator must be the first stage of that pipeline.
+
+    The ``path`` field of ``name`` represents the field within our documents
+    that we want to search in. Remember, ``name`` is also the field we defined in our
+    index.
+
+    This is where the fun stuff comes in!
+
+    We're doing a fuzzy search. This means we're finding strings which are similar, but not necessarily exactly the same, to the search term. 
+    Remember when I misspelled
+    ``cheese`` by entering ``chease`` instead? The ``maxEdits`` field
+    represents how many consecutive characters must match. In my
+    example there was only one, but what if I misspelled it as ``cheaze``
+    where the ``az`` characters are not correct?
+
+    The ``prefixLength`` field indicates the number of characters at the beginning 
+    of each term in the result that must match exactly. In our example, three characters 
+    at the beginning of each term must match.
+
+    This is all very powerful considering what kind of mess your code would
+    look like by using regular expressions or ``$text`` instead.
+
+    You can find more information on what can be used with the ``autocomplete`` operator in the `documentation <https://docs.atlas.mongodb.com/reference/atlas-search/autocomplete/index.html#syntax>`__.
+
+    So let's take care of our other endpoint:
+
+    .. code:: javascript
+
+        server.get("/get/:id", async (request, response) => {
+            try {
+                let result = await collection.findOne({ "_id": ObjectID(request.params.id) });
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    The above code is nothing fancy. We're taking an id hash that the user
+    provides, converting it into a proper object id, and then finding a
+    single document.
+
+    You can test this application by first serving it with ``node main.js``
+    and then using a tool like Postman against the
+    http://localhost:3000/search?query= or http://localhost:3000/get/ urls.
+
+    Develop a JavaScript with jQuery Frontend with Autocomplete Form Elements
+    -------------------------------------------------------------------------
+
+    Now that we have a backend to work with, we can take care of the
+    frontend that improves the overall user experience. There are plenty of
+    ways to create an autocomplete form, but for this example jQuery will be
+    doing the heavy lifting.
+
+    Create a new project with an **index.html** file in it. Open that file
+    and include the following:
+
+    .. code:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+                <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            </head>
+            <body>
+                <div class="ui-widget">
+                    <label for="recipe">Recipe:</label><br />
+                    <input id="recipe">
+                    <ul id="ingredients"></ul>
+                </div>
+                <script>
+                    $(document).ready(function () {});
+                </script>
+            </body>
+        </html>
+
+    The above markup doesn't do much of anything. We're just importing the
+    jQuery dependencies and defining the form element that will show the
+    autocomplete. After clicking the autocomplete element, the data will
+    populate our list of ingredients in the list.
+
+    Within the ``<script>`` tag we can add the following:
+
+    .. code:: auto
+
+        <script>
+            $(document).ready(function () {
+                $("#recipe").autocomplete({
+                    source: async function(request, response) {
+                        let data = await fetch(`http://localhost:3000/search?query=${request.term}`)
+                            .then(results => results.json())
+                            .then(results => results.map(result => { 
+                                return { label: result.name, value: result.name, id: result._id };
+                            }));
+                        response(data);
+                    },
+                    minLength: 2,
+                    select: function(event, ui) {
+                        fetch(`http://localhost:3000/get/${ui.item.id}`)
+                            .then(result => result.json())
+                            .then(result => {
+                                $("#ingredients").empty();
+                                result.ingredients.forEach(ingredient => {
+                                    $("#ingredients").append(`<li>${ingredient}</li>`);
+                                });
+                            });
+                    }
+                });
+            });
+        </script>
+
+    A few things are happening in the above code.
+
+    Within the ``autocomplete`` function, we define a ``source`` for
+    where our data comes from and a ``select`` for what happens when we
+    select something from our list. We also define a ``minLength`` so
+    that we aren't hammering our backend and database with every keystroke.
+
+    If we take a closer look at the ``source`` function, we have the
+    following:
+
+    .. code:: javascript
+
+        source: async function(request, response) {
+            let data = await fetch(`http://localhost:3000/search?query=${request.term}`)
+                .then(results => results.json())
+                .then(results => results.map(result => { 
+                    return { label: result.name, value: result.name, id: result._id };
+                }));
+            response(data);
+        },
+
+    We're making a ``fetch`` against our backend, and then formatting the
+    results into something the jQuery plugin recognizes. If you want to
+    learn more about making HTTP requests with JavaScript, you can check out
+    a previous tutorial I wrote titled `Execute HTTP Requests in JavaScript
+    Applications <https://www.thepolyglotdeveloper.com/2019/08/execute-http-requests-javascript-applications/>`__.
+
+    In the ``select`` function, we can further analyze what's happening:
+
+    .. code:: javascript
+
+        select: function(event, ui) {
+            fetch(`http://localhost:3000/get/${ui.item.id}`)
+                .then(result => result.json())
+                .then(result => {
+                    $("#ingredients").empty();
+                    result.ingredients.forEach(ingredient => {
+                        $("#ingredients").append(`<li>${ingredient}</li>`);
+                    });
+                });
+        }
+
+    We are making a second request to our other API endpoint. We are then
+    flushing the list of ingredients on our page and repopulating them with
+    the new ingredients.
+
+    When running this application, make sure the backend is running as well,
+    otherwise your frontend will have nothing to communicate to.
+
+    To serve the frontend application, there are a few options not limited to what's below:
+
+    - Host the code on MongoDB Realm or another hosting service.
+    - Use the `serve <https://www.npmjs.com/package/serve>`__ package with Node.js.
+    - Use Python to create a ``SimpleHTTPServer``.
+
+    My personal favorite is to use the ``serve`` package. If you install it, you can execute 
+    ``serve`` from your command line within the working directory of your project.
+
+    With the project serving with ``serve``, it should be accessible at http://localhost:5000 in your 
+    web browser.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to leverage MongoDB Atlas Search to suggest data to
+    users in an autocomplete form. Atlas Search is great because it uses
+    natural language to search within document fields to spare you from
+    having to write long and complicated regular expressions or application
+    logic.
+
+    Don't forget that we did our search by using the ``$search`` operator within an aggregation pipeline.
+    This means you could add other stages to your pipeline to do some really
+    extravagant things. For example, after the ``$search`` pipeline stage, you could 
+    use an ``$in`` on the ingredients array to limit the results to only chocolate recipes. Also, you can make 
+    use of other neat operators within the ``$search`` stage, beyond the ``autocomplete`` operator. For example, 
+    you could make use of the ``near`` operator for numerical and geospatial search, or operators such as ``compound`` 
+    and ``wildcard`` for other tasks. More information on these operators can be found in the `documentation <https://docs.atlas.mongodb.com/reference/atlas-search/operators/>`__.
