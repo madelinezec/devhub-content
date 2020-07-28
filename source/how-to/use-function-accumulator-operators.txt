@@ -1,0 +1,384 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @kukicado
+   :title: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+   :image: /images/social/twitter/Twitter-docs.png
+   :image-alt: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+
+   Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/use-function-accumulator-operators
+   :title: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+   :image: /images/social/open-graph/og-docs.png
+   :type: article
+
+   Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/kukic-ado.rst
+
+.. atf-image:: /images/atf-images/illustrations/docs.png
+
+.. pubdate:: 2020-07-28
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * MongoDB 4.4
+   * Aggregation Framework
+   * Data
+   * Technical
+
+.. products::
+
+   * MongoDB
+   * Atlas
+   * Compass
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+============================================================
+How to Use Custom Aggregation Expressions in the MongoDB 4.4
+============================================================
+
+.. introduction::
+   
+   The upcoming release of MongoDB 4.4 makes it easier than ever to work with, transform, access, and make sense of your data. This release, the beta of which you `can try right now <https://www.mongodb.com/blog/post/announcing-mongodb-44--mongodb-cloud>`__, comes with a couple of new operators that make it possible to write custom functions to extend the MongoDB Query Language. This feature, called Custom Aggregation Expressions, allows you to write JavaScript functions that execute as part of an aggregation pipeline stage. These come in handy when you need to implement behavior that is not supported by the MongoDB Query Language by default.
+
+   The MongoDB Query Language has many operators, or functions, that allow you to manipulate and transform your data to fit your application's use case. Operators such as `$avg <https://docs.mongodb.com/master/reference/operator/aggregation/avg/>`__ , `$concat <https://docs.mongodb.com/master/reference/operator/aggregation/concat/>`__ , and `$filter <https://docs.mongodb.com/master/reference/operator/aggregation/filter/>`__ make it easy for developers to query, manipulate, and transform their dataset directly at the database level versus having to write additional code and transforming the data elsewhere. While there are operators for almost anything you can think of, there are a few edge cases where a provided operator or series of operators won't be sufficient, and that's where custom aggregation expressions come in.
+
+   In this blog post, we'll learn how we can extend the MongoDB Query Language to suit our needs by writing our own custom aggregation expressions using the new `$function <https://docs.mongodb.com/master/reference/operator/aggregation/function/>`__ and `$accumulator <https://docs.mongodb.com/master/reference/operator/aggregation/accumulator/>`__ operators. Let's dive in! 
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   For this tutorial you'll need:
+
+   * `MongoDB 4.4 <https://www.mongodb.com/cloud/atlas>`__.
+   * `MongoDB Compass <https://www.mongodb.com/try/download/compass>`__.
+   * Familiarity with `MongoDB Aggregation Framework <https://docs.mongodb.com/manual/aggregation/>`__.
+
+.. content::
+
+   Custom Aggregation Expressions
+   ------------------------------
+
+   MongoDB 4.4 comes with two new operators: `$function <https://docs.mongodb.com/master/reference/operator/aggregation/function/>`__ and `$accumulator <https://docs.mongodb.com/master/reference/operator/aggregation/accumulator/>`__ . These two operators allow us to write custom JavaScript functions that can be used in a MongoDB aggregation pipeline. We are going to look at examples of how to use both by implementing our own custom aggregation expressions.
+
+   To get the most value out of this blog post, I will assume that you are already familiar with the MongoDB `aggregation framework <https://docs.mongodb.com/master/aggregation/>`__. If not, I suggest checking out the `docs <https://docs.mongodb.com/master/aggregation/>`__ and following a `tutorial <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__ or `two <https://developer.mongodb.com/quickstart/introduction-aggregation-framework>`__ and becoming familiar with how this feature works before diving into this more advanced topic.
+
+   Before we get into the code, I want to briefly talk about why you would care about this feature in the first place. The first reason is delivering higher performance to your users. If you can get the exact data you need directly out of the database in one trip, without having to do additional processing and manipulating, you will be able to serve and fulfill requests quicker. Second, custom aggregation expressions allow you to take care of edge cases directly in your aggregation pipeline stage. If you've worked with the aggregation pipeline in the past, you'll feel right at home and be productive in no time. If you're new to the aggregation pipeline, you'll only have to learn it once. By the time you find yourself with a use case for the ``$function`` or ``$accumulator`` operators, all of your previous knowledge will transfer over. I think those are two solid reasons to care about custom aggregation expressions: better performance for your users and increased developer productivity.
+
+   The one caveat to the liberal use of the ``$function`` and ``$accumulator`` operators is performance. Executing JavaScript inside of an aggregation expression is resource intensive and may reduce performance. You should always opt to use existing, highly optimized operators first, especially if they can get the job done for your use case. Only consider using ``$function`` and ``$accumulator`` if an existing operator cannot fulfill your application's needs.
+
+   $function Operator
+   ------------------
+
+   The first operator we'll take a look at is called ``$function``. As the name implies, this operator allows you to implement a custom JavaScript function to implement any sort of behavior. The syntax for this operator is:
+
+   .. code-block::
+
+      {
+        $function: {
+          body: <code>,
+          args: <array expression>,
+          lang: "js"
+        }
+      }
+
+   The ``$function`` operator has three properties. The ``body`` , which is going to be our JavaScript function, an ``args`` array containing the arguments we want to pass into our function, and a ``lang`` property specifying the language of our ``$function``, which as of MongoDB 4.4 only supports JavaScript.
+
+   The ``body`` property holds our JavaScript function as either a type of BSON Code or String. In our examples in this blog post, we'll write our code as a String. Our JavaScript function will have a signature that looks like this:
+
+   .. code-block::
+
+      function(arg){
+         return arg
+      }
+
+   From a cursory glance, it looks like a standard JavaScript function. You can pass in ``n`` number of arguments, and the function returns a result. The arguments within the ``body`` property will be mapped to the arguments provided in the ``args`` array property, so you'll need to make sure you pass in and capture all of the provided arguments.
+
+   Implementing the $function Operator
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Now that we know the properties of the ``$function`` operator, let's use it in an aggregation pipeline. To get started, let's choose a data set to work from. We'll use one of the provided MongoDB `sample datasets <https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/>`__ that you can find on `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__. If you don't already have a cluster set up, you can do so by creating a `free MongoDB Atlas account <https://www.mongodb.com/cloud/atlas>`__. Loading the sample datasets is as simple as clicking the "..." button on your cluster and selecting the "Load Sample Dataset" option.
+
+
+   .. image:: /images/starlette/load-sample.png
+      :alt: MongoDB Atlas Load Sample Dataset
+
+   Once you have the sample dataset loaded, let's go ahead and connect to our MongoDB cluster. Whenever learning something new, I prefer to use a visual approach, so for this tutorial, I'll rely on `MongoDB Compass <https://www.mongodb.com/products/compass>`__. If you already have MongoDB Compass installed, connect to your cluster that has the sample dataset loaded, otherwise `download the latest version here <https://www.mongodb.com/try/download/compass>`__, and then connect.
+
+   Whether you are using MongoDB Compass or connecting via the `mongo shell <https://docs.mongodb.com/manual/mongo/>`__, you can find your MongoDB Atlas connection string by clicking the "Connect" button on your cluster, choosing the type of app you'll be using to connect with, and copying the string which will look like this: ``mongodb+srv://mongodb:<password>@cluster0-tdm0q.mongodb.net/test``.
+
+   Once you are connected, the dataset that we will work with is called ``sample_mflix`` and the collection ``movies``. Go ahead and connect to that collection and then navigate to the "Aggregations" tab. To ensure that everything works fine, let's write a very simple aggregation pipeline using the new ``$function`` operator. From the dropdown, select the ``$addFields`` operator and add the following code as its implementation:
+
+
+   .. code-block::
+
+      {
+        fromFunction: {$function: {body: "function(){return 'hello'}", args: [], lang: 'js'}}
+      }
+
+   If you are using the mongo shell to execute these queries the code will look like this:
+
+   .. code-block::
+
+      db.movies.aggregate([
+        { 
+          $addFields: {
+            fromFunction: {
+              $function: {
+                body: "function(){return 'hello'}",
+                args: [], 
+                lang: 'js'
+              }
+            }
+           }
+         }
+      ])
+
+   If you look at the output in MongoDB Compass and scroll to the bottom of each returned document, you'll see that each document now has a field called ``fromFunction`` with the text ``hello`` as its value. We could have simply passed the string "hello" instead of using the ``$function`` operator, but the reason I wanted to do this was to ensure that your version of MongoDB Compass supports the ``$function`` operator and this is a minimal way to test it.
+
+   .. image:: /images/function-operator/basic-example.png
+      :alt: Basic Example of $function operator
+
+   Next, let's implement a custom function that actually does some work. Let's add a new field to every movie that has Ado's review score, or perhaps your own? 
+   
+   I'll name my field ``adoScore``. Now, my rating system is unique. Depending on the day and my mood, I may like a movie more or less, so we'll start figuring out Ado's score of a movie by randomly assigning it a value between 0 and 5. So we'll have a base that looks like this: ``let base = Math.floor(Math.random() * 6);``. 
+   
+   Next, if critics like the movie, then I do too, so let's say that if a movie has an IMDB score of over 8, we'll give it +1 to Ado's score. Otherwise, we'll leave it as is. For this, we'll pass in the ``imdb.rating`` field into our function. 
+   
+   Finally, movies that have won awards also get a boost in Ado's scoring system. So for every award nomination a movie receives, the total Ado score will increase by 0.25, and for every award won, the score will increase by 0.5. To calculate this, we'll have to provide the ``awards`` field into our function as well. 
+   
+   Since nothing is perfect, we'll add a custom rule to our function: if the total score exceeds 10, we'll just output the final score to be 9.9. Let's see what this entire function looks like:
+
+
+   .. code-block::
+
+      {
+        adoScore: {$function: {
+        body: "function(imdb, awards){let base =  Math.floor(Math.random() * 6) \n let imdbBonus = 0 \n if(imdb > 8){ imdbBonus = 1} \n let nominations = (awards.nominations * 0.25) \n let wins = (awards.wins * 0.5) \n let final = base + imdbBonus + nominations + wins \n if(final > 10){final = 9.9} \n return  final}", 
+        args: ["$imdb.rating", "$awards"], 
+        lang: 'js'}}
+      }
+
+   To make the JavaScript function easier to read, here it is in non-string form:
+
+   .. code-block::
+
+      function(imdb, awards){
+        let base =  Math.floor(Math.random() * 6)
+        let imdbBonus = 0 
+        
+        if(imdb > 8){ imdbBonus = 1} 
+        
+        let nominations = awards.nominations * 0.25 
+        let wins = awards.wins * 0.5 
+        
+        let final = base + imdbBonus + nominations + wins 
+        if(final > 10){final = 9.9} 
+        
+        return final
+      }
+   
+   And again, if you are using the mongo shell, the code will look like:
+
+   .. code-block::
+
+      db.movies.aggregate([
+        { 
+          $addFields: {
+            adoScore: {
+              $function: {
+                body: "function(imdb, awards){let base =  Math.floor(Math.random() * 6) \n let imdbBonus = 0 \n if(imdb > 8){ imdbBonus = 1} \n let nominations = (awards.nominations * 0.25) \n let wins = (awards.wins * 0.5) \n let final = base + imdbBonus + nominations + wins \n if(final > 10){final = 9.9} \n return  final}", 
+                args: ["$imdb.rating", "$awards"], 
+                lang: 'js'
+              }
+            }
+          }
+        }
+      ])
+
+   Running the above ``$addFields`` aggregation , which uses the ``$function`` operator, will produce a result that adds a new ``adoScore`` field to the end of each document. This field will contain a numeric value ranging from 0 to 9.9. In the ``$function`` operator, we passed our custom JavaScript function into the ``body`` property. As we iterated through our documents, the ``$imdb.rating`` and ``$awards`` fields from each document were passed into our custom function. 
+   
+   Using dot notation, we've seen how to specify any sub-document you may want to use in an aggregation. We also learned how to use an entire field and it's subfields in an aggregation, as we've seen with the ``$awards`` parameter in our earlier example. Our final result looks like this:
+
+   .. image:: /images/function-operator/ado-score.png
+      :alt: Ado Review Score using $function
+
+   This is just scratching the surface of what we can do with the ``$function`` operator.  In our above example, we paired it with the ``$addFields`` operator, but we can also use ``$function`` as an alternative to the ``$where`` operator, or with other operators as well. Check out the ``$function`` `docs <https://docs.mongodb.com/master/reference/operator/aggregation/function/>`__ for more information.
+
+   $accumulator Operator
+   ---------------------
+
+   The next operator that we'll look at, which also allows us to write custom JavaScript functions, is called the `$accumulator <https://docs.mongodb.com/master/reference/operator/aggregation/accumulator/>`__ operator and is a bit more complex. This operator allows us to define a custom accumulator function with JavaScript. Accumulators are operators that maintain their state as documents progress through the pipeline. Much of the same rules apply to the ``$accumulator`` operator as they do to ``$function``. We'll start by taking a look at the syntax for the ``$accumulator`` operator:
+
+   .. code-block::
+
+      {
+        $accumulator: {
+          init: <code>,
+          initArgs: <array expression>, // Optional
+          accumulate: <code>,
+          accumulateArgs: <array expression>,
+          merge: <code>,
+          finalize: <code>, // Optional
+          lang: <string>
+        }
+      }   
+      
+   We have a couple of additional fields to discuss. Rather than just one ``body`` field that holds a JavaScript function, the ``$accumulator`` operator gives us four additional places to write JavaScript: 
+   
+   * The ``init`` field that initializes the state of the accumulator. 
+   * The ``accumulate`` field that accumulates documents coming through the pipeline. 
+   * The ``merge`` field  that is used to merge multiple states. 
+   * The ``finalize`` field that is used to update the result of the accumulation.
+
+   For arguments, we have two places to provide them: the ``initArgs`` that get passed into our ``init`` function, and the ``accumulateArgs`` that get passed into our ``accumulate`` function. The process for defining and passing the arguments is the same here as it is for the ``$function`` operator. It's important to note that for the ``accumulate`` function the first argument is the ``state`` rather than the first item in the ``accumulateArgs`` array.
+
+   Finally, we have to specify the ``lang`` field. As before, it will be ``js`` as that's the only supported language as of the MongoDB 4.4 release.
+
+   Implementing the $accumulator Operator
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   To see a concrete example of the ``$accumulator`` operator in action, we'll continue to use our ``sample_mflix`` dataset. We'll also build on top of the ``adoScore`` we added with the ``$function`` operator. We'll pair our ``$accumulator`` with a ``$group`` operator and return the number of movies released each year from our dataset, as well as how many movies are deemed watchable by Ado's scoring system (meaning they have a score greater than 8). Our ``$accumulator`` function will look like this:
+
+   .. code-block::
+
+      {
+         _id: "$year",
+         consensus: {
+           $accumulator: {
+             init: "function(){return {total:0, worthWatching: 0}}",
+             accumulate: "function(state, adoScore){let worthIt = 0; if(adoScore > 8){worthIt = 1}; return {total:state.total + 1, worthWatching: state.worthWatching + worthIt }}",
+             accumulateArgs:["$adoScore"],
+             merge: "function(state1, state2){return {total: state1.total + state2.total, worthWatching: state1.worthWatching + state2.worthWatching}}",
+           } 
+         }
+      }
+
+   And just to display the JavaScript functions in non-string form for readability:
+
+   .. code-block::
+
+      // Init
+      function(){
+        return { total:0, worthWatching: 0 }
+      }
+      
+      // Accumulate
+      function(state, adoScore){
+        let worthIt = 0; 
+        if(adoScore > 8){ worthIt = 1}; 
+        return {
+          total: state.total + 1, 
+          worthWatching: state.worthWatching + worthIt }
+      }
+
+      // Merge
+      function(state1, state2){
+        return {
+          total: state1.total + state2.total, 
+          worthWatching: state1.worthWatching + state2.worthWatching 
+         }
+      }
+   
+   If you are running the above aggregation using the mongo shell, the query will look like this:
+
+   .. code-block::
+
+     db.movies.aggregate([
+        { 
+          $group: {
+            _id: "$year",
+            consensus: {
+              $accumulator: {
+                init: "function(){return {total:0, worthWatching: 0}}",
+                accumulate: "function(state, adoScore){let worthIt = 0; if(adoScore > 8){worthIt = 1}; return {total:state.total + 1, worthWatching: state.worthWatching + worthIt }}",
+                accumulateArgs:["$adoScore"],
+                merge: "function(state1, state2){return {total: state1.total + state2.total, worthWatching: state1.worthWatching + state2.worthWatching}}",
+              }  
+            }
+          }
+        }
+      ])
+
+   The result of running this query on the ``sample_mflix`` database will look like this:
+
+   .. image:: /images/function-operator/consensus.png
+      :alt: $accumulator function
+
+   Note: Since the ``adoScore`` function does rely on ``Math.random()`` for part of its calculation, you may get varying results each time you run the aggregation.
+
+   Just like the ``$function`` operator, writing a custom accumulator and using the ``$accumulator`` operator should only be done when existing operators cannot fulfill your application's use case. Similarly, we are also just scratching the surface of what is achievable by writing your own accumulator. Check out the `docs <https://docs.mongodb.com/master/reference/operator/aggregation/accumulator/>`__ for more.
+
+   Before we close out this blog post, let's take a look at what our completed aggregation pipeline will look like combining both our ``$function`` and ``$accumulator`` operators. If you are using the ``sample_mflix`` dataset, you should be able to run both examples with the following aggregation pipeline code:
+
+   .. code-block::
+
+      db.movies.aggregate([
+        {
+          '$addFields': {
+            'adoScore': {
+              '$function': {
+                'body': 'function(imdb, awards){let base =  Math.floor(Math.random() * 6) \n let imdbBonus = 0 \n if(imdb > 8){ imdbBonus = 1} \n let nominations = (awards.nominations * 0.25) \n let wins = (awards.wins * 0.5) \n let final = base + imdbBonus + nominations + wins \n if(final > 10){final = 9.9} \n return  final}', 
+                'args': [
+                  '$imdb.rating', '$awards'
+                ], 
+                'lang': 'js'
+              }
+            }
+          }
+        }, {
+          '$group': {
+            '_id': '$year', 
+            'consensus': {
+              '$accumulator': {
+                'init': 'function(){return {total:0, worthWatching: 0}}', 
+                'accumulate': 'function(state, adoScore){let worthIt = 0; if(adoScore > 8){worthIt = 1}; return {total:state.total + 1, worthWatching: state.worthWatching + worthIt }}', 
+                'accumulateArgs': [
+                  '$adoScore'
+                ], 
+                'merge': 'function(state1, state2){return {total: state1.total + state2.total, worthWatching: state1.worthWatching + state2.worthWatching}}'
+              }
+            }
+          }
+        }
+      ])     
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   The new ``$function`` and ``$accumulator`` operators released in MongoDB 4.4 improve developer productivity and allow MongoDB to handle many more edge cases out of the box. Just remember that these new operators, while powerful, should only be used if existing operators cannot get the job done as they may degrade performance!
+
+   Whether you are trying to use new functionality with these operators, fine-tuning your MongoDB cluster to get better performance, or are just trying to get more done with less, MongoDB 4.4 is sure to provide a few new and useful things for you. You can try all of these features out today by deploying a MongoDB 4.4 beta cluster on `MongoDB Atlas for free <https://www.mongodb.com/cloud/atlas>`__.
+
+   If you have any questions about these new operators or this blog post, head over to the `MongoDB Community forums <https://developer.mongodb.com/community/forums/>`__ and I'll see you there. 
+
+   Happy experimenting!
+
+   .. include:: /includes/callouts/safe-harbor.rst
