@@ -473,7 +473,5 @@ The MongoDB Atlas Sample Datasets
    and the free MongoDB University Course `M320: Data Modeling <http://bit.ly/M320_DataModeling>`__
    to level up your schema design skills.
 
-   If you have questions, please head to our `developer community website <https://community.mongodb.com/>`__
-   where the MongoDB engineers and the MongoDB community will help you
-   build your next big idea with MongoDB.
+   .. include:: /includes/callouts/community-cta.rst
 
