@@ -31,7 +31,7 @@
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
-.. pubdate:: 2020-07-24
+.. pubdate:: 2020-07-28
 
 .. type:: article
 
