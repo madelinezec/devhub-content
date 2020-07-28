@@ -11,15 +11,15 @@
 .. twitter::
    :site: @mongodb
    :creator: @kukicado
-   :title: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+   :title: How to Use Custom Aggregation Expressions in MongoDB 4.4
    :image: /images/social/twitter/Twitter-docs.png
-   :image-alt: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+   :image-alt: How to Use Custom Aggregation Expressions in MongoDB 4.4
 
    Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
 
 .. og::
    :url: http://developer.mongodb.com/how-to/use-function-accumulator-operators
-   :title: How to Use Custom Aggregation Expressions in the MongoDB 4.4
+   :title: How to Use Custom Aggregation Expressions in MongoDB 4.4
    :image: /images/social/open-graph/og-docs.png
    :type: article
 
@@ -56,9 +56,9 @@
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------
 
-============================================================
-How to Use Custom Aggregation Expressions in the MongoDB 4.4
-============================================================
+========================================================
+How to Use Custom Aggregation Expressions in MongoDB 4.4
+========================================================
 
 .. introduction::
    
