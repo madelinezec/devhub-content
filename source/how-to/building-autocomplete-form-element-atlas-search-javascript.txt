@@ -90,7 +90,7 @@ Building an Autocomplete Form Element with Atlas Search and JavaScript
     The Requirements
     ----------------
 
-   We'll skip the basics of configuring Node.js or MongoDB and assume that you already have a few things installed, configured, and ready to go:
+    We'll skip the basics of configuring Node.js or MongoDB and assume that you already have a few things installed, configured, and ready to go:
 
     -  MongoDB Atlas with an M0 cluster or better, with user and network safe-list configurations established
     -  Node.js installed and configured
