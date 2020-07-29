@@ -6,24 +6,24 @@
 
 .. meta-description::
 
-    Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
+    Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
 
 .. twitter::
     :site: @mongodb
     :creator: @aaronbassett
-    :title: Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
+    :title: Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
     :image: /images/social/twitter/twitter-pink-pattern.png
     :image-alt: MongoDB Realm & AWS Kinesis
 
-    Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
+    Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
 
 .. og::
     :url: https://developer.mongodb.com/how-to/Realm-AWS-Kinesis-Firehose-Destination
-    :title: Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
+    :title: Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
     :image: /images/social/open-graph/og-pink-pattern.png
     :type: article
 
-    Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
+    Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
 
 .. ---------------------------------------------------------------
 .. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
@@ -60,9 +60,9 @@
 .. ARTICLE CONTENT
 .. ---------------------------------------------------------------
 
-===========================================================
-Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
-===========================================================
+==============================================================
+Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
+==============================================================
 
 .. introduction::
 
@@ -172,9 +172,9 @@ Using MongoDB Realm WebHooks with AWS Kinesis Data Firehose
     
     You can find out more details on how to do this in our blog post "`Integrating MongoDB and Amazon Kinesis for Intelligent, Durable Streams. <https://www.mongodb.com/blog/post/integrating-mongodb-and-amazon-kinesis-for-intelligent-durable-streams>`__"
 
-    **********************************
-    AWS Kinesis Data Firehose Payloads
-    **********************************
+    *************************************
+    Amazon Kinesis Data Firehose Payloads
+    *************************************
 
     AWS Kinesis HTTP(s) Endpoint Delivery Requests are sent via POST with a single JSON document as the request body. Delivery destination URLs must be HTTPS. 
 
