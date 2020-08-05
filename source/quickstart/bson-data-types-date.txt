@@ -4,7 +4,7 @@
 
 .. meta-description::
 
-   Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
+   Test. Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
 
 .. twitter::
    :creator: @kenwalger
