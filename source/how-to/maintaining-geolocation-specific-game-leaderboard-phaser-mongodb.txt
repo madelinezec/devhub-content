@@ -1,0 +1,1088 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @nraboy
+   :title: Maintaining a Game Leaderboard with Phaser and MongoDB
+   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb
+   :type: article
+   :title: Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
+   :image: /images/social/open-graph/og-green-pattern.png
+
+   Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-08-06
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===========================================================================
+Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
+===========================================================================
+
+.. introduction::
+
+    When it comes to game development, an often forgotten component comes in
+    the form of a database for storing gameplay information. The database
+    can contribute to numerous roles, such as storing user profile
+    information, game state, and so much more.
+
+    In fact, I created a previous tutorial titled `Creating a
+    Multiplayer Drawing Game with Phaser and
+    MongoDB <https://developer.mongodb.com/how-to/creating-multiplayer-drawing-game-phaser>`__.
+    In this drawing example, every brushstroke made was stored in MongoDB.
+
+    In this tutorial, we're going to look at a different data component for a
+    game. We're going to explore leaderboards and some of the neat things
+    you can do with them. Like my other tutorial,
+    we'll be using `Phaser <https://phaser.io/>`__ and JavaScript.
+
+    To get an idea of what we want to accomplish, take a look at the
+    following animated image:
+
+    .. image:: /images/how-to/phaser-leaderboard-example.gif
+        :alt: Phaser with MongoDB Leaderboard Example
+
+    The above game has three different screens, which are referred to as
+    scenes in Phaser. The first screen (first few seconds of gif) accepts user input for a username and also
+    gathers geolocation information about the player. The second screen is
+    where you actually play the game and attempt to accumulate points (by collecting leaves) while avoiding bombs!
+    Finally, the third screen is where your score and location
+    information is submitted. You'll also see the all-time top scores 
+    as well as the top scores near your location, all of which can be queried easily using MongoDB!
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    There aren't many requirements that must be met in order to be
+    successful with this tutorial. Here's what you'll need:
+
+    -  A `MongoDB Atlas <https://mongodb.com/atlas>`__ cluster with proper user role and network configuration
+    -  Node.js 12+
+
+    For this example, MongoDB Atlas will store all of our leaderboard
+    information and Node.js will power our backend API. The Phaser game
+    doesn't have any real dependency beyond having something available to
+    serve the project. I use 
+    `serve <https://www.npmjs.com/package/serve>`__ to accomplish this, but you can use whatever you're comfortable with.
+
+.. content::
+
+    Building the Backend for the Leaderboard with Node.js and MongoDB
+    -----------------------------------------------------------------
+
+    Before we jump into the game development side of things (with Phaser), we should take
+    care of our backend API. This backend API will be responsible for the
+    direct interaction with our database. It will accept requests from our
+    game to store data as well as requests to fetch data.
+
+    Create a new project directory on your computer and from within that
+    directory, execute the following commands:
+
+    .. code:: bash
+
+        npm init -y
+        npm install express body-parser cors mongodb --save
+
+    The above commands will create a new **package.json** file and install
+    the project dependencies for our backend. We'll be using `Express <https://expressjs.com/>`__ to
+    create our API and the `MongoDB Node.js driver <https://docs.mongodb.com/drivers/node/>`__ for communicating with the
+    database.
+
+    For the backend, we'll add all of our code to a **main.js** file. Create
+    it in your project directory and add the following JavaScript:
+
+    .. code:: javascript
+
+        const { MongoClient, ObjectID } = require("mongodb");
+        const Express = require("express");
+        const Cors = require("cors");
+        const BodyParser = require("body-parser");
+        const { request } = require("express");
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+        const server = Express();
+
+        server.use(BodyParser.json());
+        server.use(BodyParser.urlencoded({ extended: true }));
+        server.use(Cors());
+
+        var collection;
+
+        server.post("/create", async (request, response) => {});
+        server.get("/get", async (request, response) => {});
+        server.get("/getNearLocation", async (request, response) => {});
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("gamedev").collection("scores");
+                collection.createIndex({ "location": "2dsphere" });
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    The above JavaScript has a lot of boilerplate code that I won't get into
+    the details on. If you'd like to learn how to connect to MongoDB with
+    Node.js, check out Lauren Schaefer's `getting started
+    tutorial <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
+    on the subject.
+
+    There are a few lines that I want to bring attention to, starting with
+    the creation of the ``MongoClient`` object:
+
+    .. code:: javascript
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+    In this example, ``ATLAS_URI`` is an environment variable on my computer
+    and Node.js is reading from that variable. 
+    For context, the variable looks something like this:
+
+    .. code:: none
+
+        mongodb+srv://<username>:<password>@cluster0-yyarb.mongodb.net/<database>?retryWrites=true&w=majority
+
+    Regardless on how you wish to create the ``MongoClient``, make sure your
+    MongoDB Atlas connection URL contains the correct username and password
+    information that you defined within the MongoDB Atlas dashboard.
+
+    The next thing I want to bring attention to is in the following two
+    lines:
+
+    .. code:: javascript
+
+        collection = client.db("gamedev").collection("scores");
+        collection.createIndex({ "location": "2dsphere" });
+
+    In this example, my database is ``gamedev`` and my collection is
+    ``scores``. If you want to use your own naming, just swap what I have
+    with your own database and collection names. Also, since we plan to use geospatial
+    queries, we'll need a geospatial index. That's where the``createIndex`` command comes in. When we launch our backend, the
+    index will be created for us on the ``location`` field of our documents, just as we've specified in our command.
+
+    We don't need any documents created at this point, but when documents
+    get inserted, they'll look something like this:
+
+    .. code:: json
+
+        {
+            "_id": "23abcd87ef",
+            "username": "nraboy",
+            "score": 35,
+            "location": {
+                "type": "Point",
+                "coordinates": [ -121, 37 ]
+            }
+        }
+
+    The ``location`` field is a special, formatted GeoJSON compliant object.
+    The formatting is important when it comes to the geospatial queries and
+    the index itself.
+
+    With the base of our backend created, let's start creating each of the
+    endpoint functions.
+
+    Since we don't have any data to work with, let's start with the
+    ``create`` endpoint function:
+
+    .. code:: javascript
+
+        server.post("/create", async (request, response) => {
+            try {
+                let result = await collection.insertOne(
+                    {
+                        "username": request.body.username,
+                        "score": request.body.score,
+                        "location": request.body.location
+                    }
+                );
+                response.send({ "_id": result.insertedId });
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    When the client makes a POST request, we take the ``username``,
+    ``score``, and ``location`` from the payload and insert it into MongoDB
+    as a new document. The resulting ``_id`` will be returned to the user
+    when successful. Data validation is out of the scope of this tutorial,
+    but it is important to note that we're not validating any of the data
+    coming from the user.
+
+    Now that we can create scores, we'll need a way to query for them. Looking at
+    the ``get`` endpoint, we can do the following:
+
+    .. code:: javascript
+
+        server.get("/get", async (request, response) => {
+            try {
+                let result = await collection.find({}).sort({ score: -1 }).limit(3).toArray();
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    In the above code, we are using the ``find`` method on our collection with no
+    filter. This means we'll be attempting to retrieve all documents in the
+    collection. However, we're also using a ``sort`` and ``limit``, which says that we only
+    want three documents in descending order.
+
+    With this endpoint configured this way, we can treat it as a global
+    function that gets the top three scores from any location. Perfect for a leaderboard!
+
+    Now we can narrow down our results. Let's take a look at the
+    ``getNearLocation`` function:
+
+    .. code:: javascript
+
+        server.get("/getNearLocation", async (request, response) => {
+            try {
+                let result = await collection.find({
+                    "location": {
+                        "$near": {
+                            "$geometry": {
+                                "type": "Point",
+                                "coordinates": [
+                                    parseFloat(request.query.longitude),
+                                    parseFloat(request.query.latitude)
+                                ]
+                            },
+                            "$maxDistance": 25000
+                        }
+                    }
+                }).sort({ score: -1 }).limit(3).toArray();
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    Here, we also use the``find`` method, but utilize a geospatial
+    query as our filter using the ``$near`` operator. When we pass a latitude and longitude
+    position as query parameters in the request, we build a geospatial
+    query that returns any document with a location that's within 25,000 meters of the
+    provided position. You can play around with the numbers to get the
+    results that you need.
+
+    The backend should be ready to go. Make sure you are running the Node.js
+    application before you try to play the game that we create in the next
+    step.
+
+    Creating and Configuring a New Phaser Project with Geolocation
+    --------------------------------------------------------------
+
+    When we create our game we're going to want to create a new project
+    directory. On your computer create a new project directory and in it,
+    create an **index.html** file with the following HTML markup:
+
+    .. code:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+                <script src="information-scene.js"></script>
+                <script src="main-scene.js"></script>
+                <script src="gameover-scene.js"></script>
+            </head>
+            <body>
+                <div id="game"></div>
+                <script>
+
+                    const phaserConfig = {
+                        type: Phaser.AUTO,
+                        parent: "game",
+                        width: 1280,
+                        height: 720,
+                        dom: {
+                            createContainer: true
+                        },
+                        physics: {
+                            default: "arcade",
+                            arcade: {
+                                debug: false
+                            }
+                        },
+                        scene: []
+                    };
+
+                    const game = new Phaser.Game(phaserConfig);
+
+                </script>
+            </body>
+        </html>
+
+    The above code shouldn't run, but it is the starting point to our Phaser
+    game. Let's break it down.
+
+    Within the ``<head>`` you'll notice the following ``<script>`` tags:
+
+    .. code:: auto
+
+        <head>
+            <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+            <script src="information-scene.js"></script>
+            <script src="main-scene.js"></script>
+            <script src="gameover-scene.js"></script>
+        </head>
+
+    The first JavaScript file is the Phaser framework. The other three are
+    files that we'll be creating. You can create each of the remaining three
+    files now or wait until we get to that step in the tutorial.
+
+    At this point in the tutorial, the most important chunk of information
+    is in here:
+
+    .. code:: javascript
+
+        const phaserConfig = {
+            type: Phaser.AUTO,
+            parent: "game",
+            width: 1280,
+            height: 720,
+            dom: {
+                createContainer: true
+            },
+            physics: {
+                default: "arcade",
+                arcade: {
+                    debug: false
+                }
+            },
+            scene: []
+        };
+
+    In the above configuration, we are defining the game canvas, but we are
+    also enabling the physics engine as well as DOM element embedding.
+
+    The DOM element embedding allows us to embed a user input field into
+    our game so users can enter their name. The physics engine
+    allows us to handle collisions between
+    the player and the reward as well as the player and the obstacle. There
+    are numerous physics engines available with Phaser, but we'll use the ``arcade``
+    physics option as it's the easiest to use.
+
+    Because we plan to keep scores for players based on their name and
+    location, we'll need to enable location tracking. Within the
+    ``<script>`` tag that contains the ``phaserConfig``, modify it to the
+    following:
+
+    .. code:: auto
+
+        <script>
+
+            // phaserConfig ...
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    if(!position.coords || !position.coords.longitude) {
+                        position.coords.latitude = 0;
+                        position.coords.longitude = 0;
+                    }
+                    const game = new Phaser.Game(phaserConfig);
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser!");
+            }
+
+        </script>
+
+    The above code will leverage the location tracking of the web browser.
+    When the game starts, the browser will prompt the user to enable
+    location tracking. If the location cannot be determined, zero values will be used. If location tracking is not available in the browser, an error will be shown in the logs and the game will fail to configure.
+
+    As of right now nothing is done with the location, but after the user
+    accepts, the game will start. However, since we don't have any scenes created yet,
+    nothing will happen.
+
+    It's important to note that between getting the location and starting
+    the game, it could take a few seconds to a few minutes. This is
+    dependent on how quickly the browser can detect your location.
+
+    With the configuration out of the way, let's create the first
+    scene that the player sees.
+
+    Design a Game Scene for User Input with HTML and JavaScript
+    -----------------------------------------------------------
+
+    The first scene the player sees will prompt them to enter a username.
+    This username will be sent to our backend and stored in MongoDB
+    with a score.
+
+    .. image:: /images/how-to/phaser-leaderboard-scene-1.jpg
+        :alt: Phaser with MongoDB Leaderboard Example, User Input Scene
+
+    If you haven't already, create an **information-scene.js** file and
+    include the following code:
+
+    .. code:: javascript
+
+        var InformationScene = new Phaser.Class({
+            Extends: Phaser.Scene,
+            initialize: function () {
+                Phaser.Scene.call(this, { key: "InformationScene" });
+            },
+            init: function (data) { },
+            preload: function () { },
+            create: async function () { },
+            update: function () { }
+        });
+
+    The above class represents our initial scene. In it, you'll see the four lifecycle
+    events that Phaser uses to compose a scene. Because this scene takes user input, we
+    need to create another HTML file that contains our form.
+
+    Create a **form.html** file within the game project and add the
+    following HTML markup:
+
+    .. code:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <style>
+                    #input-form {
+                        padding: 15px;
+                        background-color: #CCCCCC;
+                    }
+                    #input-form input {
+                        padding: 10px;
+                        font-size: 20px;
+                        width: 400px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="input-form">
+                    <input type="text" name="username" placeholder="Enter a Name" />
+                </div>
+            </body>
+        </html>
+
+    There's nothing particularly fancy happening in the above HTML. However,
+    take note of the ``name`` attribute on the ``<input>`` tag. We'll be
+    referencing it later within our **information-scene.js** file.
+
+    Jumping back into the **information-scene.js** file, we need to load the
+    HTML file that we just created in the ``preload`` function:
+
+    .. code:: javascript
+
+        preload: function () {
+            this.load.html("form", "form.html");
+        },
+
+    With the HTML form loaded in our scene, we can now work towards displaying it and
+    capturing any data entered into it. This can be done from the ``create``
+    function like so:
+
+    .. code:: javascript
+
+        create: async function () {
+
+            this.usernameInput = this.add.dom(640, 360).createFromCache("form");
+
+            this.returnKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
+            this.returnKey.on("down", event => {
+                let username = this.usernameInput.getChildByName("username");
+                if(username.value != "") {
+                    // Switch scene ...
+                }
+            })
+
+        },
+
+    In the ``preload`` function, we've referenced the HTML file as ``form``,
+    which will be added as a DOM element on the Phaser canvas. We want to
+    listen for events on a particular keystroke, in this case the enter key,
+    and when the enter key is pressed, we want to get the data from the
+    ``username`` element. Remember the ``name`` attribute on the ``<input>``
+    tag? That is the value we're using in the ``getChildByName`` function.
+
+    At this point, we technically have a working scene even though nothing happens with the
+    user input. Let's edit the **index.html** file so we can switch to it:
+
+    .. code:: auto
+
+        <script>
+
+            const phaserConfig = {
+                type: Phaser.AUTO,
+                parent: "game",
+                width: 1280,
+                height: 720,
+                dom: {
+                    createContainer: true
+                },
+                physics: {
+                    default: "arcade",
+                    arcade: {
+                        debug: false
+                    }
+                },
+                scene: [InformationScene]
+            };
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    if(!position.coords || !position.coords.longitude) {
+                        position.coords.latitude = 0;
+                        position.coords.longitude = 0;
+                    }
+                    const game = new Phaser.Game(phaserConfig);
+                    game.scene.start("InformationScene", {
+                        location: {
+                            type: "Point",
+                            coordinates: [
+                                parseFloat(position.coords.longitude.toFixed(1)),
+                                parseFloat(position.coords.latitude.toFixed(1))
+                            ]
+                        }
+                    })
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser!");
+            }
+
+        </script>
+
+    If you're wondering what changed, first take a look at the ``scene``
+    field of the ``phaserConfig`` object. Notice that we've included the
+    ``InformationScene`` class to the array. Next, take a look at what
+    happens after we get the geolocation information from the browser:
+
+    .. code:: javascript
+
+        game.scene.start("InformationScene", {
+            location: {
+                type: "Point",
+                coordinates: [
+                    parseFloat(position.coords.longitude.toFixed(1)),
+                    parseFloat(position.coords.latitude.toFixed(1))
+                ]
+            }
+        })
+
+    These changes let us start the ``InformationScene`` scene and
+    pass the location information we receive from the browser into it. To maintain my
+    privacy for the example, I'm setting the decimal precision of the
+    latitude and longitude to only a single decimal. This way, it shows my
+    general location, but not exactly where I live.
+
+    The location information is formatted as appropriate GeoJSON since that
+    is what MongoDB will depend on later.
+
+    So if we're passing information into our scene, how do we make use of it?
+
+    Open the **information-scene.js** file and change the ``init`` function
+    to look like this:
+
+    .. code:: javascript
+
+        init: function (data) {
+            this.location = data.location;
+        },
+
+    We're taking the data that was passed and are storing it in a local
+    variable to the class. When we switch from this scene to another scene
+    in the future, we'll pass the variable again.
+
+    Before we start working on the next scene, let's display the location
+    information underneath the text input. Within the ``create`` function of
+    the **information-scene.js** file, add the following:
+
+    .. code:: javascript
+
+        this.locationText = this.add.text(
+            640, 
+            425, 
+            `[${this.location.coordinates[1]}, ${this.location.coordinates[0]}]`,
+            {
+                fontSize: 20
+            }
+        ).setOrigin(0.5);
+
+    The above code renders whatever is in the location variable. It should
+    be centered below the input field in this particular scene of the game.
+
+    Even though the next scene doesn't exist yet, let's get the switching
+    logic in place. Let's change the logic that happens when the enter key
+    is pressed after typing a username:
+
+    .. code:: javascript
+
+        this.returnKey.on("down", event => {
+            let username = this.usernameInput.getChildByName("username");
+            if(username.value != "") {
+                this.scene.start("MainScene", { username: username.value, score: 0, location: this.location });
+            }
+        })
+
+    We'll be calling the next scene ``MainScene`` and we're going to pass into it
+    the username that the user provided, the location from the browser, and
+    an initial score.
+
+    Developing the Game Logic for an Interactive Gameplay Experience
+    ----------------------------------------------------------------
+
+    We have a username and some location data to work with. Now it's time to
+    create the game that the user can actually play.
+    
+    .. image:: /images/how-to/phaser-leaderboard-scene-2.jpg
+        :alt: Phaser with MongoDB Leaderboard Example, Gameplay Scene
+    
+    Create a
+    **main-scene.js** file in your project if you haven't already and
+    include the following code:
+
+    .. code:: javascript
+
+        var MainScene = new Phaser.Class({
+            Extends: Phaser.Scene,
+            initialize: function() {
+                Phaser.Scene.call(this, { key: "MainScene" });
+            },
+            init: function(data) {
+                this.username = data.username;
+                this.score = data.score;
+                this.location = data.location;
+            },
+            preload: function() { },
+            create: function() { },
+            update: function() { }
+        });
+
+    You'll notice that we are accepting the data passed in from the previous
+    scene in the ``init`` function. Before we start modifying the other
+    lifecycle functions, let's add this scene to the ``phaserConfig`` found
+    in the **index.html** file:
+
+    .. code:: javascript
+
+        scene: [InformationScene, MainScene]
+
+    Since the ``MainScene`` represents our gameplay scene, we need to
+    preload our game assets. You can download my `leaf </images/how-to/leaf.png>`__,
+    `bomb </images/how-to/bomb.png>`__, and `box </images/how-to/box.png>`__ assets or use your own
+    images. The actual images are not very important as long as something
+    exists. Depending on the resolution of your images, you may need to change the scaling that we do later in the tutorial.
+
+    With the image files in your project, change the ``preload`` function of
+    the **main-scene.js** file to look like the following:
+
+    .. code:: javascript
+
+        preload: function() {
+            this.load.image("leaf", "leaf.png");
+            this.load.image("bomb", "bomb.png");
+            this.load.image("box", "box.png");
+        },
+
+    We're only ever going to have a single box to represent our player, but
+    we're going to have many of the ``leaf`` and ``bomb`` game objects. This
+    means that we'll need to create two object pools and one single sprite
+    for the player.
+
+    If you're new to the concept of object pools, they are common when it comes to game development. The idea behind them is that instead of creating and destroying game objects as 
+    needed, which is bad for performance, a specific number of objects are created up front and these objects exist inactive and invisible until needed. When the object is no longer 
+    needed, it is deactivated and made invisible, hence going back into the pool to be used again in the future.
+
+    In the ``create`` function of the **main-scene.js** file, add the
+    following JavaScript code:
+
+    .. code:: javascript
+
+        create: function() {
+            this.player = this.physics.add.sprite(640, 650, "box");
+            this.player.setScale(0.25);
+            this.player.setDepth(1);
+            this.player.setData("score", this.score);
+            this.player.setData("username", this.username);
+
+            this.leafGroup = this.physics.add.group({
+                defaultKey: "leaf",
+                maxSize: 30,
+                visible: false,
+                active: false
+            });
+
+            this.bombGroup = this.physics.add.group({
+                defaultKey: "bomb",
+                maxSize: 30,
+                visible: false,
+                active: false
+            });
+        },
+
+    Remember the score and username information that was passed from the
+    previous scene? We're attaching this data to the player (lines 5-6).
+
+    For the ``leafGroup`` and ``bombGroup``, we are creating object pools.
+    These object pools have thirty objects each and are inactive and
+    invisible by default. This is convenient as we don't want to display or activate them
+    until we're ready to use them.
+
+    The score is being tracked on the player, but it's probably a good idea
+    to show it as well. Within the ``create`` function of the
+    **main-scene.js** function, add the following:
+
+    .. code:: javascript
+
+        create: function() {
+
+            // Sprite and object pool creation logic ...
+
+            this.scoreText = this.add.text(10, 10, "SCORE: 0", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+            this.scoreText.setDepth(1);
+
+        }
+
+    In the above code, we are initializing our text to be rendered with
+    specific formatting. We're going to change it later as the score
+    increases.
+
+    Even though we're not currently using our object pools, let's define
+    some collision logic for when they do collide with our player.
+
+    Within the ``create`` function of the **main-scene.js** file, add the
+    following:
+
+    .. code:: javascript
+
+        create: function() {
+
+            // Sprite and object pool creation logic ...
+            // Render text ...
+
+            this.physics.add.collider(this.player, this.leafGroup, (player, leaf) => {
+                if (leaf.active) {
+                    this.score = player.getData("score");
+                    this.score++;
+                    player.setData("score", this.score);
+                    this.scoreText.setText("SCORE: " + this.score);
+                    this.leafGroup.killAndHide(leaf);
+                }
+            });
+
+            this.physics.add.collider(this.player, this.bombGroup, (player, bomb) => {
+                if (bomb.active) {
+                    this.bombGroup.killAndHide(bomb);
+                    // Change scenes ...
+                }
+            });
+
+        }
+
+    We have two colliders in the above code. One with logic to determine what happens when a leaf
+    touches the player and one for when a bomb touches the player. When the
+    leaf touches the player, we need to first make sure the leaf was active. When an object is active, certain game and scene logic is able to be applied.
+    If leaf was active, we need to get the current score from the ``player`` object, increase it, set the new score
+    to the ``player`` object and update the rendered text. We also need to add the
+    leaf back to the pool so it can be used again.
+
+    When the bomb touches the player, we need to make sure the bomb is
+    active and if it is, add it back to the pool and change the scene. We'll
+    work on the logic for changing the scene soon.
+
+    Now is a good time to pull objects from both of our object pools. Within
+    the ``create`` function of the **main-scene.js** file, add the following
+    JavaScript code:
+
+    .. code:: javascript
+
+        create: function() {
+
+            // Sprite and object pool creation logic ...
+            // Render text ...
+            // Collider logic ...
+
+            this.time.addEvent({
+                delay: 250,
+                loop: true,
+                callback: () => {
+                    let leafPositionX = Math.floor(Math.random() * 1280);
+                    let bombPositionX = Math.floor(Math.random() * 1280);
+                    this.leafGroup.get(leafPositionX, 0)
+                        .setScale(0.1)
+                        .setActive(true)
+                        .setVisible(true);
+                    this.bombGroup.get(bombPositionX, 0)
+                        .setScale(0.1)
+                        .setActive(true)
+                        .setVisible(true);
+                }
+            });
+
+        }
+
+    In the above code, we are creating a repeating timer. Every time the
+    timer triggers, we pull a leaf and a bomb from the object pools and
+    place them at a random position on the x-axis. We also activate that
+    particular object and make it visible.
+
+    Don't try to pull more objects than exist in the pool, otherwise you'll
+    get errors if the pool is empty.
+
+    The timer is pulling objects, but those objects are not yet moving. We
+    need to move them in the ``update`` function of the **main-scene.js**
+    file. Change the function to look like the following:
+
+    .. code:: javascript
+
+        update: function() {
+            this.leafGroup.incY(6);
+            this.leafGroup.getChildren().forEach(leaf => {
+                if (leaf.y > 800) {
+                    this.leafGroup.killAndHide(leaf);
+                }
+            });
+            this.bombGroup.incY(6);
+            this.bombGroup.getChildren().forEach(bomb => {
+                if (bomb.y > 800) {
+                    this.bombGroup.killAndHide(bomb);
+                }
+            });
+        }
+
+    For both the ``leafGroup`` and the ``bombGroup``, we are increasing the
+    position on the y-axis. We are doing this for every object in those
+    object pools. Even though we're changing the position of the entire
+    pool, you'll only see and interact with the active and visible objects.
+
+    To prevent us from running out of objects in the pool, we can loop
+    through each pool and see if any objects have moved beyond the screen.
+    If they have, add them back into the pool.
+
+    So as of right now we have objects falling down the screen in our scene.
+    If our player touches any of the leaf objects our score increases,
+    otherwise the bombs will end the scene. The problem is that we can't
+    actually control our player yet. This is an easy fix though.
+
+    Within the ``update`` function of the **main-scene.js** file, add the
+    following:
+
+    .. code:: javascript
+
+        update: function() {
+
+            // Object pool movement logic ...
+
+            if (this.input.activePointer.isDown) {
+                this.player.x = this.input.activePointer.position.x;
+            }
+
+        }
+
+    Now when the pointer is down, whether it be on mobile or desktop, the
+    x-axis position of the player will be updated to wherever the pointer
+    is. For this particular game we won't bother updating the y-axis
+    position.
+
+    With the exception of changing from this current scene to the next
+    scene, we have a playable game.
+
+    Let's jump back into the collider logic for the bomb:
+
+    .. code:: javascript
+
+        this.physics.add.collider(this.player, this.bombGroup, (player, bomb) => {
+            if (bomb.active) {
+                this.bombGroup.killAndHide(bomb);
+                this.scene.start("GameOverScene", { 
+                    "username": this.player.getData("username"), 
+                    "score": this.player.getData("score"),
+                    "location": this.location
+                });
+            }
+        });
+
+    Even though we haven't created a ``GameOverScene`` scene, we've assumed
+    that we have. So if we collide with a bomb, the ``GameOverScene`` will
+    start and we'll pass the username, score, and location information to
+    the next scene.
+
+    Creating, Querying, and Displaying Leaderboard Information Stored in MongoDB
+    ----------------------------------------------------------------------------
+
+    The final scene is where we actually include MongoDB into our game.
+    We've defined our information, played our game, and now we need to send
+    it to MongoDB for storage.
+
+    .. image:: /images/how-to/phaser-leaderboard-scene-3.jpg
+        :alt: Phaser with MongoDB Leaderboard Example, Game Over Scene
+
+    If you haven't already, create a **gameover-scene.js** file in your
+    project directory with the following code:
+
+    .. code:: javascript
+
+        var GameOverScene = new Phaser.Class({
+            Extends: Phaser.Scene,
+            initialize: function() {
+                Phaser.Scene.call(this, { key: "GameOverScene" });
+            },
+            init: function(data) {
+                this.player = data;
+            },
+            preload: function() {},
+            create: async function() {},
+            update: function() {}
+        });
+
+    The above class should look familiar as it was used as the basis for the
+    previous two classes. In the ``init`` function we accept the username,
+    score, and location data from the previous scene. Before we start
+    defining our scene functionality, let's add the scene to the
+    **index.html** file in the ``phaserConfig`` object:
+
+    .. code:: javascript
+
+        scene: [InformationScene, MainScene, GameOverScene]
+
+    Since we do not have any game assets, we don't need to use the
+    ``preload`` function within the **gameover-scene.js** file. Instead,
+    let's take a look at the ``create`` function:
+
+    .. code:: javascript
+
+        create: async function() {
+            try {
+                if (this.player.username && this.player.score) {
+                    await fetch("http://localhost:3000/create", {
+                        "method": "POST",
+                        "headers": {
+                            "content-type": "application/json"
+                        },
+                        "body": JSON.stringify(this.player)
+                    });
+                }
+
+                this.globalScores = await fetch("http://localhost:3000/get")
+                    .then(response => response.json());
+
+                this.nearbyScores = await fetch(`http://localhost:3000/getNearLocation?latitude=${this.player.location.coordinates[1]}&longitude=${this.player.location.coordinates[0]}`)
+                    .then(response => response.json());
+            } catch (e) {
+                console.error(e);
+            }
+
+        },
+
+    In the above ``create`` function, we're doing three requests. First we
+    are taking the player information provided in the previous scene and
+    we're sending it to our backend via the ``create`` endpoint. After we
+    send our score data, we do two requests, the first for the top three
+    global scores, and the second for the top three scores near my latitude
+    and longitude.
+
+    The next step is to render the results from these requests on the screen
+    as text.
+
+    .. code:: javascript
+
+        create: async function() {
+            try {
+                
+                // REST API logic ...
+
+                this.add.text(10, 100, "GLOBAL HIGH SCORES", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+                this.add.text(600, 100, "NEARBY HIGH SCORES", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+
+                this.add.text(10, 10, "YOUR SCORE: " + this.player.score, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+
+                for(let i = 0; i < this.globalScores.length; i++) {
+                    this.add.text(10, 100 * (i + 2), `${this.globalScores[i].username}: ${this.globalScores[i].score}`, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+                }
+
+                for(let i = 0; i < this.nearbyScores.length; i++) {
+                    this.add.text(600, 100 * (i + 2), `${this.nearbyScores[i].username}: ${this.nearbyScores[i].score}`, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+                }
+
+                this.retryButton = this.add.text(1125, 640, "RETRY", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+                this.retryButton.setInteractive();
+
+                this.retryButton.on("pointerdown", () => {
+                    this.scene.start("MainScene", { username: this.player.username, score: 0, location: this.player.location });
+                }, this);
+
+            } catch (e) {
+                console.error(e);
+            }
+        },
+
+    The above code might look messy, but the reality is that we're just
+    rendering text to the screen. We're looping through both of the scores
+    results and rending the results and we're also rendering the current
+    score.
+
+    To replay the game, we create a text that is clickable:
+
+    .. code:: javascript
+
+        this.retryButton = this.add.text(1125, 640, "RETRY", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+        this.retryButton.setInteractive();
+
+        this.retryButton.on("pointerdown", () => {
+            this.scene.start("MainScene", { username: this.player.username, score: 0, location: this.player.location });
+        }, this);
+
+    When clicking on the button, the ``MainScene`` is started and the
+    current player information is sent.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to work with leaderboard information using MongoDB
+    within a `Phaser <https://phaser.io/>`__ game. In this particular
+    example we saw two different types of leaderboards, one being global and
+    one being geospatial. Another possibility that we didn't explore could
+    be in the realm of platform such as mobile or desktop.
+
+    If you want to see another gaming example with MongoDB, check out my
+    previous tutorial titled `Creating a Multiplayer Drawing Game with
+    Phaser and
+    MongoDB <https://developer.mongodb.com/how-to/creating-multiplayer-drawing-game-phaser>`__.
