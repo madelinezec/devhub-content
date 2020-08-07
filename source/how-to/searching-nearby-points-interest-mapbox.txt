@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Searching for Nearby Points of Interest with MongoDB and Mapbox
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.

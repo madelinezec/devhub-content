@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Maintaining a Game Leaderboard with Phaser and MongoDB
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.

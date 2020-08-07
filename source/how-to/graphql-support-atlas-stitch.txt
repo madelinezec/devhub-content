@@ -23,7 +23,7 @@
 
 .. include:: /includes/authors/raboy-nic.rst
 
-.. atf-image:: /images/atf-images/logos/GraphQL.png
+.. atf-image:: /images/atf-images/logos/graphql.png
 
 .. pubdate:: 2020-01-22
 

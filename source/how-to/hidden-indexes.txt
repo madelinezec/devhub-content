@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @kukicado
    :title: Optimize and Tune MongoDB Performance with Hidden Indexes
-   :image: /images/social/twitter/Twitter-docs.png
+   :image: /images/social/twitter/twitter-docs.png
    :image-alt: Optimize and Tune MongoDB Performance with Hidden Indexes
 
    Learn how to optimize and fine tune your MongoDB performance with hidden indexes.

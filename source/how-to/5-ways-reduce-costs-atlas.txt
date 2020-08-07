@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @mlynn
    :title: 5 Ways to Reduce Costs With MongoDB Atlas
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB graphic pattern
 
    Learn about 5 Ways to Reduce Costs With MongoDB Atlas

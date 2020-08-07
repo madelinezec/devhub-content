@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Location Geofencing with MongoDB, Stitch, and Mapbox
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to use MongoDB geospatial queries and GeoJSON with Mapbox to create dynamic geofences.

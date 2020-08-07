@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @kukicado
    :title: How to Use Custom Aggregation Expressions in MongoDB 4.4
-   :image: /images/social/twitter/Twitter-docs.png
+   :image: /images/social/twitter/twitter-docs.png
    :image-alt: How to Use Custom Aggregation Expressions in MongoDB 4.4
 
    Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.

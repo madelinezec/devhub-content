@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Build an Autocomplete Form Element with Atlas Search and JavaScript
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to create an autocomplete form element that leverages the natural language processing of MongoDB Atlas Search.

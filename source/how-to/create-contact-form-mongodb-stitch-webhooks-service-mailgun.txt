@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.

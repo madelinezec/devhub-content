@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @eoinbrazil
    :title: Explaining the MongoDB Atlas Sample Data
-   :image: /images/social/twitter/Twitter-docs.png
+   :image: /images/social/twitter/twitter-docs.png
    :image-alt: MongoDB Atlas Sample Data
 
    Explaining the MongoDB Atlas Sample Data and diving into its various datasets

@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @kukicado
    :title: Set Global Read and Write Concerns in MongoDB 4.4
-   :image: /images/social/twitter/Twitter-docs.png
+   :image: /images/social/twitter/twitter-docs.png
    :image-alt: MongoDB documents
 
    Learn how to set global read isolation and write durability defaults in MongoDB 4.4.

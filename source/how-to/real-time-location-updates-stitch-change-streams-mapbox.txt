@@ -12,7 +12,7 @@
    :site: @mongodb
    :creator: @nraboy
    :title: Real-Time Location with MongoDB Stitch, Change Streams, and Mapbox
-   :image: /images/social/twitter/Twitter-Green-pattern.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
    Learn how to use change streams with MongoDB Stitch to update location on a Mapbox map in real-time.
