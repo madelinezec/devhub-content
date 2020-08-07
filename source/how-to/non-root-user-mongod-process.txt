@@ -1,0 +1,212 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Secure your MongoDB installation by allowing non-root users to stop/start/restart your mongod process.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mongodb
+   :title: Secure your MongoDB installation.
+   :image: /images/social/twitter/twitter-security.png
+   :image-alt: MongoDB Security
+
+   Read more about the procedure to allow non-root users to stop/start/restart "mongod" process.
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/non-root-user-mongod-process
+   :type: article
+   :title: Secure your MongoDB installation.
+   :image: /images/social/open-graph/og-security.png
+
+   Read more about the procedure to allow non-root users to stop/start/restart "mongod" process.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/shurhavetsky-ella.rst
+
+.. include:: /includes/authors/costa-nuno.rst
+
+.. pubdate:: 2020-08-07
+
+.. type:: how-to
+
+.. level:: advanced
+
+.. tags::
+
+   * Security
+   * Technical
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/security.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+========================================================================
+Procedure to Allow Non-Root Users to Stop/Start/Restart "mongod" Process
+========================================================================
+
+.. introduction::
+
+   Introduction
+   ------------
+
+   Systems' security plays a fundamental role in today's modern applications. It is very important to restrict non-authorized users' access to root capabilities. With this blog post, we intend to document how to avoid jeopardizing root system resources, but allow authorized, non-root users, to perform administrative operations on ``mongod`` processes such as starting or stopping the daemon.
+
+   The methodology is easily extensible to other administrative operations such as preventing non-authorized users from modifying ``mongod`` audit logs.
+
+   Use this procedure for Linux based systems to allow users with restricted permissions to stop/start/restart ``mongod`` processes. These users are set up under a non-root Linux group. Further, the Linux group of these users is different from the Linux user group under which the ``mongod`` process runs.
+
+.. prerequisites::
+
+   Considerations
+   --------------
+
+   .. blockquote::
+
+      WARNING: The procedure requires root access for the setup. Incorrect settings can lead to an unresponsive system, so always test on a development environment before implementing in production. Ensure you have a current backup of your data.
+
+   It's recommended to perform this procedure while setting up a new system. If it is not possible, perform the procedure during the maintenance window.
+
+   The settings will impact only one local system, thus in case of replica set or a sharded cluster perform the procedure in a rolling matter and never change all nodes at once.
+
+   Tested Linux flavors
+   --------------------
+
+   - CentOS 6|7
+   - RHEL 6|7
+   - Ubuntu 18.04
+   - Amazon Linux 2
+
+   .. blockquote::
+
+      Disclaimer: For other Linux distributions the procedure should work in a similar way however, only the above versions were tested while writing this article.
+
+.. content::
+
+   Procedure
+   ---------
+
+   - Add the user with limited permissions (replace testuser with your user):
+
+   .. code-block:: auto
+
+      $ adduser testuser
+      $ groupadd testgroup
+
+   - Install `MongoDB Community <https://docs.mongodb.com/manual/administration/install-on-linux/>`__ | `Enterprise <https://docs.mongodb.com/manual/administration/install-enterprise/>`__ following our recommended procedures.
+   - Edit the MongoDB configuration file ``/etc/mongod.conf`` permissions:
+
+   .. code-block:: none
+
+      $ sudo chown mongod:mongod /etc/mongod.conf
+      $ sudo chmod 600 /etc/mongod.conf
+      $ ls -l /etc/mongod.conf
+      -rw-------. 1 mongod mongod 330 Feb 27 18:43 /etc/mongod.conf
+
+   With this configuration, only the mongod user (and root) will have permissions to access and edit the ``mongod.conf`` file. No other user will be allowed to read/write and have access to its content.
+
+   Systems running with systemd
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   This procedure works for CentOS 7 and RHEL 7.
+
+   - Add the following configuration lines to the `sudoers <https://www.sudo.ws/man/1.8.17/sudoers.man.html>`__ file with `visudo <https://www.sudo.ws/man/1.8.13/visudo.man.html>`__:
+
+   .. code-block:: bash
+
+      %mongod ALL =(ALL) NOPASSWD: /bin/systemctl start mongod.service, /bin/systemctl stop mongod.service, /bin/systemctl restart mongod.service
+      %testuser ALL =(ALL) NOPASSWD: /bin/systemctl start mongod.service, /bin/systemctl stop mongod.service, /bin/systemctl restart mongod.service
+
+   .. blockquote::
+
+      Note: The root user account may become non-functional if a syntax error is introduced in the sudoers file.
+
+   Systems running with System V Init
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   This procedure works for CentOS 6, RHEL 6, Amazon Linux 2 and Ubuntu 18.04.
+
+   - MongoDB init.d-mongod script is available on our repository `here <https://github.com/mongodb/mongo/blob/master/rpm/init.d-mongod>`__ in case manual download is required (make sure you save it in the /etc/init.d/ directory with permissions set to 755).
+   - Add the following configuration lines to the `sudoers <https://www.sudo.ws/man/1.8.17/sudoers.man.html>`__ file with `visudo <https://www.sudo.ws/man/1.8.13/visudo.man.html>`__:
+
+   For CentOS 6, RHEL 6 and Amazon Linux 2:
+
+   .. code-block:: bash
+
+      %mongod ALL =(ALL) NOPASSWD: /sbin/service mongod start, /sbin/service mongod stop, /sbin/service mongod restart
+      %testuser ALL =(ALL) NOPASSWD: /sbin/service mongod start, /sbin/service mongod stop, /sbin/service mongod restart
+
+   For Ubuntu 18.04:
+
+   .. code-block:: bash
+
+      %mongod ALL =(ALL) NOPASSWD: /usr/sbin/service mongod start, /usr/sbin/service mongod stop, /usr/sbin/service mongod restart
+      %testuser ALL =(ALL) NOPASSWD: /usr/sbin/service mongod start, /usr/sbin/service mongod stop, /usr/sbin/service mongod restart
+
+   .. blockquote::
+
+      Note: The root may become non-functional if a syntax error is introduced in the sudoers file.
+
+   Testing procedure
+   -----------------
+
+   Systems running with systemd (systemctl service)
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   So with these settings testuser has no permissions to read /etc/mongod.conf but can start and stop the mongod service:
+
+   .. code-block:: none
+
+      [testuser@localhost ~]$ sudo /bin/systemctl start mongod.service
+      [testuser@localhost ~]$ sudo /bin/systemctl stop mongod.service
+      [testuser@localhost ~]$ vi /etc/mongod.conf
+      "/etc/mongod.conf" [Permission Denied]
+      [testuser@localhost ~]$ sudo vi /etc/mongod.conf
+      "/etc/mongod.conf" [Permission Denied]
+
+   .. blockquote::
+
+      Note: The authorization is given when using the ``/bin/systemctl``  command. With this procedure, the ``sudo systemctl start mongod`` will prompt the sudo password for the testuser.
+
+   Systems running with System V Init
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Use sudo service mongod [start|stop|restart]:
+
+   .. code-block:: none
+
+      [testuser@localhost ~]$ sudo service mongod start
+      Starting mongod:                                           [  OK  ]
+      [testuser@localhost ~]$ sudo service mongod stop
+      Stopping mongod:                                           [  OK  ]
+      [testuser@localhost ~]$ vi /etc/mongod.conf
+      "/etc/mongod.conf" [Permission Denied]
+      [testuser@localhost ~]$ sudo vi /etc/mongod.conf
+      [sudo] password for testuser:
+      Sorry, user testuser is not allowed to execute '/bin/vi /etc/mongod.conf' as root on localhost.
+
+   .. blockquote::
+
+      Note: Additionally, test restarting other services with the testuser with (and without) the required permissions.
+
+.. summary::
+
+   Wrap Up
+   -------
+
+   It is one of the critical security requirements, not to give unauthorized users full root privileges. With that requirement in mind, it is important for system administrators to know that it is possible to give access to actions like restart/stop/start for a ``mongod`` process (or any other process) without giving root privileges, using Linux systems capabilities.
+
+   .. include:: /includes/callouts/community-cta.rst
