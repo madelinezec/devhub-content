@@ -704,9 +704,24 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
         scene: [InformationScene, MainScene]
 
     Since the ``MainScene`` represents our gameplay scene, we need to
-    preload our game assets. You can download my `leaf </images/how-to/leaf.png>`__,
-    `bomb </images/how-to/bomb.png>`__, and `box </images/how-to/box.png>`__ assets or use your own
-    images. The actual images are not very important as long as something
+    preload our game assets.
+    
+    You can download my assets below or use your own
+    images. 
+
+    .. image:: /images/how-to/leaf.png
+        :scale: 15%
+        :alt: MongoDB Leaf Graphic
+
+    .. image:: /images/how-to/bomb.png
+        :scale: 20%
+        :alt: Bomb Game Graphic
+
+    .. image:: /images/how-to/box.png
+        :scale: 20%
+        :alt: Box Game Graphic
+    
+    The actual images are not very important as long as something
     exists. Depending on the resolution of your images, you may need to change the scaling that we do later in the tutorial.
 
     With the image files in your project, change the ``preload`` function of
