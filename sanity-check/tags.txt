@@ -10,6 +10,7 @@ Cloud
 Containers
 Data
 Data Visualization
+DevOps
 Full-Text Search
 HapiJS
 GatsbyJS
@@ -30,6 +31,7 @@ Security
 Starlette
 SQL
 Technical
+Testing
 Time Series
 Transactions
 University

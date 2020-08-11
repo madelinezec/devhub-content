@@ -1,0 +1,479 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to write unit tests for MongoDB Realm Serverless Functions.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: How to Write Unit Tests for MongoDB Realm Serverless Functions
+   :image: /images/social/twitter/twitter-realm-functions.jpg
+   :image-alt: Graphic with the logo for Realm Functions
+
+   Learn how to write unit tests for MongoDB Realm Serverless Functions
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/how-to-unit-test-realm-serverless-functions
+   :type: article
+   :title: How to Write Unit Tests for MongoDB Realm Serverless Functions
+   :image: /images/social/open-graph/og-realm-functions.jpg
+ 
+   Learn how to write unit tests for MongoDB Realm Serverless Functions
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-08-11
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Testing
+   * DevOps
+
+.. products::
+
+   * Realm
+   * Atlas
+   * Charts
+
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
+
+.. related::
+
+   * `Stitch Hosting: A Drag-and-Drop Delight <https://developer.mongodb.com/how-to/stitch-hosting>`__
+   * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
+   * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==============================================================
+How to Write Unit Tests for MongoDB Realm Serverless Functions
+==============================================================
+
+.. introduction:: 
+
+   I recently `built a web app for my team <https://github.com/mongodb-developer/SocialStats>`__ using `Realm Serverless Functions <https://docs.mongodb.com/realm/functions/>`__.  I wanted to be able to iterate quickly and frequently deploy my changes.  To do so, I needed to implement DevOps infrastructure that included a strong foundation of test automation.
+
+   Unfortunately, I didn't know how to do any of that for apps built using Realm Serverless Functions.  
+
+   In this series, I'll walk you through what I discovered.  I'll share how you can build a suite of automated tests and a `CI/CD <https://en.wikipedia.org/wiki/CI/CD>`__ pipeline for web applications that are built on Realm Serverless Functions. 
+
+   Today, I'll explain how you can write automated unit tests for Realm Serverless Functions.  Below is a summary of what we'll cover:
+   
+   - :ref:`about-the-app`
+   - :ref:`app-architecture`
+
+     - :ref:`serverless-architecture`
+     - :ref:`social-stats-architecture`
+
+   - :ref:`unit-testing`
+
+     - :ref:`modifying`
+     - :ref:`self-contained`
+     - :ref:`mocks`
+     
+   - :ref:`wrapping-up`
+
+   .. blockquote::
+
+      Prefer to learn by video?  Many of the concepts I cover in this series are available in `this video <https://youtu.be/RlouET0cPsc>`__.
+   
+.. content::
+   
+   .. _about-the-app:
+
+   About the Social Stats App
+   --------------------------
+
+   Before I jump into how I tested my app, I want to give you a little background on what the app does and how it's built.
+
+   My teammates and I needed a way to track our Twitter statistics together.  
+
+   Twitter provides a way for their users to download Twitter statistics.  The download is a  comma-separated value (CSV) file that contains a row of statistics for each Tweet.  If you want to try it out, navigate to `https://analytics.twitter.com/user/insert_your_username_here/tweets <https://analytics.twitter.com/user/insert_your_username_here/tweets>`__ and choose to export your data by Tweet.  
+
+   .. figure:: /images/how-to/devops-realm/unit-test/downloadtweetstats.gif
+      :align: center
+      :alt: Animation of downloading Tweet Statistics from Twitter and opening the file
+
+   Once my teammates and I downloaded our Tweet statistics, we needed a way to regularly combine our stats without duplicating data from previous CSV files.  So I decided to build a web app.
+
+   The app is really light, and, to be completely honest, really ugly.  The app currently consists of two pages.
+
+   The first page allows anyone on our team to upload their Twitter statistics CSV file.  
+
+   .. figure:: /images/how-to/devops-realm/unit-test/uploadtweets.gif
+      :align: center
+      :alt: Animation of uploading Twitter statistics CSV file to the SocialStats app
+
+   The second page is a dashboard where we can slice and dice our data.  Anyone on our team can access the dashboard to pull individual stats or grab combined stats.  The dashboard is handy for both my teammates and our management chain.
+
+   .. figure:: /images/how-to/devops-realm/unit-test/dashboard.gif
+      :align: center
+      :alt: Animation of navigating to the SocialStats dashboard and interacting with the charts on it
+
+   .. _app-architecture:
+
+   App Architecture
+   ----------------
+
+   Let's take a look at how I architected this app, so we can understand how I tested it.
+   
+   .. _serverless-architecture:
+
+   Serverless Architecture and Realm
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The app is built using a serverless architecture. The term "serverless" can be a bit misleading.  Serverless doesn't mean the app uses no servers.  Serverless means that developers don't have to manage the servers themselves.  (That's a major win in my book!)  
+
+   When you use a serverless architecture, you write the code for a function.  The cloud provider handles executing the function on its own servers whenever the function needs to be run.  
+
+   Serverless architectures have big advantages over traditional, monolithic applications:
+
+   - **Focus on what matters.**  Developers don't have to worry about servers, containers, or infrastructure.  Instead, we get to focus on the application code, which could lead to reduced development time and/or more innovation.
+   - **Pay only for what you use.**  In serverless architectures, you typically pay for the compute power you use and the data you're transferring.  You don't typically pay for the servers when they are sitting idle.  This can result in big cost savings.
+   - **Scale easily.**  The cloud provider handles scaling your functions.  If your app goes viral, the development and operations teams don't need to stress.
+
+   I've never been a fan of managing infrastructure, so I decided to build the Social Stats app using a serverless architecture.
+
+   MongoDB has a platform called `MongoDB Realm <https://www.mongodb.com/realm>`__ that makes building serverless apps easy.  The Realm platform has three main components:  
+   
+   - **Realm Mobile Database**:  a lightweight database built for mobile devices.
+   - **Realm Sync**: a tool that syncs data between mobile clients and a database server such as `MongoDB Atlas <https://www.mongodb.com/cloud>`__).
+   - **Realm Application Services (formerly known as MongoDB Stitch)**:  a set of MongoDB-hosted features that make building web apps or integrating MongoDB data into your tech stack simple.  
+
+   In this series, I'll be using the features that are part of Realm Application Services.
+
+   Realm Application Services work well with `MongoDB Atlas <https://www.mongodb.com/cloud>`__.  Atlas is MongoDB's fully managed database-as-a-service.  As I mentioned earlier, I do not enjoy managing servers (even database servers), so I decided to use Atlas.  Both Realm and Atlas have generous, free-forever tiers that I was able to use while developing the app.
+
+   .. _social-stats-architecture:
+   
+   Social Stats Architecture
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Let's take a look at how the Social Stats app is architected.  Below is a flow diagram of how the pieces of the app work together.
+
+   .. figure:: /images/how-to/devops-realm/unit-test/diagram.gif
+      :align: center
+      :alt: Animation of the app architecture
+
+   When a user wants to upload their Twitter statistics CSV file, they navigate to ``index.html`` in their browser.  ``index.html`` could be hosted anywhere.  I chose to host ``index.html`` using `Realm Hosting <https://docs.mongodb.com/realm/hosting/>`__.  I like the simplicity of keeping my hosted files and serverless functions in one project that is hosted on one platform.
+
+   When a user chooses to upload their Twitter statistics CSV file, ``index.html`` encodes the CSV file and passes it to the ``processCSV`` Realm Serverless Function.  
+
+   The ``processCSV`` function decodes the CSV file and passes the results to the ``storeCsvInDb`` Realm Serverless Function.
+
+   The ``storeCsvInDb`` function calls the ``removeBreakingCharacters`` Realm Serverless Function that removes any emoji or other breaking characters from the data.  Then the ``storeCsvInDb`` function converts the cleaned data to `JSON (JavaScript Object Notation) <https://www.mongodb.com/json-and-bson>`__ documents and stores those documents in a MongoDB database hosted by Atlas.
+
+   The results of storing the data in the database are passed up the function chain.
+
+   The dashboard that displays the charts with the Twitter statistics is hosted by `MongoDB Charts <https://www.mongodb.com/products/charts>`__.  The great thing about this dashboard is that I didn't have to do any programming to create it.  I granted Charts access to my database, and then I was able to use the Charts UI to create charts with customizable filters.  
+
+   (Sidenote:  Linking to a full Charts dashboard worked fine for my app, but I know that isn't always ideal.  Charts also allows you to `embed individual charts in your app through an iframe or SDK <https://docs.mongodb.com/charts/master/embedding-charts/>`__.)
+   
+   .. _unit-testing:
+
+   Unit Testing Realm Serverless Functions
+   ---------------------------------------
+
+   Now that I've explained what I had to test, let's explore how I tested it.  Today, we'll talk about the tests that form the base of the  `testing pyramid <https://www.testim.io/blog/test-automation-pyramid-a-simple-strategy-for-your-tests/>`__:  `unit tests <https://en.wikipedia.org/wiki/Unit_testing>`__.  
+
+   Unit tests are designed to test the small units of your application.  In this case, the units we want to test are serverless functions.  Unit tests should have a clear input and output.  They should not test how the units interact with each other.
+
+   Unit tests are valuable because they:
+   
+   #. Are typically faster to write than other automated tests.
+   #. Can be executed quickly and independently as they do not rely on other integrations and systems.
+   #. Reveal bugs early in the software development lifecycle when they are cheapest to fix.
+   #. Give developers confidence we aren't introducing regressions as we update and refactor other parts of the code.
+
+   Many JavaScript testing frameworks exist.  I chose to use `Jest <https://jestjs.io/>`__ for building my unit tests as it's a popular choice in the JavaScript community.  The examples below use Jest, but you can apply the principles described in the examples below to any testing framework.
+   
+   .. _modifying:
+
+   Modifying Realm Serverless Functions to be Testable
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Every Realm Serverless Function assigns a function to the global variable ``exports``.  Below is the code for a boilerplate Function that returns ``"Hello, world!"``
+
+   .. code-block:: javascript
+
+      exports = function() {
+         return "Hello, world!";
+      };
+
+   This function format is problematic for unit testing:  calling this function from another JavaScript file is impossible.
+
+   To workaround this problem, we can add the following three lines to the bottom of Function source files:
+
+   .. code-block:: javascript
+
+      if (typeof module === 'object') {
+         module.exports = exports;
+      }
+
+   Let's break down what's happening here.  If the type of the module is an ``object``, the function is being executed outside of a Realm environment, so we need to assign our function (stored in ``exports``) to ``module.exports``.  If the type of the module is not an ``object``, we can safely assume the function is being executed in a Realm environment, so we don't need to do anything special.  
+
+   Once we've added these three lines to our serverless functions, we are ready to start writing unit tests.
+   
+   .. _self-contained:
+
+   Unit Testing Self-Contained Functions
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Unit testing functions is easiest when the functions are self-contained, meaning that the functions don't call any other functions or utilize any services like a database.  So let's start there.
+
+   Let's begin by testing the ``removeBreakingCharacters`` function.  This function removes emoji and other breaking characters from the Twitter statistics.  Below is the source code for the ``removeBreakingCharacters`` function.
+
+   .. code-block:: javascript
+
+      exports = function (csvTweets) {
+         csvTweets = csvTweets.replace(/[^a-zA-Z0-9\, "\/\\\n\`~!@#$%^&*()\-_—+=[\]{}|:;\'"<>,.?/']/g, '');
+         return csvTweets;
+      };
+
+      if (typeof module === 'object') {
+         module.exports = exports;
+      }
+
+   To test this function, I created a new test file named ``removeBreakingCharacters.test.js``.  I began by importing the ``removeBreakingCharacters`` function.
+
+   .. code-block:: javascript
+
+      const removeBreakingCharacters = require('../../../functions/removeBreakingCharacters/source.js');
+
+   Next I imported several constants from `constants.js <https://github.com/mongodb-developer/SocialStats/blob/master/tests/constants.js>`__.  Each constant represents a row of data in a Twitter statistics CSV file.
+
+   .. code-block:: javascript
+
+      const { header, validTweetCsv, emojiTweetCsv, emojiTweetCsvClean, specialCharactersTweetCsv } = require('../../constants.js');
+   
+   Then I was ready to begin testing.  I began with the simplest case:  a single valid Tweet.
+
+   .. code-block:: javascript
+
+      test('SingleValidTweet', () => {
+         const csv = header + "\n" + validTweetCsv;
+         expect(removeBreakingCharacters(csv)).toBe(csv);
+      })
+
+   The ``SingleValidTweet`` test creates a constant named ``csv``.  ``csv`` is a combination of a valid header, a new line character, and a valid Tweet.  Since the Tweet is valid, ``removeBreakingCharacters`` shouldn't remove any characters.  The test checks that when ``csv`` is passed to the ``removeBreakingCharacters`` function, the function returns a String equal to ``csv``.
+
+   Emojis were a big problem that were breaking my app, so I decided to create a test just for them.
+
+   .. code-block:: javascript
+
+      test('EmojiTweet', () => {
+         const csvBefore = header + "\n" + emojiTweetCsv;
+         const csvAfter = header + "\n" + emojiTweetCsvClean;
+         expect(removeBreakingCharacters(csvBefore)).toBe(csvAfter);
+      })
+
+   The ``EmojiTweet`` test creates two constants:
+   
+   - ``csvBefore`` stores a valid header, a new line character, and stats about a Tweet that contains three emoji.  
+   - ``csvAfter`` stores the same valid header, a new line character, and stats about the same Tweet except the three emoji have been removed.  
+
+   The test then checks that when I pass the ``csvBefore`` constant to the ``removeBreakingCharacters`` function, the function returns a String equal to ``csvAfter``.
+
+   I created other unit tests for the ``removeBreakingCharacters`` function.  You can find the complete set of unit tests in `removeBreakingCharacters.test.js <https://github.com/mongodb-developer/SocialStats/blob/master/tests/unit/functions/removeBreakingCharacters.test.js>`__.
+
+   .. _mocks:
+
+   Unit Testing Functions Using Mocks
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Unfortunately, unit testing most serverless functions will not be as straightforward as the example above.  Serverless functions tend to rely on other functions and services.
+
+   The goal of unit testing is to test individual units—not how the units interact with each other.  
+
+   When a function relies on another function or service, we can simulate the function or service with a `mock object <https://en.wikipedia.org/wiki/Mock_object>`__.  Mock objects allow developers to "mock" what a function or service is doing.  The mocks allows us to test individual units.
+
+   Let's take a look at how I tested the ``storeCsvInDb`` function.  Below is the source code for the function.
+
+   .. code-block:: javascript
+
+      exports = async function (csvTweets) {
+         const CSV = require("comma-separated-values");
+
+         csvTweets = context.functions.execute("removeBreakingCharacters", csvTweets);
+
+         // Convert the CSV Tweets to JSON Tweets
+         jsonTweets = new CSV(csvTweets, { header: true }).parse();
+
+         // Prepare the results object that we will return
+         var results = {
+            newTweets: [],
+            updatedTweets: [],
+            tweetsNotInsertedOrUpdated: []
+         }
+
+         // Clean each Tweet and store it in the DB
+         jsonTweets.forEach(async (tweet) => {
+
+            // The Tweet ID from the CSV is being rounded, so we'll manually pull it out of the Tweet link instead
+            delete tweet["Tweet id"];
+
+            // Pull the author and Tweet id out of the Tweet permalink
+            const link = tweet["Tweet permalink"];
+            const pattern = /https?:\/\/twitter.com\/([^\/]+)\/status\/(.*)/i;
+            const regexResults = pattern.exec(link);
+            tweet.author = regexResults[1];
+            tweet._id = regexResults[2]
+
+            // Generate a date from the time string
+            tweet.date = new Date(tweet.time.substring(0, 10));
+
+            // Upsert the Tweet, so we can update stats for existing Tweets
+            const result = await context.services.get("mongodb-atlas").db("TwitterStats").collection("stats").updateOne(
+               { _id: tweet._id },
+               { $set: tweet },
+               { upsert: true });
+
+            if (result.upsertedId) {
+               results.newTweets.push(tweet._id);
+            } else if (result.modifiedCount > 0) {
+               results.updatedTweets.push(tweet._id);
+            } else {
+               results.tweetsNotInsertedOrUpdated.push(tweet._id);
+            }
+         });
+         return results;
+      };
+
+      if (typeof module === 'object') {
+         module.exports = exports;
+      }
+   
+   At a high level, the ``storeCsvInDb`` function is doing the following:
+   
+   - Calling the ``removeBreakingCharacters`` function to remove breaking characters.
+   - Converting the Tweets in the CSV to JSON documents.
+   - Looping through the JSON documents to clean and store each one in the database.
+   - Returning an object that contains a list of Tweets that were inserted, updated, or unable to be inserted or updated.
+
+   To unit test this function, I created a new file named ``storeCsvInDB.test.js``.  The top of the file is very similar to the top of ``removeBreakingCharacters.test.js``:  I imported the function I wanted to test and imported constants.
+
+   .. code-block:: javascript
+
+      const storeCsvInDb = require('../../../functions/storeCsvInDb/source.js');
+   
+      const { header, validTweetCsv, validTweetJson, validTweetId, validTweet2Csv, validTweet2Id, validTweet2Json, validTweetKenId, validTweetKenCsv, validTweetKenJson } = require('../../constants.js');
+   
+   Then I began creating mocks.  The function interacts with the database, so I knew I needed to create mocks to support those interactions.  The function also calls the ``removeBreakingCharacters`` function, so I created a mock for that as well.  
+
+   I added the following code to ``storeCsvInDB.test.js``.
+
+   .. code-block:: javascript
+
+      let updateOne;
+      
+      beforeEach(() => {
+         // Mock functions to support context.services.get().db().collection().updateOne()
+         updateOne = jest.fn(() => {
+            return result = {
+               upsertedId: validTweetId
+            }
+         });
+      
+         const collection = jest.fn().mockReturnValue({ updateOne });
+         const db = jest.fn().mockReturnValue({ collection });
+         const get = jest.fn().mockReturnValue({ db });
+      
+         collection.updateOne = updateOne;
+         db.collection = collection;
+         get.db = db;
+      
+         // Mock the removeBreakingCharacters function to return whatever is passed to it
+         // Setup global.context.services
+         global.context = {
+            functions: {
+               execute: jest.fn((functionName, csvTweets) => { return csvTweets; })
+            },
+            services: {
+               get
+            }
+         }
+      });
+   
+
+   Jest runs the `beforeEach <https://jestjs.io/docs/en/api#beforeeachfn-timeout>`__ function before each test in the given file.  I chose to put the instantiation of the mocks inside of ``beforeEach`` so that I could add checks for how many times a particular mock is called in a given test case.  Putting mocks inside of ``beforeEach`` can also be handy when we want to change what the mock returns the first time it is called versus the second.
+
+   Once I had created my mocks, I was ready to begin testing.  I created a test for the simplest case:  a single tweet.
+
+   .. code-block:: javascript
+
+      test('Single tweet', async () => {
+      
+         const csvTweets = header + "\n" + validTweetCsv;
+      
+         expect(await storeCsvInDb(csvTweets)).toStrictEqual({
+            newTweets: [validTweetId],
+            tweetsNotInsertedOrUpdated: [],
+            updatedTweets: []
+         });
+      
+         expect(context.functions.execute).toHaveBeenCalledWith("removeBreakingCharacters", csvTweets);
+         expect(context.services.get.db.collection.updateOne).toHaveBeenCalledWith(
+            { _id: validTweetId },
+            {
+               $set: validTweetJson
+            },
+            { upsert: true });
+      })
+
+   Let's walk through what this test is doing.
+
+   Just as we saw in earlier tests in this post, I began by creating a constant to represent the CSV Tweets.  ``csvTweets`` consists of a valid header, a newline character, and a valid Tweet.
+
+   The test then calls the ``storeCsvInDb`` function, passing the ``csvTweets`` constant.  The test asserts that the function returns an object that shows that the Tweet we passed was successfully stored in the database.
+
+   Next, the test checks that the mock of the ``removeBreakingCharacters`` function was called with our ``csvTweets`` constant.
+
+   Finally, the test checks that the database's ``updateOne`` function was called with the arguments we expect.
+
+   After I finished this unit test, I wrote an additional test that checks the ``storeCsvInDb`` function correctly handles multiple Tweets.  
+
+   You can find the complete set of unit tests in `storeCsvInDB.test.js <https://github.com/mongodb-developer/SocialStats/blob/master/tests/unit/functions/storeCsvInDB.test.js>`__.
+
+.. summary::
+
+   .. _wrapping-up:
+
+   Wrapping Up
+   -----------
+
+   Unit tests can be incredibly valuable.  They are one of the best ways to find bugs early in the software development lifecycle.  They also lay a strong foundation for CI/CD.  
+
+   Keep in mind the following two tips as you write unit tests for Realm Serverless Functions:
+   
+   - Modify the module exports in the source file of each Function, so you will be able to call the Functions from your test files.
+   - Use mocks to simulate interactions with other functions, databases, and other services.
+
+   The Social Stats application source code and associated test files are available in a GitHub repo:  `https://github.com/mongodb-developer/SocialStats <https://github.com/mongodb-developer/SocialStats>`__.  The repo's readme has detailed instructions on how to execute the test files.
+
+   Be on the lookout for the next post in this series where I'll walk you through how to write integration tests for Realm serverless apps.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `GitHub Repository: Social Stats <https://github.com/mongodb-developer/SocialStats>`__
+   - `Video:  DevOps + MongoDB Realm Serverless Functions = 😍 <https://www.youtube.com/watch?v=RlouET0cPsc&feature=youtu.be>`__
+   - `Documentation:  MongoDB Realm <https://docs.mongodb.com/realm/>`__
+   - `MongoDB Atlas <https://www.mongodb.com/cloud>`__
+   - `MongoDB Charts <https://www.mongodb.com/products/charts>`__
