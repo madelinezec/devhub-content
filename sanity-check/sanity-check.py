@@ -327,7 +327,8 @@ def check_snooty(blog_posts):
 
 
 def check_blogs_exist(existing_blog_posts, line, output):
-    split = line.split('=')
+    # Split from the right side on the equals sign. This assumes the blog urls have no equal signs
+    split = line.rsplit('=', 1)
     snooty_part = split[0]
     blog_posts_in_line = eval(split[1])
     imaginary_blog_posts = set(blog_posts_in_line) - set(existing_blog_posts)
