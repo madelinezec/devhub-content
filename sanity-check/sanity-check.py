@@ -281,11 +281,16 @@ def scan_includes(file):
         return includes
 
 
-def check_thing_not_used(things, all_things, things_used):
+def check_thing_not_used(things, all_things, things_used, things_to_ignore):
     output = ['\nList of ' + things + ' not used:\n']
     for thing in all_things:
-        if thing not in things_used:
-            output.append('=> ' + thing)
+        if not thing.endswith(".DS_Store"):
+            if thing not in things_used:
+                if things_to_ignore is not None:
+                    if thing not in things_to_ignore:
+                        output.append('=> ' + thing)
+                else:
+                    output.append('=> ' + thing)
     print_if_necessary(output)
 
 
@@ -343,6 +348,8 @@ if __name__ == '__main__':
         valid_products = f.read().splitlines()
     with open('languages.txt', encoding='utf-8') as f:
         valid_languages = f.read().splitlines()
+    with open('ignored-images.txt', encoding='utf-8') as f:
+        ignored_images = f.read().splitlines()
 
     blog_posts = []
     with os.scandir('../source/article') as f:
@@ -415,8 +422,10 @@ if __name__ == '__main__':
     for (dirpath, dirnames, filenames) in os.walk('../source/includes'):
         all_includes += [os.path.join(dirpath, file).replace('../source', '').replace('\\', '/') for file in filenames if not file.endswith('.DS_STORE')]
 
-    check_thing_not_used('images', all_images, images_used)
+    check_thing_not_used('images', all_images, images_used, ignored_images)
     check_thing_not_found('images', all_images, images_used)
 
-    check_thing_not_used('includes', all_includes, includes_used)
+    check_thing_not_used('includes', all_includes, includes_used, None)
     check_thing_not_found('includes', all_includes, includes_used)
+
+    print("Sanity check is complete")
