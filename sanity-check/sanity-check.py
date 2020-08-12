@@ -1,8 +1,12 @@
 import os
 import re
 
+# Set the exit code to 0 by default to indicate a clean exit
+exit_code = 0
+
 
 def read_list_in_directive(file, directive):
+    output = [['\nERROR: invalid element in directive:\n']]
     with open(file.path, encoding='utf-8') as f:
         reading_tags = False
         empty_lines = 1
@@ -17,9 +21,10 @@ def read_list_in_directive(file, directive):
                 try:
                     array.append(line.split('*')[1].strip())
                 except:
-                    print('ERROR: invalid element in directive \'' + directive + '\' in file: ' + f.name + ' => \'' + line_stripped + '\'')
+                    output.append(directive + '\' in file: ' + f.name + ' => \'' + line_stripped + '\'')
             if reading_tags and empty_lines < 0:
                 return {'file': file, 'array': array}
+        handle_errors(output, False)
         return {'file': file, 'array': array}
 
 
@@ -116,7 +121,7 @@ def check_for_invalid_elements(files, valid_list, element):
         for elem in ft['array']:
             if elem not in valid_list:
                 output.append(['=> Invalid ' + element + ': ' + elem, ft['file'].path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_twitter(files):
@@ -144,7 +149,7 @@ def check_twitter(files):
                 title = re.compile(':title:(.*)').search(line).group(1)
                 if '' != title and len(title) > 70:
                     output.append(['=> Twitter title is too long (70 max) - need to remove ' + str(len(title) - 70) + ' characters', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_og(files):
@@ -170,7 +175,7 @@ def check_og(files):
                 title = re.compile(':title:(.*)').search(line).group(1)
                 if '' != title and len(title) > 95:
                     output.append(['=> Twitter title is too long (95 max) - need to remove ' + str(len(title) - 95) + ' characters', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_meta_description(files):
@@ -183,7 +188,7 @@ def check_meta_description(files):
             output.append(['=> Description is empty.', file_path])
         if length_desc > 155:
             output.append(['=> meta-description is too long (155 characters max) - need to remove ' + str(length_desc - 155) + ' characters', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_links(files):
@@ -192,7 +197,7 @@ def check_links(files):
         file_path = ft['file'].path.replace('../source', '')
         if ft['link_found']:
             output.append(['=> This file needs some extra underscores.', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_type(files):
@@ -202,7 +207,7 @@ def check_type(files):
         type = ft['type']
         if type == '' or (type != ft['folder'] and type not in ['video', 'live']):
             output.append(['=> Type directive is wrong in this file.', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_level(files):
@@ -212,7 +217,7 @@ def check_level(files):
         level = ft['level']
         if level == '' or level not in ['beginner', 'intermediate', 'advanced']:
             output.append(['=> Level directive is wrong in this file.', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_atf_image(files):
@@ -222,7 +227,7 @@ def check_atf_image(files):
         found = ft['atf_image_found']
         if not found:
             output.append(['=> atf-image directive is missing in this file.', file_path])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
 def check_weird_characters(files):
@@ -235,30 +240,36 @@ def check_weird_characters(files):
             output.append(['=> this file contains weird characters like ' + chars, file_path])
             for line in lines:
                 output.append(['  - ' + str.strip(line[:70])])
-    print_if_necessary_style_columns(output)
+    handle_errors(output, True)
 
 
-def print_if_necessary(output):
-    if len(output) > 1:
+# If no output is passed, the method assumes there are no errors
+def handle_errors(output, should_print_column_style_output):
+    # if the length of the output is less than or equal to 1, we have no errors to handle
+    if len(output) <= 1:
+        return
+
+    # set the exit code to 1 to indicate we have an error
+    global exit_code
+    exit_code = 1
+
+    # print the output
+    if (should_print_column_style_output):
+        print(output.pop(0)[0])
+        width_col_1 = 0
+        width_col_2 = 0
+        for i in range(len(output)):
+            width_col_1 = max(width_col_1, len(output[i][0]))
+            if len(output[i]) > 1:
+                width_col_2 = max(width_col_2, len(output[i][1]))
+        for i in range(len(output)):
+            if len(output[i]) > 1:
+                print(output[i][0].ljust(width_col_1), ' => ', output[i][1].ljust(width_col_2))
+            else:
+                print(output[i][0].ljust(width_col_1))
+    else:
         for line in output:
             print(line)
-
-
-def print_if_necessary_style_columns(output):
-    if len(output) == 1:
-        return
-    print(output.pop(0)[0])
-    width_col_1 = 0
-    width_col_2 = 0
-    for i in range(len(output)):
-        width_col_1 = max(width_col_1, len(output[i][0]))
-        if len(output[i]) > 1:
-            width_col_2 = max(width_col_2, len(output[i][1]))
-    for i in range(len(output)):
-        if len(output[i]) > 1:
-            print(output[i][0].ljust(width_col_1), ' => ', output[i][1].ljust(width_col_2))
-        else:
-            print(output[i][0].ljust(width_col_1))
 
 
 def scan_images(file):
@@ -291,15 +302,14 @@ def check_thing_not_used(things, all_things, things_used, things_to_ignore):
                         output.append('=> ' + thing)
                 else:
                     output.append('=> ' + thing)
-    print_if_necessary(output)
-
+    handle_errors(output, False)
 
 def check_thing_not_found(things, all_images, images_used):
     output = ['\nList of ' + things + ' not found:\n']
     for img in images_used:
         if img not in all_images:
             output.append('=> ' + img)
-    print_if_necessary(output)
+    handle_errors(output, False)
 
 
 def check_snooty(blog_posts):
@@ -328,7 +338,7 @@ def check_snooty(blog_posts):
             output.append(['=> ERROR: Featured articles for the "learn" page are missing in "snooty.toml".'])
         for line in page_groups:
             check_blogs_exist(blog_posts, line, output)
-        print_if_necessary_style_columns(output)
+        handle_errors(output, True)
 
 
 def check_blogs_exist(existing_blog_posts, line, output):
@@ -429,3 +439,5 @@ if __name__ == '__main__':
     check_thing_not_found('includes', all_includes, includes_used)
 
     print("Sanity check is complete")
+
+    exit(exit_code)
