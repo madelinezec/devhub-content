@@ -112,8 +112,9 @@ Active-Active Application Architectures with MongoDB
        application requests.
 
     .. figure:: /images/aa0.png
+        :alt: Active-Active Application Architecture
 
-      Figure 1 - Active-Active Application Architecture
+        Figure 1 - Active-Active Application Architecture
 
     An alternative to an active-active architecture is an active-disaster
     recovery (also known as active-passive) architecture consisting of a
@@ -134,8 +135,9 @@ Active-Active Application Architectures with MongoDB
     architecture implies that application downtime is minimal (near zero).
     
     .. figure:: /images/aa1.png
+        :alt: Active-DR architecture
 
-      Figure 2 - Active-DR architecture
+        Figure 2 - Active-DR architecture
 
     A common misconception is that an active-active application architecture
     requires a multi-master database. This is not only false, but using a
@@ -367,8 +369,9 @@ Active-Active Application Architectures with MongoDB
     book. 
 
     .. figure:: /images/aa2.png
+        :alt: Example inconsistency in multi-master database
 
-      Figure 3 - Example inconsistency in multi-master database
+        Figure 3 - Example inconsistency in multi-master database
 
     The set of uses cases for multi-master databases is limited to the
     capture of non-mission-critical data, like log data, where the
@@ -400,8 +403,9 @@ Active-Active Application Architectures with MongoDB
     writes can occur locally in each datacenter (Figure 4). 
     
     .. figure:: /images/aa3.png
+        :alt: Partitioned database
 
-      Figure 4 - Partitioned database
+        Figure 4 - Partitioned database
 
     A sharded database can be used to implement an active-active application
     architecture by deploying at least as many shards as data centers and
@@ -425,8 +429,9 @@ Active-Active Application Architectures with MongoDB
     shard so that writes can be made locally as well. 
 
     .. figure:: /images/aa4.png
+        :alt: Active Active architecture with sharded database
 
-      Figure 5 - Active Active architecture with sharded database
+        Figure 5 - Active Active architecture with sharded database
 
     The sharded database meets most of the consistency and performance
     requirements for a majority of use cases. Performance is great because
@@ -455,8 +460,9 @@ Active-Active Application Architectures with MongoDB
     responsibility for updating the carts owned by the local data center.
     
     .. figure:: /images/aa5.png
+        :alt: Shard key partitioning for shopping cart example
 
-      Figure 6 - Shard key partitioning for shopping cart example
+        Figure 6 - Shard key partitioning for shopping cart example
 
     This design assumes that there is some external process routing traffic
     to the correct data center. When a new cart is created, the user's
@@ -487,6 +493,9 @@ Active-Active Application Architectures with MongoDB
     database is usually the best option. 
 
     .. figure:: /images/aa6.png
+        :alt: Database Architecture Comparison
+
+        Figure 7: Database Architecture Comparison
 
     MongoDB Active-Active Applications
     ----------------------------------

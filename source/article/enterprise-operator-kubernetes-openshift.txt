@@ -152,9 +152,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    basic components that make up Ops Manager as they will be used by the
    Kubernetes Operator to create your deployments.
 
-   .. image:: /images/kubernetes0.png
+   .. figure:: /images/kubernetes0.png
+      :alt: MongoDB Ops Manager deployment screen
 
-   Figure 1: MongoDB Ops Manager deployment screen
+      Figure 1: MongoDB Ops Manager deployment screen
 
    A simplified Ops Manager architecture is shown in Figure 2 below. Note
    that there are other agents that Ops Manager uses to support features
@@ -163,9 +164,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    online documentation found at the following URL:
    https://docs.opsmanager.mongodb.com/current/
 
-   .. image:: /images/kubernetes1.png
+   .. figure:: /images/kubernetes1.png
+      :alt: MongoDB Ops Manager architecture
 
-   Figure 2: Simplified Ops Manager deployment
+      Figure 2: Simplified Ops Manager deployment
 
    The MongoDB HTTP Service provides a web application for administration.
    These pages are simply a front end to a robust set of Ops Manager REST
@@ -303,9 +305,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    select the "Ops Manager Config" menu item. You will be presented with a
    screen similar to the figure below:
 
-   .. image:: /images/kubernetes2.png
+   .. figure:: /images/kubernetes2.png
+      :alt: MongoDB Ops Manager config page
 
-   Figure 3: Ops Manager Config page
+      Figure 3: Ops Manager Config page
 
    Copy down the value displayed in the URL To Access Ops Manager box.
    Note: If you don't have access to the Admin drop down you will have to
@@ -327,9 +330,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    Organization" button and provide a name for your Organization. Once you
    have an Organization you can create a Project.
 
-   .. image:: /images/kubernetes3.png
+   .. figure:: /images/kubernetes3.png
+      :alt: MongoDB Ops Manager Organizations page
 
-   Figure 4: Ops Manager Organizations page
+      Figure 4: Ops Manager Organizations page
 
    To create a new Project, click on your Organization name. This will
    bring you to the Projects page and from here click on the "+ New
@@ -342,9 +346,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    administrator you can obtain the Project Id by clicking on the Settings
    menu option as shown in the Figure below.
 
-   .. image:: /images/kubernetes4.png
+   .. figure:: /images/kubernetes4.png
+      :alt: Project Settings page
 
-   Figure 5: Project Settings page
+      Figure 5: Project Settings page
 
    Copy the Project ID. 
    
@@ -358,9 +363,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    has at least Project Owner access. If you'd like to create another
    username click on the "Add Users & Team" button as shown in Figure 6.
 
-   .. image:: /images/kubernetes5.png
+   .. figure:: /images/kubernetes5.png
+      :alt: Users & Teams page
 
-   Figure 6: Users & Teams page
+      Figure 6: Users & Teams page
 
    Copy down the email of the user you would like the Kubernetes Operator
    to use when connecting to Ops Manager. 
@@ -374,17 +380,19 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    selecting, "Account" from the drop down menu. This will open the Account
    Settings page as shown in Figure 7.
 
-   .. image:: /images/kubernetes6.png
+   .. figure:: /images/kubernetes6.png
+      :alt: Public API Access page
 
-   Figure 7: Public API Access page
+      Figure 7: Public API Access page
 
    Click on the "Public API Access" tab. To create a new API key click on
    the "Generate" button and provide a description. Upon completion you
    will receive an API key as shown in Figure 8.
 
-   .. image:: /images/kubernetes7.png
+   .. figure:: /images/kubernetes7.png
+      :alt: Confirm API Key dialog
 
-   Figure 8: Confirm API Key dialog
+      Figure 8: Confirm API Key dialog
 
    Be sure to copy the API Key as it will be used later as a value in a
    configuration file. **It is important to copy this value while the
@@ -490,9 +498,10 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    After a few minutes your new cluster will show up in Ops Manager as
    shown in Figure 11.
 
-   .. image:: /images/kubernetes8.png
+   .. figure:: /images/kubernetes8.png
+      :alt: Servers tab of the Deployment page in Ops Manager
 
-   Figure 11: Servers tab of the Deployment page in Ops Manager
+      Figure 11: Servers tab of the Deployment page in Ops Manager
 
    Notice that Ops Manager installed not only the Automation Agents on
    these three containers running MongoDB, it also installed Monitoring

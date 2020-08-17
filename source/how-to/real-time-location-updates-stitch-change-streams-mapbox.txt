@@ -82,6 +82,7 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
     Take the following animated image for example:
 
     .. image:: /images/how-to/mapbox-mongodb-change-streams.gif
+        :alt: mapbox automatically updated by a change stream
 
     Rather than building an Internet of Things (IoT) device to track and
     submit GPS data, we're going to simulate the experience by directly

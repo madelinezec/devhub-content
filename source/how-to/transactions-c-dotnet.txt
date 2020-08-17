@@ -75,6 +75,7 @@ Working with MongoDB Transactions with C# and the .NET Framework
     NuGet Package Manager, search for "MongoDB".
 
     .. figure:: /images/driverdownload.png
+       :alt: MongoDB .NET driver
        :width: 300px
 
     Make sure you choose the latest version (>=2.7) of the driver, and press
@@ -227,6 +228,7 @@ Working with MongoDB Transactions with C# and the .NET Framework
     Successful execution yields the following:
 
     .. figure:: /images/ExecutionResults-5aao2jdet7.png
+       :alt: Results of the code execution
        :width: 400px
 
     Key points:

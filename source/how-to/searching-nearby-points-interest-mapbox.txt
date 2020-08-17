@@ -76,6 +76,7 @@ Searching for Nearby Points of Interest with MongoDB and Mapbox
     following animated image for example:
 
     .. image:: /images/how-to/mapbox-mongodb-points-of-interest.gif
+        :alt: Screen recording of nearby points of interest appearing as a user clicks various points on a map
 
     We're going to pre-load our MongoDB database with a few points of
     interest that are formatted using the GeoJSON specification. When

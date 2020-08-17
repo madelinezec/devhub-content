@@ -187,6 +187,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     actually interacting with our MongoDB Stitch function.
 
     .. image:: /images/how-to/mailgun-email-form.png
+        :alt: form with name, email and message.
 
     With HTML in place, let's take a look at the JavaScript that will be
     used to interact with our future Stitch function.
@@ -244,6 +245,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     connect the application to an Atlas cluster.
 
     .. image:: /images/how-to/stitch-third-party-services.png
+        :alt: MongoDB Stitch 3rd party services integration webpage
 
     Within the Stitch dashboard for your application, choose to create a new
     service from the **3rd Party Services** tab. Because we wish to listen
@@ -251,6 +253,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     to contain any webhooks that we wish to use.
 
     .. image:: /images/how-to/stitch-http-webhook-service.png
+        :alt: Add a new HTTP 3rd party service in MongoDB Stitch
 
     When choosing to create a webhook, we need to give it a name, define the
     authentication necessary, and the type of HTTP requests it should listen
@@ -313,12 +316,14 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     followed by the **Secrets** tab.
 
     .. image:: /images/how-to/stitch-secrets.png
+        :alt: MongoDB Stitch values and secrets UI
 
     Enter the name of your secret followed by the value that is actually to
     be kept a secret. Because we plan to use this value within our function,
     we also need to link it to the **Values** tab.
 
     .. image:: /images/how-to/stitch-values.png
+        :alt: adding the mailgun private key as a secret in MongoDB Stitch
 
     You'll want to give the **Value** a name, which we'll use directly
     within the function. Make sure it is a **Secret** type and is linked to
@@ -371,6 +376,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
     Within the MongoDB Stitch dashboard, choose the **Hosting** tab.
 
     .. image:: /images/how-to/stitch-hosting.png
+        :alt: MongoDB Stitch live hosting feature UI
 
     After enabling hosting, upload the HTML file and wait for the website to
     be created. While this was not a necessary step to test our webhook

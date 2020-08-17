@@ -139,11 +139,13 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    menu.
 
    .. image:: /images/how-to/atlas-dashboard-project-access-management.jpg
+      :alt: MongoDB Atlas project access management UI
 
    Towards the top right of the screen, click the **Manage** button and
    then select **Create API Key**.
 
    .. image:: /images/how-to/project-access-management-api-keys.jpg
+      :alt: MongoDB Atlas API key UI
 
    Walk through each of the steps presented, taking note of the public key
    as well as the private key. For this tutorial to work, the **Project
@@ -172,6 +174,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    done by starting within the MongoDB Atlas dashboard.
 
    .. image:: /images/how-to/new-stitch-application.jpg
+      :alt: MongoDB Atlas access MongoDB Stitch applications
 
    Choose to create a new application and give it a name. For this
    particular example, the default settings can be used for the rest of the
@@ -180,6 +183,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    After the project has been created, two things need to be done.
 
    .. image:: /images/how-to/stitch-hosting-app-id.jpg
+      :alt: MongoDB Stitch application ID and hosting feature
 
    First, take note of the application id as it will be used alongside the
    CLI. Next, click **Hosting** from the navigation menu and enable it.
@@ -454,6 +458,7 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    navigate to the **Environment Variables** section.
 
    .. image:: /images/how-to/travis-ci-env-variables.jpg
+      :alt: Travis settings page
 
    The keys and values should look similar to what we've done a few times
    already. You'll want to take your public and secret API keys and add

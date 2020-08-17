@@ -64,6 +64,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     noticed a strange new syntax on 3.6 connection strings.
 
     .. figure:: /images/srv-address.png
+        :alt: MongoDB SRV connection string
 
     MongoDB Seed Lists
     ------------------
@@ -86,6 +87,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     example of this URL on a 3.4 cluster connection string:
 
     .. figure:: /images/connection-string.png
+        :alt: MongoDB Atlas connection string
 
     Note that without the SRV record configuration we must list several
     nodes (in the case of Atlas we always include all the cluster members,
@@ -93,6 +95,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     ``replicaSet`` options. 
     
     .. figure:: /images/connection-string.png
+        :alt: MongoDB Atlas connection string
     
     With the 3.4 or earlier driver, we have
     to specify all the options on the command line using the `MongoDB URI
@@ -135,6 +138,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     node specified in the 3.6 connection string as a parameter.
 
     .. figure:: /images/connection-string3.png
+        :alt: DNS server hostname
 
     .. code-block:: sh
 
@@ -208,6 +212,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     the above nodes in AWS Route 53.
 
     .. figure:: /images/dnsnames.png
+        :alt: DNS names
 
     We can start the mongod processes by running the following command on
     each node. 
@@ -230,10 +235,12 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     The settings in AWS Route 53 are: 
 
     .. figure:: /images/awsroutes.png
+        :alt: AWS routes
 
     Which leads to the following entry in the zone file for Route 53.
 
     .. figure:: /images/awsroutes2.png
+        :alt: AWS routes
 
     Now we can add the TXT record. By convention, we use the same name as
     the SRV record (``rs.joedrumgoole.com``) so that MongoDB knows where to
@@ -242,10 +249,12 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     We can do this on AWS Route 53 as follows:
 
     .. figure:: /images/awsroutes3.png
+        :alt: Add a TXT record
 
     This will create the following TXT record.
 
     .. figure:: /images/awsroutes4.png
+        :alt: TXT record created
 
     Now we can access this service as :
 
@@ -259,6 +268,7 @@ MongoDB 3.6: Here to SRV you with easier replica set connections
     The whole process is outlined below:
 
     .. figure:: /images/srv-process.png
+        :alt: summary of all the operations above
 
     Once your records are set up, you can easily change port numbers without
     impacting clients and also add and remove cluster members. 

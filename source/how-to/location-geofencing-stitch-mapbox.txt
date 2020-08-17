@@ -89,6 +89,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     following animated image:
 
     .. image:: /images/how-to/mapbox-mongodb-geofence.gif
+        :alt: Animation of geofencing
 
     We're going to implement functionality where a map is displayed and
     polygon shapes are rendered based on data from within MongoDB. When we
@@ -204,6 +205,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     has your geofencing data.
 
     .. image:: /images/how-to/stitch-applications-geofencing.png
+        :alt: applications in MongoDB Stitch
 
     Within the Stitch dashboard, choose the **Rules** tab and create a new
     set of permissions for the **geofences** collection. For this particular
@@ -216,6 +218,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     create geofences that have stricter users and rules design.
 
     .. image:: /images/how-to/geofence-stitch-anonymous-auth.png
+        :alt: activating anonymous authentication in MongoDB Stitch
 
     Before moving onto actually creating an application, make note of your
     **App ID** within Stitch, as it will be necessary for connecting.
