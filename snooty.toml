@@ -7,8 +7,8 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/article/johns-hopkins-university-covid-19-rest-api", "/article/schema-design-anti-pattern-summary", "/how-to/use-function-accumulator-operators", "/how-to/Realm-AWS-Kinesis-Firehose-Destination"]
-"learn" = ["/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb", "/how-to/non-root-user-mongod-process", "/how-to/atlas-data-lake-online-archive"]
+"home" = ["/how-to/use-union-all-aggregation-pipeline-stage", "/how-to/unit-test-realm-serverless-functions", "/how-to/mongoimport-guide", "/how-to/Realm-AWS-Kinesis-Firehose-Destination"]
+"learn" = ["/how-to/creating-multiplayer-drawing-game-phaser", "/how-to/nextjs-building-modern-applications", "/article/building-service-based-atlas-management"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
