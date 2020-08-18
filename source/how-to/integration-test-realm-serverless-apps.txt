@@ -1,0 +1,224 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to write integration tests for MongoDB Realm Serverless Apps.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @Lauren_Schaefer
+   :title: How to Write Integration Tests for MongoDB Realm Serverless Apps
+   :image: /images/social/twitter/twitter-realm-functions.jpg
+   :image-alt: Graphic with the logo for Realm Functions
+
+   Learn how to write integration tests for MongoDB Realm Serverless Apps
+
+.. og::
+   :url: http://developer.mongodb.com/how-to/how-to-integration-test-realm-serverless-apps
+   :type: article
+   :title: How to Write Integration Tests for MongoDB Realm Serverless Apps
+   :image: /images/social/open-graph/og-realm-functions.jpg
+ 
+   Learn how to write integration tests for MongoDB Realm Serverless Apps
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-08-18
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Testing
+   * DevOps
+
+.. products::
+
+   * Realm
+   * Atlas
+   * Charts
+
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
+
+.. related::
+
+   * :doc:`/how-to/unit-test-realm-serverless-functions`
+   * `Stitch Hosting: A Drag-and-Drop Delight <https://developer.mongodb.com/how-to/stitch-hosting>`__
+   * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
+   * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+================================================================
+How to Write Integration Tests for MongoDB Realm Serverless Apps
+================================================================
+ 
+.. introduction:: 
+
+   Integration tests are vital for apps built with a serverless architecture.  Unfortunately, figuring out how to build integration tests for serverless apps can be challenging.  
+
+   Today, I'll walk you through how to write integration tests for apps built with MongoDB Realm Serverless Functions.
+
+   This is the second post in the *DevOps + MongoDB Realm Serverless Functions = 😍* blog series.  Throughout this series, I'm explaining how I built automated tests and a CI/CD pipeline for the `Social Stats app <https://github.com/mongodb-developer/SocialStats>`__.   :doc:`In the first post </how-to/unit-test-realm-serverless-functions>`, I explained :ref:`what the Social Stats app does <about-the-app>` and :ref:`how I architected it <social-stats-architecture>`.  Then I walked through :ref:`how I wrote unit tests for the app's serverless functions <unit-testing>`.  If you haven't read the first post, I recommend starting there to understand what is being tested and then returning to this post.
+
+   .. blockquote::
+
+      Prefer to learn by video?  Many of the concepts I cover in this series are available in `this video <https://youtu.be/RlouET0cPsc>`__.
+
+.. content::
+
+   Integration Testing MongoDB Realm Serverless Functions
+   ------------------------------------------------------
+
+   Today we'll focus on the middle layer of the `testing pyramid <https://www.testim.io/blog/test-automation-pyramid-a-simple-strategy-for-your-tests/>`__:  `integration tests <https://en.wikipedia.org/wiki/Integration_testing>`__.
+
+   Integration tests are designed to test the integration of two or more components that work together as part of the application.  A component could be a piece of the code base.  A component could also exist outside of the code base.  For example, an integration test could check that a function correctly saves information in a database.  An integration test could also test that a function is correctly interacting with an external API.
+
+   When following the traditional test pyramid, a developer will write significantly more unit tests than integration tests.  When testing a serverless app, developers tend to write nearly as many (or sometimes more!) integration tests as unit tests.  Why?
+
+   Serverless apps rely on integrations.  Serverless functions tend to be small pieces of code that interact with other services.  Testing these interactions is vital to ensure the application is functioning as expected.
+   
+   Example Integration Test
+   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Let's take a look at how I tested the integration between the ``storeCsvInDb`` Realm Serverless Function, the ``removeBreakingCharacters`` Realm Serverless Function, and the MongoDB database hosted on `Atlas <https://cloud.mongodb.com>`__.  (I discuss what these functions do and how they interact with each other and the database :doc:`in my previous post </how-to/unit-test-realm-serverless-functions>`.)
+
+   I decided to build my integration tests using `Jest <https://jestjs.io/>`__ since I was already using Jest for my unit tests.  You can use whatever testing framework you prefer; the principles described below will still apply.
+
+   Let's focus on one test case:  storing the statistics about a single Tweet.
+
+   As we discussed in the previous post, the `storeCsvInDb <https://github.com/mongodb-developer/SocialStats/blob/master/functions/storeCsvInDb/source.js>`__ function completes the following:
+   
+   - Calls the ``removeBreakingCharacters`` function to remove breaking characters like emoji.
+   - Converts the Tweets in the CSV to JSON documents.
+   - Loops through the JSON documents to clean and store each one in the database.
+   - Returns an object that contains a list of Tweets that were inserted, updated, or unable to be inserted or updated.
+
+   :ref:`When I wrote unit tests for this function <mocks>`, I created mocks to simulate the ``removeBreakingCharacters`` function and the database.  
+
+   We won't use any mocks in the integration tests.  Instead, we'll let the ``storeCsvInDb`` function call the ``removeBreakingCharacters`` function and the database.
+
+   The first thing I did was import ``MongoClient`` from the ``mongodb`` module.  We will use `MongoClient <http://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html>`__ later to connect to the MongoDB database hosted on Atlas.
+
+   .. code-block:: javascript
+
+      const { MongoClient } = require('mongodb');
+
+   Next, I imported several constants from ``constants.js``.  I created the ``constants.js`` file to store constants I found myself using in several test files.  
+
+   .. code-block:: javascript
+
+      const { TwitterStatsDb, statsCollection, header, validTweetCsv, validTweetJson, validTweetId, validTweetUpdatedCsv, validTweetUpdatedJson, emojiTweetId, emojiTweetCsv, emojiTweetJson, validTweetKenId, validTweetKenCsv, validTweetKenJson } = require('../constants.js');
+
+   Next, I imported the ``realm-web`` module.  I'll be able to use this module to call the Realm Serverless Functions.
+
+   .. code-block:: javascript
+
+      const RealmWeb = require('realm-web');
+   
+   Then I created some variables that I'll set later.
+
+   .. code-block:: javascript
+
+      let collection;
+      let mongoClient;
+      let app;
+
+   Now that I had all of my prep work completed, I was ready to start setting up my test structure.  I began by implementing the `beforeAll() <https://jestjs.io/docs/en/api#beforeallfn-timeout>`__ function.  Jest runs ``beforeAll()`` once before any of the tests in the file are run.  Inside of ``beforeAll()`` I connected to a copy of the Realm app I'm using for testing.  I also connected to the test database hosted on Atlas that is associated with that Realm app.  Note that this database is NOT my production database.  (We'll explore how I created Realm apps for development, staging, and production later in this series.)
+
+   .. code-block:: javascript
+
+      beforeAll(async () => {
+         // Connect to the Realm app
+         app = new RealmWeb.App({ id: `${process.env.REALM_APP_ID}` });
+
+         // Login to the Realm app with anonymous credentials
+         await app.logIn(RealmWeb.Credentials.anonymous());
+
+         // Connect directly to the database
+         const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_URI}/test?retryWrites=true&w=majority`;
+         mongoClient = new MongoClient(uri);
+         await mongoClient.connect();
+         collection = mongoClient.db(TwitterStatsDb).collection(statsCollection);
+      });
+
+   I chose to use the same Realm app with the same database for all of my tests.  As a result, these tests cannot be run in parallel as they could interfere with each other.  
+
+   My app is architected in a way that it cannot be spun up completely using APIs and command line interfaces.  Manual intervention is required to get the app configured correctly.  If your app is architected in a way that you can completely generate your app using APIs and/or command line interfaces, you could choose to spin up a copy of your app with a new database for every test case or test file.  This would allow you to run your test cases or test files in parallel.
+
+   I wanted to ensure I always closed the connection to my database, so I added a call to do so in the `afterAll() <https://jestjs.io/docs/en/api#afterallfn-timeout>`__ function.  
+   
+   .. code-block:: javascript
+
+      afterAll(async () => {
+         await mongoClient.close();
+      })
+
+   I also wanted to ensure each test started with clean data since all of my tests are using the same database.  In the `beforeEach() <https://jestjs.io/docs/en/api#beforeeachfn-timeout>`__ function, I added a call to delete all documents from the collection the tests will be using.
+
+   .. code-block:: javascript
+
+      beforeEach(async () => {
+         await collection.deleteMany({});
+      });
+
+   Now that my test infrastructure was complete, I was ready to start writing a test case that focuses on storing a single valid Tweet.
+
+   .. code-block:: javascript
+
+      test('Single tweet', async () => {
+
+         expect(await app.functions.storeCsvInDb(header + "\n" + validTweetCsv)).toStrictEqual({
+            newTweets: [validTweetId],
+            tweetsNotInsertedOrUpdated: [],
+            updatedTweets: []
+         });
+
+         const tweet = await collection.findOne({ _id: validTweetId });
+         expect(tweet).toStrictEqual(validTweetJson);
+      });
+
+   The test begins by calling the ``storeCsvInDb`` Realm Serverless function just as application code would.  The test simulates the contents of a Twitter statistics CSV file by concatenating a valid header, a new line character, and the statistics for a Tweet with standard characters.
+
+   The test then asserts that the function returns an object that indicates the Tweet statistics were successfully saved.
+
+   Finally, the test checks the database directly to ensure the Tweet statistics were stored correctly.
+
+   After I finished this integration test, I wrote similar tests for Tweets that contain emoji as well as for updating statistics for Tweets already stored in the database.
+
+   You can find the complete set of integration tests in `storeCsvInDB.test.js <https://github.com/mongodb-developer/SocialStats/blob/master/tests/integration/storeCsvInDB.test.js>`__.
+
+
+.. summary::
+
+   Wrapping Up
+   -----------
+
+   Integration tests are especially important for apps built with a serverless architecture.  The tests ensure that the various components that make up the app are working together as expected.
+
+   The Social Stats application source code and associated test files are available in a GitHub repo:  https://github.com/mongodb-developer/SocialStats.  The repo's readme has detailed instructions on how to execute the test files.
+
+   Be on the lookout for the next post in this series where I'll walk you through how to write end-to-end tests (sometimes referred to as UI tests) for Realm serverless apps.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `GitHub Repository: Social Stats <https://github.com/mongodb-developer/SocialStats>`__
+   - `Video:  DevOps + MongoDB Realm Serverless Functions = 😍 <https://www.youtube.com/watch?v=RlouET0cPsc&feature=youtu.be>`__
+   - `Documentation:  MongoDB Realm <https://docs.mongodb.com/realm/>`__
+   - `MongoDB Atlas <https://www.mongodb.com/cloud>`__
+   - `MongoDB Charts <https://www.mongodb.com/products/charts>`__
