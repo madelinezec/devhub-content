@@ -65,7 +65,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    ``$unionWith``. This stage lets you combine multiple collections into a
    single result set!
 
-   Here’s how you’d use it:
+   Here's how you'd use it:
 
    **Simplified syntax, with no additional processing on the specified
    collection**
@@ -81,28 +81,28 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. code-block::
 
       db.collection.aggregate([
-        { $unionWith: { coll: "<anotherCollection>", pipeline: [ <stage1>, ... ] } }
+        { $unionWith: { coll: "<anotherCollection>", pipeline: [ <stage1>, etc. ] } }
       ])
 
    .. blockquote::
 
       ⚠ If you use the pipeline field to process your collection before
       combining, keep in mind that stages that write data, like ``$out``
-      and ``$merge``, can’t be used!
+      and ``$merge``, can't be used!
 
-   Your resulting documents will merge your current collection’s (or
-   pipeline’s) stream of documents with the documents from the
+   Your resulting documents will merge your current collection's (or
+   pipeline's) stream of documents with the documents from the
    collection/pipeline you specify. Keep in mind that this can include
    duplicates!
 
-   This sounds kinda familiar…
-   ---------------------------
+   This sounds kinda familiar 🤔
+   -----------------------------
 
-   If you’ve used the ``UNION ALL`` operation in SQL before, the
-   ``$unionWith`` stage’s functionality may sound familiar to you, and you
-   wouldn’t be wrong! Both combine the result sets from multiple queries
+   If you've used the ``UNION ALL`` operation in SQL before, the
+   ``$unionWith`` stage's functionality may sound familiar to you, and you
+   wouldn't be wrong! Both combine the result sets from multiple queries
    and return the merged rows, some of which may be duplicates. However,
-   that’s where the similarities end. Unlike MongoDB’s ``$unionWith``
+   that's where the similarities end. Unlike MongoDB's ``$unionWith``
    stage, you have to follow `a few
    rules <https://docs.microsoft.com/en-us/sql/t-sql/language-elements/set-operators-union-transact-sql?view=sql-server-ver15>`__
    in order to run a valid ``UNION ALL`` operation in SQL:
@@ -111,7 +111,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    -  Make sure the *order of columns* are the same
    -  Make sure the *matching columns are compatible data types*.
 
-   It’d look something like this in SQL:
+   It'd look something like this in SQL:
 
    .. code-block::
 
@@ -122,24 +122,24 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
       FROM table2
       WHERE [conditions]
 
-   With the ``$unionWith`` stage in MongoDB, you don’t have to worry about
+   With the ``$unionWith`` stage in MongoDB, you don't have to worry about
    these stringent constraints.
 
-   So how is MongoDB’s ``$unionWith`` stage different?
+   So how is MongoDB's ``$unionWith`` stage different?
    ---------------------------------------------------
 
    The most convenient difference between the ``$unionWith`` stage and
-   other UNION operations is that there’s no matching schema restriction.
+   other UNION operations is that there's no matching schema restriction.
    This flexible schema support means you can combine documents that may
    not have the same type or number of fields. This is common in certain
    scenarios, where the data we need to use comes from different sources:
 
-   -  TimeSeries data that’s stored by month/quarter/some other unit of time
+   -  TimeSeries data that's stored by month/quarter/some other unit of time
    -  IoT device data, per fleet or version
    -  Archival and Recent data, stored in a Data Lake
    -  Regional data
 
-   With MongoDB’s ``$unionWith`` stage, combining these data sources is
+   With MongoDB's ``$unionWith`` stage, combining these data sources is
    possible.
 
    Ready to try the new ``$unionWith`` stage? Follow along by completing a
@@ -161,21 +161,21 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
 
    Choose your scenario:
 
-   **I don’t have an Atlas cluster set up yet**:
+   **I don't have an Atlas cluster set up yet**:
 
-   1. You’ll need an Atlas account to play around with MongoDB Atlas! `Create one <https://docs.atlas.mongodb.com/tutorial/create-atlas-account/>`__ if you haven’t already done so. Otherwise, log into your Atlas account.
+   1. You'll need an Atlas account to play around with MongoDB Atlas! `Create one <https://docs.atlas.mongodb.com/tutorial/create-atlas-account/>`__ if you haven't already done so. Otherwise, log into your Atlas account.
    2. `Setup a free Atlas cluster <https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/>`__ (no credit card needed!). Be sure to select **MongoDB 4.4** (may be Beta, which is OK) as your version in Additional Settings!
 
    .. blockquote::
 
-      💡 **If you don’t see the prompt to create a cluster**: You may be
+      💡 **If you don't see the prompt to create a cluster**: You may be
       prompted to create a project *first* before you see the prompt to
       create your first cluster. In this case, go ahead and create a
       project first (leaving all the default settings). Then continue with
       the instructions to deploy your first free cluster!
 
-   3. Once your cluster is set up, `add your IP address <https://docs.atlas.mongodb.com/tutorial/whitelist-connection-ip-address/>`__ to your cluster’s connection settings. This tells your cluster who’s allowed to connect to it.
-   4. Finally, `create a database user <https://docs.atlas.mongodb.com/tutorial/create-mongodb-user-for-cluster/>`__ for your cluster. Atlas requires anyone or anything accessing its clusters to authenticate as MongoDB database users for security purposes! Keep these credentials handy as you’ll need them later on.
+   3. Once your cluster is set up, `add your IP address <https://docs.atlas.mongodb.com/tutorial/whitelist-connection-ip-address/>`__ to your cluster's connection settings. This tells your cluster who's allowed to connect to it.
+   4. Finally, `create a database user <https://docs.atlas.mongodb.com/tutorial/create-mongodb-user-for-cluster/>`__ for your cluster. Atlas requires anyone or anything accessing its clusters to authenticate as MongoDB database users for security purposes! Keep these credentials handy as you'll need them later on.
    5. Continue with the steps in Connecting to your cluster.
 
    **I have an Atlas cluster set up**:
@@ -184,7 +184,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
 
    **Connecting to your cluster**
 
-   To connect to your cluster, we’ll use the MongoDB for Visual Studio Code
+   To connect to your cluster, we'll use the MongoDB for Visual Studio Code
    extension (VS Code for short 😊). You can view your data directly,
    interact with your collections, and much more with this helpful
    extension! Using this also consolidates our workspace into a single
@@ -197,16 +197,16 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
       of this tutorial, it's not a requirement to use the ``$unionWith`` pipeline stage!
       You can also use the `CLI <https://docs.mongodb.com/mongocli/stable/>`__, `language-specific drivers <https://docs.mongodb.com/drivers/>`__, or `Compass <https://docs.mongodb.com/compass/current/>`__ if you prefer!
 
-   1. Install the `MongoDB for VS Code <https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode>`__ extension (or install `VS Code <https://code.visualstudio.com/Download>`__ first, if you don’t already have it 😉).
-   2. To connect to your cluster, you’ll need a connection string. You can get this connection string from your cluster connection settings. Go to your cluster and select the “Connect” option:
+   1. Install the `MongoDB for VS Code <https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode>`__ extension (or install `VS Code <https://code.visualstudio.com/Download>`__ first, if you don't already have it 😉).
+   2. To connect to your cluster, you'll need a connection string. You can get this connection string from your cluster connection settings. Go to your cluster and select the "Connect" option:
 
    .. image:: /images/article/union-all/connect.png
       :alt: Connecting to your Atlas cluster
 
-   3. Select the “Connect using MongoDB Compass” option. This will give us a connection string in the `DNS Seedlist Connection format <https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format>`__ that we can use with the MongoDB extension.
+   3. Select the "Connect using MongoDB Compass" option. This will give us a connection string in the `DNS Seedlist Connection format <https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format>`__ that we can use with the MongoDB extension.
 
    .. image:: /images/article/union-all/connect-with-compass.png
-      :alt: Choosing the “Connect with MongoDB Compass” option
+      :alt: Choosing the "Connect with MongoDB Compass" option
 
    .. blockquote::
 
@@ -214,7 +214,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
       connection string format <https://docs.mongodb.com/manual/reference/connection-string/#standard-connection-string-format>`__.
       Using the DNS seedlist connection format is purely preference.
 
-   4. Skip to the second step and copy the connection string (don’t worry about the other settings, you won’t need them):
+   4. Skip to the second step and copy the connection string (don't worry about the other settings, you won't need them):
 
    .. image:: /images/article/union-all/copy-connection-string.png
       :alt: Copy the connection string in MongoDB Atlas connection settings
@@ -224,28 +224,28 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. image:: /images/article/union-all/show-commands.png
       :alt: Showing the command palette in VS Code
 
-   6. Start typing “MongoDB” until you see the MongoDB extension’s list of available commands. Select the “MongoDB: Connect with Connection String…” option.
+   6. Start typing "MongoDB" until you see the MongoDB extension's list of available commands. Select the "MongoDB: Connect with Connection String" option.
 
    .. image:: /images/article/union-all/mdb-connect-with-connection-string.png
       :alt: Searching for MongoDB extension commands
 
-   7. Paste in your copied connection string. 💡 Don’t forget! You have to replace the placeholder password with your actual password!
+   7. Paste in your copied connection string. 💡 Don't forget! You have to replace the placeholder password with your actual password!
 
    .. image:: /images/article/union-all/mdb-paste-conn-string.png
       :alt: Pasting and modifying our MongoDB Atlas cluster connection string
 
-   8. Press enter to connect! You’ll know the connection was successful if you see a confirmation message on the bottom right. You’ll also see your cluster listed when you expand the MongoDB extension pane.
+   8. Press enter to connect! You'll know the connection was successful if you see a confirmation message on the bottom right. You'll also see your cluster listed when you expand the MongoDB extension pane.
 
    With the MongoDB extension installed and your cluster connected, you can
    now use MongoDB Playgrounds to test out the ``$unionWith`` examples! MongoDB
    Playgrounds give us a nice sandbox to easily write and test Mongo
    queries. I love using it when prototying or trying something new because
-   it has query auto-completion and syntax highlighting…something that you
-   don’t get in most terminals.
+   it has query auto-completion and syntax highlighting, something that you
+   don't get in most terminals.
 
 .. content::
 
-   Let’s finally dive into some examples!
+   Let's finally dive into some examples!
 
    Examples
    --------
@@ -256,7 +256,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. blockquote::
 
       💡 If you create your own playground, remember to change the database
-      name and delete the default template’s code first!
+      name and delete the default template's code first!
 
    ``$unionWith`` using a pipeline
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,9 +264,9 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. blockquote::
 
       📃 Use `this <https://github.com/adriennetacke/mdb-union-all-walkthrough/blob/master/unionWith_examples_similar_schemas.mongodb>`__ playground if
-      you’d like follow along with pre-written code for this example.
+      you'd like follow along with pre-written code for this example.
 
-   Right at the top, specify the database you’ll be using. In this example, I'm using a database also called ``union-walkthrough``:
+   Right at the top, specify the database you'll be using. In this example, I'm using a database also called ``union-walkthrough``:
 
    .. code-block::
 
@@ -279,14 +279,14 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
       and create a database of the specified name!
 
    Next, we need data! Particularly about some planets. And particularly
-   about planets in a certain movie series…
+   about planets in a certain movie series. 😉
 
-   Using the awesome `SWAPI API <https://swapi.dev/>`__, I’ve collected
-   such information on a few planets. Let’s add them into two collections,
+   Using the awesome `SWAPI API <https://swapi.dev/>`__, I've collected
+   such information on a few planets. Let's add them into two collections,
    separated by popularity.
 
    Any planets that appear in at least 2 or more films are considered
-   popular. Otherwise, we’ll add them into the ``lonely_planets``
+   popular. Otherwise, we'll add them into the ``lonely_planets``
    collection:
 
    .. code-block::
@@ -535,9 +535,9 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    the separation, we can use the ``$unionWith`` stage to combine these two
    collections if we ever needed to analyze them as a single result set!
 
-   Let’s say that we needed to find out the total population of planets,
-   grouped by climate. Additionally, we’d like to leave out any planets
-   that don’t have population data from our calculation. We can do this
+   Let's say that we needed to find out the total population of planets,
+   grouped by climate. Additionally, we'd like to leave out any planets
+   that don't have population data from our calculation. We can do this
    using an aggregation:
 
    .. code-block::
@@ -568,21 +568,21 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
           }
       ]);
 
-   If you’ve followed along in your own MongoDB playground and have copied
+   If you've followed along in your own MongoDB playground and have copied
    the code so far, try running the aggregation!
 
-   And if you’re using the provided MongoDB playground I created, highlight
+   And if you're using the provided MongoDB playground I created, highlight
    lines 264 - 290 and then run the selected code.
 
    .. blockquote::
 
-      💡 You’ll notice in the code snippet above that I’ve added another ``use('union-walkthrough');``
+      💡 You'll notice in the code snippet above that I've added another ``use('union-walkthrough');``
       method right above the aggregation code. I do this to make the
-      selection of relevant code within the playground easier. It’s also
+      selection of relevant code within the playground easier. It's also
       required so that the aggregation code can run against the correct
       database. However, the same thing can be achieved by selecting
       multiple lines, namely the original ``use('union-walkthrough')`` line
-      at the top and whatever additional example you’d like to run!
+      at the top and whatever additional example you'd like to run!
 
    You should see the results like so:
 
@@ -603,10 +603,10 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
         }
       ]
 
-   Unsurprisingly, planets with “temperate” climates seem to have more
-   inhabitants. Something about that cool 75 F / 23.8 C, I guess…
+   Unsurprisingly, planets with "temperate" climates seem to have more
+   inhabitants. Something about that cool 75 F / 23.8 C, I guess 🌞
 
-   Let’s break down this aggregation:
+   Let's break down this aggregation:
 
    The first object we pass into our aggregation is also our first stage,
    used here as our filter criteria. Specifically, we use the `$match <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__
@@ -626,7 +626,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    (not equal) operator.
 
    The next object (and next stage) in our aggregation is our
-   ``$unionWith`` stage. Here, we specifiy what collection we’d like to
+   ``$unionWith`` stage. Here, we specifiy what collection we'd like to
    perform a union with (including any duplicates). We also make use of the
    pipeline field to similarly filter out any documents in our
    ``popular_planets`` collection that have an unknown population:
@@ -665,8 +665,8 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    result set. Then, we calculate a new field called ``totalPopulation`` by
    using a
    `$sum <https://docs.mongodb.com/manual/reference/operator/aggregation/sum/>`__
-   operator to add each matching document’s population values together.
-   You’ll also notice that based on the data we have, we needed to use a
+   operator to add each matching document's population values together.
+   You'll also notice that based on the data we have, we needed to use a
    `$toLong <https://docs.mongodb.com/manual/reference/operator/aggregation/toLong/>`__
    operator to first convert our ``$population`` field into a calculable
    value!
@@ -677,10 +677,10 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. blockquote::
 
       📃 Use `this <https://github.com/adriennetacke/mdb-union-all-walkthrough/blob/master/unionWith_examples_similar_schemas.mongodb>`__ playground if
-      you’d like follow along with pre-written code for this example.
+      you'd like follow along with pre-written code for this example.
 
-   Now, if you *don’t* need to run some additional processing on the
-   collection you’re combining with, you don’t have to! The ``pipeline``
+   Now, if you *don't* need to run some additional processing on the
+   collection you're combining with, you don't have to! The ``pipeline``
    field is optional and is only there if you need it.
 
    So, if you just need to work with the planet data as a unified set, you can
@@ -708,7 +708,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    Combining the same schemas is great, but we can do
    that in regular SQL too! The real convenience of the ``$unionWith``
    pipeline stage is that it can also combine collections with different
-   schemas. Let’s take a look!
+   schemas. Let's take a look!
 
    ``$unionWith`` using collections with different schemas
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -716,16 +716,16 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. blockquote::
 
       📃 Use `this <https://github.com/adriennetacke/mdb-union-all-walkthrough/blob/master/unionWith_examples_different_schemas.mongodb>`__ playground if
-      you’d like follow along with pre-written code for this example.
+      you'd like follow along with pre-written code for this example.
 
-   As before, we’ll specifiy the database we want to use:
+   As before, we'll specifiy the database we want to use:
 
    .. code-block::
 
       use('union-walkthrough');
 
    This time, we'll use some acquired information about certain starships and
-   vehicles that are used in this same movie series. Let’s add them to
+   vehicles that are used in this same movie series. Let's add them to
    their respective collections:
 
    .. code-block::
@@ -891,19 +891,19 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
           }
       ]);
 
-   You may be thinking (as I first did), what’s the difference between
-   starships and vehicles? You’ll be pleased to know that starships are
+   You may be thinking (as I first did), what's the difference between
+   starships and vehicles? You'll be pleased to know that starships are
    defined as any "single transport craft that has hyperdrive capability".
    Any other single transport craft that **does not have** hyperdrive
-   capability is considered a vehicle. The more you know…
+   capability is considered a vehicle. The more you know! 🤯
 
-   If you look at the two collections, you’ll see that they have two key
+   If you look at the two collections, you'll see that they have two key
    differences:
 
    -  The ``max_atmosphering_speed`` field is present in both collections, but is a ``string`` in the ``starships`` collection and an ``int`` in the ``vehicles`` collection.
    -  The ``starships`` collection has two fields (``hyperdrive_rating``, ``MGLT``) that are not present in the ``vehicles`` collection, as it only relates to starships.
 
-   But you know what? That’s not a problem for the ``$unionWith`` stage!
+   But you know what? That's not a problem for the ``$unionWith`` stage!
    You can combine them just as before:
 
    .. code-block::
@@ -915,11 +915,11 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
         { $unionWith: 'vehicles' }
       ]);
 
-    Try running the aggregation in your playground! Or if you’re following
-    along in the MongoDB playground I’ve provided, select and run lines 185
-    - 189! You should get the following combined result set as your output:
+   Try running the aggregation in your playground! Or if you're following
+   along in the MongoDB playground I've provided, select and run lines 185
+   - 189! You should get the following combined result set as your output:
 
-    .. code-block::
+   .. code-block::
 
       [
         {
@@ -964,8 +964,8 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
         // + 7 other results, omitted for brevity
       ]
 
-   Can you imagine doing that in SQL? Hint: You can’t! That kind of schema
-   restriction is something you don’t need to worry about with MongoDB,
+   Can you imagine doing that in SQL? Hint: You can't! That kind of schema
+   restriction is something you don't need to worry about with MongoDB,
    though!
 
    $unionWith using collections with different schemas and a pipeline
@@ -974,13 +974,13 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    .. blockquote::
 
       📃 Use `this <https://github.com/adriennetacke/mdb-union-all-walkthrough/blob/master/unionWith_examples_different_schemas.mongodb>`__ playground if
-      you’d like follow along with pre-written code for this example.
+      you'd like follow along with pre-written code for this example.
 
    So we can combine different schemas no problem. What if we need to do a
-   little extra work on our collection before combining it? That’s where
+   little extra work on our collection before combining it? That's where
    the ``pipeline`` field comes in!
 
-   Let’s say that there’s some classified information in our data about the
+   Let's say that there's some classified information in our data about the
    vehicles. Namely, any vehicles manufactured by Kuat Drive Yards (AKA a division of the
    Imperial Department of Military Research).
 
@@ -1014,11 +1014,11 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
           }
       ]);
 
-    In this example, we’re combining the ``starships`` and ``vehicles``
-    collections as before, using the ``$unionWith`` pipeline stage. We
-    also process the ``vehicle`` data a bit more, using the ``$unionWith``'s optional ``pipeline`` field:
+   In this example, we're combining the ``starships`` and ``vehicles``
+   collections as before, using the ``$unionWith`` pipeline stage. We
+   also process the ``vehicle`` data a bit more, using the ``$unionWith``'s optional ``pipeline`` field:
 
-    .. code-block::
+   .. code-block::
 
       // Pipeline used with the vehicle collection
       { 
@@ -1030,19 +1030,18 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
               }
           }
       }
-      ...
 
-   Inside the ``$unionWith``’s pipeline, we use a
+   Inside the ``$unionWith``'s pipeline, we use a
    `$redact <https://docs.mongodb.com/manual/reference/operator/aggregation/redact/>`__
    stage to restrict the contents of our documents based on a condition. The condition is specified using the
    `$cond <https://docs.mongodb.com/manual/reference/operator/aggregation/cond/>`__
    operator, which acts like an ``if/else`` statement.
 
    In our case, we are evaluating whether or not the ``manufacturer`` field holds a value of
-   “Kuat Drive Yards, Imperial Department of Military Research”. If it does
-   (uh oh, that’s classified!), we use a system variable called
+   "Kuat Drive Yards, Imperial Department of Military Research". If it does
+   (uh oh, that's classified!), we use a system variable called
    `$$PRUNE <https://docs.mongodb.com/manual/reference/operator/aggregation/redact/#prune>`__, which lets us exclude all fields at the current
-   document/embedded document level. If it doesn’t, we use another system
+   document/embedded document level. If it doesn't, we use another system
    variable called `$$DESCEND <https://docs.mongodb.com/manual/reference/operator/aggregation/redact/#descend>`__, which will return all fields at the
    current document level, except for any embedded documents.
 
@@ -1094,13 +1093,13 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    Restrictions for UNION ALL
    --------------------------
 
-   Now that we know how the ``$unionWith`` stage works, it’s important to
+   Now that we know how the ``$unionWith`` stage works, it's important to
    discuss its limits and restrictions.
 
    Duplicates
    ~~~~~~~~~~
 
-   We’ve mentioned it already, but it’s important to reiterate: using the
+   We've mentioned it already, but it's important to reiterate: using the
    ``$unionWith`` stage will give you a combined result set which may
    include duplicates! This is equivalent to how the ``UNION ALL`` operator
    works in ``SQL`` as well. As a workaround, using a ``$group`` stage at the
@@ -1128,9 +1127,9 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
                 from: "extinct_planets",
                 let: { last_known_population: "$population", years_extinct: "$time_extinct" },
                 pipeline: [
-                  ...
-                  { $unionWith: { coll: "questionable_planets", pipeline: [ ... ] } },
-                  ...
+                  // Filter criteria
+                  { $unionWith: { coll: "questionable_planets", pipeline: [ { pipeline } ] } },
+                  // Other pipeline stages
                 ],
                 as: "planetdata"
             }
@@ -1145,7 +1144,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    Transactions
    ~~~~~~~~~~~~
 
-   Aggregation pipelines can’t use the ``$unionWith`` stage inside
+   Aggregation pipelines can't use the ``$unionWith`` stage inside
    transactions because a rare, but possible 3-thread deadlock can occur in very
    niche scenarios. Additionally, in MongoDB 4.4, there is a first-time
    definition of a view that would restrict its reading from within a
@@ -1170,7 +1169,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    `collation <https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/#method-collection-aggregate-collation>`__,
    that collation is used for the operation, ignoring any other collations.
 
-   However, if your aggregation doesn’t include a collation, it will use
+   However, if your aggregation doesn't include a collation, it will use
    the collation for the top-level collection/view on which the aggregation
    is run:
 
