@@ -1,0 +1,693 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @nraboy
+   :title: Real-Time Chat in a Phaser Game with MongoDB and Socket.io
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/real-time-chat-phaser-game-mongodb-socketio
+   :type: article
+   :title: Real-Time Chat in a Phaser Game with MongoDB and Socket.io
+   :image: /images/social/open-graph/og-green-pattern.png
+
+   Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-08-20
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+==========================================================
+Real-Time Chat in a Phaser Game with MongoDB and Socket.io
+==========================================================
+
+.. introduction::
+
+    When building a multiplayer game, you're probably going to want to
+    implement a way to interact with other players beyond the general
+    gameplay experience. This could be in the form of video, audio, or
+    written chat within a game.
+
+    So how would you manage that real-time interaction and how would you
+    store it in your database?
+
+    In this tutorial, we're going to see how to build a simple game with
+    `Phaser <https://phaser.io/>`__ and JavaScript, 
+    how to add a real-time chat component that uses
+    `Socket.io <https://socket.io/>`__, and how to save each message to our
+    `MongoDB <https://www.mongodb.com/>`__ NoSQL database.
+
+    To get a better idea of what we hope to accomplish, take a look at the
+    following animated image:
+
+    .. image:: /images/how-to/phaser-mongodb-chat-example.gif
+        :alt: Phaser Real-Time Chat with Socket.io
+
+    The actual game aspect in the above animation is a bit lackluster, but
+    what's important is the chat functionality. In the above example, the
+    chat messages and chat input are baked into the Phaser game. When we
+    enter a message, it is sent to the server through sockets and the server
+    saves the messages to MongoDB. In addition to saving, the server also
+    broadcasts the messages back to every client and retrieves all messages
+    for new clients.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    There are a few moving pieces when it comes to this example, however,
+    there aren't too many requirements. We'll need the following to be
+    successful:
+
+    -  A `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster
+    -  Node.js 12+
+
+    The backend will be developed with Node.js and it will use the MongoDB
+    Node.js driver to communicate with MongoDB and
+    `Socket.io <https://socket.io/>`__ to communicate with our clients. The
+    frontend, which is the game, will use Phaser and
+    `Socket.io <https://socket.io/>`__.
+
+    Most of what we do will be accomplished using readily available JavaScript
+    packages.
+
+.. content::
+
+    Building the Backend for Message Orchestration and Persistance
+    --------------------------------------------------------------
+
+    We're going to start by creating the backend for our game. It will do
+    all of the heavy lifting for us that isn't related to visuals.
+
+    On your computer, create a new directory and run the following commands from within the directory:
+
+    .. code-block:: bash
+
+        npm init -y
+        npm install mongodb express cors socket.io --save
+
+    The above commands will install the MongoDB Node.js driver, Express,
+    Socket.io, and a library for handling cross-origin resource sharing
+    between the game and the server.
+
+    Next, create a **main.js** file within the project directory and add the
+    following JavaScript code:
+
+    .. code-block:: javascript
+
+        const express = require("express")();
+        const cors = require("cors");
+        const http = require("http").createServer(express);
+        const io = require("socket.io")(http);
+        const { MongoClient } = require("mongodb");
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+        express.use(cors());
+
+        var collection;
+
+        io.on("connection", (socket) => {
+            socket.on("join", async (gameId) => {});
+            socket.on("message", (message) => {});
+        });
+
+        express.get("/chats", async (request, response) => {});
+
+        http.listen(3000, async () => {
+            try {
+                await client.connect();
+                collection = client.db("gamedev").collection("chats");
+                console.log("Listening on port :%s...", http.address().port);
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    A lot of the above code is boilerplate when it comes to
+    configuring Express and MongoDB. We'll do a quick breakdown on the
+    pieces that matter as of right now.
+
+    First you'll notice the following line:
+
+    .. code-block:: javascript
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+    The ``ATLAS_URI`` is an environment variable on my computer. You can
+    obtain the value to this variable within the MongoDB Atlas dashboard.
+    The value will look something like this:
+
+    .. code-block:: none
+
+        mongodb+srv://<username>:<password>@cluster0-yyarb.mongodb.net/<database>?retryWrites=true&w=majority
+
+    You can choose to hard-code your value or use an environment variable
+    like me. It doesn't matter as long as you know what you're choosing. Using an environment variable is beneficial as it makes the project easier to share without the risk of exposing potentially sensitive information that might be hard-coded.
+
+    The next thing you'll notice is the following:
+
+    .. code-block:: javascript
+
+        http.listen(3000, async () => {
+            try {
+                await client.connect();
+                collection = client.db("gamedev").collection("chats");
+                console.log("Listening on port :%s...", http.address().port);
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    After we connect to our MongoDB Atlas cluster, we obtain the collection
+    that we plan to use. In this case, the database we plan to use is
+    ``gamedev`` and the collection is ``chats``, neither of which need to
+    exist prior to starting your application.
+
+    With the basics added to the application, let's focus on the more
+    important things, starting with the REST API endpoint:
+
+    .. code-block:: javascript
+
+        express.get("/chats", async (request, response) => {
+            try {
+                let result = await collection.findOne({ "_id": request.query.room });
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    Even though we're using Socket.io for most of our communication, it
+    makes sense to have an endpoint for initially obtaining any chat data.
+    It is not frequently accessed and it will prevent too much stress on the
+    socket layer.
+
+    What we're saying in the endpoint is that we want to find a single
+    document based on the ``room`` value that was passed in with the
+    request. This value will represent our game room or our chat room,
+    however you want to interpret it. This single document will have all
+    of our previous chat conversations for the particular room. This data
+    will be used to get the clients up to speed when they join.
+
+    Now we can get into the real interesting things!
+
+    Let's revisit the Socket.io logic within the **main.js** file:
+
+    .. code-block:: javascript
+
+        io.on("connection", (socket) => {
+            socket.on("join", async (gameId) => {
+                try {
+                    let result = await collection.findOne({ "_id": gameId });
+                    if(!result) {
+                        await collection.insertOne({ "_id": gameId, messages: [] });
+                    }
+                    socket.join(gameId);
+                    socket.emit("joined", gameId);
+                    socket.activeRoom = gameId;
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+            socket.on("message", (message) => {});
+        });
+
+    You'll notice that this time we have some logic for the ``join`` event.
+
+    When a ``join`` payload is received from the client, the ``gameId`` that
+    the client provides with the payload is used to try to find an existing
+    MongoDB document. If a document exists, it means the chat room exists.
+    If it doesn't, we should create one. After retrieving or creating a
+    document in MongoDB, we can join the socket room with Socket.io, emit an
+    event back to the client that we've joined, and specify that the active
+    room is that of the ``gameId`` that we just passed.
+
+    A socket can be a part of multiple rooms, but we only care about one,
+    the active one.
+
+    Now let's have a look at the ``message`` event for our sockets:
+
+    .. code-block:: javascript
+
+        io.on("connection", (socket) => {
+            socket.on("join", async (gameId) => {
+                // Logic here ...
+            });
+            socket.on("message", (message) => {
+                collection.updateOne({ "_id": socket.activeRoom }, {
+                    "$push": {
+                        "messages": message
+                    }
+                });
+                io.to(socket.activeRoom).emit("message", message);
+            });
+        });
+
+    When the client sends a message, we want to append it to the document
+    defined by the active room. Remember, the room, game id, and document id
+    are all the same thing and each socket maintains that information as
+    well.
+
+    After the message is saved, its then broadcast to all sockets
+    that are part of the same room.
+
+    The backend is now fully capable of handling the chat system within our
+    game.
+
+    Developing a Phaser Game with Sockets and Real-Time Interaction
+    ---------------------------------------------------------------
+
+    With the backend under control, now we can focus on the game that we can
+    distribute to clients, otherwise known as other players.
+
+    Create a new directory on your computer and within that directory create
+    an **index.html** file with the following HTML markup:
+
+    .. code-block:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head></head>
+            <body>
+                <div id="game"></div>
+                <script src="//cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+                <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+                <script>
+
+                    const phaserConfig = {
+                        type: Phaser.AUTO,
+                        parent: "game",
+                        width: 1280,
+                        height: 720,
+                        backgroundColor: "#E7F6EF",
+                        physics: {
+                            default: "arcade",
+                            arcade: {
+                                gravity: { y: 200 }
+                            }
+                        },
+                        dom: {
+                            createContainer: true
+                        },
+                        scene: {
+                            init: initScene,
+                            preload: preloadScene,
+                            create: createScene
+                        }
+                    };
+
+                    const game = new Phaser.Game(phaserConfig);
+
+                    function initScene() {}
+                    function preloadScene() {}
+                    function createScene() {}
+
+                </script>
+            </body>
+        </html>
+
+    It may seem like there's a lot happening in the above HTML, but it is
+    really just Phaser configuration.
+
+    First you'll notice the following two lines:
+
+    .. code-block:: auto
+
+        <script src="//cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+
+    In the above lines we are including the Phaser game development
+    framework and the Socket.io client library. These libraries can be used
+    directly from a CDN or downloaded to your project directory.
+
+    Most of our boilerplate focuses around the ``phaserConfig`` object:
+
+    .. code-block:: javascript
+
+        const phaserConfig = {
+            type: Phaser.AUTO,
+            parent: "game",
+            width: 1280,
+            height: 720,
+            backgroundColor: "#E7F6EF",
+            physics: {
+                default: "arcade",
+                arcade: {
+                    gravity: { y: 200 }
+                }
+            },
+            dom: {
+                createContainer: true
+            },
+            scene: {
+                init: initScene,
+                preload: preloadScene,
+                create: createScene
+            }
+        };
+
+    Because this is a game, we're going to enable game physics. In
+    particular, we're going to use arcade physics and the environment
+    gravity will be specific on the y-axis. While we won't be doing much in
+    terms of the physics in this game, you can learn more about arcade
+    physics in a previous tutorial I wrote titled, `Handle Collisions
+    Between Sprites in Phaser with Arcade
+    Physics <https://www.thepolyglotdeveloper.com/2020/08/handle-collisions-between-sprites-phaser-arcade-physics/>`__.
+
+    In the ``phaserConfig`` object you'll notice the ``dom`` field. This
+    will allow us to accept text input from the user directly within our
+    Phaser game. We'll be doing something similar to what we saw in my
+    tutorial, `Maintaining a Geolocation Specific Game Leaderboard with
+    Phaser and
+    MongoDB <https://developer.mongodb.com/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb>`__.
+
+    This brings us to our scene lifecycle functions.
+
+    The ``initScene`` function is where we initialize our variables and our
+    connection to the backend server:
+
+    .. code-block:: javascript
+
+        function initScene() {
+            this.socket = io("http://localhost:3000", { autoConnect: false });
+            this.chatMessages = [];
+        }
+
+    We're specifying ``autoConnect`` as false because we don't want to
+    connect until our scene is finished being created. We'll manually
+    connect in a different lifecycle function.
+
+    The next lifecycle function is the ``preloadScene`` function, but before
+    we get there, we should probably create our input form.
+
+    Within your game project directory, create a new **form.html** file with
+    the following HTML:
+
+    .. code-block:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <style>
+                    #input-form input {
+                        padding: 10px;
+                        font-size: 20px;
+                        width: 250px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="input-form">
+                    <input type="text" name="chat" placeholder="Enter a message" />
+                </div>
+            </body>
+        </html>
+
+    The styling information isn't too important, but the actual ``<input>``
+    tag is. Pay attention to the ``name`` attribute on our tag as this will be important when we want to work with the data supplied by the user in the form.
+
+    Within the ``preloadScene`` function of the **index.html** file, add the
+    following:
+
+    .. code-block:: javascript
+
+        function preloadScene() {
+            this.load.html("form", "form.html");
+        }
+
+    Now we're able to use our user input form within the game!
+
+    To display text and interact with the user input form, we need to alter
+    the ``createScene`` function within the **index.html** file:
+
+    .. code-block:: javascript
+
+        function createScene() {
+
+            this.textInput = this.add.dom(1135, 690).createFromCache("form").setOrigin(0.5);
+            this.chat = this.add.text(1000, 10, "", { lineSpacing: 15, backgroundColor: "#21313CDD", color: "#26924F", padding: 10, fontStyle: "bold" });
+            this.chat.setFixedSize(270, 645);
+
+            this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
+            this.enterKey.on("down", event => {
+                let chatbox = this.textInput.getChildByName("chat");
+                if (chatbox.value != "") {
+                    this.socket.emit("message", chatbox.value);
+                    chatbox.value = "";
+                }
+            })
+
+            this.socket.connect();
+            
+            this.socket.on("connect", async () => {
+                this.socket.emit("join", "mongodb");
+            });
+
+            this.socket.on("joined", async (gameId) => {
+                let result = await fetch("http://localhost:3000/chats?room=" + gameId).then(response => response.json());
+                this.chatMessages = result.messages;
+                this.chatMessages.push("Welcome to " + gameId);
+                if (this.chatMessages.length > 20) {
+                    this.chatMessages.shift();
+                }
+                this.chat.setText(this.chatMessages);
+            });
+
+            this.socket.on("message", (message) => {
+                this.chatMessages.push(message);
+                if(this.chatMessages.length > 20) {
+                    this.chatMessages.shift();
+                }
+                this.chat.setText(this.chatMessages);
+            });
+
+        }
+
+    There is a lot happening in the above ``createScene`` function and it
+    can be a little tricky to understand. We're going to break it down to
+    make it easy.
+
+    Take a look at the following lines:
+
+    .. code-block:: javascript
+
+        this.textInput = this.add.dom(1135, 690).createFromCache("form").setOrigin(0.5);
+        this.chat = this.add.text(1000, 10, "", { lineSpacing: 15, backgroundColor: "#21313CDD", color: "#26924F", padding: 10, fontStyle: "bold" });
+        this.chat.setFixedSize(270, 645);
+
+        this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
+    The first line says that we are loading and positioning the input form
+    that we had added to our project in the ``preloadScene`` function. Next
+    we are creating a chat box to hold our text. We are positioning and
+    styling the chat box to our liking. Finally, we are giving Phaser
+    control of the enter key, something we'll use to submit the form in our
+    game.
+
+    Before we look at what happens with the enter key, take a look at the
+    following lines:
+
+    .. code-block:: javascript
+
+        this.socket.connect();
+
+        this.socket.on("connect", async () => {
+            this.socket.emit("join", "mongodb");
+        });
+
+    In the above lines we are manually connecting to our socket server. When
+    the client socket says we have connected, we attempt to join a game.
+    Remember the ``join`` we're waiting for on the server? This is where we
+    are sending it and in this case we are saying we want to join the
+    ``mongodb`` game.
+
+    After the server says we've joined, it sends us back a message which we
+    can pick up here:
+
+    .. code-block:: javascript
+
+        this.socket.on("joined", async (gameId) => {
+            let result = await fetch("http://localhost:3000/chats?room=" + gameId).then(response => response.json());
+            this.chatMessages = result.messages;
+            this.chatMessages.push("Welcome to " + gameId);
+            if (this.chatMessages.length > 20) {
+                this.chatMessages.shift();
+            }
+            this.chat.setText(this.chatMessages);
+        });
+
+    When we know we've joined, we can execute an HTTP request against the
+    API endpoint and provide the room, which again is our game id. The
+    response will be all of our chat messages which we'll add to an array.
+    To eliminate the risk of messages displaying off the screen, we are
+    popping items from the top of the array if the length is greater than
+    our threshold.
+
+    When we call ``setText`` using an array value, Phaser will automatically
+    separate each array item with a new line character.
+
+    As of right now we've joined a game and we received all the prior
+    messages. Now we want to send messages:
+
+    .. code-block:: javascript
+
+        this.enterKey.on("down", event => {
+            let chatbox = this.textInput.getChildByName("chat");
+            if (chatbox.value != "") {
+                this.socket.emit("message", chatbox.value);
+                chatbox.value = "";
+            }
+        })
+
+    When the enter key is pressed, we get the ``<input>`` tag from the
+    **form.html** file by the ``name`` attribute. If the value is not empty,
+    we can send a message to the server and clear the field.
+
+    In our configuration, our own messages are not displayed immediately. We
+    let the server decide what should be displayed. This means we need to
+    listen for messages coming in:
+
+    .. code-block:: javascript
+
+        this.socket.on("message", (message) => {
+            this.chatMessages.push(message);
+            if(this.chatMessages.length > 20) {
+                this.chatMessages.shift();
+            }
+            this.chat.setText(this.chatMessages);
+        });
+
+    If a message comes in from the server we push it into our array. If that
+    array is larger than our threshold, we pop an item from the top before
+    rendering it to the screen. We're doing this because we don't want
+    scrolling within our game and we don't want messages going off the
+    screen. It isn't fool proof, but it will work good enough for us.
+
+    If you ran the game right now, you'd have something like this:
+
+    .. image:: /images/how-to/phaser-chat-mongodb.jpg
+        :alt: Phaser with MongoDB Chat
+
+    As you can see, we only have a chat area towards the right of the
+    screen. Not particularly exciting for a game if you ask me.
+
+    What we're going to do is add a little flare to the game. Nothing
+    extravagant, but just a little to remind us that we're actually doing
+    game development with MongoDB.
+
+    Before we do that, go ahead and download the following image:
+
+    .. image:: /images/how-to/leaf.png
+        :scale: 15%
+        :alt: MongoDB Leaf
+
+    It really doesn't matter what image you use, but I'm saving you the
+    trouble of having to find one for this game.
+
+    With the image inside of your project, we need to change the
+    ``preloadScene`` function of the **index.html** file:
+
+    .. code-block:: javascript
+
+        function preloadScene() {
+            this.load.html("form", "form.html");
+            this.load.image("leaf", "leaf.png");
+        }
+
+    Notice that we're now loading the image that we just downloaded. The
+    goal here will be to have many of these images bouncing around the
+    screen.
+
+    Within the ``createScene`` function, let's make the following
+    modification:
+
+    .. code-block:: javascript
+
+        function createScene() {
+
+            this.leafGroup = this.physics.add.group({
+                defaultKey: "leaf",
+                maxSize: 15
+            });
+
+            for(let i = 0; i < 15; i++) {
+                let randomX = Math.floor(Math.random() * 1000);
+                let randomY = Math.floor(Math.random() * 600);
+                let randomVelocityX = Math.floor(Math.random() * 2);
+                this.leafGroup.get(randomX, randomY)
+                    .setScale(0.2)
+                    .setVelocity([-100, 100][randomVelocityX], 200)
+                    .setBounce(1, 1)
+                    .setCollideWorldBounds(true)
+            }
+
+            // Chat and socket logic ...
+        }
+
+    In the above code we are creating an object pool with 15 possible
+    sprites. Next we are looping and taking each of our 15 sprites from the
+    object pool and placing them randomly on the screen. We're adding some
+    physics information to each sprite and saying that they collide with the
+    edges of our game.
+
+    This should cause 15 leaf sprites bounding around the screen.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to add real-time chat to your
+    `Phaser <https://phaser.io>`__ game where each chat message is stored in
+    MongoDB so it can be accessed later by new players in the game. The
+    technologies we used were Phaser for the game engine,
+    `Socket.io <https://www.socket.io>`__ for the real-time client and
+    server interaction, and `MongoDB <https://www.mongodb.com>`__ for
+    persisting our data.
+
+    I mentioned previously in this tutorial that I had created a different
+    game that made use of user inputs. This article entitled, `Maintaining a
+    Geolocation Specific Game Leaderboard with Phaser and
+    MongoDB <https://developer.mongodb.com/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb>`__,
+    focused on creating leaderboards for games. I also wrote a tutorial
+    titled, `Creating a Multiplayer Drawing Game with Phaser and
+    MongoDB <https://developer.mongodb.com/how-to/creating-multiplayer-drawing-game-phaser>`__,
+    which demonstrated interactive gameplay, not just chat.
