@@ -18,7 +18,7 @@
    Learn how to write integration tests for MongoDB Realm Serverless Apps
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/how-to-integration-test-realm-serverless-apps
+   :url: http://developer.mongodb.com/how-to/integration-test-realm-serverless-apps
    :type: article
    :title: How to Write Integration Tests for MongoDB Realm Serverless Apps
    :image: /images/social/open-graph/og-realm-functions.jpg
@@ -90,6 +90,8 @@ How to Write Integration Tests for MongoDB Realm Serverless Apps
 
    Serverless apps rely on integrations.  Serverless functions tend to be small pieces of code that interact with other services.  Testing these interactions is vital to ensure the application is functioning as expected.
    
+   .. _example-integration-test:
+
    Example Integration Test
    ~~~~~~~~~~~~~~~~~~~~~~~~
 

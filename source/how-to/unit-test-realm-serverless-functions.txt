@@ -18,7 +18,7 @@
    Learn how to write unit tests for MongoDB Realm Serverless Functions
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/how-to-unit-test-realm-serverless-functions
+   :url: http://developer.mongodb.com/how-to/unit-test-realm-serverless-functions
    :type: article
    :title: How to Write Unit Tests for MongoDB Realm Serverless Functions
    :image: /images/social/open-graph/og-realm-functions.jpg
