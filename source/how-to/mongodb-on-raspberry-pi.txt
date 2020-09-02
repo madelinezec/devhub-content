@@ -1,0 +1,506 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Install and correctly configure MongoDB on Raspberry Pi
+
+.. twitter::
+   :site: @mongodb
+   :creator: @judy2k
+   :title: Install MongoDB on the Raspberry Pi
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB graphic pattern
+
+   Install and correctly configure MongoDB on Raspberry Pi
+
+.. og::
+   :url: https://developer.mongodb.com/how-to/mongodb-on-raspberry-pi
+   :title:  Install MongoDB on the Raspberry Pi
+   :image: /images/social/open-graph/og-green-pattern.png
+   :type: article
+
+   Install and correctly configure MongoDB on Raspberry Pi
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-09-02
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. products::
+
+   * MongoDB
+   
+.. tags::
+
+   * Raspberry Pi
+
+.. atf-image:: /images/atf-images/generic/green2.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===============================================
+Install & Configure MongoDB on the Raspberry Pi
+===============================================
+
+.. introduction::
+
+   I've been a big fan of the Raspberry Pi since the first version was
+   released in 2012. The newer generations are wonderful home-automation
+   and IoT prototyping computers, with built in WiFi, and the most recent
+   versions (the Pi 3 and Pi 4) are 64-bit. This means they can run the
+   MongoDB server, mongod, locally! MongoDB even provides a pre-compiled
+   version for the Raspberry Pi processor, so it's relatively
+   straightforward to get it installed.
+
+   I'm currently building a home-automation service on a Raspberry Pi 4.
+   Its job is to run background tasks, such as periodically requesting data
+   from the internet, and then provide the data to a bunch of small devices
+   around my house, such as some smart displays, and (ahem) my coffee
+   grinder.
+
+   The service doesn't have super-complex data storage requirements, and I
+   could have used an embedded database, such as SQLite. But I've become
+   resistant to modelling tables and joins in a relational database and
+   working with flat rows. The ability to store rich data structures in a
+   single MongoDB database is a killer feature for me.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   You will need:
+
+   -  A Raspberry Pi 3 or 4
+   -  A suitably sized Micro SD card (I used a 16 Gb card)
+   -  A computer and SD card reader to write the SD card image. (This *can*
+      be another Raspberry Pi, but I'm using my desktop PC)
+   -  A text editor on the host computer. (I recommend `VS
+      Code <https://code.visualstudio.com/download>`__)
+
+.. content::
+
+   What This Tutorial Will Do
+   --------------------------
+
+   This tutorial will show you how to:
+
+   -  Install the 64-bit version of Ubuntu Server on your Raspberry Pi.
+   -  Configure it to connect to your WiFi.
+   -  *Correctly* install MongoDB onto your Pi.
+   -  Add a user account, so you can *safely* expose MongoDB on your home
+      network.
+
+   When you're done, you'll have a secured MongoDB instance available on
+   your home network.
+
+   .. blockquote::
+   
+      Before we get too far into this, please bear in mind that you
+      don't want to run a production, web-scale database on a Raspberry Pi.
+      Despite the processor improvements on the Pi 4, it's still a relatively
+      low-powered machine, with a relatively low amount of RAM for a database
+      server. Still! For a local, offline MongoDB instance, with the ease of
+      development that MongoDB offers, a Raspberry Pi is a great low-cost
+      solution. If you *do* wish to serve your data to the Internet, you
+      should definitely check out
+      `Atlas <https://www.mongodb.com/cloud/atlas>`__, MongoDB's cloud hosting
+      solution. MongoDB will host your database for you, and the service has a
+      generous (and permanent) free tier!
+
+   Things Not To Do
+   ----------------
+
+   *Do not* run ``apt install mongodb`` on your Raspberry Pi, or indeed any
+   Linux computer! The versions of MongoDB shipped with Linux distributions
+   are *very* out of date. They won't run as well, and some of them are so
+   old they're no longer supported.
+
+   MongoDB provide versions of the database, pre-packaged for many
+   different operating systems, and Ubuntu Server on Raspberry Pi is one of
+   them.
+
+   Installing Ubuntu
+   -----------------
+
+   Download and install the `Raspberry Pi
+   Imager <https://www.raspberrypi.org/downloads/>`__ for your host
+   computer.
+
+   .. image:: /images/how-to/raspberry_pi/download_imager.png
+        :alt: Download Raspberry Pi Imager
+
+   Run the Raspberry Pi Imager, and select Ubuntu Server 20.04, 64-bit for
+   Raspberry Pi 3/4.
+
+   .. image:: /images/how-to/raspberry_pi/ubuntu_os_selection.png
+        :alt: Select the correct Ubuntu image
+
+   Make sure you *don't* accidentally select Ubuntu Core, or a 32-bit
+   version.
+
+   Insert your Micro SD Card into your computer and select it in the
+   Raspberry Pi Imager window.
+
+   .. image:: /images/how-to/raspberry_pi/select_sd_card.png
+        :alt: Select your SD Card
+
+   Click **Write** and wait for the image to be written to the SD Card.
+   This may take some time! When it's finished, close the Raspberry Pi
+   Imager. Then remove the Micro SD Card from your computer, and re-insert
+   it.
+
+   The Ubuntu image for Raspberry Pi uses
+   `cloud-init <https://cloudinit.readthedocs.io/>`__ to configure the
+   system at boot time. This means that in your SD card ``system-boot``
+   volume, there should be a YAML file, called ``network-config``. Open
+   this file in VS Code (or your favourite text editor).
+
+   Edit it so that it looks like the following.
+   The indentation is important,
+   and it's the 'wifis' section that you're editing to
+   match your wifi configuration.
+   Replace 'YOUR-WIFI-SSD' with your WiFi's name,
+   and 'YOUR-WIFI-PASSWORD' with your WiFi password.
+
+   .. code:: yaml
+
+      version: 2
+      ethernets:
+         eth0:
+            dhcp4: true
+            optional: true
+      wifis:
+         wlan0:
+            dhcp4: true
+            optional: true
+            access-points:
+               "YOUR-WIFI-SSID":
+                  password: "YOUR-WIFI-PASSWORD"
+
+   Now eject the SD card (safely!) from your computer, insert it into the
+   Pi, and power it up! It may take a few minutes to start up, at least the
+   first time. You'll need to monitor your network to wait for the Pi to
+   connect. When it does, ssh into the Pi with
+   ``ssh ubuntu@<raspberry-pi-ip-address>``. The password is also
+   ``ubuntu``.
+
+   You'll be prompted to change your password to something secret.
+
+   Once you've set your password update the operating system by running the following commands:
+
+   .. code:: bash
+   
+      sudo apt update
+      sudo apt upgrade
+
+   Install MongoDB
+   ---------------
+
+   Now let's install MongoDB. This is done as follows:
+
+   .. code:: bash
+
+      # Install the MongoDB 4.4 GPG key:
+      wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+
+      # Add the source location for the MongoDB packages:
+      echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+
+      # Download the package details for the MongoDB packages:
+      sudo apt-get update
+
+      # Install MongoDB:
+      sudo apt-get install -y mongodb-org
+
+   The instructions above have mostly been taken from `Install MongoDB
+   Community Edition on
+   Ubuntu <https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/>`__
+
+   Run MongoDB
+   -----------
+
+   Ubuntu 20.04 uses Systemd to run background services, so to set up
+   mongod to run in the background, you need to enable and start the
+   service:
+
+   .. code:: bash
+
+      # Ensure mongod config is picked up:
+      sudo systemctl daemon-reload
+
+      # Tell systemd to run mongod on reboot:
+      sudo systemctl enable mongod
+
+      # Start up mongod!
+      sudo systemctl start mongod
+
+   Now, you can check to see if the service is running correctly by
+   executing the following command. You should see something like the
+   output below it:
+
+   .. code:: bash
+
+      $ sudo systemctl status mongod
+
+      ● mongod.service - MongoDB Database Server
+         Loaded: loaded (/lib/systemd/system/mongod.service; enabled; vendor preset: enabled)
+         Active: active (running) since Tue 2020-08-09 08:09:07 UTC; 4s ago
+         Docs: https://docs.mongodb.org/manual
+      Main PID: 2366 (mongod)
+         CGroup: /system.slice/mongod.service
+               └─2366 /usr/bin/mongod --config /etc/mongod.conf
+
+   If your service is running correctly, you can run the MongoDB client,
+   ``mongo``, from the command-line to connect:
+
+   .. code:: bash
+
+      # Connect to the local mongod, on the default port:
+      $ mongo
+      MongoDB shell version v4.4.0
+      connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+      Implicit session: session { "id" : UUID("576ec12b-6c1a-4382-8fae-8b6140e76d51") }
+      MongoDB server version: 4.4.0
+      ---
+      The server generated these startup warnings when booting:
+            2020-08-09T08:09:08.697+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+            2020-08-09T08:09:10.712+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+      ---
+      ---
+            Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+            metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+            The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+            and anyone you share the URL with. MongoDB may use this information to make product
+            improvements and to suggest MongoDB products and deployment options to you.
+
+            To enable free monitoring, run the following command: db.enableFreeMonitoring()
+            To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+      ---
+
+   First, check the warnings. You can ignore the recommendation to run the
+   XFS filesystem, as this is just a small, local install. The warning
+   about access control not being enabled for the database is important
+   though! You'll fix that in the next section. At this point, if you feel
+   like it, you can enable the `free
+   monitoring <https://docs.mongodb.com/manual/administration/free-monitoring/>`__
+   that MongoDB provides, by running ``db.enableFreeMonitoring()`` inside
+   the mongo shell.
+
+   Securing MongoDB
+   ----------------
+
+   Here's the next, essential steps, that other tutorials miss out, for
+   some reason. Recent versions of mongod won't connect to the network
+   unless user authentication has been configured. Because of this, at the
+   moment your database is only accessible from the Raspberry Pi itself.
+   This may actually be fine, if like me, the services you're running with
+   MongoDB are running on the same device. It's still a good idea to set a
+   username and password on the database.
+
+   Here's how you do that, inside ``mongo`` (replace SUPERSECRETPASSWORD
+   with an *actual* secret password!):
+
+   .. code:: javascript
+
+      use admin
+      db.createUser( { user: "admin",
+                  pwd: "SUPERSECRETPASSWORD",
+                  roles: [ "userAdminAnyDatabase",
+                           "dbAdminAnyDatabase",
+                           "readWriteAnyDatabase"] } )
+      exit
+
+   The three roles listed give the ``admin`` user the ability to administer
+   all user accounts and data in MongoDB. Make sure your password is
+   secure. You can use a `random password
+   generator <https://www.avast.com/random-password-generator>`__ to be
+   safe.
+
+   Now you need to reconfigure mongod to run with authentication enabled,
+   by adding a couple of lines to ``/etc/mongod.conf``. If you're
+   comfortable with a terminal text editor, such as vi or emacs, use one of
+   those. I used nano, because it's a little simpler, with
+   ``sudo nano /etc/mongod.conf``.
+   Add the following two lines somewhere in the file.
+   Like the ``network-config`` file you edited earlier,
+   it's a YAML file, so the indentation is important!
+
+   .. code:: yaml
+
+      # These two lines must be uncommented and in the file together:
+      security:
+         authorization: enabled
+
+   And finally, restart mongod:
+
+   .. code:: bash
+
+      sudo systemctl restart mongod
+
+   Ensure that authentication is enforced by connecting ``mongo`` without
+   authentication:
+
+   .. code:: bash
+
+      $ mongo
+      MongoDB shell version v4.4.0
+      connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+      Implicit session: session { "id" : UUID("4002052b-1a39-4158-8a99-234cfd818e30") }
+      MongoDB server version: 4.4.0
+      > db.adminCommand({listDatabases: 1})
+      {
+            "ok" : 0,
+            "errmsg" : "command listDatabases requires authentication",
+            "code" : 13,
+            "codeName" : "Unauthorized"
+      }
+      > exit
+
+   Ensure you've exited ``mongo`` and now test that you can connect and
+   authenticate with the user details you created:
+
+   .. code:: bash
+
+      $ mongo -u "admin" -p "SUPERSECRETPASSWORD"
+      MongoDB shell version v4.4.0
+      connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+      Implicit session: session { "id" : UUID("3dee8ec3-6e7f-4203-a6ad-976b55ea3020") }
+      MongoDB server version: 4.4.0
+      > db.adminCommand({listDatabases: 1})
+      {
+            "databases" : [
+                     {
+                              "name" : "admin",
+                              "sizeOnDisk" : 151552,
+                              "empty" : false
+                     },
+                     {
+                              "name" : "config",
+                              "sizeOnDisk" : 36864,
+                              "empty" : false
+                     },
+                     {
+                              "name" : "local",
+                              "sizeOnDisk" : 73728,
+                              "empty" : false
+                     },
+                     {
+                              "name" : "test",
+                              "sizeOnDisk" : 8192,
+                              "empty" : false
+                     }
+            ],
+            "totalSize" : 270336,
+            "ok" : 1
+      }
+      > exit
+
+   Make MongoDB Available to your Network
+   --------------------------------------
+
+   **This step is optional!** Now that you've configured authentication on
+   your server, if you want your database to be available to other
+   computers on your network, you need to:
+
+   -  Bind MongoDb to the Raspberry Pi's public IP address
+   -  Open up port ``27017`` on the Raspberry Pi's firewall.
+
+   .. blockquote::
+
+      If you *don't* want to access your data from your network,
+      *don't* follow these steps! It's always better to leave things more
+      secure, if possible.
+
+   First, edit ``/etc/mongod.conf`` again, the same way as before. This
+   time, change the IP address to 0.0.0.0:
+
+   .. code:: yaml
+
+      # Change the bindIp to '0.0.0.0':
+      net:
+         port: 27017
+         bindIp: 0.0.0.0
+
+   And restart ``mongod`` again:
+
+   .. code:: bash
+
+      sudo systemctl restart mongod
+
+   Open up port 27017 on your Raspberry Pi's firewall:
+
+   .. code:: bash
+
+      sudo ufw allow 27017/tcp
+
+   Now, on *another computer on your network*, with the MongoDB client
+   installed, run the following to ensure that ``mongod`` is available on
+   your network:
+
+   .. code:: bash
+
+      # Replace YOUR-RPI-IP-ADDRESS with your Raspberry Pi's actual IP address:
+      mongo --host 'YOUR-RPI-IP-ADDRESS'
+
+   If it connects, then you've successfully installed and configured
+   MongoDB on your Raspberry Pi!
+
+   Security Caveats
+   ~~~~~~~~~~~~~~~~
+
+   *This short section is extremely important. Don't skip it.*
+
+   -  *Never* open up an instance of ``mongod`` to the internet without
+      authentication enabled.
+   -  Configure your firewall to limit the IP addresses which can connect
+      to your MongoDB port. (Your Raspberry Pi has just been configured to
+      allow connections from *anywhere*, with the assumption that your home
+      network has a firewall blocking access from outside.)
+   -  Ensure the database user password you created is secure!
+   -  Set up different database users for each app that connects to your
+      database server, with *only* the permissions required by each app.
+
+   MongoDB comes with sensible security defaults. It uses TLS, SCRAM-based
+   password authentication, and won't bind to your network port without
+   authentication being set up. It's still up to you to understand how to
+   secure your Raspberry Pi and any data you store within it. Go and read
+   the `MongoDB Security
+   Checklist <https://docs.mongodb.com/manual/administration/security-checklist/>`__
+   for further information on keeping your data secure.
+
+.. summary::
+
+   Wrapping Up
+   -----------
+
+   As you can see, there are a few steps to properly installing and
+   configuring MongoDB yourself. I hadn't done it for a while, and I'd
+   forgotten how complicated it can be! For this reason, you should
+   definitely consider using `MongoDB Atlas <https://cloud.mongodb.com/>`__
+   where a lot of this is taken care of for you. Not only is the
+   free-forever tier quite generous for small use-cases, there are also a
+   bunch of extra services thrown in, such as serverless functions,
+   charting, free-text search, and more!
+
+   You're done! Go write some code in your favourite programming language,
+   and if you're proud of it (or even if you're just having some trouble
+   and would like some help) `let us
+   know! <https://community.mongodb.com/>`__. Check out all the cool blog
+   posts on the `MongoDB Developer Hub <https://developer.mongodb.com/>`__,
+   and make sure to bookmark `MongoDB
+   Documentation <https://docs.mongodb.com/>`__
