@@ -52,7 +52,6 @@
 
 .. related::
 
-   * :doc:`/how-to/integration-test-realm-serverless-apps`
    * `Stitch Hosting: A Drag-and-Drop Delight <https://developer.mongodb.com/how-to/stitch-hosting>`__
    * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
    * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
