@@ -128,8 +128,6 @@ def check_twitter(files):
     output = [['\nList of the Twitter warnings:\n']]
     for ft in files:
         file_path = ft['file'].path.replace('../source', '')
-        if ':site: @mongodb' not in ft['array']:
-            output.append(['=> Missing ":site: @mongodb"', file_path])
         if not any(re.compile(':creator: @.*').match(line) for line in ft['array']):
             output.append(['=> Missing ":creator: @..."', file_path])
         if not any(re.compile(':title:.*').match(line) for line in ft['array']):
@@ -156,10 +154,6 @@ def check_og(files):
     output = [['\nList of the og warnings:\n']]
     for ft in files:
         file_path = ft['file'].path.replace('../source', '')
-        if ':type: article' not in ft['array']:
-            output.append(['=> Missing ":type: article"', file_path])
-        if not any(re.compile(':url:.*').match(line) for line in ft['array']):
-            output.append(['=> Missing ":url:"', file_path])
         if not any(re.compile(':title:.*').match(line) for line in ft['array']):
             output.append(['=> Missing ":title:"', file_path])
         if not any(re.compile(':image:.*').match(line) for line in ft['array']):
@@ -303,6 +297,7 @@ def check_thing_not_used(things, all_things, things_used, things_to_ignore):
                 else:
                     output.append('=> ' + thing)
     handle_errors(output, False)
+
 
 def check_thing_not_found(things, all_images, images_used):
     output = ['\nList of ' + things + ' not found:\n']
