@@ -35,6 +35,8 @@
 
 .. pubdate:: 2020-04-22
 
+.. updated-date:: 2020-09-02
+
 .. type:: article
 
 .. level:: beginner
@@ -212,7 +214,7 @@ Massive Arrays
          "last": "Yepp",
          "cell": "8125552344",
          "start-year": "2004",
-         "building_name": {
+         "building": {
             "name": "City Hall",
             "state": "IN"
          }
