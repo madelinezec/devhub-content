@@ -65,6 +65,10 @@ Building Modern Applications with Next.js and MongoDB
 
 .. introduction::
 
+   .. blockquote:: 
+
+      This article is out of date. Check out the :doc:`official Next.js with MongoDB tutorial </how-to/nextjs-with-mongodb>` for the latest guide on integrating MongoDB with Next.js.
+
    Developers have more choices than ever before when it comes to choosing the technology stack for their next application. Developer productivity is one of the most important factors in choosing a modern stack and I believe that Next.js coupled with MongoDB can get you up and running on the next great application in no time at all. Let's find out how and why!
 
    If you would like to follow along with this tutorial, you can get the code from the `GitHub repo <https://github.com/kukicado/building-modern-app-with-nextjs-and-mongodb>`__. Also, be sure to sign up for a `free MongoDB Atlas account <https://www.mongodb.com/atlas>`__ to make it easier to connect your MongoDB database.
