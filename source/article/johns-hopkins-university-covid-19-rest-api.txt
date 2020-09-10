@@ -33,6 +33,8 @@
 
 .. pubdate:: 2020-07-28
 
+.. updated-date:: 2020-09-10
+
 .. type:: article
 
 .. level:: beginner
@@ -42,6 +44,10 @@
    * API
    * Data
    * Time Series
+
+.. languages::
+
+   * JavaScript
 
 .. products::
 
@@ -66,6 +72,15 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
    .. blockquote::
 
       Here is the `REST API Documentation in Postman <https://documenter.getpostman.com/view/1678623/SzfDx54T?version=latest>`__.
+
+   News
+   ----
+
+   September 10th, 2020
+   ~~~~~~~~~~~~~~~~~~~~
+
+   - Let me know what you think in `our topic in the community forum <https://developer.mongodb.com/community/forums/t/devhub-a-free-rest-api-for-johns-hopkins-university-covid-19-dataset/8915>`__.
+   - Fixed a bug in my code which was failing if the IP address wasn't collected properly.
 
    Introduction
    ------------
@@ -119,15 +134,19 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
 
    .. code-block:: javascript
 
-      exports = function(payload, response) {
+      function log_ip(payload) {
         const log = context.services.get("pre-prod").db("logs").collection("ip");
-        const ip = payload.headers["X-Cluster-Client-Ip"][0] || "IP missing";
+        let ip = "IP missing";
+        try {
+          ip = payload.headers["X-Envoy-External-Address"][0];
+        } catch (error) {
+          console.log("Can't retrieve IP address.")
+        }
         console.log(ip);
         log.updateOne({"_id": ip}, {"$inc": {"queries": 1}}, {"upsert": true})
           .then( result => {
             console.log("IP + 1: " + ip);
           });
-        // [...]
       }
 
    - Then I retrieve the query parameters and I build the query that I'm sending to the MongoDB cluster along with the `projection <https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/#return-all-but-the-excluded-fields>`__ and `sort <https://docs.mongodb.com/manual/reference/method/cursor.sort/>`__ options.
@@ -139,7 +158,8 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
       }
 
       exports = function(payload, response) {
-        // [...]
+        log_ip(payload);
+
         const {uid, country, state, country_iso3, min_date, max_date, hide_fields} = payload.query;
         const coll = context.services.get("mongodb-atlas").db("covid19").collection("global_and_us");
 
@@ -200,15 +220,24 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
       function isPositiveInteger(str) {
           return ((parseInt(str, 10).toString() == str) && str.indexOf('-') === -1);
       }
-      
-      exports = function(payload, response) {
+
+      function log_ip(payload) {
         const log = context.services.get("pre-prod").db("logs").collection("ip");
-        const ip = payload.headers["X-Cluster-Client-Ip"][0] || "IP missing";
+        let ip = "IP missing";
+        try {
+          ip = payload.headers["X-Envoy-External-Address"][0];
+        } catch (error) {
+          console.log("Can't retrieve IP address.")
+        }
         console.log(ip);
         log.updateOne({"_id": ip}, {"$inc": {"queries": 1}}, {"upsert": true})
           .then( result => {
             console.log("IP + 1: " + ip);
           });
+      }
+
+      exports = function(payload, response) {
+        log_ip(payload);
 
         const {uid, country, state, country_iso3, min_date, max_date, hide_fields} = payload.query;
         const coll = context.services.get("mongodb-atlas").db("covid19").collection("global_and_us");
