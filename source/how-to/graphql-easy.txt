@@ -1,0 +1,596 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL. 
+
+
+.. twitter::
+   :creator: @youoldmaid
+   :title: GraphQL: The Easy Way to Do the Hard Stuff
+   :image: /images/social/twitter/twitter-graphql.png
+   :image-alt: Graphic with the logo for Realm GraphQL
+
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way. 
+
+
+.. og::
+   :title: GraphQL: The Easy Way to Do the Hard Stuff
+   :image: /images/social/open-graph/og-graphql.png
+ 
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way. 
+
+.. ---------------------------------------------------------------
+.. HOW-TO METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/huaulme-karen.rst
+
+.. include:: /includes/authors/leonard-brian.rst
+
+.. pubdate:: 2020-09-11
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags:: 
+
+   * GraphQL
+   * API
+   * Data
+   * Schema Design
+
+.. products::
+
+   * Realm
+   * Atlas
+
+.. atf-image:: /images/atf-images/logos/graphql.png
+
+.. related::
+
+   * `Video: GraphQL: The Easy Way to Do the Hard Stuff <https://youtu.be/nM51I6XVlTw>`__
+   * `GitHub Repo: BankingDogs <https://github.com/mongodb-developer/BankingDogs>`__
+   * `Video: Realm Creating Sophisticated GraphQL APIs in Minutes <https://youtu.be/eiUYYYiG7F0>`__
+
+==========================================
+GraphQL: The Easy Way to Do the Hard Stuff
+==========================================
+
+.. introduction:: 
+
+    `GraphQL <https://graphql.org/>`__ is rapidly growing in popularity as the new standard for working with APIs, and it's easy to see why! Performant and efficient, this groundbreaking API query language gives developers a single API endpoint to access exactly the data they need. Relationships and custom resolvers allow you to even further evolve your GraphQL API to access multiple data sources. With such extensibility, you can iterate even more quickly on front-end features your application users will love.
+
+    In this tutorial, we'll walk through a comprehensive example starting only with data and build out an entire site using GraphQL - showing why it's become so popular. 
+
+    We'll start by setting up a hosted, serverless, and secure GraphQL API for our data in minutes. Then we will extend that API with relationships to other data collections and custom resolvers in order to bundle together different data sources and APIs together under the same schema. Finally, we will build out a web application using our GraphQL endpoint to demonstrate how GraphQL gives us exactly the data we want - nothing more, nothing less. 
+
+    Along the way, we'll learn how to
+
+    - automatically generate JSON schema for your MongoDB collections.
+    - create types and resolvers for that data.
+    - define custom query resolvers to access other databases or 3rd party APIs. 
+    - test your schema using the GraphiQL interface inside the Atlas UI.
+
+    .. blockquote::
+      
+      Do you prefer to learn by video? To see us build out our GraphQL application in real time, check out this video tutorial.
+
+      .. youtube:: nM51I6XVlTw
+
+.. content:: 
+    
+    LET'S START WITH THE DATA
+    -------------------------
+
+    This tutorial assumes that you already have a MongoDB Atlas cluster with the `Sample Dataset loaded <https://docs.atlas.mongodb.com/sample-data/sample-analytics/#sample-analytics>`__. If not, it's `totally free <https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/>`__ to create one. Our application will use the `sample_analytics <https://docs.atlas.mongodb.com/sample-data/sample-analytics/#sample-analytics>`__ dataset. This database contains different collections for a typical financial services application: 
+
+    - The **sample_analytics.customers** collection contains customer details including account numbers. 
+    - The **sample_analytics.accounts** collection contains the details of each of the customer's accounts. Each document contains an account_id and the products that a customer has purchased.
+
+    In the below image, notice how the value in the customer document's accounts array points to the account_id field in the account document.
+
+    .. figure:: /images/how-to/graphql-easy/CustAcctsDiagram_nb.png
+        :align: center
+        :alt: Relationship Between Customer and Account
+
+    Now let's expose our sample_analytics data from our cluster by leveraging MongoDB Realm to set up a hosted, serverless, and secure GraphQL API. This will only take a few clicks!
+
+    **Step 1. Create the BankingDogs Realm Application** 
+
+    MongoDB Realm, simply stated, is a serverless application backend that streamlines your backend code so you can focus on front-end features.  We'll use Realm in this tutorial to not only offload the GraphQL backend and middleware layers, but also to handle the authentication, schema creation, and GraphQL queries.
+
+    Inside your Atlas UI, select the **Realm** tab and **Create a New App.**
+
+    .. figure:: /images/how-to/graphql-easy/CreateRealmApp.png
+        :align: center
+        :scale: 60%
+        :alt: Create Realm App
+
+    Name the application and link it to your Atlas cluster with the sample data loaded. I named my application *BankingDogs.* You'll see why very soon.
+
+    .. figure:: /images/how-to/graphql-easy/NameAndLink.png
+        :align: center
+        :scale: 70%
+        :alt: Name and Link to Cluster
+
+    Then click **Create Realm Application.** Now we are well on our way!
+
+
+    **Step 2: Define Data Access Rules for Your Collections**
+
+    Realm enforces data collection rules for all incoming GraphQL requests. All GraphQL requests must include an authentication token to identify the logged-in Realm user making the request. Realm evaluates a role for every document included in a GraphQL operation and only returns fields and documents that the Realm user has permission to see.  
+
+    We'll examine this more in detail later, but for right now select the **Rules** menu under Data Access & Security on the left. Then click **Add Collection** to select database **sample_analytics** and **accounts** collection using no collection template. Select **All Additional Fields** for read permission. This **Default Role** will apply to every logged-in user and will allow all fields to be read.
+
+    .. figure:: /images/how-to/graphql-easy/RulesCollection.gif
+        :align: center
+        :alt: Define Rules on a Collection
+
+    Schema
+    ------
+
+    GraphQL is strongly typed. Every GraphQL API conforms to a "schema." This schema data model serves as a contract between the client and the server to define what fields are mapped to what types and what kinds of queries a client can make.  As such, schemas need to be created for any fields we want to expose via the API. In the upcoming Steps 3-6, we will create the schema from our data, test the schema, and extend the schema through relationships to other data collections. Finally in Steps 7-8, we will extend our schema beyond simply our MongoDB data to include 3rd party data by creating custom resolvers. 
+
+    **Step 3: Create the Schema for Accounts Collection**
+
+    Switch to the **Schema** tab and click **Generate Schema.** Once your schema is generated, to ensure it is valid, select the **Validate** tab to **Run Validation.** **Save**, then **Review & Deploy** the changes.
+
+    .. figure:: /images/how-to/graphql-easy/GenAccountsSchema.gif
+        :align: center
+        :alt: Generate Accounts Schema 
+
+    And that's it!! You just created your first GraphQL schema and endpoint. At this point, you have done all you need to do to surface your MongoDB Atlas data to client applications. Even if you do not have a front end, you can still test your endpoint and query for your data inside the Realm interface. 
+
+    .. blockquote::
+
+        Pro Tip! To speed up development, you can bypass the Review & Deploy changes step by disabling drafts. You'll find the setting under Deploy > Configuration.
+
+    **Step 4: Test New Schema and API in GraphiQL**
+
+    Navigate over to GraphQL in the left side menu. This will open the **Explore** tab with the `GraphiQL <https://github.com/graphql/graphiql>`__ GraphQL IDE interface.
+
+    There are several exciting things to note here:
+
+    * You have your GraphQL endpoint to use in your application. 
+    * You have your GraphiQL interface where you can test out queries.
+    * You have automatically generated documentation in the Documentation Explorer. 
+
+    .. image:: /images/how-to/graphql-easy/graphql3things.gif
+        :align: center
+        :alt: Three Things to Note
+
+    Documentation
+    -------------
+
+    A favorite aspect of GraphQL is that it's self documenting. You'll find the Documentation Explorer on the right side of the GraphiQL interface. Click into **Query** and you'll see the Query fields that are now available:
+
+    .. image:: /images/how-to/graphql-easy/documentation.gif
+        :align: center
+        :scale: 40%
+        :alt: Documentation Explorer
+
+    **account** and **accounts** were created for us when we generated this schema for that collection. 
+    Finally, click into **account** to see the fields that are returned: **_id**, **account_id**, **limit**, and **products**. 
+
+    BUILDING QUERIES
+    ----------------
+
+    GraphiQL provides an invaluable tool which will help you structure your GraphQL queries correctly. Switch to the query window inside of GraphiQL and scroll to the bottom (or just delete the commented help text). You can see our first query to return an account document. Clicking **RUN** will execute this query and see the response on the right. 
+
+    .. image:: /images/how-to/graphql-easy/queryaccount.png
+        :align: center
+        :scale: 90%
+        :alt: Query Account
+
+    Feel free to peruse the Document Explorer and play around with your queries in GraphiQL.
+
+    **Step 5: Create a Custom Schema for Customers Collection**
+
+    Now that you have successfully created and tested a GraphQL API endpoint for your accounts data, let's repeat these same steps to create and validate a schema for the customers collection by clicking on the **customers** collection in the left side menu.
+
+    .. image:: /images/how-to/graphql-easy/cust_rules.png
+        :align: center
+        :scale: 90%
+        :alt: Create Customer Schema
+
+    Remember to give all fields read permissions. Generate the schema and validate. After validating, you will see you get an error message when trying to save.
+
+    .. figure:: /images/how-to/graphql-easy/error.png
+        :align: center
+        :alt: Error
+    
+    .. figure:: /images/how-to/graphql-easy/uhoh.gif
+        :align: center
+        :scale: 20%
+        :alt: Oops!
+
+    This is because of the **tier_and_details** field in the customer document. We can simply remove this field since we won't need it in the response payload anyway. In fact, if you have data fields that you don't want to surface to the client application, you can simply remove them from your schema. Click **Remove Configuration**.
+
+    .. image:: /images/how-to/graphql-easy/removeconfig.png
+        :align: center
+        :scale: 50%
+        :alt: Remove Configuration
+
+    Now go back to the **Schema** tab, and instead of generating a schema automatically, paste in the following schema object which simply removes the **tier_and_details** field:
+
+    .. code-block:: javascript
+
+        {
+            "title": "customer",
+            "properties": {
+                "_id": {
+                    "bsonType": "objectId"
+                },
+                "accounts": {
+                    "bsonType": "array",
+                    "items": {
+                    "bsonType": "int"
+                    }
+                },
+                "active": {
+                    "bsonType": "bool"
+                },
+                "address": {
+                    "bsonType": "string"
+                },
+                "birthdate": {
+                    "bsonType": "date"
+                },
+                "email": {
+                    "bsonType": "string"
+                },
+                "name": {
+                    "bsonType": "string"
+                }
+            }
+        }
+
+    .. figure:: /images/how-to/graphql-easy/createcustschema.gif
+        :align: center
+        :alt: Create Customer Schema
+
+    Now you can validate and save with no problems. Be sure to **Review & Deploy** the changes.
+
+    Going back to GraphiQL, you can start querying for the customer data right away:
+
+    .. figure:: /images/how-to/graphql-easy/querycust.png
+        :align: center
+        :scale: 90%
+        :alt: Customer Query
+
+    Notice you have the **EXACT SAME ENDPOINT** as you used for the accounts collection! You can also combine calls to both collections, thereby avoiding multiple roundtrips to the server. 
+
+    .. image:: /images/how-to/graphql-easy/queryaccountcust.png
+        :align: center
+        :scale: 90%
+        :alt: Customer & Account Query
+
+    Request as many or as few fields as you wish to get exactly the data you want. This eliminates over-fetching, decreases the response payload, and avoids long page load times. In turn, you get better application performance and can write cleaner code.
+
+    .. figure:: /images/how-to/graphql-easy/bigdeal.gif
+        :align: center
+        :scale: 40%
+        :alt: Big Deal
+
+    RELATIONSHIPS
+    -------------
+
+    We can use our schema to define relationships that connect each document in one local collection to one or more documents in a different, or foreign, collection on the linked MongoDB Atlas cluster. 
+    So let's connect our customers to their accounts. Creating a relationship between customers and accounts allows us to fluently query related documents in GraphQL read and write operations. 
+    In our case, this will enable us to query for a customer and not just get the customer information, but also the list of products for each of their accounts from the accounts collection in one call.
+   
+    **Step 6: Define a Relationship Between Customers and Accounts**
+
+    To create a relationship, return to **Rules** for the **customers** collection, our local collection. Remember how our **customers** and **accounts** collections are related through the customers **accounts** array 
+    pointing to the **account_id** field in the **accounts** collection? Let's link them in the interface. **Add Relationship** in the **Relationships** tab:
+
+    .. figure:: /images/how-to/graphql-easy/addrelationship.gif
+        :align: center
+        :alt: Relationship
+
+    This is our relationship defintion:
+
+    .. figure:: /images/how-to/graphql-easy/relationship.png
+        :align: center
+        :scale: 70%
+        :alt: relationship defintion
+    
+    Realm evaluates which account documents are related to a given customer document based on a foreign key value. Our relationship defines the **foreign_key** 
+    field as **account_id**. Also note that **is_list** definition field is set to **true**. This indicates that the relationship from one customer is to multiple account 
+    documents because the local field **accounts** contains an array of values.
+
+    With this relationship now defined, Realm can fluidly return a customer and all of her accounts in the same GraphQL query. 
+    Returning to GraphiQL, note that we no longer query for simply the accounts field from customers. We must request fields 
+    from the corresponding accounts document as per the related account_id field in the **accounts** collection. In the example below, I am 
+    retrieving not only the customer information from the **customers** collection, but also all of her product information from her related 
+    accounts in one single trip to the server:
+
+    .. image:: /images/how-to/graphql-easy/query_cust_account.png
+        :align: center
+        :scale: 90%
+        :alt: Customer & Account Query
+
+
+    **What would traditionally require 2 distinct API calls can now be accomplished with a single call!**
+
+    .. figure:: /images/how-to/graphql-easy/twofer.gif
+        :align: center
+        :scale: 40%
+        :alt: Twofer
+
+    CUSTOM RESOLVERS
+    ----------------
+
+    One of the many powerful aspects of GraphQL is the ability to resolve a single query to multiple backend resources. From the `GraphQL Documentation <https://graphql.org/learn/execution/>`__:
+        *Each field on each type is backed by a function called the resolver which is provided by the GraphQL server developer. When a field is executed, the corresponding resolver is called to produce the next value.*
+
+    Realm `automatically generates resolvers <https://docs.mongodb.com/realm/graphql/types-and-resolvers/#query-resolvers>`__ for the collection fields defined in your schema. However, you may want to define a field that resolves to something outside of the MongoDB database. With `custom resolvers <https://docs.mongodb.com/realm/graphql/custom-resolvers>`__ , you can bundle together different data sources - whether from other databases or 3rd party APIs - all under the same schema. To extend our GraphQL API even further to suit our use case, let's create a custom resolver to retrieve a random dog image and quote. After all, right now the world needs more dogs and humor.
+
+    .. figure:: /images/how-to/graphql-easy/funnydog.gif
+        :align: center
+        :scale: 25%
+        :alt: Dog
+
+    **Step 7: Create the getDogAndQuote Function**
+
+    Our custom resolver will point to this function for the logic in defining what gets translated into the actual GraphQL API. In our banking application, we not only want to get our customer's account information, but we also need a good laugh nowadays. For this step, we're going to employ the Computer Quote API from `Storm Consultancy <https://stormconsultancy.co.uk/>`__ which provides a selection of quotes from the field of computer science - because computer science is hilarious!!! 
+
+    Here is a  typical payload requesting a random quote from http://quotes.stormconsultancy.co.uk/random.json :
+
+    .. figure:: /images/how-to/graphql-easy/quotepayload.png
+        :align: center
+        :scale: 90%
+        :alt: Storm Consultancy Payload
+
+    With this in mind, select the **Functions** menu on the left:
+
+    .. image:: /images/how-to/graphql-easy/functions.png
+        :align: center
+        :alt: Functions
+
+    And **Create a New Function.**
+
+    Name the function **getDogAndQuote.**
+
+    .. image:: /images/how-to/graphql-easy/getdogandquote.png
+        :align: center
+        :scale: 90%
+        :alt: Dog and Quote Function
+
+    Then switch to the **Function Editor** and replace the sample code with the following:
+
+    .. code-block:: javascript
+
+        exports = async function(){
+
+            // Computer Quote API from Storm Consultancy:   
+            const quoteUrl = "http://quotes.stormconsultancy.co.uk/random.json";
+
+            const quoteResponse = await context.http.get({ url: quoteUrl});
+            const quotePayload = EJSON.parse(quoteResponse.body.text());
+        
+            const quote = quotePayload.quote;
+            const author = quotePayload.author;
+
+            return {  
+                     quote:quote, 
+                     author:author
+            };
+        }
+
+    Feel free to include error handling as you desire :-).
+
+    Use the **Console** at the bottom of the page to click **Run** to verify that you get a quote and author back successfully from the API:
+
+    .. figure:: /images/how-to/graphql-easy/RunQuote.gif
+        :align: center
+        :alt: Run Quote Function
+
+    Even though our **customers** collection doesn't have the customer's photo, I like to imagine who we are working with, so let's use the **Dog API** to retrieve a random dog photo. Add the following lines of code to your Realm function and change the return object to include your dog image.
+
+    .. code-block:: javascript
+
+         const dogUrl = "https://dog.ceo/api/breeds/image/random";
+         const dogResponse = await context.http.get({ url: dogUrl});
+         const dogPayload = EJSON.parse(dogResponse.body.text());
+         const dogImage = dogPayload.message;
+
+         return { 
+                  quote:quote, 
+                  author:author,
+                  dogImage: dogImage
+         };
+
+    **Save** then **Review & Deploy** the function.
+
+    **Step 8: Create the Custom Resolver**
+
+    Finally, to create the custom resolver, select the **GraphQL** menu on the left and then the **Custom Resolvers** tab:
+
+    .. figure:: /images/how-to/graphql-easy/addcustomresolver.png
+        :align: center
+        :scale: 50%
+        :alt: Add Custom Resolver
+
+    Click **Add a Custom Resolver.** 
+
+    We want to allow our clients to insert a new field into their GraphQL query which will return the dog image and quote. The **GraphQL** Field Name is the name of the field that calls the custom resolver and the **Parent Type** determines if the resolver is a query or a mutation. Set the GraphQL Field Name to **DogAndQuote**, the Parent Type to **Query** and the Function to the **getDogAndQuote** function you just created.
+
+    Set the InputType to **None**, as our resolver doesn't require one. Set the Payload Type to **Custom Type** with the following: 
+
+    .. code-block:: javascript
+
+        {
+            "type": "object",
+            "title": "DogAndQuote",
+            "properties": {
+                "quote": {
+                    "type": "string"
+                },  
+                "author": {
+                    "type": "string"
+                },
+                "dogImage": {
+                    "type": "string"
+                }
+            }
+        }
+
+    .. figure:: /images/how-to/graphql-easy/createcustresolver.gif
+        :align: center
+        :alt: Create Custom Resolver
+
+    The title "DogAndQuote" will be used to describe the payload in the GraphQL documentation. In summary, when the Realm GraphQL resolver sees the field "DogAndQuote", it will call the function "getDogAndQuote" to get the result.
+
+    **Save** then **Review & Deploy** the custom resolver.
+
+    Switch to the **Explore** tab to see the result from the DogAndQuote query:
+
+    .. image:: /images/how-to/graphql-easy/querydogquote.png
+        :align: center
+        :scale: 90%
+        :alt: Query Dog Quote
+
+    For good measure, let's add some simple customer data to the query:
+
+    .. image:: /images/how-to/graphql-easy/queryDogCust.png
+        :align: center
+        :scale: 90%
+        :alt: Query Dog Customer
+
+    On the backend, data from multiple sources (MongoDB, QuoteAPI and Dog API) was retrieved with a single query - thanks to Realm's support for Custom Resolvers! Now our client can query GraphQL and get exactly the data they want - nothing more, nothing less.
+
+    .. image:: /images/how-to/graphql-easy/GraphQLDiagram_nb.png
+        :align: center
+        :alt: GraphQL to Multiple Backends
+
+    **Query Filters and Variables**
+
+    Our current GraphQL query is just returning a single customer record. We can apply a filter to the query to get a specific customer. For example:
+
+    .. image:: /images/how-to/graphql-easy/queryfiltervariable.png
+        :align: center
+        :scale: 90%
+        :alt: Query Filter Variable
+
+    We can then further abstract this query by pulling the name into a variable:
+
+    .. image:: /images/how-to/graphql-easy/queryvariable.png
+        :align: center
+        :scale: 90%
+        :alt: Query Variable
+
+    LET'S FINISH WITH THE FRONT-END
+    -------------------------------
+    
+    Now that we have our entire GraphQL backend built out, let's use it in an application. At https://github.com/mongodb-developer/BankingDogs you will find 4 files which comprise our BankingDogs web application. Go ahead and download them into an application folder. Open them and let's familiarize ourselves with the code. 
+
+    On the user interface (BankingDogs.html), there is a form input for a customer name. Upon hitting enter, the application will execute the **userAction** function in the **BankingDogsScript.js** file. In the BankingDogsScript.js file, you will see that we have only two points of integration to our Realm application:
+
+    * Line 2: Realm App ID
+    * Line 21: GraphQL endpoint
+
+    You will also notice on line 5 that we will need login credentials for Realm GraphQL. As mentioned in Step 2, all GraphQL requests must include an authentication token to identify the logged-in Realm user making the request. Realm built-in authentication support makes your app's authentication implementation quick and painless! 
+
+    **Step 9: Enable Anonymous Authentication**
+
+    In your Realm interface, navigate over to Users in the left side menu. In the **Providers** tab, toggle **Allow users to log in anonymously** to on:
+
+    .. image:: /images/how-to/graphql-easy/users.png
+        :align: center
+        :scale: 90%
+        :alt: Users
+
+    The Anonymous authentication provider allows users to log in to your application without providing credentials. 
+
+    .. blockquote::
+
+        .. image:: /images/how-to/graphql-easy/youtube_logo.png
+            :align: center
+            :alt: Video
+
+        Since our application is quite basic, anonymous authentication is plenty. However, Realm provides a wide variety of built-in `authentication <https://docs.mongodb.com/realm/authentication/>`__ options, such as email/password, Google, Facebook, and even custom authentication. To learn more, check out this brief video tutorial: `Intro to MongoDB Stitch: Using Stitch Authentication Providers <https://youtu.be/afs0wQa-Dp0>`__
+
+    **Step 10: Link BankingDogs Front-End to Realm Application**
+
+    As noted earlier, lines 2 and 21 are the sole points of integration for your Realm application to the front end.  Currently these are using the endpoints of my BankingDogs application, but go ahead and replace them with your own Realm App ID and GraphQL API endpoint. Navigate back to GraphQL in the left menu to retrieve these.
+
+    .. image:: /images/how-to/graphql-easy/endpoint_id.jpg
+        :align: center
+        :scale: 90%
+        :alt: GraphQL Endpoint
+
+    .. figure:: /images/how-to/graphql-easy/RealmIntegration_fe.gif
+        :align: center
+        :alt: Integrate Realm to Front End 
+
+    **Step 11: Insert GraphQL Queries**
+    
+    Notice on **lines 29-44** in our BankingDogs.js file that we have the query which can be simply cut and pasted directly from our GraphiQL interface. 
+
+    .. figure:: /images/how-to/graphql-easy/finalquery.png
+        :align: center
+        :scale: 90%
+        :alt: Final Query to Paste 
+
+    You can see in the application we are also using a QueryInput to filter for a specific user:
+
+    .. code-block:: javascript
+
+         const resp = await axios({
+         url: 'https://realm.mongodb.com/api/client/v2.0/app/bankingdogs-ukaex/graphql',
+         method: 'post',
+         headers: {
+            'Authorization': `Bearer ${user.auth.activeUserAuthInfo.accessToken}`
+         },
+         data: {
+            variables: {cust},
+            query :`
+               query ($cust: String) {
+                  customer(query:{name:$cust}) {
+                     name
+                     email
+                     address
+                     accounts{
+                        account_id
+                        products
+                     }  
+                  }
+                  DogAndQuote {
+                     author
+                     dogImage
+                     quote
+                  }   
+               }
+               `
+            }
+         }); 
+
+    Opening the console in the developer tools, will also show you the entire response payload. Go ahead and play around with your queries in GraphiQL and in the application.
+
+    .. figure:: /images/how-to/graphql-easy/appdemo.gif
+        :align: center
+        :alt: App Demo 
+
+.. summary:: 
+
+    WRAPPING UP!
+    ------------
+    
+    Working through our BankingDogs application tutorial, we see how our secure GraphQL server exposes a single endpoint to respond with exactly the data our client application requested - nothing more, nothing less. This simplicity and flexibility leads to cleaner code, reduced payloads, optimized performance, and increased developer productivity. It's easy to see how MongoDB Realm's GraphQL support has made data even more stunningly easy to work with. 
+
+    To learn more, ask questions, leave feedback or simply connect with other MongoDB developers, visit our `community forums. <https://developer.mongodb.com/community/forums/>`__ Come to learn. Stay to connect.   
+
+
+    .. blockquote::
+
+        For our BankingDogs application, we have only queried data with one role. If you would like to do a more. sophisticated application and employ mutations and varied roles, check out Drew DiPalma's talk from MongoDB .live 2020: 
+        **Creating Sophisticated GraphQL APIs in Minutes.**
+        
+        .. youtube:: eiUYYYiG7F0
