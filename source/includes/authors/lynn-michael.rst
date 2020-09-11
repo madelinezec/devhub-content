@@ -7,4 +7,4 @@
    :github: https://github.com/mrlynn
    :linkedin: https://www.linkedin.com/in/mlynn/
 
-   I'm Michael Lynn, a Principal Developer Advocate at MongoDB focusing on emerging developers.
+   Michael Lynn is a Principal Developer Advocate on the Developer Relations team at MongoDB focusing on Realm, Swift, iOS as well as Startups and Emerging Developers.

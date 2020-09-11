@@ -1,0 +1,626 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description::
+
+   Build a Command Line Tool with Swift and MongoDB
+
+.. twitter::
+   :creator: @mlynn
+   :title: How to build a command-line executable using Swift and MongoDB
+   :image: /images/atf-images/illustrations/dev-tools-swift.png
+   :image-alt: MongoDB Developers
+
+   Ever wanted to create a command-line executable that automates interaction with a database? This guide will get you started 
+   with executables, Swift and MongoDB.
+
+.. og::
+   :title: How to create a command-line executable using Swift and MongoDB
+   :image: /images/social/open-graph/og-build.png
+
+   This article will help you build a command line executable tool that manipulates data in a MongoDB database.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-09-11
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. atf-image:: /images/atf-images/illustrations/dev-tools-swift.png
+
+.. level:: beginner
+
+.. tags::
+
+   * iOS
+   * Data
+
+.. languages::
+
+   * Swift
+
+.. products::
+
+   * MongoDB
+   * Realm
+   * Atlas
+
+.. related::
+
+   * `Announcing the MongoDB Swift Driver <https://www.mongodb.com/blog/post/announcing-release-official-swift-driver>`__
+   * `Building a Command Line Tool with Swift and MongoDB - Video <https://www.youtube.com/watch?v=cHB8hzUSCpE>`__
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+===================================================
+Build a Command Line Tool with Swift and MongoDB
+===================================================
+
+.. introduction::
+
+   Table of Contents
+   -----------------
+
+   - :ref:`command-line-swift-introduction`
+   - :ref:`command-line-swift-tldr`
+   - :ref:`command-line-swift-goals`
+   - :ref:`command-line-swift-prerequisites`
+   - :ref:`command-line-swift-overview`
+   - :ref:`command-line-swift-requirements`
+   - :ref:`command-line-swift-launching-atlas`
+   - :ref:`command-line-swift-setting-up-project`
+   - :ref:`command-line-swift-data`
+   - :ref:`command-line-swift-mongodb-driver`
+   - :ref:`command-line-swift-conclusion`
+   - :ref:`command-line-swift-resources`
+   - :ref:`command-line-swift-troubleshooting`
+
+   ================================================
+   Build a Command Line Tool with Swift and MongoDB
+   ================================================
+
+.. content:: 
+
+   .. _command-line-swift-introduction:
+
+   Introduction
+   ------------
+
+   Building something with your bare hands gives a sense of satisfaction like few other tasks. But there's really 
+   no comparison to the feeling you get when you create something that not only accomplishes the immediate task at 
+   hand but also enables you to more efficiently accomplish that same task in the future. Or, even better, when someone 
+   else can use what you have built to more easily accomplish their tasks. That is what we are going to do today. We are 
+   going to build something that will automate the process of importing data into MongoDB.
+
+   An executable program is powerful because it's self contained and transportable. There's no requirement
+   to compile it or ensure that other elements are present in the environment. It just runs. You can share
+   it with others and assuming they have a relatively similar system, it'll just run for them too. We're going 
+   to focus on accomplishing our goal using Swift, Apple's easy-to-learn programming language. We'll also feature 
+   use of our brand new MongoDB Swift Driver that enables you to create, read, update and delete data in a MongoDB database.
+
+   .. _command-line-swift-tldr:
+
+   TL;DR:
+   ------
+
+   Rather have a video run-through of this content? Check out the `Youtube Video <https://www.youtube.com/watch?v=cHB8hzUSCpE>`__ where my colleague Nic Raboy, and I talk through this very same content. 
+
+   .. youtube:: cHB8hzUSCpE
+
+   .. _command-line-swift-goals:
+
+   Goals
+   -----
+
+   Here are the goals for this article.
+
+   1. Increase your familiarity with MongoDB Atlas
+   2. Introduce you to the `Swift Language <https://developer.apple.com/swift/>`__, and the `Xcode Development Environment <https://developer.apple.com/xcode/>`__
+   3. Introduce you to the `MongoDB Swift Driver <https://github.com/mongodb/mongo-swift-driver>`__
+   4. Introduce you to the `Swift Package Manager <https://swift.org/package-manager/>`__
+
+   By the end of this article, if we've met our goals, you will be able to do the following:
+
+   #. Use Xcode to begin experimenting with Swift
+   #. Use `Swift Package Manager <https://swift.org/package-manager/>`__ to: 
+      
+      - Create a basic project. 
+      - Integrate the MongoDB Swift Driver into your project
+      - Create an exectuable on your Mac.
+
+   .. _command-line-swift-prerequisites:
+
+   Prerequisites
+   -------------
+
+   Before we begin, let's clarify some of the things you'll have to have in place to get started. 
+
+   * A Mac & MacOS (not an iOS device). You may be reading this on your Windows PC or an iPad. Sorry folks this tutorial was written for you to follow along on your Mac machine: MacBook, MacBook Pro, iMac, etc. You may want to check out `macincloud <https://macincloud.com>`__ if you're interested in a virtual Mac experience.
+   * Xcode. You should have Xcode Installed - Visit `Apple's App Store <https://apps.apple.com/us/app/xcode/id497799835>`__ to install on your Mac.
+   * Swift Installed - Visit `Apple's Developer Site <https://developer.apple.com/swift/>`__ to learn more.
+   * Access to a MongoDB Database - Visit `MongoDB Atlas <https://cloud.mongodb.com>`__ to start for free. Read more about :atlas:`MongoDB Atlas <>`.
+
+   .. image:: /images/how-to/command-line-swift-mongodb/cmd-line-swift-about-xcode.png
+      :alt: Xcode Version 11.6
+      :align: center
+
+   .. blockquote:: 
+
+      If you haven't had much experience with `Xcode <https://developer.apple.com/xcode/>`__ or MacOS Application Development, check out
+      the guides on `Apple's Developer Hub <https://developer.apple.com/library/archive/referencelibrary/GettingStarted/DevelopiOSAppsSwift/>`__. 
+      Getting started is very easy and it's free!
+
+   What will we build?
+   -------------------
+
+   The task I'm trying to automate involves importing data into a MongoDB database. Before we get too far down the path of creating a solution, let's document our set of requirements for what we'll create. 
+
+   .. image:: /images/how-to/command-line-swift-mongodb/csv-to-mongodb.png
+      :alt: From CSV to MongoDB
+      :align: center
+
+
+   .. _command-line-swift-overview:
+
+   Overview of Steps
+   -----------------
+
+   Here's a quick run-down of the steps we'll work on to complete our task. 
+   
+   1. Launch an Atlas Cluster.
+   2. Add a Database user/password, and a network exception entry so you can access your database from your IP Address.
+   3. Create a Swift project using Swift Package Manager (``swift package init --type=executable``)
+   4. Generate an Xcode project using Swift Package Manager (``swift package generate-xcodeproj``)
+   5. Create a (``for loop``) using (`String <https://developer.apple.com/documentation/swift/string>`__) to access, and print out the data in your ``example.csv`` file. (See `csvread.swift <https://github.com/mongodb-developer/command-line-swift-mongodb>`__)
+   6. Modify your package to pull in the MongoDB Swift Driver. (See `Package.swift <https://github.com/mongodb-developer/command-line-swift-mongodb>`__)
+   7. Test. (``swift build; swift run``) Errors? See FAQ section below.
+   8. Modify your code to incorporate the MongoDB Swift Driver, and write documents. (See `Sources/command-line-swift-mongodb/main.swift <https://github.com/mongodb-developer/command-line-swift-mongodb>`__)
+   9. Test. (``swift build; swift run``) Errors? See FAQ section below.
+   10. Create executable and release. (``swift package release``)
+
+   .. _command-line-swift-requirements:
+
+   Requirements for Solution
+   -------------------------
+
+   1. The solution must **import a set of data** that starts in CSV (or tabular/excel) format into an existing MongoDB database.
+   2. Each row of the data in the CSV file **should become a separate document in the MongoDB Database**. Further, each new document should include a new field with the import date/time. 
+   3. It **must be done with minimal knowledge of MongoDB** - i.e. Someone with relatively little experience and knowledge of MongoDB should be able to perform the task within several minutes. 
+
+   We could simply use mongoimport with the following command line:
+
+   .. code-block:: bash
+
+      mongoimport --host localhost:27017 --type csv --db school --collection students --file example.csv  --headerline
+
+   If you're familiar with MongoDB, the above command line won't seem tricky at all.  However, this will not satisfy our requirements for the 
+   following reasons:
+
+   - **Requirement 1**: Pass - It will result in data being imported into MongoDB.
+   - **Requirement 2**: Fail - While each row WILL become a separate document, we'll not get our additional date field in those documents.
+   - **Requirement 3**: Fail - While the syntax here may seem rather straight-forward if you've used MongoDB before, to a newcomer, it can be a bit confusing. For example, I'm using localhost here... when we run this executable on another host, we'll need to replace that with the actual hostname for our MongoDB Database. The command syntax will get quite a bit more complex once this happens.
+
+   So then, how will we build something that meets all of our requirements?
+
+   We can build a command-line executable that uses the MongoDB Swift Driver to accomplish the task. Building a program to accomplish our task enables us to abstract much of the complexity associated with our task. 
+   Fortunately, there's a driver for Swift and using it to read CSV data, manipulate it and write it to a MongoDB database is really straight forward.
+
+   .. image:: /images/how-to/command-line-swift-mongodb/csv-to-mongodb.png
+      :alt: CSV to MongoDB
+      :align: center
+      
+   .. _command-line-swift-launching-atlas:
+
+   Launching Your Database Cluster in Atlas
+   ----------------------------------------
+
+   You'll need to create a new cluster and load it with sample data. My
+   colleague `Maxime Beugnet <https://www.linkedin.com/in/maximebeugnet>`__ has created a
+   :doc:`video tutorial </quickstart/free-atlas-cluster>`
+   to help you out, but I also explain the steps below:
+
+   -  Click `"Start free" <https://www.mongodb.com/cloud/atlas/signup>`__
+      on the MongoDB homepage.
+   -  Enter your details, or just sign up with your Google account, if you
+      have one.
+   -  Accept the Terms of Service
+   -  Create a *Starter* cluster.
+
+      -  Select the cloud provider where you'd like to store your MongoDB Database
+      -  Pick a region that makes sense for you.
+      -  You can change the name of the cluster if you like. I've called
+         mine "MyFirstCluster".
+
+   Once your cluster launches, be sure that you add a `Network Exception <https://docs.atlas.mongodb.com/security-whitelist/>`__ entry 
+   for your current IP and then `add a database username and password <https://docs.atlas.mongodb.com/security-add-mongodb-users/>`__. 
+   Take note of the username and password - you'll need these shortly.
+
+   .. _command-line-swift-setting-up-project:
+   
+   Setting Up The Project
+   ------------------------
+
+   We'll start on our journey by creating a Swift Package using `Swift Package Manager <https://swift.org/package-manager/>`__. This tool will give us a template project and establish the directory structure and some scaffolding we'll need to get started.  We're going to use the swift command line tool with the ``package`` subcommand. 
+
+   There are several variations that we can use. Before jumping in, let's example the difference in some of the flags.
+
+   .. code:: bash
+      
+      swift package init
+
+   This most basic variation will give us a general purpose project. But, since we're building a MacOS, executable, let's add the ``--type`` flag to indicate the type of project we're working on.
+
+   .. code:: bash
+
+      swift package init --type=executable
+
+   This will create a project that defines the "product" of a build -- which is in essense our executable. Just remember that if you're creating an executable, typically for server-side Swift, you'll want to incorporate the ``--type=executable`` flag.
+
+   Xcode is where most iOS, and Apple developers in general, write and maintain code so let's prepare a project so we can use Xcode too. Now that we've got our basic project scaffolding in place, let's create an Xcode project where we can modify our code.
+
+   To create an Xcode project simply execute the following command:
+
+   .. code-block:: bash
+   
+      swift package generate-xcodeproj
+
+   Then, we can open the ``.xcproject`` file. Your mac should automatically open Xcode as a result of trying to open an Xcode Project file. 
+
+   .. code-block:: bash
+   
+      open <your project name>.xcodeproj/ # change this to the name that was created by the previous command.
+
+   .. _command-line-swift-data:
+
+   Looking at our Data
+   -------------------
+
+   With our project scaffolding in place, let's turn our focus to the data we'll be manipulating with our executable. Let's look at the raw data first. Let's say there's a list of students that come out every month that I need to get into my database. It might look something like this:
+
+   .. code:: bash
+
+      firstname,lastname,assigned
+      Michael,Basic,FALSE
+      Dan,Acquilone,FALSE
+      Eli,Zimmerman,FALSE
+      Liam,Tyler,FALSE
+      Jane,Alberts,FALSE
+      Ted,Williams,FALSE
+      Suzy,Langford,FALSE
+      Paulina,Stern,FALSE
+      Jared,Lentz,FALSE
+      June,Gifford,FALSE
+      Wilma,Atkinson,FALSE
+
+   In this example data, we have 3 basic fields of information: First Name, Last Name, and a Boolean value indicating whether or not the student has been assigned to a specific class. 
+
+   We want to get this data from it's current form (CSV) into documents inside the database and along the way, 
+   add a field to record the date that the document was imported. This is going to require us to read the CSV 
+   file inside our Swift application.  Before proceeding, make sure you either have similar data in a file to which you know the path. 
+   We'll be creating some code next to access that file with Swift.
+
+   Once we're finished, the data will look like the following, represented in a JSON document:
+
+   .. code-block:: json
+
+      {
+      "_id": {
+         "$oid": "5f491a3bf983e96173253352" // this will come from our driver.
+      },
+      "firstname": "Michael",
+      "lastname": "Basic",
+      "date": {
+         "$date": "2020-08-28T14:52:43.398Z" // this will be set by our Struct default value
+      },
+      "assigned": false
+      }
+
+   In order to get the rows and fields of names into MongoDB, we'll use Swift's built-in `String <https://developer.apple.com/documentation/swift/string>`__ class. 
+   This is a powerhouse utility that can do everything from read the contents of a file to interpolate embedded variables and do comparisons between two or more sets of strings.
+   The class method `contentsOfFile <https://developer.apple.com/documentation/swift/string/3126740-init>`__ of the String 
+   class will access the file based on a filepath we provide, open the file and enable us to access its contents. 
+   Here's what our code might look like if we were just going to loop through the CSV file and print out the rows it contains.
+
+   .. blockquote:: 
+
+      You may be tempted to just copy/paste the code below. I would suggest that you type it in by hand... reading it from the screen. This will enable you to
+      experience the power of auto-correct, and code-suggest inside Xcode. Also, be sure to modify the value of the ``path`` variable to point to the location 
+      where you put your ``example.csv`` file. 
+
+   .. code-block:: swift
+
+      import Foundation
+
+      let path = "/Users/mlynn/Desktop/example.csv" // change this to the path of your csv file
+      do {
+         let contents = try String(contentsOfFile: path, encoding: .utf8)
+         let rows = contents.components(separatedBy: NSCharacterSet.newlines)
+         for row in rows {
+            if row != "" {
+                  print("Got Row: \(row)")
+            }
+         }
+      }
+
+   Let's take a look at what's happening here.
+
+   * Line 1: We'll use the Foundation core library. This gives us access to some basic string, character and comparison methods. The `import declaration <https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-declaration>`__ gives us access to native, as well as third party libraries and modules.  
+   * Line 3: Hard code a path variable to the CSV file.
+   * Lines 6-7: Use the String method to access the contents of the CSV file.
+   * Line 8: Loop through each row in our file and display the contents.
+
+   To run this simple example, let's open the ``main.swift`` file that our that the command ``swift package init`` created for us. To edit this file, in Xcode,   
+   To begin, let's open the main.swift file that our that the command ``swift package init`` created for us. To edit this file, in Xcode, traverse the folder tree
+   under Project->Sources-Project name... and open ``main.swift``.  Replace the simple ``hello world`` with the code above.
+
+   Running this against our ``example.csv`` file, you should see something like the following output. We'll use the commands ``swift build``, and ``swift run``.
+
+   .. image:: /images/how-to/command-line-swift-mongodb/swift-build-run-1.gif
+      :alt: CSV to MongoDB
+      :align: center
+
+   .. _command-line-swift-mongodb-driver:
+
+   Integrating the MongoDB Swift Driver
+   ------------------------------------
+
+   With this basic construct in place, we can now begin to incorporate the code necessary to insert a document
+   into our database for each row of data in the csv file. Let's start by configuring 
+   Swift Package Manager to integrate the MongoDB Swift Driver.
+
+   .. image:: /images/how-to/command-line-swift-mongodb/package-swift-in-xcode.png
+      :alt: Package.swift file
+      :align: center
+
+   Navigate in the project explorer to find the Package.swift file. Replace the contents with the Package.swift file from `the repo <https://github.com/mongodb-developer/command-line-swift-mongodb>`__:
+
+   .. code-block:: swift
+
+      // swift-tools-version:5.2
+      // The swift-tools-version declares the minimum version of Swift required to build this package.
+      import PackageDescription
+
+      let package = Package(
+         name: "csvimport-swift",
+         platforms: [
+            .macOS(.v10_15),
+         ],
+         dependencies: [
+            .package(url: "https://github.com/mongodb/mongo-swift-driver.git", from: "1.0.1"),
+         ],
+         targets: [
+            .target(
+                  name: "csvimport-swift",
+                  dependencies: [.product(name: "MongoSwiftSync", package: "mongo-swift-driver")]),
+            .testTarget(
+                  name: "csvimport-swiftTests",
+                  dependencies: ["csvimport-swift"]),
+         ]
+      )
+
+   .. blockquote:: 
+
+      If you're unfamiliar with `Swift Package Manager <https://developer.apple.com/documentation/swift_packages>`__ take a detour and 
+      read up `over here <https://developer.apple.com/documentation/swift_packages>`__.
+
+   We're including a statement that tells Swift Package Manager that we're building this executable for a specific set of MacOS versions.
+
+   .. code-block:: swift
+
+      platforms: [
+            .macOS(.v10_15)
+      ],
+
+   .. blockquote::
+
+      Tip: If you leave this statement out, you'll get a message stating that the package was designed to be built for MacOS 10.10 or similar.
+
+   Next we've included references to the packages we'll need in our software to insert, and manipulate MongoDB data.  In this example, we'll 
+   concentrate on an asynchronous implementation. Namely, the `mongo-swift-driver <https://docs.mongodb.com/drivers/swift>`__. 
+
+   Now that we've included our dependencies, let's build the project. Build the project often so you catch any errors you may have inadvertently 
+   introduced early on.
+
+   .. code-block:: none
+
+      swift package build
+
+   You should get a response similar to the following:
+
+   .. code-block:: none
+
+      [3/3] Linking cmd
+
+   Now let's modify our basic program project to make use of our MongoDB driver. 
+   
+   .. code-block:: swift
+
+      import Foundation
+      import MongoSwiftSync
+
+      var murl: String = "mongodb+srv://<username>:\(ProcessInfo.processInfo.environment["PASS"]!)@myfirstcluster.zbcul.mongodb.net/<dbname>?retryWrites=true&w=majority"
+      let client = try MongoClient(murl)
+
+      let db = client.db("students")
+      let session = client.startSession(options: ClientSessionOptions(causalConsistency: true))
+
+      struct Person: Codable {
+         let firstname: String
+         let lastname: String
+         let date: Date = Date()
+         let assigned: Bool
+         let _id: BSONObjectID
+      }
+
+      let path = "/Users/mlynn/Desktop/example.csv"
+      var tempAssigned: Bool
+      var count: Int = 0
+      var header: Bool = true
+
+      let personCollection = db.collection("people", withType: Person.self)
+
+      do {
+         let contents = try String(contentsOfFile: path, encoding: .utf8)
+         let rows = contents.components(separatedBy: NSCharacterSet.newlines)
+         for row in rows {
+            if row != "" {
+                  var values: [String] = []
+                  values = row.components(separatedBy: ",")
+                  if header == true {
+                     header = false
+                  } else {
+                     if String(values[2]).lowercased() == "false" || Bool(values[2]) == false {
+                        tempAssigned = false
+                     } else {
+                        tempAssigned = true
+                     }
+                     try personCollection.insertOne(Person(firstname: values[0], lastname: values[1], assigned: tempAssigned, _id: BSONObjectID()), session: session)
+                     count.self += 1
+                     print("Inserted: \(count) \(row)")
+                     
+                  }
+            }
+         }
+      }
+
+   Line 2 imports the driver we'll need (mongo-swift).
+
+   Next, we configure the driver.
+
+   .. code-block:: swift
+
+      var murl: String = "mongodb+srv://<username>:\(ProcessInfo.processInfo.environment["PASS"]!)@myfirstcluster.zbcul.mongodb.net/<dbname>?retryWrites=true&w=majority"
+      let client = try MongoClient(murl)
+
+      let db = client.db("students")
+      let session = client.startSession(options: ClientSessionOptions(causalConsistency: true))
+
+   Remember to replace ``<username>`` with the user you created in Atlas.
+   
+   To read and write data from and to MongoDB in Swift, we'll 
+   need to leverage a Codable structure. `Codeables <https://developer.apple.com/documentation/swift/codable>`__ are an amazing feature of Swift and definitely helpful
+   for writing code that will write data to MongoDB. Codables is actually an alias for two protocols: `Encodable <https://developer.apple.com/documentation/swift/encodable>`__, and `Decodable <https://developer.apple.com/documentation/swift/decodable>`__.
+   When we make our ``Struct`` conform to the Codable protocol, we're able to encode our string data into JSON and then decode it back
+   into a simple ``Struct`` using `JSONEncoder <https://developer.apple.com/documentation/foundation/jsonencoder>`__ and `JSONDecoder <https://developer.apple.com/documentation/foundation/jsondecoder>`__ respectively. 
+   We'll need this structure because 
+   the format used to store data in MongoDB is slightly different that the representation
+   you see of that data structure in Swift. We'll create 
+   a structure to describe what our document schema should look like inside MongoDB.  
+   Here's what our schema ``Struct`` should look like:
+
+   .. code-block:: swift
+
+      struct Code: Codable {
+         let code: String
+         let assigned: Bool
+         let date: Date = Date()
+         let _id: BSONObjectID
+      }
+
+   Notice we've got all the elements from our CSV file plus a date field. 
+  
+   We'll also need a few temporary variables that we will use as we process the data. ``count`` and a special temporary variable I'll 
+   use when I determine whether or not a student is assigned to a class or not... ``tempAssigned``. Lastly, in this code block, I'll create a variable to store the state
+   of our position in the file.  **header** will be set to true initially because we'll want to skip the first row of data. That's where the column headers live.
+
+   .. code-block:: swift
+
+      let path = "/Users/mlynn/Desktop/example.csv"
+      var tempAssigned: Bool
+      var count: Int = 0
+      var header: Bool = true
+
+   Now we can create a reference to the collection in our MongoDB Database that we'll use to store our student data. For lack of a better name, I'm calling mine ``personCollection``.  
+   Also, notice that we're providing a link back to our ``Struct`` using the ``withType`` argument to the collection method. This ensures that the driver knows what type of data we're
+   dealing with.
+
+   .. code-block:: swift
+
+      let personCollection = db.collection("people", withType: Person.self)
+
+   The next bit of code is at the heart of our task. We're going to loop through each row and create a document. I've commented and explained each row inline.
+
+   .. code-block:: swift
+
+      let contents = try String(contentsOfFile: path, encoding: .utf8)        // get the contents of our csv file with the String built-in
+      let rows = contents.components(separatedBy: NSCharacterSet.newlines)    // get the individual rows separated by newline characters
+      for row in rows {                                                       // Loop through all rows in the file.
+         if row != "" {                                                       // in case we have an empty row... skip it.
+               var values: [String] = []                                      // create / reset the values array of type string - to null.
+               values = row.components(separatedBy: ",")                      // assign the values array to the fields in the row of data
+               if header == true {                                            // if it's the first row... skip it and.
+                  header = false                                              // Set the header to false so we do this only once.
+               } else {
+                  if String(values[2]).lowercased() == "false" || Bool(values[2]) == false {
+                     tempAssigned = false                                     // Above: if its the string or boolean value false, so be it
+                  } else {
+                     tempAssigned = true                                      // otherwise, explicitly set it to true
+                  }
+                  try personCollection.insertOne(Person(firstname: values[0], lastname: values[1], assigned: tempAssigned, _id: BSONObjectID()), session: session)
+                  count.self += 1                                             // Above: use the insertOne method of the collection class form
+                  print("Inserted: \(count) \(row)")                          // the mongo-swift-driver and create a document with the Person ``Struct``.
+               }
+            }
+         }
+
+.. summary::
+
+   .. _command-line-swift-conclusion:
+
+   Conclusion
+   ----------
+
+   Importing data is a common challenge. Even more common is when we want to automate the task of inserting, or manipulating data with MongoDB. In this
+   **how-to**, I've explained how you can get started with Swift and accomplish the task of simplifying data import by creating an executable, command-line
+   tool that you can share with a colleague to enable them to import data for you. While this example is quite simple in terms of how it solves the problem
+   at hand, you can certainly take the next step and begin to build on this to support command-line arguments and even use it to not only insert data but
+   also to remove, and merge or update data. 
+
+   I've prepared a section below titled **Troubleshooting** in case you come across some common errors. I've tried my best to think of all of the usual 
+   issues you may find. However, if you do find another, issue, please let me know. The best way to do this is to `Sign Up for the MongoDB Community <https://community.mongodb.com>`__ 
+   and be sure to visit the section for `Drivers and ODMs <https://developer.mongodb.com/community/forums/c/drivers-odms/>`__.
+
+   .. _command-line-swift-resources:
+
+   Resources
+   ---------
+
+   * `GitHub <https://github.com/mongodb-developer/command-line-swift-mongodb>`__
+   * `MongoDB Swift Driver Repository <https://mongodb.com/mongodb/mongo-swift-driver>`__
+   * `Announcing the MongoDB Swift Driver <https://www.mongodb.com/blog/post/announcing-release-official-swift-driver>`__
+   * `MongoDB Swift Driver Examples <https://github.com/mongodb/mongo-swift-driver/tree/master/Examples>`__
+   * `Mike's Twitter <https://twitter.com/mlynn>`__
+
+   .. _command-line-swift-troubleshooting:
+
+   Troubleshooting
+   ---------------
+
+   Use this section to help solve some common problems. If you still have issues after reading these common solutions, please visit me in the `MongoDB Community <https://community.mongodb.com>`__.
+
+   No Such Module
+   ~~~~~~~~~~~~~~
+
+   .. image:: /images/how-to/command-line-swift-mongodb/swift-no-such-module.png
+      :alt: Swift Error: No such module
+      :align: center
+
+
+   This occurs when Swift was unable to build the ``mongo-swift-driver`` module. This most typically occurs when 
+   a developer is attempting to use Xcode and has not specified a minimum target OS version. Review the attached image and note the sequence
+   of clicks to get to the appropriate setting. Change that setting to 10.15 or greater.
+
+   .. image:: /images/how-to/command-line-swift-mongodb/swift-no-such-module-fix.png
+      :alt: Swift Error No such module
+      :align: center
