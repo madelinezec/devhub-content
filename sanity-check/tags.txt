@@ -12,9 +12,10 @@ Data
 Data Visualization
 DevOps
 Full-Text Search
-HapiJS
+Game Development
 GatsbyJS
 GraphQL
+HapiJS
 iOS
 IoT
 Kafka
@@ -38,4 +39,3 @@ Transactions
 University
 Public Speaking
 Speaker Program
-   

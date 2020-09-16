@@ -1,0 +1,298 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn how to design a strategy towards developing the next big online game that uses MongoDB.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Designing a Strategy to Develop a Game with Unity and MongoDB
+   :image: /images/atf-images/generic/green.png
+   :image-alt: Schema Design Patterns
+
+   Learn how to design a strategy towards developing the next big online game that uses MongoDB.
+
+.. og::
+   :title: Designing a Strategy to Develop a Game with Unity and MongoDB
+   :image: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-09-16
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Game Development
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=============================================================
+Designing a Strategy to Develop a Game with Unity and MongoDB
+=============================================================
+
+.. introduction::
+
+    When it comes to game development, you should probably have some ideas
+    written down before you start writing code or generating assets. The
+    same could probably be said about any kind of development, unless of
+    course you're just messing around and learning something new.
+
+    So what should be planned before developing your next game?
+
+    Depending on the type of game, you're probably going to want a playable
+    frontend, otherwise known as the game itself, some kind of backend if
+    you want an online component such as multiplayer, leaderboards, or
+    similar, and then possibly a web-based dashboard to get information at a
+    glance if you're on the operational side of the game and not a player.
+
+    `Adrienne Tacke <https://www.twitter.com/adriennetacke>`__, `Karen Huaulme <https://www.twitter.com/youoldmaid>`__, and myself (`Nic Raboy <https://www.nraboy.com>`__) are in the process
+    of building a game. We think `Fall Guys: Ultimate
+    Knockout <https://fallguys.com/>`__ is a very well-made game and thought
+    it'd be interesting to create a tribute game that is a little more on
+    the retro side, but with a lot of the same features. The game will be
+    titled, Plummeting People. This article explores the planning, design, and development
+    process!
+
+    Take a look at the `Jamboard <https://jamboard.google.com/d/1CdF-ZbegRWjsttwLExgt5VZBNC0ss3SAEBsKMBX5a8Q/viewer?f=1>`__ we've created so far:
+
+    .. image:: /images/how-to/gamedev-jamboard.gif
+      :alt: Game Development Planning Board
+
+    The above Jamboard was created during a `planning stream on Twitch <https://www.youtube.com/watch?v=XAvy2BouZ1Q>`__ where the community participated. The content that 
+    follows is a summary of each of the topics discussed and helpful information towards planning the development of a game.
+
+.. content::
+
+    Planning the Game Experience with a Playable Frontend
+    -----------------------------------------------------
+
+    The game is what most will see and what most will ever care about. It
+    should act as the driver to every other component that operates behind
+    the scenes.
+
+    Rather than try to invade the space of an already great game that we
+    enjoy (Fall Guys), we wanted to put our own spin on things by making it
+    2D rather than 3D. With Fall Guys being the basic idea behind what we
+    wanted to accomplish, we needed to further break down what the game
+    would need. We came to a few conclusions.
+
+    **Levels / Arenas**
+
+    We need a few arenas to be able to call it a game worth playing, but we
+    didn't want it to be as thought out as the game that inspired our idea.
+    At the end of the day, we wanted to focus more on the development
+    journey than making a blockbuster hit.
+
+    Fall Guys, while considered a battle royale, is still a racing game at
+    its core. So what kind of arenas would make sense in a 2D setting?
+
+    .. image:: /images/how-to/fall-guys-door-dash.png
+      :alt: Fall Guys Door Dash
+
+    Our plan is to start with the simplest level concepts to save us from
+    complicated game physics and engineering. There are two levels in
+    particular that have basic collisions as the emphasis in Fall Guys.
+    These levels include "Door Dash" and "Tip Toe" which focus on fake doors
+    and disappearing floor tiles. Both of which have no rotational physics
+    and nothing beyond basic collisions and randomization.
+
+    .. image:: /images/how-to/fall-guys-tip-toe.png
+      :alt: Fall Guys Tip Toe
+
+    While we could just stick with two basic levels as our proof of concept,
+    we have a goal for a team arena such as scoring goals at soccer
+    (football).
+
+    **Assets**
+
+    The arena concepts are important, but in order to execute, game assets
+    will be necessary.
+
+    We're considering the following game assets a necessary part of our
+    game:
+
+    -  Arena backgrounds
+    -  Obstacle images
+    -  Player images
+    -  Sound effects
+    -  Game music
+
+    To maintain the spirit of the modern battle royale game, we thought
+    player customizations were a necessary component. This means we'll need
+    customized sprites with different outfits that can be unlocked
+    throughout the gameplay experience.
+
+    **Gameplay Physics and Controls**
+
+    Level design and game assets are only part of a game. They are quite
+    meaningless unless paired with the user interaction component. The user
+    needs to be able to control the player, interact with other players, and
+    interact with obstacles in the arena. For this we'll need to create our
+    own gameplay logic using the assets that we create.
+
+    Maintaining an Online, Multiplayer Experience with a Data Driven Backend
+    ------------------------------------------------------------------------
+
+    We envision the bulk of our work around this tribute game will be on the
+    backend. Moving around on the screen and interacting with obstacles is
+    not too difficult of a task as demonstrated in a `previous
+    tutorial <https://developer.mongodb.com/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb>`__
+    that I wrote.
+
+    Instead, the online experience will require most of our attention. Our
+    first round of planning came to the following conclusions:
+
+    **Real-Time Interaction with Sockets**
+
+    When the player does anything in the game, it needs to be processed by
+    the server and broadcasted to other players in the game. This needs to
+    be real-time and sockets is probably the only logical solution to this.
+    If the server is managing the sockets, data can be stored in the
+    database about the players, and the server can also validate
+    interactions to prevent cheating.
+
+    **Matchmaking Players with Games**
+
+    When the game is live, there will be simultaneous games in operation,
+    each with their own set of players. We'll need to come up with a
+    matchmaking solution so that players can only be added to a game that is
+    accepting players and these players must fit certain criteria.
+
+    The matchmaking process might serve as a perfect opportunity to use
+    `aggregation pipelines <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__ within MongoDB. For example, let's say that you
+    have 5 wins and 1000 losses. You're not a very good player, so you
+    probably shouldn't end up in a match with a player that has 1000 wins
+    and 5 losses. These are things that we can plan for from a database
+    level.
+
+    **User Profile Stores**
+
+    User profile stores are one of the most common components for any online
+    game. These store information about the player such as the name and
+    billing information for the player as well as gaming statistics. Just
+    imagine that everything you do in a game will end up in a record for
+    your player.
+
+    So what might we store in a user profile store? What about the
+    following?:
+
+    -  Unlocked player outfits
+    -  Wins, losses, experience points
+    -  Username
+    -  Play time
+
+    The list could go on endlessly.
+
+    The user profile store will have to be carefully planned because it is
+    the baseline for anything data related in the game. It will affect the
+    matchmaking process, leaderboards, historical data, and so much more.
+
+    To get an idea of what we're putting into the user profile store, check out a `recorded Twitch stream <https://youtu.be/XUQCOf3NuJQ>`__ we did on the topic.
+
+    **Leaderboards**
+
+    Since this is a competitive game, it makes sense to have a leaderboard.
+    However this leaderboard can be a little more complicated than just your
+    name and your experience points. What if we wanted to track who has the
+    most wins, losses, steps, play time, etc.? What if we wanted to break it
+    down further to see who was the leader in North America, Europe, or
+    Asia? We could use `MongoDB geospatial queries <https://docs.mongodb.com/manual/geospatial-queries/>`__ around the location of players.
+
+    As long as we're collecting game data for each player, we can come up
+    with some interesting leaderboard ideas.
+
+    **Player Statistics**
+
+    We know we're going to want to track wins and losses for each player,
+    but we might want to track more. For example, maybe we want to track how
+    many steps a player took in a particular arena, or how many times they
+    fell. This information could be later passed through an aggregation
+    pipeline in MongoDB to determine a rank or level which could be useful
+    for matchmaking and leaderboards.
+
+    **Player Chat**
+
+    Would it be an online multiplayer game without some kind of chat? We
+    were thinking that while a player was in matchmaking, they could chat
+    with each other until the game started. This chat data would be stored
+    in MongoDB and we could implement `Atlas Search <https://docs.atlas.mongodb.com/atlas-search/>`__ functionality to look for
+    signs of abuse, foul language, etc., that might appear throughout the
+    chat.
+
+    Generating Reports and Logical Metrics with an Admin Dashboard
+    --------------------------------------------------------------
+
+    As an admin of the game, we're going to want to collect information to
+    make the game better. Chances are we're not going to want to analyze
+    that information from within the game itself or with raw queries against
+    the database.
+
+    For this, we're probably going to want to create dashboards, reports,
+    and other useful tools to work with our data on a regular basis. Here
+    are some things that we were thinking about doing:
+
+    **MongoDB Atlas Charts**
+
+    If everything has been running smooth with the game and the
+    data-collection of the backend, we've got data, so we just need to
+    visualize it. `MongoDB Atlas Charts <https://www.mongodb.com/products/charts>`__ can take that data and help us make
+    sense of it. Maybe we want to show a heatmap at different hours of the
+    day for different regions around the world, or maybe we want to show a
+    bar graph around player experience points. Whatever the reason may be,
+    Atlas Charts would make sense in an admin dashboard setting.
+
+    **Offloading Historical Data**
+
+    Depending on the popularity of the game, data will be coming into
+    MongoDB like a firehose. To help with scaling and pricing, it will make
+    sense to offload historical data from our cluster to a cloud object storage 
+    in order to save on costs and improve our cluster's performance by removing
+    historical data.
+    
+    In MongoDB Atlas, the best way to do this is to enable `Online Archive <https://docs.atlas.mongodb.com/online-archive/manage-online-archive/>`__
+    which allows you to set rules to automatically archive your data to a fully-managed
+    cloud storage while retaining access to query that data.
+    
+    You can also leverage `MongoDB Atlas Data Lake <https://www.mongodb.com/atlas/data-lake>`__
+    to connect your own S3 buckets and run `Federated Queries <https://docs.mongodb.com/datalake/query/query-data-lake>`__
+    to access your entire data set using MQL and the Aggregation Framework.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    Like previously mentioned, this article is a starting point for a series
+    of articles that are coming from `Adrienne Tacke <https://www.twitter.com/adriennetacke>`__, `Karen Huaulme <https://www.twitter.com/youoldmaid>`__, and
+    myself (`Nic Raboy <https://www.nraboy.com>`__), around a Fall Guys tribute game that we're calling
+    Plummeting People. Are we trying to compete with Fall Guys? Absolutely
+    not! We're trying to show the thought process around designing and
+    developing a game that leverages MongoDB and since Fall Guys is such an
+    awesome game, we wanted to pay tribute to it.
+
+    The next article in the series will be around designing and developing
+    the user profile store for the game. It will cover the data model,
+    queries, and some backend server code for managing the future
+    interactions between the game and the server.
+
+    Want to discuss this planning article or the Twitch stream that went with it? Join us in the `community thread <https://developer.mongodb.com/community/forums/t/gamedev-episode-1-designing-a-strategy-for-building-a-game-with-mongodb-and-unity/9179>`__ that we created.

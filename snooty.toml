@@ -20,3 +20,4 @@ pgp-version = "{+version+}"
 "Speaker Program" = ["/community/community-speaker-grant","/community/apply-to-speak","/community/art-of-creating-talk","/community/creating-stunning-slides","/community/surviving-the-stage","/community/virtual-presentation"]
 "learnPageExclude" =["/community/apply-to-speak","/community/art-of-creating-talk","/community/community-speaker-grant","/community/creating-stunning-slides","/community/speaker-program","/community/surviving-the-stage","/community/virtual-presentation"]
 "DevOps + MongoDB Realm Serverless Functions = 😍" = ["/how-to/unit-test-realm-serverless-functions", "/how-to/integration-test-realm-serverless-apps", "/how-to/end-to-end-test-realm-serverless-apps"]
+"Game Development with Unity and MongoDB" = ["/how-to/designing-strategy-develop-game-unity-mongodb"]
