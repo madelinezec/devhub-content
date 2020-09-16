@@ -95,8 +95,8 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    collection/pipeline you specify. Keep in mind that this can include
    duplicates!
 
-   This sounds kinda familiar 🤔
-   -----------------------------
+   This sounds kinda familiar..
+   ----------------------------
 
    If you've used the ``UNION ALL`` operation in SQL before, the
    ``$unionWith`` stage's functionality may sound familiar to you, and you
@@ -895,7 +895,7 @@ How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
    starships and vehicles? You'll be pleased to know that starships are
    defined as any "single transport craft that has hyperdrive capability".
    Any other single transport craft that **does not have** hyperdrive
-   capability is considered a vehicle. The more you know! 🤯
+   capability is considered a vehicle. The more you know! 😮
 
    If you look at the two collections, you'll see that they have two key
    differences:
