@@ -1,0 +1,116 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/virtual-presentation.png
+
+.. meta-description:: 
+
+   Missed the MongoDB .Live 2020 online conference? From the breakthroughs to the milestones, here's what you missed - in less than 10 minutes!
+
+.. twitter::
+   :creator: @YouOldMaid
+   :title: MongoDB.Live 2020 Keynote In Less Than 10 Minutes
+   :image: /images/social/twitter/twitter-virtual-presentation.png
+   :image-alt: MongoDB .Live Keynote 
+
+   Missed the MongoDB .Live 2020 online conference? From the breakthroughs to the milestones, here's what you missed - in less than 10 minutes!
+
+.. og::
+   :title: MongoDB.Live 2020 Keynote In Less Than 10 Minutes
+   :image: /images/social/open-graph/og-virtual-presentation.png
+
+.. include:: /includes/authors/huaulme-karen.rst
+
+.. pubdate:: 2020-09-18
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Data
+   * MongoDB 4.4
+   * Releases
+
+.. products::
+
+   * MongoDB
+   * Realm
+   * Charts
+   * Atlas
+   * Data Lake
+   * Online Archive
+
+.. related::
+
+   * `Video: MongoDB .Live 2020 Full Keynote <https://www.youtube.com/watch?v=ETawbyIxygQ>`__
+   * `Article: How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake and Online Archive <https://developer.mongodb.com/how-to/atlas-data-lake-online-archive>`__
+   * `Tutorial: MongoDB Atlas Data Lake Tutorial: Federeated Queries and $out to AWS S3 <https://developer.mongodb.com/how-to/atlas-data-lake-federated-queries-out-aws-s3>`__
+   * `Tutorial: How to Build an Animated Timeline Chart with the MongoDB Charts Embedding SDK <https://developer.mongodb.com/how-to/build-animated-timeline-chart-embedding-sdk>`__ 
+
+=================================================
+MongoDB.Live 2020 Keynote In Less Than 10 Minutes
+=================================================
+ 
+.. introduction:: 
+
+   Didn't get a chance to attend the MongoDB.Live 2020 online conference this year? Don't worry. We have compiled a quick recap of all the highlights to get you caught up. 
+
+   .. blockquote::
+      
+      MongoDB.Live 2020 - Everything from the Breakthroughs to the Milestones - in 10 Minutes!
+
+      .. youtube:: TB_EdovmBUo
+
+.. content:: 
+
+   As you can see, we packed a lot of exciting news in this year's event.
+
+   MongoDB Realm:  
+      - Bi-directional sync between mobile devices and data in an Atlas cluster
+      - Easy integration with authentication, serverless functions and triggers
+      - GraphQL support
+
+   MongoDB Server 4.4:
+      - Refinable shard keys
+      - Hedged reads 
+      - New query language additions - union, custom aggregation expressions 
+   
+   MongoDB Atlas: 
+      - Atlas Search GA
+      - Atlas Online Archive (Beta)
+      - Automated schema suggestions
+      - AWS IAM authentication 
+   
+   Analytics
+      - Atlas Data Lake
+      - Federated queries
+      - Charts embedding SDK
+      
+   DevOps Tools and Integrations
+      - Community Kubernetes operator and containerized Ops Manager for Enterprise
+      - New MongoDB shell
+      - New integration for VS Code and other JetBrains IDEs 
+   
+   MongoDB Learning & Community
+      - University Learning Paths
+      - Developer Hub
+      - Community Forum
+
+.. summary::
+
+   Over 14,000 attendees attended our annual user conference online to experience how we make data stunningly easy to 
+   work with. If you didn't get the chance to attend, check out our upcoming 
+   `MongoDB.live 2020 regional series. <https://www.mongodb.com/live>`__ These virtual conferences in every corner 
+   of the globe are the easiest way for you to sharpen your skills during a full day of interactive, virtual 
+   sessions, deep dives, and workshops from the comfort of your home and the convenience of your time zone. You'll 
+   discover new ways MongoDB removes the developer pain of working with data, allowing you to focus on your vision 
+   and freeing your genius.
+
+   To learn more, ask questions, leave feedback or simply connect with other MongoDB developers, visit our `community forums. <https://developer.mongodb.com/community/forums/>`__ Come to learn. Stay to connect.
+
+   .. blockquote::
+ 
+      Get started with Atlas is easy. Sign up for a `free MongoDB Atlas <https://mongodb.com/cloud/atlas>`__ account to start working with all the exciting new features of MongoDB, including Realm and Charts, today!
+
+         
