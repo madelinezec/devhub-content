@@ -1,0 +1,160 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/dev-tools-swift.png
+
+.. meta-description:: 
+
+   An update on MongoDB's ongoing commitment to Swift 
+
+.. twitter::
+   :creator: @techbelle
+   :title: An update on MongoDB's ongoing commitment to Swift
+   :image: /images/social/twitter/twitter-build.png
+   :image-alt: Swift Update from MongoDB
+
+   An update on MongoDB's ongoing commitment to Swift
+
+.. og::
+   :title: An update on MongoDB's ongoing commitment to Swift
+   :image: /images/social/open-graph/og-build.png
+
+.. include:: /includes/authors/palmer-rachelle.rst
+
+.. include:: /includes/authors/mahar-kaitlin.rst
+
+.. pubdate:: 2020-09-21
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Releases
+   * Mobile
+
+.. languages::
+
+   * Swift
+
+.. products::
+
+   * MongoDB
+
+.. related::
+
+   * `How to Build a Command Line Tool with Swift and MongoDB <https://developer.mongodb.com/how-to/build-command-line-swift-mongodb>`__
+   * `Announcing the MongoDB Swift Driver <https://www.mongodb.com/blog/post/announcing-release-official-swift-driver>`__
+
+==================================================
+An update on MongoDB's ongoing commitment to Swift
+==================================================
+
+.. introduction:: 
+
+   Recently, `Rachelle Palmer <https://www.linkedin.com/in/rachellepalmer/>`__, Senior Product Manager for MongoDB Drivers sat down with `Kaitlin Mahar <https://www.linkedin.com/in/kaitlinmahar/>`__, Lead Engineer
+   for the ``Swift`` and ``Rust`` drivers to discuss some of the exciting developments in the ``Swift`` space. This
+   article details that conversation. 
+
+.. content::
+
+   Swift is a well documented, easy to use and convenient language focused on iOS app 
+   development. As one of the top ten languages, it's more popular than Ruby, Go, or 
+   Rust, but keeps a fairly low profile - it's the underestimated backbone of millions 
+   of applications, from Airbnb to LinkedIn. With its simple syntax and strong performance 
+   profile, Swift is versatile enough to be used for many use cases and applications, and 
+   we've watched with great interest as the number of customers using Swift with MongoDB has 
+   grown.
+
+   Swift can also be used for more than mobile, and we've seen a growing number of 
+   developers worldwide use Swift for backend development - software engineers can easily 
+   extend their skills with this concise, open source language. Kaitlin Mahar, and I decided 
+   we'd like to share more about MongoDB's commitment and involvement with the Swift community 
+   and how that influences some of the initiatives on our Swift driver roadmap.
+
+   **Rachelle (RP):** I want to get right to the big announcement! Congratulations on joining the Swift 
+   Server Working Group (SSWG). What is the SSWG and what are some of the things that the group is thinking about right now?
+   
+   **Kaitlin (KM):** The SSWG is a steering team focused on promoting the use of Swift on the server. Joining 
+   the SSWG is an honor and a privilege for me personally - through my work on the driver and attendance 
+   at conferences like `Serverside.swift <https://www.serversideswift.info/>`__, I've become increasingly involved in the community over the last 
+   couple of years and excited about the huge potential I see for Swift on the server, and being a part of 
+   the group is a great opportunity to get more deeply involved in this area.  There are representatives in 
+   the group from Apple, `Vapor <https://vapor.codes/>`__ (a popular Swift web framework), and Amazon. The group right now is primarily 
+   focused on guiding the development of a robust ecosystem of libraries and tools for server-side Swift. 
+   We run an incubation process for such projects, focused on providing overall technical direction, ensuring 
+   compatibility between libraries, and promoting best practices.
+
+   To that end, one thing we're thinking about right now is `connection pooling <https://forums.swift.org/t/generic-connection-pool/39161>`__. The ability to pool connections is 
+   very important for a number of server-side use cases, and right now developers who need a pool have to implement 
+   one from scratch. A generalized library would make it far easier to, for example, write a new database driver 
+   in Swift. Many SSWG members as well as the community at large are interested in such a project and I'm very excited 
+   to see where it goes.
+   
+   A number of other foundational libraries and tools are being worked on by the community as well, and we've been 
+   spending a lot of time thinking about and discussing those: for example, `standardized APIs to support tracing <https://forums.swift.org/t/current-state-of-swift-tracing/39830>`__, 
+   and a new library called `Swift Service Lifecycle <https://swift.org/blog/swift-service-lifecycle/>`__ which helps server applications manage their startup and shutdown 
+   sequences.
+
+   **RP:** When we talk with customers about using Swift for backend development, asking how they made that choice, 
+   it seems like the answers are fairly straightforward: with limited time and limited resources, it was the fastest 
+   way to get a web app running with a team of iOS developers. Do you feel like Swift is compelling to learn if you 
+   aren't an iOS developer though? Like, as a first language instead of Python?
+   
+   **KM:** Absolutely! My first language was Python, and I see a lot of things I love about Python in Swift: it's 
+   succinct and expressive, and it's easy to quickly pick up on the basics. At the same time, Swift has a really 
+   powerful and strict type system similar to what you might have used in compiled languages like Java before, 
+   which makes it far harder to introduce bugs in your code, and forces you to address edge cases (for example, 
+   null values) up front. People often say that Swift borrows the best parts of a number of other languages, and 
+   I agree with that. I think it is a great choice whether it is your first language or fifth language, regardless 
+   of if you're interested in iOS development or not.
+   
+   **RP:** Unquestionably, I think there's a great match here - we have MongoDB which is really easy and quick to 
+   get started with, and you have Swift which is a major win for developer productivity.
+
+   **RP:** What's one of your favorite Swift features? 
+   
+   **KM:** Enums with associated values are definitely up there for me. We use these in the driver a lot. They 
+   provide a very succinct way to express that particular values are present under certain conditions. For example, 
+   MongoDB allows users to specify either a string or a document as a "hint" about what index to use when executing a 
+   query. Our API clearly communicates these choices to users by defining our ``IndexHint`` type like this:
+
+   .. code-block:: swift
+
+      public enum IndexHint {
+         /// Specifies an index to use by its name.
+         case indexName(String)
+         /// Specifies an index to use by a specification `BSONDocument` containing the index key(s).
+         case indexSpec(BSONDocument)
+      }
+
+   This requires the user to explicitly specify which version of a hint they want to use, and 
+   requires that they provide a value of the correct corresponding type along with it.
+
+   **RP:** I'd just like to say that mine is the ``MemoryLayout`` type. Being able to see the memory 
+   footprint of a class that you've defined is really neat. We're also excited to announce that 
+   our top priority for the next 6-9 months is rewriting our driver to be purely in Swift.  
+   For everyone who is wondering, why wasn't our official Swift driver "all Swift" initially? 
+   And why change now?
+
+   **KM:** We initially chose to wrap libmongoc as it provided a solid, reliable core and allowed 
+   us to deliver a great experience at the API level to the community sooner. The downside of 
+   that was of course, for every feature we want to do, the C driver had to implement it first 
+   sometimes this slowed down our release cadence. We also feel that writing driver internals 
+   in pure Swift will enhance performance, and give better memory safety - for example, we won't 
+   have to spend as much time thinking about properly freeing memory when we're done using it.   
+
+.. summary::
+
+   If you're interested in learning more about Swift, and how to use Swift for your development 
+   projects with MongoDB, here are some resources to check out:
+   
+   - `Introduction to Server-Side Swift and Building a Command Line Executable <https://www.youtube.com/watch?v=cHB8hzUSCpE>`__
+   - `Getting Started with MongoDB and Swift tutorial <https://www.raywenderlich.com/10521463-server-side-swift-with-mongodb-getting-started>`__
+   - `The Swift driver GitHub <https://github.com/mongodb/mongo-swift-driver>`__
+
+   Kaitlin will also be on an upcoming `MongoDB Podcast episode <https://mongodb.com/podcast>`__ to talk more about 
+   working with Swift so make sure you subscribe and stay tuned!
+
+   If you have questions about the Swift Driver, or just want to interact with other developers using
+   this and other drivers, visit us `in the MongoDB Community <https://community.mongodb.com>`__ and be sure to introduce yourself and say hello!
