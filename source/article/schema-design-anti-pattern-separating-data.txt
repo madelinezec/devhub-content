@@ -184,7 +184,7 @@ Separating Data That is Accessed Together
          "status": "draft",
          "title": "Country Defense Policy",
          "country_id": "finland",
-         "policy": "Finland has formally decide to use lions in lieu of military for all self defense..."
+         "policy": "Finland has formally decided to use lions in lieu of military for all self defense..."
       }
    
    .. code-block:: javascript
