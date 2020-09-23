@@ -1,0 +1,333 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description::
+
+   Learn how to integrate MongoDB Atlas with Heroku to build and deploy fully managed cloud applications.
+
+.. twitter::
+   :creator: @adriennetacke
+   :title: Using MongoDB Atlas on Heroku
+   :image: /images/atf-images/generic/green.png
+   :image-alt: Using MongoDB Atlas on Heroku
+
+   Learn how to integrate MongoDB Atlas with Heroku to build and deploy fully managed cloud applications.
+
+.. og::
+   :title: Using MongoDB Atlas on Heroku
+   :image: /images/atf-images/generic/green.png
+
+.. include:: /includes/authors/tacke-adrienne.rst
+
+.. pubdate:: 2020-09-23
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+   * Cloud
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+=============================
+Using MongoDB Atlas on Heroku
+=============================
+
+.. introduction::
+   
+   As we begin building more cloud-native applications, choosing the right services and tools can be quite overwhelming. Luckily, when it comes to choosing a cloud database service, `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ may be the easiest choice yet!
+
+   When paired with `Heroku <https://www.heroku.com/>`__, one of the most popular PaaS solutions for developers, you'll be able to build and deploy fully managed cloud applications in no time. The best part? MongoDB Atlas integrates easily with Heroku applications. All you need to do is :ref:`set your Atlas cluster's connection string to a Heroku config variable <configure-heroku-ip-address-in-atlas>`. That's really all there is to it!
+
+   If you're already familiar with MongoDB, using MongoDB Atlas with your cloud applications is a natural choice. MongoDB Atlas is a fully-managed cloud database service for MongoDB that automates the management of MongoDB clusters in the cloud. Offering features such as automated backup, auto-scaling, multi-AZ fault tolerance, and a full suite of management and analytics tools, Atlas is the most sophisticated DBaaS anywhere, and is just a few clicks away.
+
+   To see how quick it is to get up and running with MongoDB Atlas, just follow the next few steps to setup your first free cluster. Then, see how quickly you can connect your new Atlas cluster to your Heroku application by following the step-by-step instructions later on in this tutorial. 
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   This tutorial assumes the following:
+
+   * You are familiar with MongoDB and have written applications that use MongoDB
+   * You are familiar with Heroku and know how to deploy Heroku apps
+   * You have the `Heroku CLI <https://devcenter.heroku.com/articles/heroku-cli>`__ installed
+   * You are familiar with and have `Git <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`__ installed
+
+   With these assumptions in mind, let's get started!
+
+.. content::
+
+   Setting up your Atlas cluster in five steps (or less!)
+   ------------------------------------------------------
+
+   Step 1: Create an Atlas account
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. blockquote::
+
+      💡 If you already created a MongoDB account using your email address, you can skip this step! `Sign into your account <https://account.mongodb.com/account/login>`__ instead.
+
+   You can register for an `Atlas account <https://www.mongodb.com/cloud/atlas/register>`__ with your email address or your Google Account. 
+
+   .. image:: /images/heroku/atlas-signup.png
+      :alt: MongoDB Atlas Signup
+
+   Step 2: Create your Organization and Project
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   After registering, Atlas will prompt you to create an organization and project where you can deploy your cluster. 
+
+   .. image:: /images/heroku/create-cluster.png
+      :alt: MongoDB Atlas Create Cluster   
+
+   Step 3: Deploy your first cluster
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   You'll now be able to select from a range of cluster options. For this tutorial, we'll select the Shared Clusters option, which is Atlas's Free Tier cluster. Click "Create a cluster" under the Shared Clusters option: 
+
+   .. image:: /images/heroku/cluster-selection.png
+      :alt: MongoDB Atlas Cluster Selection
+
+   On the next page, you'll be prompted to choose a few options for your cluster:
+
+   *Cloud provider & region*
+
+   Choose where you want to deploy your cluster to. It is important  to select the available region closest to your application, and ideally the same region, in order to minimize latency. In our case, let's choose the N. Virginia (us-east-1) region, with AWS as our cloud provider (since we're deploying on Heroku, and that is where Heroku hosts its infrastructure):
+
+   .. image:: /images/heroku/cloud-provider-region-selection.png
+      :alt: MongoDB Atlas Cloud Provider Region Selection
+
+   *Cluster tier*
+
+   Here, you'll see the cluster tiers available for the shared clusters option. You can view a comparison of RAM, Storage, vCPU, and Base Price between the tiers to help you choose the right tier. For our tutorial, leave the default M0 Sandbox tier selected:
+            
+   .. image:: /images/heroku/cluster-tier-selection.png
+      :alt: MongoDB Atlas Cluster Tier Selection
+
+   *Additional settings* 
+
+   Depending on the tier you choose, some additional options may be available for you. This includes the MongoDB version you wish to deploy and, for M2 clusters and up, Backup options. For this tutorial, select the latest version, MongoDB 4.4:
+
+   .. image:: /images/heroku/cluster-additional-settings.png
+      :alt: MongoDB Atlas Cluster Additional Settings
+
+   *Cluster name*
+
+   Lastly, you can give your cluster a name. Keep in mind that once your cluster is created, you won't be able to change it! Here, we'll name our cluster ``leaflix-east`` to help us know which project and region this cluster will be supporting:
+
+   .. image:: /images/heroku/cluster-name.png
+      :alt: MongoDB Atlas Cluster Name
+
+   That's it! Be sure to review your options one last time before clicking the "Create Cluster" button.
+   
+   .. image:: /images/heroku/create-cluster.png
+      :alt: MongoDB Atlas Create Cluster
+
+   Step 4: Create a database user for your cluster
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Atlas requires clients to authenticate as MongoDB database users to access clusters, so let's create one real quick for your cluster.
+
+   .. image:: /images/heroku/add-database-user.gif
+      :alt: MongoDB Atlas Add Database User
+
+   As you can see in the gif above, creating a database user is straightforward. First navigate to the "Database Access" section (located under "Security" in the left-hand navigation bar). Click on "Create a new Database User. A prompt will appear where you can choose this user's authentication method and database user privileges.
+
+   Select the "Password" authentication method and give this user a username and password. As a convenience, you can even autogenerate a secure password right in Atlas, which we highly recommend. 
+
+   .. blockquote::
+
+      💡 After autogenerating your password, be sure to click Copy and store it in a safe place for now. We'll need it later when connecting to our cluster!  
+
+   Choose a built-in role for this user. For this tutorial, I'm choosing "Atlas admin" which grants the most privileges.
+
+   Finally, click the "Add User" button. You've created your cluster's first database user!
+
+   Step 5: Grant authorized IP addresses access to your cluster
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The last step in setting up your cluster is to choose which IP addresses are allowed to access it. To quickly get up and running, set your cluster to allow access from anywhere: 
+
+   .. image:: /images/heroku/allow-access-anywhere.gif
+      :alt: MongoDB Atlas Allow Access from Anywhere
+
+   **Congratulations! You've just successfully set up your Atlas cluster!**
+
+   .. blockquote::
+
+      💡 Note:  you probably don't want to allow this type of access in a production environment. Instead, you'll want to identify the exact IP addresses you know your application will be hosted on and explicitly set which IP addresses, or IP ranges,  should have access to your cluster. After setting up your Heroku app, follow the steps in the "Configuring Heroku IP Addresses in Atlas" section below to see how to add the proper IP addresses for your Heroku app.
+
+   Configuring your Heroku app to point at your Atlas cluster using Config Vars
+   ----------------------------------------------------------------------------
+
+   Quickly setting up our Atlas cluster was pretty exciting, but we think you'll find this section even more thrilling! 
+
+   Atlas-backed, Heroku applications are simple to set up. All you need to do is create an application-level config var that holds your cluster's connection string. Once set up, you can securely access that config var within your application!
+
+   Here's how to do it:
+
+   Step 1: Log into the Heroku CLI
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: bash
+
+      heroku login
+   
+   This command opens your web browser to the Heroku login page. If you're already logged in, just click the "Log in" button. Alternatively, you can use the -i flag to log in via the command line.
+
+   Step 2: Clone my demo app
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   To continue this tutorial, I've created a `demo Node application <https://github.com/adriennetacke/mongodb-atlas-heroku-leaflix-demo>`__ that uses MongoDB Atlas and is an app I'd like to deploy to Heroku. Clone it, then navigate to its directory:
+
+   .. code-block:: bash
+
+      git clone https://github.com/adriennetacke/mongodb-atlas-heroku-leaflix-demo.git
+
+      cd mongodb-atlas-heroku-leaflix-demo
+
+   Step 3: Create the Heroku app
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: bash
+
+      heroku create leaflix
+
+   As you can see, I've named mine ``leaflix``.
+
+   Get your Atlas cluster connection string
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Head back to your Atlas cluster's dashboard as we'll need to grab our connection string. 
+
+   Click the "Connect" button.
+
+   Choose the "Connect your application" option.    
+
+   Here, you'll see the connection string we'll need to connect to our cluster. Copy the connection string.
+
+   Paste the string into an editor; we'll need to modify it a bit before we can set it to a Heroku config variable.
+
+   As you can see, Atlas has conveniently added the username of the database user we previously created. To complete the connection string and make it valid, replace the <password> with your own database user's password and ``<dbname>`` with ``sample_mflix``, which is the sample dataset our demo application will use.
+
+   .. blockquote::
+
+      💡 If you don't have your database user's password handy, autogenerate a new one and use that in your connection string. Just remember to update it if you autogenerate it again! You can find the password by going to Database Access > Clicking "Edit" on the desired database user > Edit Password > Autogenerate Secure Password
+
+   Set a MONGODB_URI config var
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Now that we've properly formed our connection string, it's time to store it in a Heroku config variable. Let's set our connection string to a config var called MONGODB_URI:
+
+   .. code-block:: bash
+
+      heroku config:set MONGODB_URI="mongodb+srv://yourUsername:yourPassword@yourClusterName.n9z04.mongodb.net/sample_mflix?retryWrites=true&w=majority"
+
+   Some important things to note here:
+
+   * This command is all one line
+   * Since the format of our connection string contains special characters, it is necessary to wrap it within quotes
+
+   That's all there is to it! You've now properly added your Atlas cluster's connection string as a Heroku config variable, which means you can securely access that string once your application is deployed to Heroku.   
+
+   .. blockquote::
+
+      💡 Alternatively, you can also add this config var via your app's "Settings" tab in the Heroku Dashboard. Head to your `apps <https://dashboard.heroku.com/apps>`__ > leaflix > Settings. Within the Config Vars section, click the "Reveal Config Vars" button, and add your config var there.
+
+   .. image:: /images/heroku/config-var-dashboard.png
+      :alt: Heroku Config Dashboard
+
+   The last step is to modify your application's code to access these variables.
+
+   Accessing Heroku config var values from your application
+   --------------------------------------------------------
+
+   In our demo application, you'll see that we have hard-coded our Atlas cluster connection string. We should refactor our code to use the Heroku config variable we previously created.
+
+   `Config vars are exposed to your application's code as environment variables <https://devcenter.heroku.com/articles/config-vars#accessing-config-var-values-from-code>`__. Accessing these variables will depend on your application's language; for example, you'd use ``System.getenv('key')`` calls in Java or ``ENV['key']`` calls in Ruby.
+
+   Knowing this, and knowing our application is written in Node, we can access our Atlas cluster via the ``process.env`` property, made available to us in Node.js. In the ``server.js`` file, change the uri constant to this:    
+
+   .. code-block:: bash
+
+      const uri = process.env.MONGODB_URI;
+
+   That's it! Since we've added our Atlas cluster connection string as a Heroku config var, our application will be able to access it securely once it's deployed.
+
+   Save that file, commit that change, then deploy your code to Heroku.
+
+   .. code-block:: bash
+
+      git commit -am "fix: refactor hard coded connection string to Heroku config var"
+
+      git push heroku master
+
+   Your app is now deployed! You can double check that at least one instance of Leaflix is running by using this command:
+
+   .. code-block:: bash
+
+      heroku ps:scale web=1
+
+   If you see a message that says ``Scaling dynos… done, now running web at 1:Free``, you'll know that at least one instance is up and running.
+   
+   Finally, go visit your app. You can do so with this useful command:
+
+   .. code-block:: bash
+
+      heroku open
+
+   If all is well, you'll see something like this:
+
+   .. image:: /images/heroku/leaflix-deployed.png
+      :alt: Leaflix App
+
+   When you click on the "Need a Laugh?" button, our app will randomly choose a movie that has the "Comedy" genre in its genres field. This comes straight from our Atlas cluster and uses the ``sample_mflix`` dataset.
+
+   .. _configure-heroku-ip-address-in-atlas: 
+
+   Configuring Heroku IP addresses in Atlas
+   ----------------------------------------
+
+   We have our  cluster up and running and our app is deployed to Heroku!
+
+   To get us through the tutorial, we initially configured our cluster to accept connections from any IP address. Ideally you would like to restrict access to only your application, and there are a few ways to do this on Heroku.
+
+   The first way is to use an add-on to provide a static outbound IP address for your application that you can use to restrict access in Atlas. You can find some listed here:
+
+   `https://elements.heroku.com/addons/categories/network <https://elements.heroku.com/addons/categories/network>`__
+
+   Another way would be to use Heroku Private Spaces and use the static outbound IPs for your space. This is a more expensive option, but does not require a separate add-on. 
+
+   There are some documents and articles out there that suggest you can use IP ranges published by either AWS or Heroku to allow access to IPs originating in your AWS region or Heroku Dynos located in those regions. While this is possible, it is not recommended as those ranges are subject to change over time. Instead we recommend one of the two methods above.
+
+   Once you have the IP address(es) for your application you can use them to configure your firewall in Atlas. 
+
+   Head to your Atlas cluster, delete any existing IP ranges, then add them to your allow list:
+
+   .. image:: /images/heroku/add-ip-range.gif
+      :alt: MongoDB Atlas Add Select IP Range
+
+   Of course, at all times you will be communicating between your application and your Atlas database securely via TLS encryption. 
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   We've accomplished quite a bit in a relatively short time! As a recap:
+
+   * We setup and deployed an Atlas cluster in five steps or less
+   * We created a Heroku config variable to securely store our Atlas connection string, enabling us to connect our Atlas cluster to our Heroku application
+   * We learned that Heroku config variables are exposed to our application's code as environment variables
+   * We refactored the hard-coded URI string in our code to point to a ``process.env.MONGODB_URI`` variable instead
+
+   Have additional questions or a specific use case not covered here? Head over to `MongoDB Developer's Community Forums <https://developer.mongodb.com/community/forums/>`__ and start a discussion! We look forward to hearing from you.
+
