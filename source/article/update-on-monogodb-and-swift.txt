@@ -150,7 +150,6 @@ An update on MongoDB's ongoing commitment to Swift
    projects with MongoDB, here are some resources to check out:
    
    - `Introduction to Server-Side Swift and Building a Command Line Executable <https://www.youtube.com/watch?v=cHB8hzUSCpE>`__
-   - `Getting Started with MongoDB and Swift tutorial <https://www.raywenderlich.com/10521463-server-side-swift-with-mongodb-getting-started>`__
    - `The Swift driver GitHub <https://github.com/mongodb/mongo-swift-driver>`__
 
    Kaitlin will also be on an upcoming `MongoDB Podcast episode <https://mongodb.com/podcast>`__ to talk more about 
