@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
 
-.. meta-description:: 
+.. meta-description::
 
    Discover the 3 things you need to know when you switch from SQL to MongoDB
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: 3 Things to Know When You Switch from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
@@ -18,17 +15,9 @@
    Discover the 3 things you need to know when you switch from SQL to MongoDB
 
 .. og::
-   :url: http://developer.mongodb.com/article/3-things-to-know-switch-from-sql-mongodb
-   :type: article
    :title: 3 Things to Know When You Switch from SQL to MongoDB
    :image: /images/social/open-graph/og-sql-mdb.png
  
-   Discover the 3 things you need to know when you switch from SQL to MongoDB
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
-
 .. include:: /includes/authors/schaefer-lauren.rst
 
 .. pubdate:: 2020-04-01
@@ -44,12 +33,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ====================================================
 3 Things to Know When You Switch from SQL to MongoDB

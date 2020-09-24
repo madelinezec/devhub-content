@@ -1,8 +1,6 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/dev-tools-swift.png
 
 .. meta-description::
 
@@ -11,11 +9,10 @@
 .. twitter::
    :creator: @mlynn
    :title: How to build a command-line executable using Swift and MongoDB
-   :image: /images/atf-images/illustrations/dev-tools-swift.png
+   :image: /images/social/twitter/twitter-build.png
    :image-alt: MongoDB Developers
 
-   Ever wanted to create a command-line executable that automates interaction with a database? This guide will get you started 
-   with executables, Swift and MongoDB.
+   Ever wanted to create a command-line executable that automates interaction with a database? This guide will get you started with executables, Swift and MongoDB.
 
 .. og::
    :title: How to create a command-line executable using Swift and MongoDB
@@ -23,19 +20,11 @@
 
    This article will help you build a command line executable tool that manipulates data in a MongoDB database.
 
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
-
 .. include:: /includes/authors/lynn-michael.rst
 
 .. pubdate:: 2020-09-11
 
 .. type:: how-to
-
-.. level:: beginner
-
-.. atf-image:: /images/atf-images/illustrations/dev-tools-swift.png
 
 .. level:: beginner
 
@@ -59,13 +48,9 @@
    * `Announcing the MongoDB Swift Driver <https://www.mongodb.com/blog/post/announcing-release-official-swift-driver>`__
    * `Building a Command Line Tool with Swift and MongoDB - Video <https://www.youtube.com/watch?v=cHB8hzUSCpE>`__
 
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
-===================================================
+================================================
 Build a Command Line Tool with Swift and MongoDB
-===================================================
+================================================
 
 .. introduction::
 

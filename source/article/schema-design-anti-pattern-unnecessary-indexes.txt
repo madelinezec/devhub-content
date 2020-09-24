@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
-.. meta-description:: 
+.. meta-description::
 
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
    :image: /images/social/twitter/twitter-schema-design-patterns.png
@@ -18,16 +15,8 @@
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
 
 .. og::
-   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes
-   :type: article
    :title: MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
    :image: /images/social/open-graph/og-schema-design-patterns.png
- 
-   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Unnecessary Indexes
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -39,7 +28,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Schema Design
 
@@ -47,28 +36,21 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
-
 .. related::
 
    * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
 
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
-=============================
+===================
 Unnecessary Indexes
-=============================
+===================
  
 .. introduction:: 
 
    So far in this MongoDB Schema Design Anti-Patterns series, we've discussed avoiding  `massive arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__ as well as a massive number of `collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__.
 
    Today, let's talk about indexes.  Indexes are great (seriously!), but it's easy to get carried away and make indexes that you'll never actually use.  Let's examine why an index may be unnecessary and what the consequences of keeping it around are.
-
 
 .. content::
 
@@ -196,5 +178,3 @@ Unnecessary Indexes
    - `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
    - `MongoDB University M201: MongoDB Performance <https://university.mongodb.com/courses/M201/about>`__
    - `Blog Series: Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
-
-

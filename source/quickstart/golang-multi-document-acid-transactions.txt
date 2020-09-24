@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/golang.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to accomplish ACID transactions and logical sessions with MongoDB and the Go programming language (Golang).
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Multi-Document ACID Transactions in MongoDB with Go
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,20 +15,13 @@
    Learn how to accomplish ACID transactions and logical sessions with MongoDB and the Go programming language (Golang).
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/golang-multi-document-acid-transactions
    :title: Multi-Document ACID Transactions in MongoDB with Go
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to accomplish ACID transactions and logical sessions with MongoDB and the Go programming language (Golang).
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
 .. pubdate:: 2020-03-27
+
 .. updated-date:: 2020-06-26
 
 .. type:: quickstart
@@ -46,12 +36,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/golang.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===================================================
 Multi-Document ACID Transactions in MongoDB with Go

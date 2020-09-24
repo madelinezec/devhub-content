@@ -1,44 +1,40 @@
 :template: devhub-article
  
+.. atf-image:: /images/atf-images/quickstart/nodejs.png
+
 .. meta-description::
+
    How to call the MongoDB Atlas API from Python, Node and Ruby - easy digesting.
- 
+
 .. twitter::
-   :site: @mongodb
    :creator: @codepope
    :title: Calling the MongoDB Atlas API with Node, Python and Ruby
    :image: /images/social/twitter/twitter-build.png
    :image-alt: MongoDB build
- 
+
    How to call the MongoDB Atlas API from Python, Node and Ruby - easy digesting.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/nodejs-python-ruby-atlas-api
-   :type: article
    :title: Calling the MongoDB Atlas API with Node, Python and Ruby
    :image: /images/social/open-graph/og-build.png
 
-   How to call the MongoDB Atlas API from Python, Node and Ruby - easy digesting.
-
 .. include:: /includes/authors/walker-dj.rst
- 
+
 .. pubdate:: 2019-03-12
- 
+
 .. type:: how-to
 
 .. level:: beginner
 
 .. languages::
- 
+
    * JavaScript
    * Python
    * Ruby
- 
-.. products::
- 
-   * Atlas
 
-.. atf-image:: /images/atf-images/quickstart/nodejs.png
+.. products::
+
+   * Atlas
 
 ========================================================================
 Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
@@ -191,6 +187,8 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
 
    .. figure:: /images/how-to/atlasruby-e82kmt50uy.png
       :alt: Calling Atlas from Ruby
+
+.. summary::
 
    Next Stop - The API
    -------------------

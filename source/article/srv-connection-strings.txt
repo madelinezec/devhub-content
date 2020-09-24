@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/pink.png
 
-.. meta-description:: 
+.. meta-description::
 
    SRV records are another way in which MongoDB is making life easier for database developers everywhere.
 
 .. twitter::
-   :site: @mongodb
    :creator: @jdrumgoole
    :title: MongoDB 3.6: Here to SRV you with easier replica set connections
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    SRV records are another way in which MongoDB is making life easier for database developers everywhere.
 
 .. og::
-   :url: http://developer.mongodb.com/article/srv-connections-strings
-   :type: article
    :title: MongoDB 3.6: Here to SRV you with easier replica set connections
    :image: /images/social/open-graph/og-mdb-developer.png
-
-   SRV records are another way in which MongoDB is making life easier for database developers everywhere.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/drumgoole-joe.rst
 
@@ -39,19 +28,13 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Technical
 
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/generic/pink.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ================================================================
 MongoDB 3.6: Here to SRV you with easier replica set connections

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
 
-.. meta-description:: 
+.. meta-description::
 
    Discover the top 4 reasons you should use MongoDB
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: The Top 4 Reasons Why You Should Use MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
@@ -18,16 +15,8 @@
    Discover the top 4 reasons you should use MongoDB
 
 .. og::
-   :url: http://developer.mongodb.com/article/top-4-reasons-to-use-mongodb
-   :type: article
    :title: The Top 4 Reasons Why You Should Use MongoDB
    :image: /images/social/open-graph/og-sql-mdb.png
-
-   Discover the top 4 reasons you should use MongoDB
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -37,19 +26,13 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * SQL
 
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ============================================
 The Top 4 Reasons Why You Should Use MongoDB

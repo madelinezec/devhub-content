@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/java.png
 
 .. meta-description::
 
    Learn how to use the Aggregation Pipeline using the MongoDB Java Driver.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: How to use the Aggregation Pipeline using the MongoDB Java Driver.
    :image: /images/social/twitter/twitter-blue-pattern.png
@@ -18,16 +15,8 @@
    Learn how to use the Aggregation Pipeline using the MongoDB Java Driver.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/java-aggregation-pipeline
-   :type: article
    :title: How to use the Aggregation Pipeline using the MongoDB Java Driver.
    :image: /images/social/open-graph/og-blue-pattern.png
-
-   Learn how to use the Aggregation Pipeline using the MongoDB Java Driver.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -47,12 +36,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/java.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================
 Java - Aggregation Pipeline

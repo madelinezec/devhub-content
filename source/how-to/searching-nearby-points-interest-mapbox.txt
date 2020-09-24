@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Searching for Nearby Points of Interest with MongoDB and Mapbox
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/searching-nearby-points-interest-mapbox
-   :type: article
    :title: Searching for Nearby Points of Interest with MongoDB and Mapbox
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to use the $near operator in a MongoDB geospatial query to find nearby points of interest.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -45,12 +34,6 @@
 
    * MongoDB
    * Realm
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================================
 Searching for Nearby Points of Interest with MongoDB and Mapbox

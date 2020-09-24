@@ -1,28 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to design a strategy towards developing the next big online game that uses MongoDB.
 
 .. twitter::
    :creator: @nraboy
    :title: Designing a Strategy to Develop a Game with Unity and MongoDB
-   :image: /images/atf-images/generic/green.png
+   :image: /images/social/twitter/twitter-mdb-developer.png
    :image-alt: Schema Design Patterns
 
    Learn how to design a strategy towards developing the next big online game that uses MongoDB.
 
 .. og::
    :title: Designing a Strategy to Develop a Game with Unity and MongoDB
-   :image: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-mdb-developer.png
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -32,19 +26,13 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Game Development
 
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =============================================================
 Designing a Strategy to Develop a Game with Unity and MongoDB

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/bson.png
 
 .. meta-description::
 
    Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Quick Start: BSON Data Types - Date
    :image: /images/social/twitter/twitter-blue-pattern.png
@@ -18,16 +15,8 @@
    Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/bson-data-types-date
    :title: Quick Start: BSON Data Types - Date
    :image: /images/social/open-graph/og-blue-pattern.png
-   :type: article
-
-   Working with dates and times can be a challenge. The Date BSON data type is an unsigned 64-bit integer with a UTC (Universal Time Coordinates) time zone.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -40,12 +29,6 @@
 .. tags::
 
    * BSON
-
-.. atf-image:: /images/atf-images/quickstart/bson.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===================================
 Quick Start: BSON Data Types - Date

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to write unit tests for MongoDB Realm Serverless Functions.
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: How to Write Unit Tests for MongoDB Realm Serverless Functions
    :image: /images/social/twitter/twitter-realm-functions.jpg
@@ -18,16 +15,8 @@
    Learn how to write unit tests for MongoDB Realm Serverless Functions
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/unit-test-realm-serverless-functions
-   :type: article
    :title: How to Write Unit Tests for MongoDB Realm Serverless Functions
    :image: /images/social/open-graph/og-realm-functions.jpg
- 
-   Learn how to write unit tests for MongoDB Realm Serverless Functions
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -37,7 +26,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Testing
    * DevOps
@@ -48,17 +37,11 @@
    * Atlas
    * Charts
 
-.. atf-image:: /images/atf-images/logos/realm-functions.jpg
-
 .. related::
 
    * `Stitch Hosting: A Drag-and-Drop Delight <https://developer.mongodb.com/how-to/stitch-hosting>`__
    * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
    * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==============================================================
 How to Write Unit Tests for MongoDB Realm Serverless Functions

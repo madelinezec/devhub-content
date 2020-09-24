@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/java.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Learn how to use MongoDB with Java in this CRUD operations tutorial.
    :image: /images/social/twitter/twitter-blue-pattern.png
@@ -18,16 +15,8 @@
    Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/java-mapping-pojos
-   :type: article
    :title: Learn how to use MongoDB with Java in this CRUD operations tutorial.
    :image: /images/social/open-graph/og-blue-pattern.png
-
-   Learn how to use MongoDB with Java in this tutorial on CRUD operations with example code and walkthrough.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -47,12 +36,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/java.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================
 MongoDB & Java - CRUD Operations Tutorial

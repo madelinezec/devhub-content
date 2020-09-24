@@ -1,11 +1,12 @@
 :template: devhub-article
 
+.. atf-image:: /images/atf-images/illustrations/tuning.png
+
 .. meta-description::
 
    Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MongoDB
    :title: MongoDB Performance Tuning Questions
    :image: /images/social/twitter/twitter-tuning.png
@@ -14,12 +15,8 @@
    Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
 
 .. og::
-   :url: http://developer.mongodb.com/article/performance-tuning-tips
    :title: MongoDB Performance Tuning Questions
    :image: /images/social/open-graph/og-tuning.png
-   :type: article
-
-   Early detection of problems allows you to stay ahead of the game, resolving issues before they affect performance.
 
 .. include:: /includes/authors/mongodb.rst
 
@@ -32,8 +29,6 @@
 .. products::
 
    * Atlas
-
-.. atf-image:: /images/atf-images/illustrations/tuning.png
 
 ====================================
 MongoDB Performance Tuning Questions

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
 .. meta-description::
 
    Learn how to enrich your data with MongoDB Stitch.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Data Enrichment with MongoDB Stitch
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn how to enrich your data with MongoDB Stitch.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/data-enrichment-stitch
    :title: Data Enrichment with MongoDB Stitch
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to enrich your data with MongoDB Stitch.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -51,12 +40,6 @@
 
    * Realm
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===================================
 Data Enrichment with MongoDB Stitch

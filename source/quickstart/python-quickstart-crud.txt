@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/python.png
 
 .. meta-description::
 
    Learn how to perform CRUD operations using Python for MongoDB databases.
 
 .. twitter::
-   :site: @mongodb
    :creator: @judy2k
    :title: QuickStart: CRUD Operations in Python
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn how to do MongoDB CRUD operations in #python.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/python-quickstart-crud
    :title: QuickStart: Basic Operations in Python
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to do MongoDB CRUD operations in Python.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/smith-mark.rst
 
@@ -36,16 +25,10 @@
 .. type:: quickstart
 
 .. level:: beginner
-   
+
 .. languages::
 
    * Python
-
-.. atf-image:: /images/atf-images/quickstart/python.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==================================
 Basic MongoDB Operations in Python
@@ -517,6 +500,8 @@ Basic MongoDB Operations in Python
    Once again, PyMongo has an equivalent ``delete_one`` method which will
    only delete the first matching document the database finds, instead of
    deleting *all* matching documents.
+
+.. summary::
 
    Further reading
    ===============

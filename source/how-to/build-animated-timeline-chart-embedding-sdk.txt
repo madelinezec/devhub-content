@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/charts.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to build an animated timeline chart with the MongoDB Charts Embedding SDK
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: Build an animated timeline chart with the Charts Embedding SDK
    :image: /images/social/twitter/twitter-charts.png
@@ -18,16 +15,8 @@
    Learn how to build an animated timeline chart with the MongoDB Charts Embedding SDK
 
 .. og::
-   :url: http://developer.mongodb.com/article/active-active-application-architectures
-   :type: article
    :title: Build an animated timeline chart with the MongoDB Charts Embedding SDK
    :image: /images/social/open-graph/og-charts.png
- 
-   Learn how to build an animated timeline chart with the MongoDB Charts Embedding SDK
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/stefanova-kristina.rst
 
@@ -37,7 +26,7 @@
 
 .. level:: intermediate
 
-.. tags:: 
+.. tags::
 
    * Data Visualization
    * Analytics
@@ -50,15 +39,9 @@
 
    * Charts
 
-.. atf-image:: /images/atf-images/illustrations/charts.png
-
 .. related::
 
    * :doc:`/how-to/charts-javascript-sdk`
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =============================================================================
 How to Build an Animated Timeline Chart with the MongoDB Charts Embedding SDK

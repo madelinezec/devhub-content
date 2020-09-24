@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/csharp.png
 
-.. meta-description:: 
+.. meta-description::
 
    Walk through an example of how to use transactions in C#.
 
 .. twitter::
-   :site: @mongodb
    :creator: @RobsCranium
    :title: MongoDB Transactions with C# and the MongoDB .NET Driver
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Walk through an example of how to use transactions in C#.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/transactions-c-dotnet
-   :type: article
    :title: MongoDB Transactions with C# and the MongoDB .NET Driver
    :image: /images/social/open-graph/og-mdb-developer.png
-
-   Walk through an example of how to use transactions in C#.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/walters-robert.rst
 
@@ -39,7 +28,7 @@
 
 .. level:: intermediate
 
-.. tags:: 
+.. tags::
 
    * Technical
    * .NET
@@ -52,12 +41,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/quickstart/csharp.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ================================================================
 Working with MongoDB Transactions with C# and the .NET Framework
@@ -230,6 +213,8 @@ Working with MongoDB Transactions with C# and the .NET Framework
     .. figure:: /images/ExecutionResults-5aao2jdet7.png
        :alt: Results of the code execution
        :width: 400px
+
+.. summary::
 
     Key points:
     -----------

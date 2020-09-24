@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/bson.png
 
 .. meta-description::
 
    Working with decimal numbers can be a challenge. The Decimal128 BSON data type allows for high precision options when working with numbers.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Quick Start: BSON Data Types - Decimal128
-   :image: /images/decimal128-precision-details.png
+   :image: /images/social/twitter/twitter-mdb-developer.png
    :image-alt: Decimal 128 precision
 
    Working with decimal numbers can be a challenge. The Decimal128 BSON data type allows for high precision options when working with numbers.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/bson-data-types-decimal128
    :title: Quick Start: BSON Data Types - Decimal 128
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Working with decimal numbers can be a challenge. The Decimal128 BSON data type allows for high precision options when working with numbers.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -40,12 +29,6 @@
 .. tags::
 
    * BSON
-
-.. atf-image:: /images/atf-images/quickstart/bson.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================
 Quick Start: BSON Data Types - Decimal128

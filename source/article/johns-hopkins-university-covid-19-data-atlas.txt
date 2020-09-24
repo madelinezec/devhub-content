@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/covid19.png
 
-.. meta-description:: 
+.. meta-description::
 
    Making the Johns Hopkins University COVID-19 Data open and accessible to all with MongoDB
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Access the JHU dataset via MongoDB, GraphQL, REST, SQL
    :image: /images/social/twitter/twitter-covid19.png
@@ -18,16 +15,8 @@
    Making the Johns Hopkins University COVID 19 Data open and accessible to all with MongoDB
 
 .. og::
-   :url: http://developer.mongodb.com/article/johns-hopkins-university-covid-19-data-atlas
    :title: Open and clean COVID-19 dataset from Johns Hopkins University.
    :image: /images/social/open-graph/og-covid19.png
-   :type: article
-
-   Making the Johns Hopkins University COVID-19 Data open and accessible to all with MongoDB
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -68,12 +57,6 @@
    * MongoDB
    * Atlas
    * Charts
-
-.. atf-image:: /images/atf-images/illustrations/covid19.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================================================================
 How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas

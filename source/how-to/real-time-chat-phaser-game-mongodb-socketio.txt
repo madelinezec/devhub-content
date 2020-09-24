@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Real-Time Chat in a Phaser Game with MongoDB and Socket.io
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/real-time-chat-phaser-game-mongodb-socketio
-   :type: article
    :title: Real-Time Chat in a Phaser Game with MongoDB and Socket.io
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to add real-time chat to a Phaser game with Socket.io and MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -45,12 +34,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================================================
 Real-Time Chat in a Phaser Game with MongoDB and Socket.io

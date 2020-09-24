@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/nodejs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Discover how to react to changes in your MongoDB database using change streams implemented in Node.js and Atlas triggers.
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: Change Streams & Triggers with Node.js Tutorial
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Discover how to react to changes in your MongoDB database using change streams implemented in Node.js and Atlas triggers.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/nodejs-change-streams-triggers
    :title: Change Streams & Triggers with Node.js Tutorial
    :image: /images/social/open-graph/og-pink-pattern.png
-   :type: article
-
-   Discover how to react to changes in your MongoDB database using change streams implemented in Node.js and Atlas triggers.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -39,7 +28,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Node.js
 
@@ -52,18 +41,12 @@
    * MongoDB
    * Atlas
 
-.. atf-image:: /images/atf-images/quickstart/nodejs.png
-
 .. related::
 
    * `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
    * :doc:`MongoDB Node.js CRUD Tutorial </quickstart/node-crud-tutorial>`
    * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
    * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================
 Change Streams & Triggers with Node.js Tutorial

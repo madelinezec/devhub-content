@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/security.png
 
-.. meta-description:: 
+.. meta-description::
 
    VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
 
 .. twitter::
-   :site: @mongodb
    :creator: @jaydestro
    :title: CIDR Subnet Selection for MongoDB Atlas
    :image: /images/social/twitter/twitter-security.png
@@ -18,16 +15,8 @@
    VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/cidr-subnet-selection-atlas
-   :type: article
    :title: CIDR Subnet Selection for MongoDB Atlas
    :image: /images/social/open-graph/og-security.png
-
-   VPC peering provides you with the ability to use the private IP range of your hosts and MongoDB Atlas cluster.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/gordon-jay.rst
 
@@ -47,12 +36,6 @@
 .. products::
 
    * Atlas
-
-.. atf-image:: /images/atf-images/illustrations/security.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =======================================
 CIDR Subnet Selection for MongoDB Atlas

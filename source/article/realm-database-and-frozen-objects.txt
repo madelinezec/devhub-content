@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
 
-.. meta-description:: 
+.. meta-description::
 
    Explaining Realm Database 6.0 and Frozen Objects
 
 .. twitter::
-   :site: @mongodb
    :creator: @shaneymac
    :title: Realm Database 6.0: A New Architecture and Frozen Objects
    :image: /images/social/twitter/twitter-realm-mobilesync.jpg
-   :image-alt: MongoDBRealm 
+   :image-alt: MongoDBRealm
 
-   New Realm Database 6.0 - Archtitecture and Frozen Objects 
+   New Realm Database 6.0 - Archtitecture and Frozen Objects
 
 .. og::
-   :url: http://developer.mongodb.com/article/realm-database-and-frozen-objects 
    :title: Realm Core 6.0 release and support for frozen objects
    :image: /images/social/open-graph/og-realm-mobilesync.jpg
-   :type: article
-
-   Realm Core 6.0 release and support for frozen objects
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/mcallister-shane.rst
 
@@ -44,7 +33,7 @@
 .. tags::
 
    * API
-   * iOS 
+   * iOS
 
 .. languages::
 
@@ -55,13 +44,7 @@
 .. products::
 
    * MongoDB
-   * Realm 
-
-.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
+   * Realm
 
 =========================================================
 Realm Database 6.0: A New Architecture and Frozen Objects

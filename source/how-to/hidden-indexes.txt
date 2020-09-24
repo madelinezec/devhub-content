@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/docs.png
 
-.. meta-description:: 
+.. meta-description::
 
-   Learn how to optimize and fine tune your MongoDB performance with hidden indexes. 
+   Learn how to optimize and fine tune your MongoDB performance with hidden indexes.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Optimize and Tune MongoDB Performance with Hidden Indexes
    :image: /images/social/twitter/twitter-docs.png
@@ -18,20 +15,10 @@
    Learn how to optimize and fine tune your MongoDB performance with hidden indexes.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
    :title: Optimize and Tune MongoDB Performance with Hidden Indexes
    :image: /images/social/open-graph/og-docs.png
-   :type: article
-
-   Learn how to optimize and fine tune your MongoDB performance with hidden indexes.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/docs.png
 
 .. pubdate:: 2020-06-16
 
@@ -47,10 +34,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================================
 Optimize and Tune MongoDB Performance with Hidden Indexes

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/docs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: How to Use Custom Aggregation Expressions in MongoDB 4.4
    :image: /images/social/twitter/twitter-docs.png
@@ -18,20 +15,10 @@
    Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/use-function-accumulator-operators
    :title: How to Use Custom Aggregation Expressions in MongoDB 4.4
    :image: /images/social/open-graph/og-docs.png
-   :type: article
-
-   Learn how to use custom aggregation expressions in your MongoDB aggregation pipeline operations.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/docs.png
 
 .. pubdate:: 2020-07-28
 
@@ -51,10 +38,6 @@
    * MongoDB
    * Atlas
    * Compass
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================================================
 How to Use Custom Aggregation Expressions in MongoDB 4.4

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/golang.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use change streams to react to changes to MongoDB documents, databases, and clusters in real-time using the Go programming language.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Reacting to Database Changes with MongoDB Change Streams and Go
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn how to use change streams to react to changes to MongoDB documents, databases, and clusters in real-time using the Go programming language.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/golang-change-streams
    :title: Reacting to Database Changes with MongoDB Change Streams and Go
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to use change streams to react to changes to MongoDB documents, databases, and clusters in real-time using the Go programming language.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -45,12 +34,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/golang.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================================
 Reacting to Database Changes with MongoDB Change Streams and Go
@@ -309,6 +292,8 @@ Reacting to Database Changes with MongoDB Change Streams and Go
    aggregation pipeline and its operators. You can learn more about what's
    available in the `official
    documentation <http://docs.mongodb.com/manual/changeStreams/#modify-change-stream-output>`__.
+
+.. summary::
 
    Conclusion
    ----------

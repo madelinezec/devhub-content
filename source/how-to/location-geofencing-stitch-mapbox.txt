@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use MongoDB geospatial queries and GeoJSON with Mapbox to create dynamic geofences.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Location Geofencing with MongoDB, Stitch, and Mapbox
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to use MongoDB geospatial queries and GeoJSON with Mapbox to create dynamic geofences.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci
-   :type: article
    :title: Location Geofencing with MongoDB, Stitch, and Mapbox
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to use MongoDB geospatial queries and GeoJSON with Mapbox to create dynamic geofences.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -44,12 +33,6 @@
 .. products::
 
    * Realm
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ====================================================
 Location Geofencing with MongoDB, Stitch, and Mapbox

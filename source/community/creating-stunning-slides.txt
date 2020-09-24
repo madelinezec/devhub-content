@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/creating-slides.png
 
 .. meta-description::
 
    Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: Creating Stunning Slides
    :image: /images/social/twitter/twitter-creating-slides.png
@@ -18,16 +15,8 @@
    Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
 
 .. og::
-   :url: http://developer.mongodb.com/community/creating-stunning-slides
    :title: Creating Stunning Slides
    :image: /images/social/twitter/twitter-creating-slides.png
-   :type: article
-
-   Learn how to use the MongoDB slide template to impress your audience with a stunning deck.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/creating-slides.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================
 Creating Stunning Slides
@@ -125,7 +108,7 @@ Creating Stunning Slides
    - Full slide pictures can make a great impression.
    - Use a semi transparent overlay for text on pictures. It can improve the contrast and readability of your text.
    - If you can't find an icon in our style guide you could also take a look at free icon libraries like `The Noun Project <https://thenounproject.com/>`__.
-   - We don't have a stock photo repository yet. You can use free photo libraries like `Pexels <https://www.pexels.com/>`__, `Unsplash <https://unsplash.com/>`__, and `Nappy <https://www.nappy.com/>`__. Please don't simply copy pictures from the Internet to avoid copyright infringements.
+   - We don't have a stock photo repository yet. You can use free photo libraries like `Pexels <https://www.pexels.com/>`__, `Unsplash <https://unsplash.com/>`__, and `Nappy <https://www.nappy.com/>`__. Please don't simply copy pictures from the Internet to avoid copyright infringements.
 
    .. youtube:: UwZyiFvKGpc
 
@@ -134,7 +117,7 @@ Creating Stunning Slides
 
    Lets' face it: Code is not made for slides. Here are some tips how you can make it less painful:
 
-   - Use the syntax highlighting from your IDE. When copying code from your source code editor and paste it on slides the colors should also be copied. For PowerPoint use Edit → Paste Special → HTML
+   - Use the syntax highlighting from your IDE. When copying code from your source code editor and paste it on slides the colors should also be copied. For PowerPoint use Edit → Paste Special → HTML
    - Don't show a full method or function on a slide. Just highlight the parts of the code you want to explain.
    - The code you show doesn't have to be compilable, really.
    - Consider shortening variable names for readability.
@@ -165,7 +148,7 @@ Creating Stunning Slides
 
    - Take full screen screenshots (for mac users: cmd+shift+3 / for window users: windows + PrtScn).
    - For web apps: hide browser controls, bookmark bars, and tabs before taking the screenshot.
-   - Zoom into the app, especially if you're taking a screenshot from a high resolution screen. Navigate to the important part of the screen that you're planning to highlight.
+   - Zoom into the app, especially if you're taking a screenshot from a high resolution screen. Navigate to the important part of the screen that you're planning to highlight.
 
    .. youtube:: fDjfi_K6sPY
 

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how SQL terms and concepts map to MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: Mapping Terms and Concepts from SQL to MongoDB
    :image: /images/social/twitter/twitter-sql-mdb.png
@@ -18,16 +15,8 @@
    Learn how SQL terms and concepts map to MongoDB.
 
 .. og::
-   :url: http://developer.mongodb.com/article/map-terms-concepts-sql-mongodb
-   :type: article
    :title: Mapping Terms and Concepts from SQL to MongoDB
    :image: /images/social/open-graph/og-sql-mdb.png
-
-   Learn how SQL terms and concepts map to MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -45,12 +34,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/sql-mdb.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================
 Mapping Terms and Concepts from SQL to MongoDB

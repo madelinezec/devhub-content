@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/datalake2.png
 
-.. meta-description:: 
+.. meta-description::
 
    Automatically tier your data across Atlas clusters and cloud object storage while retaining access to query it all with Atlas Data Lake.
 
 .. twitter::
-   :site: @mongodb
    :creator: @mbeugnet
    :title: Learn how to use MongoDB Atlas Data Lake and Online Archive.
    :image: /images/social/twitter/twitter-datalake.png
@@ -18,16 +15,8 @@
    Automatically tier your data across Atlas clusters and cloud object storage while retaining access to query it all with Atlas Data Lake.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/atlas-data-lake-online-archive
-   :type: article
    :title: Learn how to use MongoDB Atlas Data Lake and Online Archive.
    :image: /images/social/open-graph/og-datalake.png
-
-   Automatically tier your data across Atlas clusters and cloud object storage while retaining access to query it all with Atlas Data Lake.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -48,12 +37,6 @@
    * Atlas
    * Data Lake
    * Online Archive
-
-.. atf-image:: /images/atf-images/logos/datalake2.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =============================================================================================
 How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake & Online Archive

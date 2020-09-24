@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to continuously deploy a static generated website to MongoDB Stitch using Hugo, simple Git commands, and Travis CI.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Static Website Deployments to Stitch with Hugo, Git, and Travis CI
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to continuously deploy a static generated website to MongoDB Stitch using Hugo, simple Git commands, and Travis CI.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/static-website-deployments-mongodb-stitch-hugo-git-travis-ci
-   :type: article
    :title: Static Website Deployments to Stitch with Hugo, Git, and Travis CI
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to continuously deploy a static generated website to MongoDB Stitch using Hugo, simple Git commands, and Travis CI.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -44,12 +33,6 @@
 .. products::
 
    * Realm
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================================================================
 Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
@@ -505,6 +488,8 @@ Static Website Deployments to MongoDB Stitch with Hugo, Git, and Travis CI
    When you push your entire project to GitHub with this Travis CI
    configuration, the runner will start and if it doesn't fail, it will
    automatically push your static output files to Stitch.
+
+.. summary::
 
    Conclusion
    ----------

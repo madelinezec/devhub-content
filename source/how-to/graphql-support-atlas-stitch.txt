@@ -1,11 +1,12 @@
 :template: devhub-article
 
-.. meta-description:: 
+.. atf-image:: /images/atf-images/logos/graphql.png
+
+.. meta-description::
 
     Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
 
 .. twitter::
-    :site: @mongodb
     :creator: @nraboy
     :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
     :image: /images/social/twitter/twitter-mdb-developer.png
@@ -14,20 +15,15 @@
     Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
 
 .. og::
-    :url: https://developer.mongodb.com/how-to/graphql-support-atlas-stitch
     :title: Introducing GraphQL Support in MongoDB Atlas with Stitch
     :image: /images/social/open-graph/og-mdb-developer.png
-    :type: article
-
-    Learn how to interact with MongoDB through GraphQL directly in Stitch, without the need for a backend web service.
 
 .. include:: /includes/authors/raboy-nic.rst
-
-.. atf-image:: /images/atf-images/logos/graphql.png
 
 .. pubdate:: 2020-01-22
 
 .. type:: how-to
+
 .. level:: beginner
 
 .. tags:: 
@@ -477,6 +473,8 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     While both of the above examples leverage React, a popular web
     development framework, they demonstrate interacting with GraphQL using
     different client packages.
+
+.. summary::
 
     Conclusion
     ----------

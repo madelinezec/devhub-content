@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/build.png
 
 .. meta-description::
 
    Build a Movie Search Engine Using Full Text Search Indexes on MongoDB Atlas.
 
 .. twitter::
-   :site: @mongodb
    :creator: @YouOldMaid
    :title: Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search
    :image: /images/social/twitter/twitter-pink-pattern.png
@@ -18,16 +15,8 @@
    Build a Movie Search Engine Using Full Text Search Indexes on MongoDB Atlas.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/search-engine-using-atlas-full-text-search
-   :type: article
    :title: Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search
    :image: /images/social/open-graph/og-pink-pattern.png
-
-   Build a Movie Search Engine Using Full Text Search Indexes on MongoDB Atlas.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/huaulme-karen.rst
 
@@ -51,12 +40,6 @@
 
    * Realm
    * Atlas
-
-.. atf-image:: /images/atf-images/illustrations/build.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ================================================================================
 Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search in 10 Minutes

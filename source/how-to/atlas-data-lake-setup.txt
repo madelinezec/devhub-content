@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/datalake.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Learn how to setup MongoDB Atlas Datalake
    :image: /images/social/twitter/twitter-datalake.png
@@ -18,16 +15,8 @@
    Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/atlas-data-lake-setup
-   :type: article
    :title: Learn how to setup MongoDB Atlas Datalake
    :image: /images/social/open-graph/og-datalake.png
-
-   Learn how to setup your MongoDB Atlas Data Lake connection to explore data stored in AWS S3 buckets.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -46,12 +35,6 @@
 
    * Atlas
    * Data Lake
-
-.. atf-image:: /images/atf-images/logos/datalake.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =============================
 MongoDB Atlas Data Lake Setup

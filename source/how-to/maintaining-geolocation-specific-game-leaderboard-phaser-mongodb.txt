@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Maintaining a Game Leaderboard with Phaser and MongoDB
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/maintaining-geolocation-specific-game-leaderboard-phaser-mongodb
-   :type: article
    :title: Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to create a game with a functioning leaderboard using Phaser, JavaScript, and MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -45,12 +34,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================================================================
 Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB

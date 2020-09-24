@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/purple2.png
 
 .. meta-description::
 
    How I ended up building a whole CMS for a newsletter — when it wasn't even my job
 
 .. twitter::
-   :site: @mongodb
    :creator: @dwellington
    :title: Build a Newsletter Website With the MongoDB Data Platform
    :image: /images/social/twitter/twitter-blue-pattern.png
@@ -18,16 +15,8 @@
    How I ended up building a whole CMS for a newsletter — when it wasn't even my job
 
 .. og::
-   :url: http://developer.mongodb.com/article/good-intentions-rewarded-usual-way
-   :type: article
    :title: Build a Newsletter Website With the MongoDB Data Platform
    :image: /images/social/open-graph/og-blue-pattern.png
-
-   How I ended up building a whole CMS for a newsletter — when it wasn't even my job
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/wellington-dominic.rst
 
@@ -45,12 +34,6 @@
 
    * Realm
    * Charts
-
-.. atf-image:: /images/atf-images/generic/purple2.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================================
 Build a Newsletter Website With the MongoDB Data Platform

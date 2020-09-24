@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/java.png
 
 .. meta-description::
 
    Learn how to use the Change Streams using the MongoDB Java Driver.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Learn how to use the Change Streams using the MongoDB Java Driver.
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn how to use the Change Streams using the MongoDB Java Driver.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/java-change-streams
    :title: Learn how to map POJOs using the MongoDB Java Driver.
    :image: /images/social/open-graph/og-blue-pattern.png
-   :type: article
-
-   Learn how to use the Change Streams using the MongoDB Java Driver.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -47,12 +36,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/java.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =====================
 Java - Change Streams
@@ -467,7 +450,7 @@ Java - Change Streams
       automatically in the face of an "incident". Generally, the only
       reason that an application needs to restart the change stream
       manually from a resume token is if there is an incident in the
-      application itself rather than the change stream (e.g. an operator
+      application itself rather than the change stream (e.g. an operator
       has decided that the application needs to be restarted).
    
    .. code-block:: java

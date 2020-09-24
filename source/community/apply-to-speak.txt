@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/write-abstract.png
 
 .. meta-description::
 
    Learn how to write a successful conference pitch: Come up with a successful talk title, develop a compelling abstract, and win over the program committee.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: How to write compelling event submissions
    :image: /images/social/twitter/twitter-write-abstract.png
@@ -18,16 +15,8 @@
    Learn how to write a successful conference pitch and win over the program committee.
 
 .. og::
-   :url: http://developer.mongodb.com/community/apply-to-speak
    :title: Apply to speak
    :image: /images/social/twitter/twitter-write-abstract.png
-   :type: article
-
-   Learn how to write a successful conference pitch and win over the program committee.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/write-abstract.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================
 How to Write Compelling Event Submissions
@@ -89,8 +72,8 @@ How to Write Compelling Event Submissions
    Conferences are usually looking for topics that are:
 
    * **New** - Is your talk about a new hot technology or method that everyone is speaking about right now? Committees love to have those talks in the program since they attract mostly senior attendees and those are the ones that often get the budget to go to a conference. Nevertheless you could also try to apply with more generalized / beginner-friendly talks or workshops like "Git 101" or "Document Based Databases Explained". There should be always room at conferences for these types of talks.
-   * **Unique** - If you're not THE well known expert for a hot topic it's usually harder to get accepted. If you're among 10 submissions on a new technology the competition is pretty tough. Try to find a unique topic that you're passionate about.
-   * **Fit the track** - For a lot of conferences you're supposed to pick a track when submitting. Read the track description. Would your talk idea fit to the description? Program committees often split up efforts so different tracks are reviewed by different people. There's a chance of a low score by reviewers with the comment "Doesn't fit" when submitting to the wrong track. Even though a lot of reviewers just change the track by themselves, those submissions can fall through the cracks.
+   * **Unique** - If you're not THE well known expert for a hot topic it's usually harder to get accepted. If you're among 10 submissions on a new technology the competition is pretty tough. Try to find a unique topic that you're passionate about.
+   * **Fit the track** - For a lot of conferences you're supposed to pick a track when submitting. Read the track description. Would your talk idea fit to the description? Program committees often split up efforts so different tracks are reviewed by different people. There's a chance of a low score by reviewers with the comment "Doesn't fit" when submitting to the wrong track. Even though a lot of reviewers just change the track by themselves, those submissions can fall through the cracks.
 
    Some tracks might be more popular than others. If you're an expert on many fields you could consider submitting to less popular tracks. At the moment technology conferences get a lot of submissions in Methodology, Programming Languages, and Software Architecture tracks.
 

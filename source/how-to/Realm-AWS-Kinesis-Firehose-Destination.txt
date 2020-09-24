@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
 .. meta-description::
 
     Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
 
 .. twitter::
-    :site: @mongodb
     :creator: @aaronbassett
     :title: Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
     :image: /images/social/twitter/twitter-pink-pattern.png
@@ -18,16 +15,8 @@
     Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
 
 .. og::
-    :url: https://developer.mongodb.com/how-to/Realm-AWS-Kinesis-Firehose-Destination
     :title: Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
     :image: /images/social/open-graph/og-pink-pattern.png
-    :type: article
-
-    Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/bassett-aaron.rst
 
@@ -53,12 +42,6 @@
     * MongoDB
     * Atlas
     * Realm
-
-.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==============================================================
 Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
@@ -486,7 +469,9 @@ Using MongoDB Realm WebHooks with Amazon Kinesis Data Firehose
     .. image:: /images/how-to/realm-kinesis-firehose/mongodb-atlas-collection.png
         :alt: Screenshot of a collection in MongoDB Atlas
         :align: center
-    
+
+.. summary::
+
     **********
     Next Steps
     **********

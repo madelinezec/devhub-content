@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to write end-to-end tests for MongoDB Realm Serverless Apps.
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: How to Write End-to-End Tests for MongoDB Realm Serverless Apps
    :image: /images/social/twitter/twitter-realm-functions.jpg
@@ -18,14 +15,8 @@
    Learn how to write end-to-end tests for MongoDB Realm Serverless Apps
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/end-to-end-test-realm-serverless-apps
-   :type: article
    :title: How to Write End-to-End Tests for MongoDB Realm Serverless Apps
    :image: /images/social/open-graph/og-realm-functions.jpg
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -35,7 +26,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Testing
    * DevOps
@@ -46,18 +37,12 @@
    * Atlas
    * Charts
 
-.. atf-image:: /images/atf-images/logos/realm-functions.jpg
-
 .. related::
 
    * :doc:`/how-to/integration-test-realm-serverless-apps`
    * :doc:`/how-to/unit-test-realm-serverless-functions`
    * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
    * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================================
 How to Write End-to-End Tests for MongoDB Realm Serverless Apps

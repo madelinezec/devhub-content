@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/csharp.png
 
 .. meta-description::
 
    Learn how to perform CRUD operations using C Sharp for MongoDB databases.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: QuickStart: CRUD Operations in C Sharp
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn about the MongoDB CRUD operations using C Sharp.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/csharp-crud-tutorial
    :title: QuickStart: CRUD Operations in C Sharp
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn about the MongoDB CRUD operations using C Sharp.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -40,16 +29,10 @@
 .. tags::
 
    * .NET
-   
+
 .. languages::
 
    * C#
-
-.. atf-image:: /images/atf-images/quickstart/csharp.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================================
 MongoDB & C Sharp: CRUD Operations Tutorial
@@ -692,7 +675,6 @@ MongoDB & C Sharp: CRUD Operations Tutorial
    Check out the `gist for all of the CRUD
    commands <https://gist.github.com/kenwalger/4a3da771b8471c43d190327556ebc3ab>`__
    wrapped into a single file.
-
 
 .. summary::
 

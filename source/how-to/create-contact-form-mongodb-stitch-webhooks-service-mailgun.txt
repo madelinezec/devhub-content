@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/create-contact-form-mongodb-stitch-webhooks-service-mailgun
-   :type: article
    :title: Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to create a contact form and send emails using MongoDB Stitch webhooks and Mailgun transactional emails.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -44,12 +33,6 @@
 .. products::
 
    * Realm
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================================================================
 Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/community-card.png
 
 .. meta-description::
 
    Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: The MongoDB Community Speaker Program
    :image: /images/social/twitter/twitter-surviving-stage.png
@@ -18,17 +15,8 @@
    Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
 
 .. og::
-   :url: http://developer.mongodb.com/community/speaker-program
    :title: Community Speaker Program
    :image: /images/social/twitter/twitter-surviving-stage.png
-   :type: article
-
-   Learn more about the MongoDB Community Speaker Program and check out tons of resources on how to become a better speaker.
-
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -42,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/community-card.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================
 Community Speaker Program

@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
 .. meta-description::
 
    See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
 
 .. twitter::
-   :site: @mongodb
    :creator: @andrewmorgan
    :title: MongoDB Stitch Authentication Triggers
-   :image: /images/add-trigger.png
+   :image: /images/social/twitter/twitter-build.png
    :image-alt: Add trigger
 
    See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/stitch-authentication-triggers
-   :type: article
    :title: MongoDB Stitch Authentication Triggers
-   :image: /images/add-trigger.png
-
-   See how Stitch authentication triggers let you use third-party user-authentication services such as Facebook or Google.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-build.png
 
 .. include:: /includes/authors/morgan-andrew.rst
 
@@ -52,18 +41,6 @@
 
    * Realm
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
-
-.. related::
-
-   * ``list of related articles``
-   * ``:doc:`/path/to/article```
-   * ``:doc:`/path/to/other/article```
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ======================================
 MongoDB Stitch Authentication Triggers

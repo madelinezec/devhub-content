@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
-.. meta-description:: 
+.. meta-description::
 
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: MongoDB Schema Design Anti-Pattern: Separated Data
    :image: /images/social/twitter/twitter-schema-design-patterns.png
@@ -18,16 +15,8 @@
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
 
 .. og::
-   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-separated-data
-   :type: article
    :title: MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
    :image: /images/social/open-graph/og-schema-design-patterns.png
- 
-   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Separating Data That is Accessed Together
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -39,7 +28,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Schema Design
 
@@ -47,18 +36,12 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
-
 .. related::
 
    * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
    * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
    * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================
 Separating Data That is Accessed Together

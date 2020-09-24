@@ -1,11 +1,12 @@
 :template: devhub-article
 
-.. meta-description:: 
+.. atf-image:: /images/atf-images/generic/pink2.png
+
+.. meta-description::
 
    Learn how to use MongoDB Stitch for Internet of Things data in as little as 5 minutes.
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Capture IOT Data With MongoDB Stitch in 5 Minutes
    :image: /images/social/twitter/twitter-pink-pattern.png
@@ -14,12 +15,8 @@
    Learn how to use MongoDB Stitch for Internet of Things data in as little as 5 minutes.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/capture-iot-data-stitch
    :title: Capture IOT Data With MongoDB Stitch in 5 Minutes
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to use MongoDB Stitch for Internet of Things data in as little as 5 minutes.
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -29,7 +26,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * IoT
 
@@ -40,8 +37,6 @@
 .. languages::
 
    * JavaScript
-
-.. atf-image:: /images/atf-images/generic/pink2.png
 
 =================================================
 Capture IOT Data With MongoDB Stitch in 5 Minutes

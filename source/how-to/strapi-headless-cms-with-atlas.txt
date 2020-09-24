@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/build.png
 
-.. meta-description:: 
+.. meta-description::
 
-   Learn how to use MongoDB Atlas as a data store for your Strapi Headless CMS. 
+   Learn how to use MongoDB Atlas as a data store for your Strapi Headless CMS.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Use MongoDB as the Data Store for your Strapi Headless CMS
    :image: /images/social/twitter/twitter-build.png
@@ -18,20 +15,10 @@
    Learn how to build an API with HapiJS and MongoDB.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
    :title: Use MongoDB as the Data Store for your Strapi Headless CMS
    :image: /images/social/open-graph/og-build.png
-   :type: article
-
-   Learn how to use MongoDB Atlas as a data store for your Strapi Headless CMS. 
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/build.png
 
 .. pubdate:: 2020-05-05
 
@@ -52,10 +39,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================================================
 Use MongoDB as the Data Store for your Strapi Headless CMS
@@ -237,6 +220,8 @@ Use MongoDB as the Data Store for your Strapi Headless CMS
       :alt: Strapi Access via GraphQL
 
    We get everything we'd expect with the GraphQL plugin. We can view our entire schema and docs, run queries and mutations and it all just works. Now we can easily consume this data with any front-end. Say we're building an app with `Gatsby <https://www.gatsbyjs.org/>`__ or `Next.js <https://nextjs.org/>`__, we can call our endpoint, get all the data and generate all the pages ahead of time, giving us best-in-class performance as well as content management.
+
+.. summary::
 
    Putting It All Together
    -----------------------

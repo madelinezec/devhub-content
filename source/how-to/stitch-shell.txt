@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
 .. meta-description::
 
    The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
 
 .. twitter::
-   :site: @mongodb
    :creator: @andrewmorgan
    :title: Working with MongoDB Stitch Through the mongo Shell
-   :image: /images/MongoDB_Wire_Protocol.png
+   :image: /images/social/twitter/twitter-docs.png
    :image-alt: MongoDB Wire Protocol
 
    The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/stitch-shell
-   :type: article
    :title: Working with MongoDB Stitch Through the mongo Shell
-   :image: /images/MongoDB_Wire_Protocol.png
-
-   The Stitch SDK is the best way to access MongoDB Stitch from your frontend application code.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-docs.png
 
 .. include:: /includes/authors/morgan-andrew.rst
 
@@ -51,12 +40,6 @@
 
    * Realm
    * Atlas
-
-.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===================================================================================
 Working with MongoDB Stitch Through the mongo Shell - MongoDB Wire Protocol Support

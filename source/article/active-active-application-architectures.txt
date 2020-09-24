@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/purple.png
 
-.. meta-description:: 
+.. meta-description::
 
    This post will begin by describing the database capabilities required by modern multi-data center applications.
 
 .. twitter::
-   :site: @mongodb
    :creator: @jayrunkel
    :title: Active-Active Application Architectures with MongoDB
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    This post will begin by describing the database capabilities required by modern multi-data center applications.
 
 .. og::
-   :url: http://developer.mongodb.com/article/active-active-appliction-architectures
-   :type: article
    :title: Active-Active Application Architectures with MongoDB
    :image: /images/social/open-graph/og-mdb-developer.png
-
-   This post will begin by describing the database capabilities required by modern multi-data center applications.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/runkel-jay.rst
 
@@ -44,12 +33,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/generic/purple.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ====================================================
 Active-Active Application Architectures with MongoDB

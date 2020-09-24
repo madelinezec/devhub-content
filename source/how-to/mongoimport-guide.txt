@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/mongoimport.png
 
 .. meta-description::
 
    Learn how to import different types of data into MongoDB, quickly and efficiently, using mongoimport.
 
 .. twitter::
-   :site: @mongodb
    :creator: @judy2k
    :title: How to Import Data into MongoDB with mongoimport
-   :image: /images/how-to/mongoimport-guide/mongoimport-guide-twitter.png
+   :image: /images/social/twitter/twitter-mongoimport.png
    :image-alt: MongoDB Developers
 
    Ever struggled to get your data into MongoDB? This comprehensive guide shows you the ins-and-outs of the mongoimport tool.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/mongoimport-guide
    :title: How to Import Data into MongoDB with mongoimport
-   :image: /images/how-to/mongoimport-guide/mongoimport-guide-og.png
-   :type: article
-
-   Ever struggled to get your data into MongoDB? This comprehensive guide shows you the ins-and-outs of the mongoimport tool.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-mongoimport.png
 
 .. include:: /includes/authors/smith-mark.rst
 
@@ -37,17 +26,11 @@
 
 .. level:: beginner
 
-.. atf-image:: /images/how-to/mongoimport-guide/mongoimport-guide-atf.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
 ================================================
 How to Import Data into MongoDB with mongoimport
 ================================================
 
-.. introduction ::
+.. introduction::
 
    No matter what you're building with MongoDB, at some point you'll want
    to import some data. Whether it's the majority of your data, or just
@@ -65,7 +48,7 @@ How to Import Data into MongoDB with mongoimport
       documentation, if you're looking for something comprehensive or you
       just need to look up a command-line option.
 
-.. prerequisites ::
+.. prerequisites::
 
    Prerequisites
    -------------
@@ -714,7 +697,7 @@ How to Import Data into MongoDB with mongoimport
    tabular data before importing into MongoDB? Let us know on the
    `community forums <https://developer.mongodb.com/community/forums/>`__!
 
-   .. summary::
+.. summary::
 
    Conclusion
    ----------

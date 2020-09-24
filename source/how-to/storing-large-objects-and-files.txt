@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/nodejs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Discover how to store large objects and files in MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Storing Large Objects and Files in MongoDB
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Discover how to store large objects and files in MongoDB.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/storing-large-objects-and-files
    :title: Storing Large Objects and Files in MongoDB
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Discover how to store large objects and files in MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -39,7 +28,7 @@
 
 .. level:: intermediate
 
-.. tags:: 
+.. tags::
 
    * Releases
 
@@ -47,44 +36,38 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/nodejs.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
 ==========================================
 Storing Large Objects and Files in MongoDB
 ==========================================
 
 .. content::
 
-    Large objects, or "files", are easily stored in MongoDB.  It is no
-    problem to store 100MB videos in the database. 
+    Large objects, or "files", are easily stored in MongoDB. It is no
+    problem to store 100MB videos in the database.
 
-    This has a number of advantages over files stored in a file system. 
+    This has a number of advantages over files stored in a file system.
     Unlike a file system, the database will have no problem dealing with
-    millions of objects.  Additionally, we get the power of the database
+    millions of objects. Additionally, we get the power of the database
     when dealing with this data: we can do advanced queries to find a file,
     using indexes; we can also do neat things like replication of the entire
     file set.
 
     MongoDB stores objects in a binary format called
-    `BSON <http://bsonspec.org>`__.  BinData is a BSON data type for a
-    binary byte array.  However, MongoDB objects are typically limited to
-    4MB in size.  To deal with this, files are "chunked" into multiple
-    objects that are less than 4MB each.  This has the added advantage of
+    `BSON <http://bsonspec.org>`__. BinData is a BSON data type for a
+    binary byte array. However, MongoDB objects are typically limited to
+    4MB in size. To deal with this, files are "chunked" into multiple
+    objects that are less than 4MB each. This has the added advantage of
     letting us efficiently retrieve a specific range of the given file.
 
     While we could write our own chunking code, a standard format for this
     chunking is predefined, call
-    `GridFS <http://docs.mongodb.org/manual/core/gridfs/>`__.  GridFS
+    `GridFS <http://docs.mongodb.org/manual/core/gridfs/>`__. GridFS
     support is included in many MongoDB drivers and also in the
     `mongofiles <http://docs.mongodb.org/manual/reference/program/mongofiles/>`__
     command line utility.
 
     A good way to do a quick test of this facility is to try out the
-    mongofiles utility.  See the `MongoDB
+    mongofiles utility. See the `MongoDB
     documentation <http://docs.mongodb.org/manual/core/gridfs/>`__ for more
     information on GridFS.
 

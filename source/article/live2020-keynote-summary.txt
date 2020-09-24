@@ -16,7 +16,7 @@
 
 .. og::
    :title: MongoDB.Live 2020 Keynote In Less Than 10 Minutes
-   :image: /images/social/open-graph/og-virtual-presentation.png
+   :image: /images/social/open-graph/og-mdb-developer.png
 
 .. include:: /includes/authors/huaulme-karen.rst
 

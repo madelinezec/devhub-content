@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/dev-tools.png
 
 .. meta-description::
 
    Learn how to build Service-Based Atlas Cluster Management webhooks/functionality with Atlas API and MongoDB Realm.
 
 .. twitter::
-   :site: @mongodb
    :creator: @pavel.duchovny
    :title: Building Service-Based Atlas Cluster Management
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -17,17 +14,9 @@
 
    Learn how to build Service Based Atlas management components.
 
-   .. og::
-      :url: https://developer.mongodb.com/article/building-service-based-atlas-management
-      :title: Do You want to learn how to build service based Atlas management components?
-      :image: /images/social/open-graph/og-mdb-developer.png
-      :type: article
-
-   Learn how to build Service Based Atlas management components.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+.. og::
+   :title: Do You want to learn how to build service based Atlas management components?
+   :image: /images/social/open-graph/og-mdb-developer.png
 
 .. include:: /includes/authors/duchovny-pavel.rst
 
@@ -51,14 +40,6 @@
 
    * Atlas
    * Realm
-
-.. atf-image:: /images/atf-images/illustrations/dev-tools.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
-
 
 ===============================================
 Building Service-Based Atlas Cluster Management
@@ -213,7 +194,7 @@ Building Service-Based Atlas Cluster Management
 .. summary::
 
     Summary
-    ---------
+    -------
 
     Now our developers will be able to create users quickly without being exposed to any unnecessary privileges or human errors.
 

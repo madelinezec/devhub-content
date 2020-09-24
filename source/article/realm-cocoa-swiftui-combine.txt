@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
 
 .. meta-description::
 
    Public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
 
 .. twitter::
-   :site: @mongodb
    :creator: @realm
    :title: Realm Cocoa 5.0 - a ground-up rearchitecting of the core database
    :image: /images/social/twitter/twitter-realm-mobilesync.jpg
@@ -18,16 +15,8 @@
    Announcing the public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
 
 .. og::
-   :url: http://developer.mongodb.com/article/realm-cocoa-swiftui-combine
    :title: Realm Cocoa 5.0 - a ground-up rearchitecting of the core database
    :image: /images/social/open-graph/og-realm-mobilesync.jpg
-   :type: article
-
-   Announcing the public release of Realm Cocoa 5.0, with a ground-up rearchitecting of the core database
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/goyne-thomas.rst
 
@@ -49,12 +38,6 @@
 .. products::
 
    * Realm
-
-.. atf-image:: /images/atf-images/logos/realm-mobilesync.jpg
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================================================
 Realm Cocoa 5.0 - Multithreading Support with Integration for SwiftUI & Combine

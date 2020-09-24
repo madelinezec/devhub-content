@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/charts.png
 
 .. meta-description::
 
    Learn how to visualize your data with MongoDB Charts.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Working with MongoDB Charts and the new JavaScript SDK
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,20 +15,10 @@
    Learn how to visualize your data with MongoDB Charts.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/charts-javascript-sdk
    :title: Working with MongoDB Charts and the new JavaScript SDK
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to visualize your data with MongoDB Charts.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/charts.png
 
 .. pubdate:: 2020-04-07
 
@@ -53,11 +40,6 @@
    * Atlas
    * MongoDB
    * Charts
-
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ======================================================
 Working with MongoDB Charts and the new JavaScript SDK

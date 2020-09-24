@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to build a drawing game with Phaser that synchronizes with MongoDB Realm for multiplayer.
 
 .. twitter::
-   :site: @mongodb
    :creator: @nraboy
    :title: Creating a Multiplayer Drawing Game with Phaser and MongoDB
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn how to build a drawing game with Phaser that synchronizes with MongoDB Realm for multiplayer.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/creating-multiplayer-drawing-game-phaser
-   :type: article
    :title: Creating a Multiplayer Drawing Game with Phaser and MongoDB
    :image: /images/social/open-graph/og-green-pattern.png
-
-   Learn how to build a drawing game with Phaser that synchronizes with MongoDB Realm for multiplayer.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -45,12 +34,6 @@
 
    * MongoDB
    * Realm
-
-.. atf-image:: /images/atf-images/generic/green.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================================================
 Creating a Multiplayer Drawing Game with Phaser and MongoDB

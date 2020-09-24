@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/nextjs.png
 
-.. meta-description:: 
+.. meta-description::
 
-   Learn how to couple Next.js and MongoDB for your next-generation applications. 
+   Learn how to couple Next.js and MongoDB for your next-generation applications.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Building Modern Applications with Next.js and MongoDB
    :image: /images/social/twitter/twitter-nextjs.png
@@ -18,20 +15,10 @@
    Learn how to couple Next.js and MongoDB for your next-generation applications.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/nextjs-building-modern-applications
    :title: Building Modern Applications with Next.js and MongoDB
    :image: /images/social/open-graph/og-nextjs.png
-   :type: article
-
-   Learn how to couple Next.js and MongoDB for your next-generation applications.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/logos/nextjs.png
 
 .. pubdate:: 2020-02-07
 
@@ -54,10 +41,6 @@
    * MongoDB
    * Atlas
    * Compass
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =====================================================
 Building Modern Applications with Next.js and MongoDB
@@ -847,6 +830,8 @@ Building Modern Applications with Next.js and MongoDB
 
 
    Our new updateMacros method will make a POST request to our daily API endpoint with the new data. Try it now! You should be able to update existing macros or create data for new days that you don't already have any data for. We did it!
+
+.. summary::
 
    Putting It All Together
    -----------------------

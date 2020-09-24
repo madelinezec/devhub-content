@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/creating-talk.png
 
 .. meta-description::
 
    Learn how to put together exciting talks.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: The Art of Creating a Talk
    :image: /images/social/twitter/twitter-creating-talk.png
@@ -18,16 +15,8 @@
    Learn how to put together exciting talks.
 
 .. og::
-   :url: http://developer.mongodb.com/community/art-of-creating-talk
    :title: The Art of Creating a Talk
    :image: /images/social/twitter/twitter-creating-talk.png
-   :type: article
-
-   Learn how to put together exciting talks.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/creating-talk.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================
 The Art of Creating a Talk

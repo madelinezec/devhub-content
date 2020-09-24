@@ -1,10 +1,12 @@
 :template: devhub-article
 
+.. atf-image:: /images/atf-images/logos/alexa.png
+
 .. meta-description::
+
     Learn how to develop Amazon Alexa Skills that interact with MongoDB using the Go programming language and AWS Lambda.
 
 .. twitter::
-    :site: @mongodb
     :creator: @nraboy
     :title: Developing Alexa Skills with MongoDB and Golang
     :image: /images/social/twitter/twitter-mdb-developer.png
@@ -13,12 +15,8 @@
     Learn how to develop Amazon Alexa Skills that interact with MongoDB using the Go programming language and AWS Lambda.
 
 .. og::
-    :url: https://developer.mongodb.com/how-to/golang-alexa-skills
     :title: Developing Alexa Skills with MongoDB and Golang
     :image: /images/social/open-graph/og-mdb-developer.png
-    :type: article
-
-    Learn how to develop Amazon Alexa Skills that interact with MongoDB using the Go programming language and AWS Lambda.
 
 .. include:: /includes/authors/raboy-nic.rst
 
@@ -41,13 +39,11 @@
 
     * Atlas
 
-.. atf-image:: /images/atf-images/logos/alexa.png
-
 ===============================================
 Developing Alexa Skills with MongoDB and Golang
 ===============================================
 
-.. content::
+.. introduction::
 
     The popularity of `Amazon
     Alexa <https://developer.amazon.com/en-US/alexa>`__ and virtual
@@ -64,6 +60,8 @@ Developing Alexa Skills with MongoDB and Golang
 
     .. figure:: /images/how-to/demo-s4cgc58hq1.gif
         :alt: Alexa Demo
+
+.. prerequisites::
 
     The Requirements
     ----------------
@@ -90,6 +88,8 @@ Developing Alexa Skills with MongoDB and Golang
     Having an Amazon Echo or other Amazon Alexa enabled device is not
     necessary to be successful with this tutorial. Amazon offers a really
     great simulator that can be used directly in the web browser.
+
+.. content::
 
     Designing an Alexa Skill with an Invocation Term and Sample Utterances
     ----------------------------------------------------------------------
@@ -523,6 +523,8 @@ Developing Alexa Skills with MongoDB and Golang
     Of course the assumption is that you also have collection entries for
     chocolate chip cookies and the various ingredients that I used above.
     Feel free to modify the variable terms with those of your own data.
+
+.. summary::
 
     Conclusion
     ----------

@@ -1,11 +1,12 @@
 :template: devhub-article
 
-.. meta-description:: 
+.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
+
+.. meta-description::
 
    New Scheduled Stitch Triggers allow Stitch Functions to be called at regular intervals.
 
 .. twitter::
-   :site: @mongodb
    :creator: @codepope
    :title: Stitch Triggers Get Scheduled
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -14,33 +15,24 @@
    New Scheduled Stitch Triggers allow Stitch Functions to be called at regular intervals.
 
 .. og::
-   :url: http://developer.mongodb.com/article/stitch-triggers
-   :type: article
    :title: Stitch Triggers Get Scheduled
    :image: /images/social/open-graph/og-mdb-developer.png
-
-   New Scheduled Stitch Triggers allow Stitch Functions to be called at regular intervals.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/walker-dj.rst
 
 .. pubdate:: 2019-04-02
 
 .. type:: article
+
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Releases
 
 .. products::
 
    * Realm
-
-.. atf-image:: /images/atf-images/quickstart/stitch-triggers.png
 
 =============================
 Stitch Triggers Get Scheduled

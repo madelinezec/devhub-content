@@ -1,10 +1,8 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/nodejs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to write serverless functions with AWS Lambda and MongoDB
 
@@ -20,13 +18,7 @@
    :title: Write A Serverless Function with AWS Lambda and MongoDB
    :image: /images/social/open-graph/og-blue-pattern.png
 
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
-
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/nodejs.png
 
 .. pubdate:: 2020-09-18
 
@@ -46,10 +38,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =======================================================
 Write A Serverless Function with AWS Lambda and MongoDB

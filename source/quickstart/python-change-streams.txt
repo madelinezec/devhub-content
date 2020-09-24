@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/python.png
 
 .. meta-description::
 
    Change streams allow you to listen to changes that occur in your MongoDB database.
 
 .. twitter::
-   :site: @mongodb
    :creator: @naomi_pen
    :title: How to put PyMongo to work handing MongoDB Change Streams
    :image: /images/social/twitter/twitter-pink-pattern.png
@@ -18,16 +15,8 @@
    Change streams allow you to listen to changes that occur in your MongoDB database.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/python-change-streams
-   :type: article
    :title: How to put PyMongo to work handing MongoDB Change Streams
    :image: /images/social/open-graph/og-pink-pattern.png
-
-   Change streams allow you to listen to changes that occur in your MongoDB database.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/pentrel-naomi.rst
 
@@ -51,12 +40,6 @@
 
    * Atlas
    * MongoDB
-
-.. atf-image:: /images/atf-images/quickstart/python.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==================================
 MongoDB Change Streams with Python

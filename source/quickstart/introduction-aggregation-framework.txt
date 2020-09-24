@@ -1,33 +1,22 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
 
 .. meta-description::
 
    Learn about MongoDB's aggregation framework and aggregation operators.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Introduction to the MongoDB Aggregation Framework
-   :image: /images/agg-framework/agg-framework-pipeline.gif
+   :image: /images/social/twitter/twitter-mdb-developer.png
    :image-alt: MongoDB Aggregation Framework Pipeline
 
    Learn about MongoDB's aggregation framework and aggregation operators.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/introduction-aggregation-framework
    :title: Introduction to the MongoDB Aggregation Framework
-   :image: /images/agg-framework/agg-framework-pipeline.gif
-   :type: article
-
-   Learn about MongoDB's aggregation framework and aggregation operators.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-mdb-developer.png
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -40,12 +29,6 @@
 .. tags::
 
    * Aggregation Framework
-
-.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =================================================
 Introduction to the MongoDB Aggregation Framework

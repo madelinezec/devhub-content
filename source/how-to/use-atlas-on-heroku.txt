@@ -276,7 +276,7 @@ Using MongoDB Atlas on Heroku
 
       heroku ps:scale web=1
 
-   If you see a message that says ``Scaling dynos… done, now running web at 1:Free``, you'll know that at least one instance is up and running.
+   If you see a message that says ``Scaling dynos... done, now running web at 1:Free``, you'll know that at least one instance is up and running.
    
    Finally, go visit your app. You can do so with this useful command:
 

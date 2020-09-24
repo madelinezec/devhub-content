@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/docs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Set Global Read and Write Concerns in MongoDB 4.4
    :image: /images/social/twitter/twitter-docs.png
@@ -18,20 +15,10 @@
    Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/global-read-write-concerns
    :title: Set Global Read and Write Concerns in MongoDB 4.4
    :image: /images/social/open-graph/og-docs.png
-   :type: article
-
-   Learn how to set global read isolation and write durability defaults in MongoDB 4.4.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/docs.png
 
 .. pubdate:: 2020-06-26
 
@@ -47,10 +34,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =================================================
 Set Global Read and Write Concerns in MongoDB 4.4

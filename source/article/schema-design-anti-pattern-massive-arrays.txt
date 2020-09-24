@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
-.. meta-description:: 
+.. meta-description::
 
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: MongoDB Schema Design Anti-Pattern: Massive Arrays
    :image: /images/social/twitter/twitter-schema-design-patterns.png
@@ -18,16 +15,8 @@
    Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
 
 .. og::
-   :url: http://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays
-   :type: article
    :title: MongoDB Schema Design Anti-Pattern: Massive Arrays
    :image: /images/social/open-graph/og-schema-design-patterns.png
- 
-   Don't fall into the trap of this MongoDB Schema Design Anti-Pattern: Massive Arrays
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -41,7 +30,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Schema Design
 
@@ -49,17 +38,11 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
-
 .. related::
 
    * `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
    * `Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==============
 Massive Arrays

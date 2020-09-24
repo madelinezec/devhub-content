@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/security.png
 
-.. meta-description:: 
+.. meta-description::
 
    Secure your MongoDB installation by allowing non-root users to stop/start/restart your mongod process.
 
 .. twitter::
-   :site: @mongodb
    :creator: @mongodb
    :title: Secure your MongoDB installation.
    :image: /images/social/twitter/twitter-security.png
@@ -18,16 +15,8 @@
    Read more about the procedure to allow non-root users to stop/start/restart "mongod" process.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/non-root-user-mongod-process
-   :type: article
    :title: Secure your MongoDB installation.
    :image: /images/social/open-graph/og-security.png
-
-   Read more about the procedure to allow non-root users to stop/start/restart "mongod" process.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/shurhavetsky-ella.rst
 
@@ -47,12 +36,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/security.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================================================================
 Procedure to Allow Non-Root Users to Stop/Start/Restart "mongod" Process

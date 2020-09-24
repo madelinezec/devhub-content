@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/starlette.png
 
 .. meta-description::
 
    Learn how to build a property booking website in Python with Starlette, MongoDB, and Twilio.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Build a Property Booking Website with Starlette, MongoDB, and Twilio
    :image: /images/social/twitter/twitter-starlette.png
@@ -18,20 +15,10 @@
    Learn how to build a property booking website in Python with Starlette, MongoDB, and Twilio.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/python-starlette-stitch
    :title: Build a Property Booking Website with Starlette, MongoDB, and Twilio
    :image: /images/social/open-graph/og-starlette.png
-   :type: article
-
-   Learn how to build a property booking website in Python with Starlette, MongoDB, and Twilio.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/logos/starlette.png
 
 .. pubdate:: 2020-03-13
 
@@ -52,11 +39,6 @@
 
    * Realm
    * Atlas
-
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ====================================================================
 Build a Property Booking Website with Starlette, MongoDB, and Twilio
@@ -657,6 +639,8 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    .. image:: /images/starlette/cancel-sms.png
       :alt: MongoBnB Booking Cancellation
+
+.. summary::
 
    Putting It All Together
    -----------------------

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/gatsbyjs.png
 
 .. meta-description::
 
    Learn how to build a modern blog with GatsbyJS, MongoDB, and Markdown.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Build a Modern Blog with Gatsby and MongoDB
    :image: /images/social/twitter/twitter-gatsbyjs-mdb.png
@@ -18,20 +15,10 @@
    Learn how to build a modern blog with GatsbyJS, MongoDB, and Markdown.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/gatsby-modern-blog
    :title: Build a Modern Blog with Gatsby and MongoDB
    :image: /images/social/open-graph/og-gatsbyjs-mdb.png
-   :type: article
-
-   Learn how to build a modern blog with GatsbyJS, MongoDB, and Markdown.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/logos/gatsbyjs.png
 
 .. pubdate:: 2020-03-24
 
@@ -53,11 +40,6 @@
 
    * Atlas
    * MongoDB
-
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================================
 Build a Modern Blog with Gatsby and MongoDB

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green2.png
 
 .. meta-description::
 
    Install and correctly configure MongoDB on Raspberry Pi
 
 .. twitter::
-   :site: @mongodb
    :creator: @judy2k
    :title: Install MongoDB on the Raspberry Pi
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Install and correctly configure MongoDB on Raspberry Pi
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/mongodb-on-raspberry-pi
    :title:  Install MongoDB on the Raspberry Pi
    :image: /images/social/open-graph/og-green-pattern.png
-   :type: article
-
-   Install and correctly configure MongoDB on Raspberry Pi
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/smith-mark.rst
 
@@ -40,16 +29,10 @@
 .. products::
 
    * MongoDB
-   
+
 .. tags::
 
    * Raspberry Pi
-
-.. atf-image:: /images/atf-images/generic/green2.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===============================================
 Install & Configure MongoDB on the Raspberry Pi

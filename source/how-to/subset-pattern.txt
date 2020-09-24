@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
 .. meta-description::
 
    Over the course of this blog post series, we'll take a look at twelve common Schema Design Patterns that work well in MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Building with Patterns: The Subset Pattern
    :image: /images/social/twitter/twitter-schema-design-patterns.png
@@ -18,16 +15,8 @@
    Learn about the Subset Schema Design pattern in MongoDB.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/subset-pattern/
    :title: Building with Patterns: The Subset Pattern
    :image: /images/social/open-graph/og-schema-design-patterns.png
-   :type: article
-
-   Learn about the Subset Schema Design pattern in MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -49,17 +38,12 @@
 
    * MongoDB
 
-.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
-
 ==========================================
 Building with Patterns: The Subset Pattern
 ==========================================
 
 .. introduction::
+
    Some years ago, the first PCs had a whopping 256KB of RAM and dual 5.25"
    floppy drives. No hard drives as they were incredibly expensive at the
    time. These limitations resulted in having to physically swap floppy
@@ -82,7 +66,8 @@ Building with Patterns: The Subset Pattern
    the size of our working set. This is where we can leverage the Subset
    Pattern.
    
-.. content::   
+.. content::
+
    The Subset Pattern
    ------------------
    
@@ -103,8 +88,8 @@ Building with Patterns: The Subset Pattern
    
    Instead of storing all the reviews with the product, we can split the
    collection into two collections. One collection would have the most
-   frequently used data, e.g. current reviews and the other collection
-   would have less frequently used data, e.g. old reviews, product history,
+   frequently used data, e.g. current reviews and the other collection
+   would have less frequently used data, e.g. old reviews, product history,
    etc. We can duplicate part of a 1-N or N-N relationship that is used by
    the most used side of the relationship.
    
@@ -132,7 +117,8 @@ Building with Patterns: The Subset Pattern
    the working set and causing the working set to exceed the computer's RAM
    capacities, the Subset Pattern is an option to consider.
    
-.. summary::   
+.. summary::
+
    Conclusion
    ----------
    

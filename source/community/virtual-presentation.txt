@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/virtual-presentation.png
 
 .. meta-description::
 
    Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: Running Virtual Presentations
    :image: /images/social/twitter/twitter-virtual-presentation.png
@@ -18,16 +15,8 @@
    Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
 
 .. og::
-   :url: http://developer.mongodb.com/community/virtual-presentation
    :title: Running Virtual Presentations
    :image: /images/social/twitter/twitter-virtual-presentation.png
-   :type: article
-
-   Presenting remotely is very different compared to staying on stage. We have put together some tips for everyone giving a virtual presentation.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/virtual-presentation.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================================
 Prepare and Deliver Remote Presentations

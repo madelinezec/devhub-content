@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/speaker-grant.png
 
 .. meta-description::
 
    You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: MongoDB Speaker Grant - The Rules
    :image: /images/social/twitter/twitter-speaker-grant.png
@@ -18,16 +15,8 @@
    You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
 
 .. og::
-   :url: http://developer.mongodb.com/community/community-speaker-grant
    :title: Speaker Grant - The Rules
    :image: /images/social/twitter/twitter-speaker-grant.png
-   :type: article
-
-   You want to speak at a conference about MongoDB technologies? Great, travel and lodging are on us!
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/speaker-grant.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================
 Speaker Grant - The Rules

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/rust.png
 
 .. meta-description::
 
    Learn how to perform CRUD operations using Rust for MongoDB databases.
 
 .. twitter::
-   :site: @mongodb
    :creator: @judy2k
    :title: QuickStart: CRUD Operations in Rust
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,16 +15,8 @@
    Learn how to do MongoDB CRUD operations in #rustlang.
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/rust-crud-tutorial
    :title: QuickStart: CRUD Operations in Rust
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Learn how to do MongoDB CRUD operations in Rust.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/smith-mark.rst
 
@@ -40,16 +29,10 @@
 .. products::
 
    * Atlas
-   
+
 .. languages::
 
    * Rust
-
-.. atf-image:: /images/atf-images/quickstart/rust.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =================================================
 Quick Start: Up and Running with Rust and MongoDB
@@ -811,4 +794,3 @@ Quick Start: Up and Running with Rust and MongoDB
 
    There will be more Rust Quick Start posts on `MongoDB Developer Hub <https://developer.mongodb.com/>`__,
    covering different parts of MongoDB and the MongoDB Rust Driver, so keep checking back!
-

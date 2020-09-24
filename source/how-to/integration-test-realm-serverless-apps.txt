@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to write integration tests for MongoDB Realm Serverless Apps.
 
 .. twitter::
-   :site: @mongodb
    :creator: @Lauren_Schaefer
    :title: How to Write Integration Tests for MongoDB Realm Serverless Apps
    :image: /images/social/twitter/twitter-realm-functions.jpg
@@ -18,16 +15,8 @@
    Learn how to write integration tests for MongoDB Realm Serverless Apps
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/integration-test-realm-serverless-apps
-   :type: article
    :title: How to Write Integration Tests for MongoDB Realm Serverless Apps
    :image: /images/social/open-graph/og-realm-functions.jpg
- 
-   Learn how to write integration tests for MongoDB Realm Serverless Apps
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
@@ -37,7 +26,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * Testing
    * DevOps
@@ -48,18 +37,12 @@
    * Atlas
    * Charts
 
-.. atf-image:: /images/atf-images/logos/realm-functions.jpg
-
 .. related::
 
    * :doc:`/how-to/unit-test-realm-serverless-functions`
    * `Stitch Hosting: A Drag-and-Drop Delight <https://developer.mongodb.com/how-to/stitch-hosting>`__
    * `Video: DevOps + MongoDB Serverless = Wow! <https://youtu.be/RlouET0cPsc>`__
    * `GitHub Repo: SocialStats <https://github.com/mongodb-developer/SocialStats>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ================================================================
 How to Write Integration Tests for MongoDB Realm Serverless Apps
@@ -201,7 +184,6 @@ How to Write Integration Tests for MongoDB Realm Serverless Apps
    After I finished this integration test, I wrote similar tests for Tweets that contain emoji as well as for updating statistics for Tweets already stored in the database.
 
    You can find the complete set of integration tests in `storeCsvInDB.test.js <https://github.com/mongodb-developer/SocialStats/blob/master/tests/integration/storeCsvInDB.test.js>`__.
-
 
 .. summary::
 

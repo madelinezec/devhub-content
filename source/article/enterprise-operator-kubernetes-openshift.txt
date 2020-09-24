@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/dev-tools.png
 
-.. meta-description:: 
+.. meta-description::
 
    Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @RobsCranium
    :title: Introducing the MongoDB Enterprise Operator for Kubernetes
    :image: /images/social/twitter/twitter-mdb-developer.png
@@ -18,17 +15,8 @@
    Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
 
 .. og::
-   :url: http://developer.mongodb.com/article/enterprise-operator-kubernetes-openshift
-   :type: article
    :title: Introducing the MongoDB Enterprise Operator for Kubernetes
    :image: /images/social/open-graph/og-mdb-developer.png
-
-   Introducing a Kubernetes Operator (beta) that integrates with Ops Manager, the enterprise management platform for MongoDB.
-
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/walters-robert.rst
 
@@ -48,12 +36,6 @@
 
    * MongoDB
    * Ops Manager
-
-.. atf-image:: /images/atf-images/illustrations/dev-tools.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ========================================================================
 Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift

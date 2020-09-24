@@ -1,13 +1,10 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/graphql.png
 
-.. meta-description:: 
+.. meta-description::
 
-   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL. 
-
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL.
 
 .. twitter::
    :creator: @youoldmaid
@@ -15,18 +12,13 @@
    :image: /images/social/twitter/twitter-graphql.png
    :image-alt: Graphic with the logo for Realm GraphQL
 
-   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way. 
-
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way.
 
 .. og::
    :title: GraphQL: The Easy Way to Do the Hard Stuff
    :image: /images/social/open-graph/og-graphql.png
- 
-   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way. 
 
-.. ---------------------------------------------------------------
-.. HOW-TO METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   We'll do the hard stuff the easy way by starting only with data and building out an entire site using GraphQL showing why it's become so popular along the way.
 
 .. include:: /includes/authors/huaulme-karen.rst
 
@@ -38,7 +30,7 @@
 
 .. level:: beginner
 
-.. tags:: 
+.. tags::
 
    * GraphQL
    * API
@@ -49,8 +41,6 @@
 
    * Realm
    * Atlas
-
-.. atf-image:: /images/atf-images/logos/graphql.png
 
 .. related::
 

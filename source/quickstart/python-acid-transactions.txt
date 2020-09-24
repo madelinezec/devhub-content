@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/python.png
 
-.. meta-description:: 
+.. meta-description::
 
    How to perform multi-document transactions with Python.
 
 .. twitter::
-   :site: @mongodb
    :creator: @jdrumgoole
    :title: Introduction to Multi-Document ACID Transactions in Python
    :image: /images/social/twitter/twitter-pink-pattern.png
@@ -18,16 +15,8 @@
    How to perform multi-document transactions with Python.
 
 .. og::
-   :url: http://developer.mongodb.com/quickstart/python-acid-transactions
-   :type: article
    :title: Introduction to Multi-Document ACID Transactions in Python
    :image: /images/social/open-graph/og-pink-pattern.png
-
-   How to perform multi-document transactions with Python.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/drumgoole-joe.rst
 
@@ -51,12 +40,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/quickstart/python.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==========================================================
 Introduction to Multi-Document ACID Transactions in Python

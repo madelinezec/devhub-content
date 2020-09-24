@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/docs.png
 
-.. meta-description:: 
+.. meta-description::
 
    Explaining the MongoDB Atlas Sample Data and diving into its various datasets
 
 .. twitter::
-   :site: @mongodb
    :creator: @eoinbrazil
    :title: Explaining the MongoDB Atlas Sample Data
    :image: /images/social/twitter/twitter-docs.png
@@ -18,17 +15,9 @@
    Explaining the MongoDB Atlas Sample Data and diving into its various datasets
 
 .. og::
-   :url: http://developer.mongodb.com/article/atlas-sample-datasets
-   :type: article
    :title: Explaining the MongoDB Atlas Sample Data
    :image: /images/social/open-graph/og-docs.png
  
-   Explaining the MongoDB Atlas Sample Data and diving into its various datasets
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
-
 .. include:: /includes/authors/brazil-eoin.rst
 
 .. pubdate:: 2020-06-19
@@ -44,12 +33,6 @@
 .. products::
 
    * Atlas
-
-.. atf-image:: /images/atf-images/illustrations/docs.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =================================
 The MongoDB Atlas Sample Datasets

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/surviving-stage.png
 
 .. meta-description::
 
    Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
 
 .. twitter::
-   :site: @mongodb
    :creator: @svenpet
    :title: Surviving the Stage
    :image: /images/social/twitter/twitter-surviving-stage.png
@@ -18,16 +15,8 @@
    Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
 
 .. og::
-   :url: http://developer.mongodb.com/community/surviving-the-stage
    :title: Surviving the Stage
    :image: /images/social/twitter/twitter-surviving-stage.png
-   :type: article
-
-   Learn how to rock the stage at every conference, avoid common pitfalls, and calm your nerves.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/peters-sven.rst
 
@@ -41,12 +30,6 @@
 
    * Public Speaking
    * Speaker Program
-
-.. atf-image:: /images/atf-images/illustrations/surviving-stage.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===================
 Surviving the Stage

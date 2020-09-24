@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/generic/green2.png
 
 .. meta-description::
 
    Explore five ways to reduce MongoDB Atlas costs.
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: 5 Ways to Reduce Costs With MongoDB Atlas
    :image: /images/social/twitter/twitter-green-pattern.png
@@ -18,16 +15,8 @@
    Learn about 5 Ways to Reduce Costs With MongoDB Atlas
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/5-ways-reduce-costs-atlas
    :title: 5 Ways to Reduce Costs With MongoDB Atlas
    :image: /images/social/open-graph/og-green-pattern.png
-   :type: article
-
-   Learn about 5 Ways to Reduce Costs With MongoDB Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/lynn-michael.rst
 
@@ -41,12 +30,6 @@
 
    * MongoDB
    * Atlas
-
-.. atf-image:: /images/atf-images/generic/green2.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =========================================
 5 Ways to Reduce Costs With MongoDB Atlas

@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
 
 .. meta-description::
 
    Over the course of this blog post series, we'll take a look at twelve common Schema Design Patterns that work well in MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kenwalger
    :title: Building with Patterns: The Computed Pattern
    :image: /images/social/twitter/twitter-schema-design-patterns.png
@@ -18,16 +15,8 @@
    Learn about the Computed Schema Design pattern in MongoDB.
 
 .. og::
-   :url: https://developer.mongodb.com/how-to/computed-pattern/
    :title: Building with Patterns: The Computed Pattern
    :image: /images/social/open-graph/og-schema-design-patterns.png
-   :type: article
-
-   Learn about the Computed Schema Design pattern in MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/alger-ken.rst
 
@@ -48,12 +37,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/schema-design-patterns.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ============================================
 Building with Patterns: The Computed Pattern

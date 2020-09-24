@@ -1,37 +1,24 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/nextjs.png
 
-.. meta-description:: 
+.. meta-description::
 
-   Learn how to easily integrate MongoDB into your Next.js application with the official MongoDB package. 
+   Learn how to easily integrate MongoDB into your Next.js application with the official MongoDB package.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Get Started with MongoDB and Next.js
    :image: /images/social/twitter/twitter-nextjs.png
    :image-alt: How to Integrate MongoDB Into Your Next.js App
 
-   Learn how to easily integrate MongoDB into your Next.js application with the official MongoDB package. 
+   Learn how to easily integrate MongoDB into your Next.js application with the official MongoDB package.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/nextjs-with-mongodb
    :title: How to Integrate MongoDB Into Your Next.js App
    :image: /images/social/open-graph/og-nextjs.png
-   :type: article
-
-   Learn how to easily integrate MongoDB into your Next.js application with the official MongoDB package. 
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/logos/nextjs.png
 
 .. pubdate:: 2020-09-10
 
@@ -51,10 +38,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==============================================
 How to Integrate MongoDB Into Your Next.js App

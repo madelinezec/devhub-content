@@ -1,37 +1,24 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn how to use the Union All ($unionWith) aggregation pipeline stage, newly released in MongoDB 4.4.
 
 .. twitter::
-   :site: @mongodb
    :creator: @adriennetacke
    :title: How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
-   :image: /images/atf-images/quickstart/aggregation-framework_ATF.png
+   :image: /images/social/twitter/twitter-aggregation-framework.png
    :image-alt: How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
 
    Learn how to combine data from multiple collections with the $unionWith aggregation pipeline stage.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/use-function-accumulator-operators
    :title: How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4
-   :image: /images/atf-images/quickstart/aggregation-framework_ATF.png
-   :type: article
-
-   Learn how to combine data from multiple collections with the $unionWith aggregation pipeline stage.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
+   :image: /images/social/open-graph/og-aggregation-framework.png
 
 .. include:: /includes/authors/tacke-adrienne.rst
-
-.. atf-image:: /images/atf-images/quickstart/aggregation-framework_ATF.png
 
 .. pubdate:: 2020-08-17
 
@@ -50,10 +37,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==================================================================
 How to Use the Union All Aggregation Pipeline Stage in MongoDB 4.4

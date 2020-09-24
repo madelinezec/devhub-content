@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/logos/atlas-cluster.png
 
 .. meta-description::
 
    Want to know the quickest way to start with MongoDB? It begins with getting yourself a free MongoDB Atlas Cluster so you can leverage your learning
 
 .. twitter::
-   :site: @mongodb
    :creator: @MBeugnet
    :title: Getting Your Free MongoDB Atlas Cluster
    :image: /images/social/twitter/twitter-build.png
@@ -18,16 +15,8 @@
    Want to know the quickest way to start with MongoDB? It begins with getting yourself a free MongoDB Atlas Cluster so you can leverage your learning
 
 .. og::
-   :url: https://developer.mongodb.com/quickstart/free-atlas-cluster
    :title: Getting Your Free MongoDB Atlas Cluster
    :image: /images/social/open-graph/og-mdb-developer.png
-   :type: article
-
-   Want to know the quickest way to start with MongoDB? It begins with getting yourself a free MongoDB Atlas Cluster so you can leverage your learning
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/beugnet-maxime.rst
 
@@ -46,12 +35,6 @@
 .. products::
 
    * Atlas
-
-.. atf-image:: /images/atf-images/logos/atlas-cluster.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =======================================
 Getting Your Free MongoDB Atlas Cluster

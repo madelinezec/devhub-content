@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/build.png
 
-.. meta-description:: 
+.. meta-description::
 
-   Learn how to build an API with HapiJS and MongoDB. 
+   Learn how to build an API with HapiJS and MongoDB.
 
 .. twitter::
-   :site: @mongodb
    :creator: @kukicado
    :title: Build a RESTful API with HapiJS and MongoDB
    :image: /images/social/twitter/twitter-build.png
@@ -18,20 +15,10 @@
    Learn how to build an API with HapiJS and MongoDB.
 
 .. og::
-   :url: http://developer.mongodb.com/how-to/hapijs-nodejs-driver
    :title: Build a RESTful API with HapiJS and MongoDB
    :image: /images/social/open-graph/og-build.png
-   :type: article
-
-   Learn how to build an API with HapiJS and MongoDB.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/kukic-ado.rst
-
-.. atf-image:: /images/atf-images/illustrations/build.png
 
 .. pubdate:: 2020-04-14
 
@@ -51,10 +38,6 @@
 
    * MongoDB
    * Atlas
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ===========================================
 Build a RESTful API with HapiJS and MongoDB
@@ -612,6 +595,8 @@ Build a RESTful API with HapiJS and MongoDB
       :alt: Atlas Search Results
 
    MongoDB Atlas Search is very powerful and provides all the tools to add superb search functionality for your data without relying on external APIs. Check out the documentation to learn more about how to best leverage it in your applications.  
+
+.. summary::
 
    Putting It All Together
    -----------------------
