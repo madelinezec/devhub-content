@@ -5,6 +5,7 @@ Go
 Java
 JavaScript
 Kotlin
+MQL
 PHP
 Python
 R
