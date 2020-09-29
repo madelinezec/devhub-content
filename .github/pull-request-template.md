@@ -8,6 +8,9 @@
 * [Builder log link](PUT LOG LINK HERE)
 * [Staging blog post link](PUT BLOG POST LINK HERE)
 * [ ] I swear that I will re-run the `sanity-check.py` and update the 2 links above EACH TIME I push a new version. Else, I will give Max a tremendous amount of bonusly to seek mercy.
+* [ ] The post has received LGTM from a technical reviewer and an editorial reviewer and is ready for publication. Please publish this post...
+  * [ ] As soon as possible
+  * [ ] On the following date: TBD
 
 # Technical Reviewer Checklist
 Name of reviewer:
@@ -27,7 +30,7 @@ Name of reviewer:
 * [ ] Code samples follow best practices of their language and/or MongoDB
 
 # Editorial Reviewer Checklist
-Name of reviewer:
+Once you have a LGTM from a technical reviewer above, request a review from Megan Grant (GitHub id Meg528). She will complete the fields below.
 * [ ] LGTM!
 
 ## Correctness
