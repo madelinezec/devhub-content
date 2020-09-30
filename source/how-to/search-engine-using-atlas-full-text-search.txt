@@ -1,6 +1,6 @@
 :template: devhub-article
 
-.. atf-image:: /images/atf-images/illustrations/build.png
+.. atf-image:: /images/atf-images/generic/purple.png
 
 .. meta-description::
 
@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-01-14
 
-.. updated-date:: 2020-02-19
+.. updated-date:: 2020-09-29
 
 .. type:: how-to
 
@@ -46,13 +46,17 @@ Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search in 10 Minutes
 ================================================================================
 
 .. introduction::
-
-   .. include:: /includes/callouts/realm-release.rst
       
    .. blockquote::
 
-      Atlas Full-Text Search is now `Atlas
-      Search <https://www.mongodb.com/atlas/search>`__.
+      This article is out of date. Check out `this new post <https://developer.mongodb.com/how-to/build-movie-search-application>`__ 
+      for the most up-to-date way to MongoDB Atlas Search to find your favorite movies. 📽 🎞 
+
+      .. image:: /images/atlas-fts/outdated.gif
+         :alt: Blockbuster
+         :scale: 60%
+         :align: center
+   
 
    Giving your users the ability to find exactly what they are looking for
    in your application is critical for a fantastic user experience. With
