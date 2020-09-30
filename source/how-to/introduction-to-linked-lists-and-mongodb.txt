@@ -177,7 +177,7 @@ A Gentle Introduction to Linked Lists With MongoDB
    -------------------------
 
    First, Let's Set Up Our Coding Environment
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Creating A Cluster On Atlas
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
