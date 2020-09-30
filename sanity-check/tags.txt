@@ -9,6 +9,7 @@ Change Streams
 Cloud
 Containers
 Data
+Data Structures
 Data Visualization
 DevOps
 Full-Text Search
