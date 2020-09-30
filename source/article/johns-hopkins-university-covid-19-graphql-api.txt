@@ -1,0 +1,468 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/covid19.png
+
+.. meta-description::
+
+   Making the Johns Hopkins University COVID-19 Data open and accessible to all through a simple GraphQL API using MongoDB.
+
+.. twitter::
+   :creator: @MBeugnet
+   :title: Access the JHU dataset via a GraphQL API built with MongoDB Realm.
+   :image: /images/social/twitter/twitter-covid19.png
+   :image-alt: Virus representation
+
+   Making the Johns Hopkins University COVID-19 Data open and accessible to all through a simple GraphQL API using MongoDB.
+
+.. og::
+   :title: Access the JHU Dataset via a GraphQL API Built with MongoDB Realm.
+   :image: /images/social/open-graph/og-covid19.png
+
+.. include:: /includes/authors/beugnet-maxime.rst
+
+.. pubdate:: 2020-09-25
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags::
+
+   * API
+   * Data
+   * GraphQL
+   * Time Series
+
+.. products::
+
+   * Atlas
+   * Realm
+   
+.. related::
+
+   * `Article: Introducing GraphQL Support in MongoDB Atlas <https://developer.mongodb.com/how-to/graphql-support-atlas-stitch>`__
+   * `Article: GraphQL: The Easy Way to Do the Hard Stuff <https://developer.mongodb.com/how-to/graphql-easy>`__
+   * `Video: GraphQL: The Easy Way to Do the Hard Stuff <https://youtu.be/nM51I6XVlTw>`__
+   * `Video: Realm Creating Sophisticated GraphQL APIs in Minutes <https://youtu.be/eiUYYYiG7F0>`__
+
+================================================================
+A Free GraphQL API for Johns Hopkins University COVID-19 Dataset
+================================================================
+
+.. introduction::
+
+   TL;DR
+   -----
+
+   You can retrieve an access token using the API like so:
+
+   .. code-block:: bash
+
+      curl -X POST 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/auth/providers/anon-user/login'
+
+   Then you can read the `GraphQL API documentation <https://covid-19-qppza.mongodbstitch.com/>`__ and start running queries like this one using the access token you just retrieved:
+
+   .. code-block:: bash
+
+      curl 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/graphql' \
+           --header 'Authorization: Bearer ACCESS_TOKEN' \
+           --header 'Content-Type: application/json' \
+           --data-raw '{"query":"query {countries_summary {_id combined_names confirmed country country_codes country_iso2s country_iso3s date deaths population recovered states uids}}"}'
+
+   Introduction
+   ------------
+
+   Recently, we built the :doc:`MongoDB COVID-19 Open Data project </article/johns-hopkins-university-covid-19-data-atlas>` using the `dataset from Johns Hopkins University <https://github.com/CSSEGISandData/COVID-19/>`__ (JHU).
+
+   It's a great dataset for education purposes and for pet projects. The MongoDB Atlas cluster is freely accessible using the user ``readonly`` and the password ``readonly`` using the connection string:
+
+   .. code-block:: auto
+
+      mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
+
+   .. blockquote::
+
+      This cluster contains 2 databses: ``covid19`` and ``covid19jhu``. Only the first one will be exposed with this GraphQL API. The second one contains the unprocessed raw data from JHU's CSV files. Learn about the databases and collection in :doc:`the dedicated blog post </article/johns-hopkins-university-covid-19-data-atlas>`.
+
+   You can use this cluster to build your application, but I also set up a GraphQL API using `MongoDB Realm <https://www.mongodb.com/realm>`__ to expose this data for you.
+   
+   In this blog post, I will first show you how to access our GraphQL endpoint securely. Then we will have a look at the documentation together to build out a variety of GraphQL queries to access all sorts of information in our dataset - all against a single API endpoint. Learning how to to use filters and request only specific fields in our data will help optimize the performance of your applications - by bringing you exactly the data you want - nothing more, nothing less.
+
+   .. image:: /images/article/johns-hopkins-university-covid-19-graphql-api/trevor-wow.gif
+      :alt: Trevor Noah saying wow gif
+      :align: center
+      :scale: 60%
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   - Command line and `cURL <https://en.wikipedia.org/wiki/CURL>`__ - which I'm using here for the sake of simplicity.
+   - Or any other tool which handles HTTP queries. I also tested to run the following queries with `Postman <https://www.postman.com/>`__, and it works great.
+
+.. content::
+
+   COVID-19 GraphQL API
+   --------------------
+
+   Get an Access Token
+   ~~~~~~~~~~~~~~~~~~~
+
+   I used `MongoDB Realm <https://www.mongodb.com/realm>`__ to create this `GraphQL <https://graphql.org/>`__ API. Since MongoDB Realm is secure by default, only authenticated queries can be made. Yet since I want to keep this service as open as possible, I simply used the `Anonymous Authentication <https://docs.mongodb.com/realm/authentication/anonymous/>`__ offered by MongoDB Realm.
+
+   So now, all you need to retrieve an access token is the `MongoDB Realm Application ID <https://docs.mongodb.com/realm/get-started/find-your-app-id/>`__ — or ``APP_ID``, for short — of my MongoDB Realm application:
+
+   .. code-block:: none
+
+      covid-19-qppza
+
+   And `the API to authenticate HTTP client request <https://docs.mongodb.com/realm/reference/authenticate-http-client-requests/>`__, which is:
+
+   .. code-block:: bash
+
+      curl -X POST 'https://realm.mongodb.com/api/client/v2.0/app/<APP_ID>/auth/providers/anon-user/login'
+
+   Inserting the ``APP_ID`` into the URL gives you:
+
+   .. code-block:: bash
+
+      curl -X POST 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/auth/providers/anon-user/login'
+
+   If you execute this query in your favorite shell, you will receive a JSON answer that looks like this one:
+
+   .. code-block:: json
+
+      {
+        "access_token":"eyJhbG......6dbnY",
+        "refresh_token":"eyJhbG......uKpoM",
+        "user_id":"5f692c44033b9e7f1554d475",
+        "device_id":"000000000000000000000000"
+      }
+
+   Access tokens expire 30 minutes after MongoDB Realm grants them. When an access token expires, you can request a new one using the same API, or you can `get a new one using the refresh token <https://docs.mongodb.com/realm/reference/authenticate-http-client-requests/#refresh-a-client-api-access-token>`__. Although it's often just easier to request a new one.
+
+   Query the GraphQL API
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   Once you have the token, you can start browsing the `GraphQL API documentation <https://covid-19-qppza.mongodbstitch.com/>`__ that I generated with `GraphDoc <https://github.com/2fd/graphdoc#readme>`__ and build your first query.
+
+   Five collections are available in this GraphQL API, and you can learn more about each one of them `in our documentation <https://github.com/mongodb-developer/open-data-covid-19#databases-and-collections>`__. Each have a "singular" query which can be used to retrieve a single document and a "plural" one to retrieve a list of documents. As an exception, the metadata collection contains only a single document so it offers no "plural" query.
+
+   You can see all the possible queries in `the "query" page in the documentation <https://covid-19-qppza.mongodbstitch.com/query.doc.html>`__, but I have also summarized them in the following table:
+
+
+   .. list-table:: GraphQL API
+      :header-rows: 1
+
+      * - Collection
+        - Query (singular / plural)
+        - Fields available
+      * - `metadata <https://github.com/mongodb-developer/open-data-covid-19#collection-metadata>`__
+        -
+          - metadatum
+        -
+          - _id
+          - countries
+          - states
+          - states_us
+          - counties
+          - iso3s
+          - uids
+          - first_date
+          - last_date
+      * - `countries_summary <https://github.com/mongodb-developer/open-data-covid-19#collection-countries_summary>`__
+        -
+          - countries_summary
+          - countries_summarys
+        -
+          - _id
+          - combined_names
+          - confirmed
+          - country
+          - country_codes
+          - country_iso2s
+          - country_iso3s
+          - date
+          - deaths
+          - population
+          - recovered
+          - states
+          - uids
+      * - `global <https://github.com/mongodb-developer/open-data-covid-19#collection-global>`__
+        -
+          - global
+          - globals
+        -
+          - _id
+          - combined_name
+          - confirmed
+          - country
+          - country_code
+          - country_iso2
+          - country_iso3
+          - date
+          - deaths
+          - loc { type coordinates }
+          - population
+          - recovered
+          - state
+          - uid
+      * - `global_and_us <https://github.com/mongodb-developer/open-data-covid-19#collection-global_and_us>`__
+        -
+          - global_and_u
+          - global_and_us
+        -
+          - _id
+          - combined_name
+          - confirmed
+          - country
+          - country_code
+          - country_iso2
+          - country_iso3
+          - county
+          - date
+          - deaths
+          - fips
+          - loc { type coordinates }
+          - population
+          - recovered
+          - uid
+      * - `us_only <https://github.com/mongodb-developer/open-data-covid-19#collection-us_only>`__
+        -
+          - us_only
+          - us_onlys
+        -
+          - _id
+          - combined_name
+          - confirmed
+          - country
+          - country_code
+          - country_iso2
+          - country_iso3
+          - county
+          - date
+          - deaths
+          - fips
+          - loc { type coordinates }
+          - population
+          - state
+          - uid
+
+   .. blockquote::
+
+      Find all the details in the `GraphQL documentation <https://covid-19-qppza.mongodbstitch.com/query.doc.html>`__. To explore this data and the flexibility of GraphQL, let's build out three example queries.
+
+   Query 1. The Metadata Collection
+   ````````````````````````````````
+
+   Let's first query the `metadata collection <https://github.com/mongodb-developer/open-data-covid-19#collection-metadata>`__. This collection contains only one single document listing all the values (obtained with mongodb distinct function) for the major fields.
+
+   Here is the GraphQL query:
+
+   .. code-block:: javascript
+
+      query {
+        metadatum {
+          _id
+          countries
+          states
+          states_us
+          counties
+          iso3s
+          uids
+          first_date
+          last_date
+        }
+      }
+
+   Now let's build an HTTP query with it. Don't forget to replace the ``ACCESS_TOKEN`` in the query with your own valid token.
+
+   .. code-block:: bash
+
+      curl 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/graphql' \
+           --header 'Authorization: Bearer ACCESS_TOKEN' \
+           --header 'Content-Type: application/json' \
+           --data-raw '{"query": "query { metadatum { _id countries states states_us counties iso3s uids first_date last_date } }" }'
+
+   This will answer a `JSON document <https://covid-19-qppza.mongodbstitch.com/metadatum.doc.html>`__ which will help you populate your filters for the other queries:
+
+   .. code-block:: json
+
+      {"data":
+        {"metadatum":
+          {
+            "_id":"metadata",
+            "countries": [ "Afghanistan", "Albania", "Algeria","..."],
+            "states":["Alabama","Alaska","Alberta","American Samoa","..."],
+            "states_us":["Alabama","Alaska","American Samoa","..."],
+            "counties":["Abbeville","Acadia","Accomack","..."],
+            "iso3s":["ABW","AFG","AGO","..."],
+            "uids":[4,8,12,16,...],
+            "first_date":"2020-01-22T00:00:00Z",
+            "last_date":"2020-09-23T00:00:00Z"
+          }
+        }
+      }
+
+   Query 2. The ``countries_summary`` Collection
+   `````````````````````````````````````````````
+
+   Now let's refine our data query even further. We want to see how France is trending for the last week, so we will use a query filter: 
+   
+   .. code-block:: javascript
+
+      {country: "France", date_gte: "2020-09-16T00:00:00Z"}
+      
+   Plus we will sort the dates in descending order with the most recent dates first. Remember with GraphQL, we can request as many or as few data fields as we want for the client. In this example, we'll only ask for the number of confirmed cases, deaths, and recoveries, along with the date. The final query with this filter and those specific fields is:
+
+   .. code-block:: javascript
+
+      query {
+        countries_summarys(query: {country: "France", date_gte: "2020-09-16T00:00:00Z"}, sortBy: DATE_DESC) {
+          confirmed
+          date
+          deaths
+          recovered
+        }
+      }
+
+   Or with cURL:
+
+   .. code-block:: bash
+
+      curl 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/graphql' \
+           --header 'Authorization: Bearer ACCESS_TOKEN' \
+           --header 'Content-Type: application/json' \
+           --data-raw '{"query": "query { countries_summarys(query: {country: \"France\", date_gte: \"2020-09-16T00:00:00Z\"}, sortBy: DATE_DESC) { confirmed date deaths recovered } }" }'
+
+   Which gives me:
+
+   .. code-block:: json
+
+      {
+          "data": {
+              "countries_summarys": [
+                  {
+                      "confirmed": 507150,
+                      "date": "2020-09-22T00:00:00Z",
+                      "deaths": 31426,
+                      "recovered": 94961
+                  },
+                  {
+                      "confirmed": 496851,
+                      "date": "2020-09-21T00:00:00Z",
+                      "deaths": 31346,
+                      "recovered": 94289
+                  },
+                  {
+                      "confirmed": 467614,
+                      "date": "2020-09-20T00:00:00Z",
+                      "deaths": 31257,
+                      "recovered": 93586
+                  },
+                  {
+                      "confirmed": 467614,
+                      "date": "2020-09-19T00:00:00Z",
+                      "deaths": 31257,
+                      "recovered": 93586
+                  },
+                  {
+                      "confirmed": 467421,
+                      "date": "2020-09-18T00:00:00Z",
+                      "deaths": 31257,
+                      "recovered": 92700
+                  },
+                  {
+                      "confirmed": 454266,
+                      "date": "2020-09-17T00:00:00Z",
+                      "deaths": 31103,
+                      "recovered": 91765
+                  },
+                  {
+                      "confirmed": 443869,
+                      "date": "2020-09-16T00:00:00Z",
+                      "deaths": 31056,
+                      "recovered": 91293
+                  }
+              ]
+          }
+      }
+
+   Query 3. The ``global_and_us`` Collection
+   `````````````````````````````````````````
+
+   Finally, let's find the three counties in the USA with the greatest number of confirmed cases:
+
+   .. code-block:: javascript
+
+      query {
+        global_and_us(query: {country: "US", date: "2020-09-22T00:00:00Z"}, sortBy: CONFIRMED_DESC, limit: 3) {
+          confirmed
+          deaths
+          state
+          county
+        }
+      }
+
+   Or with cURL:
+
+   .. code-block:: bash
+
+      curl 'https://realm.mongodb.com/api/client/v2.0/app/covid-19-qppza/graphql' \
+           --header 'Authorization: Bearer ACCESS_TOKEN' \
+           --header 'Content-Type: application/json' \
+           --data-raw '{"query": "query { global_and_us(query: {country: \"US\", date: \"2020-09-22T00:00:00Z\"}, sortBy: CONFIRMED_DESC, limit: 3) { confirmed deaths state county } }" }'
+
+   Results:
+
+   .. code-block:: json
+
+      {
+        "data": {
+          "global_and_us": [
+            {
+              "confirmed": 262133,
+              "county": "Los Angeles",
+              "deaths": 6401,
+              "state": "California"
+            },
+            {
+              "confirmed": 167515,
+              "county": "Miami-Dade",
+              "deaths": 3085,
+              "state": "Florida"
+            },
+            {
+              "confirmed": 140314,
+              "county": "Maricopa",
+              "deaths": 3275,
+              "state": "Arizona"
+            }
+          ]
+        }
+      }
+
+   But How Did I Build This GraphQL API?
+   -------------------------------------
+
+   Simple and easy, I used the `MongoDB Realm GraphQL API <https://docs.mongodb.com/realm/graphql/>`__ which just took me a few clicks.
+
+   If you want to build this very same service using this dataset, check out :doc:`our blog </article/johns-hopkins-university-covid-19-data-atlas>` which explains the dataset's content and how you can grab it. Then, have a look at Nic's :doc:`blog post </how-to/graphql-support-atlas-stitch>` which explains how to set up a GraphQL API using MongoDB Realm.
+
+   You want to improve your knowledge even more around MongoDB and GraphQL? Then you must read the blog post :doc:`GraphQL: The Easy Way to Do the Hard Stuff </how-to/graphql-easy>` from Karen and Brian.
+
+.. summary::
+
+   Wrap-Up
+   -------
+
+   MongoDB made setting up a GraphQL API really easy. And this GraphQL API made querying our Covid19 dataset to gain insight even easier. We update this data every hour, and we hope you will enjoy using this data to explore and learn.
+
+   .. blockquote::
+
+      Are you trying to help solve this pandemic in any way? Remember that if you are trying to build an application that helps to detect, understand, or stop the spread of the COVID-19 virus, we have a `FREE MongoDB Atlas credit program <https://www.mongodb.com/blog/post/helping-developers-tackle-covid19>`__ that can help you scale and hopefully solve this global pandemic.
+
+   I truly hope you will be able to build something amazing with this GraphQL API. Even if it won't save the world from the COVID-19 pandemic, I hope it will be a great source of motivation and training for your next pet project.
+
+   `Send me a tweet <https://twitter.com/MBeugnet>`__ or ping me in our `Community Forum <https://developer.mongodb.com/community/forums/>`__ with your project using this API. I will definitely check it out!
