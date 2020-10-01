@@ -16,7 +16,7 @@
 
 .. og::
    :title: The Art of Creating a Talk
-   :image: /images/social/twitter/twitter-creating-talk.png
+   :image: /images/social/open-graph/og-creating-talk.png
 
 .. include:: /includes/authors/peters-sven.rst
 

@@ -16,7 +16,7 @@
 
 .. og::
    :title: Apply to speak
-   :image: /images/social/twitter/twitter-write-abstract.png
+   :image: /images/social/open-graph/og-write-abstract.png
 
 .. include:: /includes/authors/peters-sven.rst
 

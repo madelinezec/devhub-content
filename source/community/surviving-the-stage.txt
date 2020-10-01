@@ -16,7 +16,7 @@
 
 .. og::
    :title: Surviving the Stage
-   :image: /images/social/twitter/twitter-surviving-stage.png
+   :image: /images/social/open-graph/og-surviving-stage.png
 
 .. include:: /includes/authors/peters-sven.rst
 

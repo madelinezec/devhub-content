@@ -16,7 +16,7 @@
 
 .. og::
    :title: Running Virtual Presentations
-   :image: /images/social/twitter/twitter-virtual-presentation.png
+   :image: /images/social/open-graph/og-virtual-presentation.png
 
 .. include:: /includes/authors/peters-sven.rst
 

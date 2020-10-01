@@ -16,7 +16,7 @@
 
 .. og::
    :title: Creating Stunning Slides
-   :image: /images/social/twitter/twitter-creating-slides.png
+   :image: /images/social/open-graph/og-creating-slides.png
 
 .. include:: /includes/authors/peters-sven.rst
 

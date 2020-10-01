@@ -16,7 +16,7 @@
 
 .. og::
    :title: Speaker Grant - The Rules
-   :image: /images/social/twitter/twitter-speaker-grant.png
+   :image: /images/social/open-graph/og-speaker-grant.png
 
 .. include:: /includes/authors/peters-sven.rst
 

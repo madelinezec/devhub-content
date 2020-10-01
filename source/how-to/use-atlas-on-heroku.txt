@@ -9,14 +9,14 @@
 .. twitter::
    :creator: @adriennetacke
    :title: Using MongoDB Atlas on Heroku
-   :image: /images/atf-images/generic/green.png
+   :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: Using MongoDB Atlas on Heroku
 
    Learn how to integrate MongoDB Atlas with Heroku to build and deploy fully managed cloud applications.
 
 .. og::
    :title: Using MongoDB Atlas on Heroku
-   :image: /images/atf-images/generic/green.png
+   :image: /images/social/open-graph/og-green-pattern.png
 
 .. include:: /includes/authors/tacke-adrienne.rst
 
