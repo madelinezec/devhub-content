@@ -1,0 +1,569 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to create a user profile store for a game using MongoDB, Node.js, and Realm.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Creating a User Profile Store for a Game With Node.js and MongoDB
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: User Profile Store in Game Development
+
+   Learn how to create a user profile store for a game using MongoDB, Node.js, and Realm.
+
+.. og::
+   :title: Creating a User Profile Store for a Game With Node.js and MongoDB
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. include:: /includes/authors/huaulme-karen.rst
+
+.. pubdate:: 2020-10-01
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Game Development
+
+.. products::
+
+   * MongoDB
+
+=================================================================
+Creating a User Profile Store for a Game With Node.js and MongoDB
+=================================================================
+
+.. introduction::
+
+    When it comes to game development, or at least game development that has
+    an online component to it, you're going to stumble into the territory of
+    user profile stores. These are essentially records for each of your
+    players and these records contain everything from account information to
+    what they've accomplished in the game.
+
+    Take the game Plummeting People that some of us at MongoDB (`Karen
+    Huaulme <https://www.twitter.com/youoldmaid>`__, `Adrienne
+    Tacke <https://www.twitter.com/adriennetacke>`__, and `Nic
+    Raboy <https://www.nraboy.com>`__) are building, streaming, and writing
+    about. The idea behind this game, as described in a `previous
+    article <https://developer.mongodb.com/how-to/designing-strategy-develop-game-unity-mongodb>`__,
+    is to create a `Fall Guys: Ultimate Knockout <https://fallguys.com/>`__
+    tribute game with our own spin on it.
+
+    Since this game will be an online multiplayer game, each player needs to
+    retain game-play information such as how many times they've won, what
+    costumes they've unlocked, etc. This information would exist inside a
+    user profile document.
+
+    In this tutorial, we're going to see how to design a user profile store
+    and then build a backend component using Node.js and MongoDB Realm for
+    interacting with it.
+
+.. content::
+
+    Designing a Data Model for the Player Documents of a Game
+    ---------------------------------------------------------
+
+    To get you up to speed, Fall Guys: Ultimate Knockout is a battle royale
+    style game where you compete for first place in several obstacle
+    courses. As you play the game, you get karma points, crowns, and
+    costumes to make the game more interesting.
+
+    .. image:: /images/how-to/fall-guys-intro.jpg
+        :alt: Fall Guys: Ultimate Knockout
+
+    Since we're working on a tribute game and not a straight up clone, we
+    determined our Plummeting People game should have the following data
+    stored for each player:
+
+    -  Experience points (XP)
+    -  Falls
+    -  Steps taken
+    -  Collisions with players or objects
+    -  Losses
+    -  Wins
+    -  Pineapples (Currency)
+    -  Achievements
+    -  Inventory (Outfits)
+    -  Plummie Tag (Username)
+
+    Of course, there could be much more information or much less information
+    stored per player in any given game. In all honesty, the things we think
+    we should store may evolve as we progress further in the development of
+    the game. However, this is a good starting point.
+
+    Now that we have a general idea of what we want to store, it makes sense
+    to convert these items into an appropriate data model for a document
+    within MongoDB.
+
+    Take the following, for example:
+
+    .. code:: json
+
+        {
+            "_id": "4573475234234",
+            "plummie_tag": "nraboy",
+            "xp": 298347234,
+            "falls": 328945783957,
+            "steps": 438579348573,
+            "collisions": 2345325,
+            "losses": 3485,
+            "wins": 3,
+            "created_at": 3498534,
+            "updated_at": 4534534,
+            "lifetime_hours_played": 5,
+            "pineapples": 24532,
+            "achievements": [
+                {
+                    "name": "Super Amazing Person",
+                    "timestamp": 2345435
+                }
+            ],
+            "inventory": {
+                "outfits": [
+                    {
+                        "id": 34345,
+                        "name": "The Kilowatt Huaulme",
+                        "timestamp": 2345345
+                    }
+                ]
+            }
+        }
+
+    Notice that we have the information previously identified. However,
+    the structure is a bit different. In addition, you'll notice extra
+    fields such as ``created_at`` and other timestamp-related data that 
+    could be helpful behind the scenes.
+
+    For achievements, an array of objects might be a good idea because the
+    achievements might change over time, and each player will likely receive
+    more than one during the lifetime of their gaming experience. Likewise,
+    the ``inventory`` field is an object with arrays of objects because,
+    while the current plan is to have an inventory of player outfits, that
+    could later evolve into consumable items to be used within the game, or
+    anything else that might expand beyond outfits.
+
+    One thing to note about the above user profile document model is that
+    we're trying to store everything about the player in a single document.
+    We're not trying to maintain relationships to other documents unless
+    absolutely necessary. The document for any given player is like a log of
+    their lifetime experience with the game. It can very easily evolve over
+    time due to the flexible nature of having a JSON document model in a
+    NoSQL database like MongoDB.
+
+    To get more insight into the design process of our user profile store
+    documents, check out the `on-demand Twitch
+    recording <https://www.youtube.com/watch?v=XUQCOf3NuJQ>`__  we
+    created.
+
+    Create a Node.js Backend API With MongoDB Atlas to Interact With the User Profile Store
+    ---------------------------------------------------------------------------------------
+
+    With a general idea of how we chose to model our player document, we
+    could start developing the backend responsible for doing the create,
+    read, update, and delete (CRUD) spectrum of operations against our
+    database.
+
+    Since Express.js is a common, if not the most common, way to work with
+    Node.js API development, it made sense to start there. What comes next
+    will reproduce what we did during the `Twitch
+    stream <https://www.youtube.com/watch?v=QgzA_9tXxy4>`__.
+
+    From the command line, execute the following commands in a new
+    directory:
+
+    .. code:: none
+
+        npm init -y
+        npm install express mongodb body-parser --save
+
+    The above commands will initialize a new **package.json** file within
+    the current working directory and then install
+    `Express.js <https://expressjs.com/>`__, the `MongoDB Node.js
+    driver <https://docs.mongodb.com/drivers/node/>`__, and the `Body
+    Parser <https://github.com/expressjs/body-parser>`__ middleware for
+    accepting JSON payloads.
+
+    Within the same directory as the **package.json** file, create a
+    **main.js** file with the following Node.js code:
+
+    .. code:: javascript
+
+        const { MongoClient, ObjectID } = require("mongodb");
+        const Express = require("express");
+        const BodyParser = require('body-parser');
+
+        const server = Express();
+
+        server.use(BodyParser.json());
+        server.use(BodyParser.urlencoded({ extended: true }));
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+        var collection;
+
+        server.post("/plummies", async (request, response, next) => {});
+        server.get("/plummies", async (request, response, next) => {});
+        server.get("/plummies/:id", async (request, response, next) => {});
+        server.put("/plummies/:plummie_tag", async (request, response, next) => {});
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("plummeting-people").collection("plummies");
+                console.log("Listening at :3000...");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    There's quite a bit happening in the above code. Let's break it down!
+
+    You'll first notice the following few lines:
+
+    .. code:: javascript
+
+        const { MongoClient, ObjectID } = require("mongodb");
+        const Express = require("express");
+        const BodyParser = require('body-parser');
+
+        const server = Express();
+
+        server.use(BodyParser.json());
+        server.use(BodyParser.urlencoded({ extended: true }));
+
+    We had previously downloaded the project dependencies, but now we are
+    importing them for use in the project. Once imported, we're initializing
+    Express and are telling it to use the body parser for JSON and URL
+    encoded payloads coming in with POST, PUT, and similar requests. These
+    requests are common when it comes to creating or modifying data.
+
+    Next, you'll notice the following lines:
+
+    .. code:: javascript
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+
+        var collection;
+
+    The ``client`` in this example assumes that your MongoDB Atlas
+    connection string exists in your environment variables. To be clear, the
+    connection string would look something like this:
+
+    .. code:: none
+
+        mongodb+srv://<username>:<password>@plummeting-us-east-1.hrrxc.mongodb.net/<dbname>
+
+    Yes, you could hard-code that value, but because the connection string
+    will contain your username and password, it makes sense to use an
+    environment variable or configuration file for security reasons.
+
+    The ``collection`` variable is being defined because it will have our
+    collection handle for use within each of our endpoint functions.
+
+    Speaking of endpoint functions, we're going to skip those for a moment.
+    Instead, let's look at serving our API:
+
+    .. code:: javascript
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("plummeting-people").collection("plummies");
+                console.log("Listening at :3000...");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    In the above code we are serving our API on port 3000. When the server
+    starts, we establish a connection to our MongoDB Atlas cluster. Once
+    connected, we make use of the ``plummeting-people`` database and the
+    ``plummies`` collection. In this circumstance, we're calling each player
+    a **plummie**, hence the name of our user profile store collection.
+    Neither the database or collection need to exist prior to starting the
+    application.
+
+    Time to focus on those endpoint functions.
+
+    To create a player — or plummie, in this case — we need to take a look at
+    the POST endpoint:
+
+    .. code:: javascript
+
+        server.post("/plummies", async (request, response, next) => {
+            try {
+                let result = await collection.insertOne(request.body);
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    The above endpoint expects a JSON payload. Ideally, it should match the
+    data model that we had defined earlier in the tutorial, but we're not
+    doing any data validation, so anything at this point would work. With
+    the JSON payload an ``insertOne`` operation is done and that payload is
+    turned into a user profile. The result of the create is sent back to the
+    user.
+
+    If you want to handle the validation of data, check out database level
+    `schema
+    validation <https://docs.mongodb.com/manual/core/schema-validation/>`__
+    or using a client facing validation library like
+    `Joi <https://github.com/sideway/joi>`__.
+
+    With the user profile document created, you may need to fetch it at some
+    point. To do this, take a look at the GET endpoint:
+
+    .. code:: javascript
+
+        server.get("/plummies", async (request, response, next) => {
+            try {
+                let result = await collection.find({}).toArray();
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    In the above example, all documents in the collection are returned
+    because there is no filter specified. The above endpoint is useful if
+    you want to find all user profiles, maybe for reporting purposes. If you
+    want to find a specific document, you might do something like this:
+
+    .. code:: javascript
+
+        server.get("/plummies/:plummie_tag", async (request, response, next) => {
+            try {
+                let result = await collection.findOne({ "plummie_tag": request.params.plummie_tag });
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    The above endpoint takes a ``plummie_tag``, which we're expecting to be
+    a unique value. As long as the value exists on the ``plummie_tag`` field
+    for a document, the profile will be returned.
+
+    Even though there isn't a game to play yet, we know that we're going to
+    need to update these player profiles. Maybe the ``xp`` increased, or new
+    ``achievements`` were gained. Whatever the reason, a PUT request is
+    necessary and it might look like this:
+
+    .. code:: javascript
+
+        server.put("/plummies/:plummie_tag", async (request, response, next) => {
+            try {
+                let result = await collection.updateOne(
+                    { "plummie_tag": request.params.plummie_tag },
+                    { "$set": request.body }
+                );
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    In the above request, we are expecting a ``plummie_tag`` to be passed to
+    represent the document we want to update. We are also expecting a
+    payload to be sent with the data we want to update. Like with the
+    ``insertOne``, the ``updateOne`` is experiencing no prior validation.
+    Using the ``plummie_tag`` we can filter for a document to change and
+    then we can use the ``$set`` operator with a selection of changes to
+    make.
+
+    The above endpoint will update any field that was passed in the payload.
+    If the field doesn't exist, it will be created.
+
+    One might argue that user profiles can only be created or changed, but
+    never removed. It is up to you whether or not the profile should have an
+    ``active`` field or just remove it when requested. For our game,
+    documents will never be deleted, but if you wanted to, you could do the
+    following:
+
+    .. code:: javascript
+
+        server.delete("/plummies/:plummie_tag", async (request, response, next) => {
+            try {
+                let result = await collection.deleteOne({ "plummie_tag": request.params.plummie_tag });
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    The above code will take a ``plummie_tag`` from the game and delete any
+    documents that match it in the filter.
+
+    It should be reiterated that these endpoints are expected to be called
+    from within the game. So when you're playing the game and you create
+    your player, it should be stored through the API.
+
+    Realm Webhook Functions: An Alternative Method for Interacting With the User Profile Store: 
+    ----------------------------------------------------------------------------------
+
+    While Node.js with Express.js might be popular, it isn't the only way to
+    build a user profile store API. In fact, it might not even be the
+    easiest way to get the job done.
+
+    `During the Twitch stream <https://www.youtube.com/watch?v=QgzA_9tXxy4>`__, we demonstrated how to offload the management of Express and Node.js to Realm. 
+    
+    As part of the MongoDB data platform, Realm offers many things Plummeting People can take advantage of as we build out this game, including triggers, functions, authentication, data synchronization, and static hosting. We very quickly showed how to re-create these APIs through Realm's HTTP Service from right inside of the Atlas UI. 
+
+    To create our GET, POST, and DELETE endpoints, we first had to create a Realm application. Return to your Atlas UI and click **Realm** at the top. Then click the green **Start a New Realm App** button.
+
+    .. image:: /images/how-to/StartNewRealmApp.png
+        :alt: New Realm Application
+        :scale: 70%
+        :align: center
+
+    We named our Realm application **PlummetingPeople** and linked to the Atlas cluster holding the player data. All other default settings are fine:
+
+    .. image:: /images/how-to/NameRealmApp.png
+        :alt: Name Realm Application
+        :scale: 70%
+        :align: center
+
+    Congrats! Realm Application Creation Achievment Unlocked! 👏
+
+    
+    Now click the **3rd Party Services** menu on the left and then **Add a Service**. 
+    Select the HTTP service. We named ours **RealmOfPlummies**:
+
+    .. image:: /images/how-to/AddService.png
+        :alt: Add a Service
+        :scale: 70%
+        :align: center
+
+    Click the green **Add a Service** button, and you'll be directed to **Add Incoming Webhook**.
+
+    Let's re-create our GET endpoint first. Once in the **Settings** tab, name your first webhook **getPlummies**. Enable **Respond with Result** set the HTTP Method to **GET**. To make things simple, let's just run the
+    webhook as the System and skip validation with **No Additional Authorization.**
+    Make sure to click the **Review and Deploy** button at the top along the way.
+
+    In this service function editor, replace the example code with the
+    following:
+
+    .. code-block:: javascript
+
+        exports = async function(payload, response) {
+        
+            // get a reference to the plummies collection
+            const collection =  context.services.get("mongodb-atlas").db("plummeting-people").collection("plummies");
+        
+            var plummies = await collection.find({}).toArray();
+        
+            return plummies;
+        };
+
+    In the above code, note that MongoDB Realm interacts with our ``plummies`` collection through the global ``context`` variable. In the service function, we use that context variable to access all of our ``plummies.`` We can also add a filter to find a specific document
+    or documents, just as we did in the Express + Node.js endpoint above.
+
+    Switch to the **Settings** tab of ``getPlummies``, and you'll notice a Webhook URL has been generated.
+
+    .. image:: /images/how-to/RealmWebhookUrl.png
+        :alt: Webhook URL
+        :align: center
+
+    We can test this endpoint out by executing it in our browser. However, if you have tools
+    like Postman installed, feel free to try that as well. Click the **COPY** button and paste the URL into your browser. 
+
+    If you receive an output showing your plummies, you have successfully created an API endpoint in Realm! Very cool. 💪😎
+
+
+    Now, let's step through that process again to create an endpoint to add new plummies to our game.
+    In the same **RealmOfPlummies** service, add another incoming webhook. Name it ``addPlummie`` and set it as a **POST**.
+    Switch to the function editor and replace the example code with the following:
+
+    .. code-block:: javascript
+
+        exports = function(payload, response) {
+
+            console.log("Adding Plummie...");
+            const plummies =  context.services.get("mongodb-atlas").db("plummeting-people").collection("plummies");
+            
+            // parse the body to get the new plummie
+            const plummie = EJSON.parse(payload.body.text());
+            
+            
+            return plummies.insertOne(plummie);
+
+        };
+
+
+    If you go back to Settings and grab the Webhook URL, you can now use this to POST new plummies to our Atlas **plummeting-people** database. 
+
+    And finally, the last two endpoints to ``DELETE`` and to ``UPDATE`` our players. 
+    
+    Name a new incoming webhook ``removePlummie`` and set as a POST. The following code will remove the ``plummie`` from our user profile store:
+
+    .. code-block:: javascript
+
+       exports = async function(payload) {
+           console.log("Removing plummie...");
+      
+           const ptag = EJSON.parse(payload.body.text());
+     
+           let plummies = context.services.get("mongodb-atlas").db("plummeting-people").collection("plummies_kwh");
+        
+           return plummies.deleteOne({"plummie_tag": ptag});
+  
+       };
+
+    The final new incoming webhook ``updatePlummie`` and set as a PUT:
+
+    .. code-block:: javascript
+
+       exports = async function(payload, response) {
+  
+          console.log("Updating Plummie...");
+          var result = {};
+            
+          if (payload.body) {
+            
+            const plummies =  context.services.get("mongodb-atlas").db("plummeting-people").collection("plummies_kwh");
+             
+            const ptag = payload.query.plummie_tag;
+            console.log("plummie_tag : " + ptag);
+            
+            // parse the body to get the new plummie update
+            var updatedPlummie = EJSON.parse(payload.body.text());
+            console.log(JSON.stringify(updatedPlummie));
+           
+            return plummies.updateOne(
+              {"plummie_tag": ptag},
+              {"$set": updatedPlummie}
+              );
+            }
+                
+            return ({ok:true});
+       };
+
+    With that, we have another option to handle all four endpoints allowing complete CRUD operations to our ``plummie`` data - without needing to spin-up and manage a Node.js and Express backend.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw some examples of how to design and create a user profile
+    store for your next game. The user profile store used in this tutorial
+    is an active part of a game that some of us at MongoDB (`Karen
+    Huaulme <https://www.twitter.com/youoldmaid>`__, `Adrienne
+    Tacke <https://www.twitter.com/adriennetacke>`__, and `Nic
+    Raboy <https://www.nraboy.com>`__) are building. It is up to you whether
+    or not you want develop your own backend using the MongoDB Node.js
+    driver or take advantage of MongoDB Realm with webhook functions.
+
+    This particular tutorial is part of a series around developing a `Fall
+    Guys: Ultimate Knockout <https://fallguys.com/>`__ tribute game using
+    Unity and MongoDB.
