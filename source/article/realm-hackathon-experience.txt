@@ -1,0 +1,230 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/realm-logo.jpg
+
+.. meta-description:: 
+
+   In July, MongoDB ran its first digital hackathon for Realm. Our winners, team "PurpleBlack," share their experience of the Hackathon in this guest post. 
+
+.. twitter::
+   :creator: @shaneymac
+   :title: The MongoDB Realm Hackathon Experience
+   :image: /images/social/twitter/twitter-realm-logo.jpg
+   :image-alt: Realm Hackathon 
+
+   Our July Realm Hackathon winners share thier experience of Realm's first Digital Hackathon
+
+.. og::
+   :title: The MongoDB Realm Hackathon Experience
+   :image: /images/social/open-graph/og-realm-logo.jpg
+
+.. include:: /includes/authors/mcallister-shane.rst
+
+.. pubdate:: 2020-09-29
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Mobile
+   * Realm
+
+.. products::
+
+   * Realm
+   * Atlas
+   * Charts
+
+
+======================================
+The MongoDB Realm Hackathon Experience
+======================================
+ 
+.. introduction:: 
+
+   With Covid19 putting an end to in-person events, we wanted to engage directly with developers utilizing the recently announced MongoDB Realm public beta, and so the Realm Hackathon was conceived. This would be MongoDB's first digital Hackathon and we were delighted with the response. In the end, we ended up with nearly 300 registrations, which culminated in 23 teams coming together over the course of a day and half of learning, experimenting, and above all, having fun! The teams were predominantly European given the timezone of the Hackathon, but we did have participants from the US and also the Asia Pacific region, too. 
+
+   During the Hackathon, we engaged in 
+      - Team forming
+      - Idea pitching
+      - Q&A with the Realm Enginnering team behind many of the Realm SDKs
+      - and of course, developing!
+
+   With 23 teams, there was a huge variation in concepts and ideas put forward for the Hackathon. From Covid19-influenced apps to chatbots to inventory tracking apps, the variety was superb. On the final morning, all teams had an opportunity to pitch their apps competitively and we (the judges) were highly impressed with the ingenuity, use of Realm, and the scope of what the teams accomplished in a 24-hour period. In the end, there can only be one winner, and we were delighted to award that title to Team PurpleBlack. 
+   
+   Team PurpleBlack created a MongoDB Realm-based mobile asset maintenance solution. Effective asset maintenance is critical to the success of any utility company. The solution included an offline iOS app for field technicians, a MongoDB Charts dashboard, and email notifications for administrators. Santaneel and Srinivas impressed with their grasp of Realm and their ambition to build a solution leveraging not only Realm but MongoDB Atlas, Charts, and Triggers. So, we asked Team PurpleBlack to share their experience in their own words, and we're thrilled to share this with you. 
+
+   .. blockquote::
+      
+      Guest post - by Santaneel Pyne of Team PurpleBlack - The MongoDB Realm Hackathon Experience!
+
+   .. image:: /images/article/hackathon/team_purpleblack.png 
+      :alt: Team PurpleBlack 
+      :align: center
+
+.. content:: 
+
+   THE MOTIVATION
+   --------------
+
+   Hackathons are always a fantastic experience. They are fun, exciting, and enriching all at the same time. This July, I participated in the first Realm Hackathon organised by MongoDB.
+   Earlier in the year, while I was going through a list of upcoming Hackathons, I came across the Realm Hackathon. I was keen on participating in this hackathon as this was about building offline mobile apps. I am a Solution Architect working with On Device Solutions, and enterprise mobile apps are a key focus area for me. For the hackathon, I had teamed up with Srinivas Divakarla from Cognizant Technology Solutions. He is a technical lead and an experienced Swift developer. We named our team PurpleBlack. It is just another random name.
+   Neither of us had any experience with MongoDB Realm. This was going to be our opportunity to learn. We went ahead with an open mind without too many expectations.
+
+   THE 'VIRTUAL' EXPERIENCE
+   ------------------------
+
+   This was our first fully online hackathon experience. The hackathon was spread across two days and it was hosted entirely on Zoom. The first day was the actual hack day and the next day was for presentations and awards.
+   There were a couple of introductory sessions held earlier in the week to provide all participants a feel of the online hackathon. After the first session, we created our accounts in `cloud.mongodb.com <https://www.mongodb.com/cloud>`__ and made sure we had access to all the necessary tools and SDKs as mentioned during the introductory session.
+   On the day of the hackathon, we joined the Zoom meeting and were greeted by the MongoDB team. As with any good hackathon, a key takeaway is interaction with the experts. It was no different in this case. We met the Realm experts - Kraen Hansen, Eduardo Lopez, Lee Maguire, Andrew Morgan, and Franck Franck. They shared their experience and answered questions from the participants.
+
+   .. image:: /images/article/hackathon/screen1.jpg 
+      :alt: Hackathon Zoom Sceen
+      :align: center
+
+   By the end of the expert sessions, all participants were assigned a team. Each team was put into a private Zoom breakout room. The organisers and the Realm experts were in the Main Zoom room. We could toggle between the breakout room and the Main room when needed. It took us some time to get used to this. 
+   We started our hacking session with an end-to-end plan and distributed the work between ourselves. I took the responsibility of configuring the back-end components of our solution, like the cluster, collections, Realm app configurations, user authentication, functions, triggers, and charts. Srinivas was responsible for building the iOS app using the iOS SDK. Before we started working on our solution, we had allocated some time to understand the end-to-end architecture and underlying concepts. We achieved this by following the `task tracker iOS app tutorial <https://docs.mongodb.com/realm/tutorial/ios-swift/>`__. We had spent a lot of time on this tutorial, but it was worth it as we were able to re-use several components from the task tracker app.
+   After completing the tutorial, we felt confident working on our solution. We were able to quickly complete all the backend components and then started working on the iOS application. Once we were able to sync data between the app and the MongoDB collections, we were like, "BINGO!" We then added two features that we had not planned for earlier. These features were the email notifications and the embedded charts. We rounded-off Day 1 by providing finishing touches to our presentation.
+   
+   Day 2 started with the final presentations and demos from all the teams. Everyone was present in the Main Zoom room. Each team had five minutes to present. The presentations and demos from all the teams were great. This added a bit of pressure on us as we were slotted to present at the end. When our turn finally arrived, I breezed through the presentation and then the demo. The demo went smoothly and I was able to showcase all the features we had built. 
+
+   .. image:: /images/article/hackathon/screen2.jpg 
+      :alt: Hackathon Zoom Screen
+      :align: center 
+
+   Next was the countdown to the award ceremony. The panel of judges went into a breakout room to select the winner. When the judges were back, they announced PurpleBlack as the winner of the first MongoDB Realm Hackathon!!
+
+   OUR IDEA
+   --------
+
+   Team PurpleBlack created a MongoDB Realm-based mobile asset maintenance solution. Effective asset maintenance is critical to the success of any utility company. The solution included an offline iOS app for field technicians, a MongoDB Charts dashboard, and email notifications for Maintenance Managers or Administrators.
+   Field technicians will download all relevant asset data into the mobile app during the initial synchronization. Later, when they are in a remote area without connectivity, they can scan a QR code fixed to an asset to view the asset details. Once the asset details are confirmed, an issue can be created against the identified asset. Finally, when the technicians are back online, the Realm mobile app will automatically synchronize all new issues with MongoDB Atlas. Functions and triggers help to send email notifications to an Administrator in case any high-priority issue is created. Administrators can view the charts dashboard to keep track of all issues created and take follow-up actions.
+
+   .. image:: /images/article/hackathon/screen3.png 
+      :alt: App Flow 
+      :align: center
+
+   To summarise, our solution included the following features: 
+      - iOS app based on Realm iOS SDK
+      - Secure user authentication using email-id and password
+      - MongoDB Atlas as the cloud datastore
+      - MongoDB Charts and embedded charts using the embedding SDK
+      - Email notifications via the SendGrid API using Realm functions and triggers
+
+   A working version of our iOS project can be found in our `GitHub repo. <https://github.com/divakarlasrinivas/PurpleBlack>`__ 
+
+   This project is based on the Task Tracker app with some tweaks that helped us build the features we wanted. In our app, we wanted to download two objects into the same Realm – Assets and Issues. This means when a user successfully logs into the app, all assets and issues available in MongoDB Atlas will be downloaded to the client. 
+   Initially, a list of issues is displayed.
+
+   .. image:: /images/article/hackathon/screen5.png 
+      :alt: App with list of issues
+      :align: center
+
+
+   From the issue list screen, the user can create a new issue by tapping the + button. Upon clicking this button, the app opens the camera to scan a barcode/QR code. The code will be the same as the asset ID of an asset. If the user scans an asset that is available in the Realm, then there is a successful match and the user can proceed to the next screen to create an asset. We illustrate how this is accomplished with the code below:
+
+   .. code:: Swift
+
+      func scanCompleted(code: String)
+         {
+               currentBarcode = code
+               // pass the scanned barcode to the CreateIssueViewController and Query MongoDB Realm
+               let queryStr: String =  "assetId == '"+code+"'";
+               print(queryStr);
+               print("issues that contain assetIDs: \(assets.filter(queryStr).count)");
+               if(assets.filter(queryStr).count > 0 ){
+                scanner?.requestCaptureSessionStopRunning()
+                self.navigationController!.pushViewController(CreateIssueViewController(code: currentBarcode!, configuration: realm.configuration), animated: true);
+                } else {
+                 self.showToast(message: "No Asset found for the scanned code", seconds: 0.6)
+               }
+
+         }
+
+   In the next screen, the user can create a new issue against the identified asset.
+
+   .. image:: /images/article/hackathon/screen6.png 
+      :alt: Issues & Assets
+      :align: center
+
+   To find out the asset details, the Asset object from Realm must be queried with the asset ID:
+
+   .. code:: Swift
+
+      required init(with code: String, configuration: Realm.Configuration) {
+
+         // Ensure the realm was opened with sync.
+         guard let syncConfiguration = configuration.syncConfiguration else {
+               fatalError("Sync configuration not found! Realm not opened with sync?");
+         }
+
+         let realm = try! Realm(configuration: configuration)
+         let queryStr: String =  "assetId == '"+code+"'";
+         scannedAssetCode = code
+         assets = realm.objects(Asset.self).filter(queryStr)
+        
+         // Partition value must be of string type.
+         partitionValue = syncConfiguration.partitionValue.stringValue!
+        
+         super.init(nibName: nil, bundle: nil)
+      }
+
+   Once the user submits the new issue, it is then written to the Realm:
+
+   .. code:: Swift
+
+      func submitDataToRealm(){
+         print(form.values())
+        
+         // Create a new Issue with the text that the user entered.
+         let issue = Issue(partition: self.partitionValue)
+         let createdByRow: TextRow? = form.rowBy(tag: "createdBy")
+         let descriptionRow: TextRow? = form.rowBy(tag: "description")
+         let priorityRow: SegmentedRow<String>? = form.rowBy(tag: "priority")
+         let issueIdRow: TextRow? = form.rowBy(tag: "issueId")
+        
+         issue.issueId = issueIdRow?.value ?? ""
+         issue.createdBy = createdByRow?.value ?? ""
+         issue.desc = descriptionRow?.value ?? ""
+         issue.priority = priorityRow?.value ?? "Low"
+         issue.status = "Open"
+         issue.assetId = self.scannedAssetCode
+        
+         try! self.realm.write {
+               // Add the Issue to the Realm. That's it!
+               self.realm.add(issue)
+         }
+        
+         self.navigationController!.pushViewController(TasksViewController( assetRealm: self.realm), animated: true);
+        
+      }
+
+
+   The new entry is immediately synced with MongoDB Atlas and is available in the Administrator dashboard built using MongoDB Charts.
+
+   .. image:: /images/article/hackathon/screen7.png 
+      :alt: Data in charts 
+      :align: center
+
+.. summary::
+
+   WRAPPING UP 
+   -----------
+
+   Winning the first MongoDB Realm hackathon was a bonus for us. We had registered for this hackathon just to experience the app-building process with Realm. Both of us had our share of the "wow" moments throughout the hackathon. What stood out at the end was the ease with which we were able to build new features once we understood the underlying concepts. We want to continue this learning journey and explore MongoDB Realm further.
+
+   Follow these links to learn more - 
+      - `GitHub Repo for Project <https://github.com/divakarlasrinivas/PurpleBlack>`__ 
+      - `Realm Tutorial <https://docs.mongodb.com/realm/tutorial/>`__ 
+      - `Charts Examples <https://github.com/mongodb/charts-embedding-examples>`__ 
+      - `Sending Emails with MongoDB Stitch and SendGrid <https://medium.com/@histechup/sending-emails-with-mongodb-stitch-and-sendgrid-b201a4ca38e9>`__ 
+
+   To learn more, ask questions, leave feedback, or simply connect with other MongoDB developers, visit our `community forums. <https://developer.mongodb.com/community/forums/>`__ Come to learn. Stay to connect.
+
+   .. blockquote::
+ 
+      Getting started with Atlas is easy. Sign up for a `free MongoDB Atlas <https://mongodb.com/cloud/atlas>`__ account to start working with all the exciting new features of MongoDB, including Realm and Charts, today!
+
+         
