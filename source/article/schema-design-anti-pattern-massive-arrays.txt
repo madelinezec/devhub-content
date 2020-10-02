@@ -24,7 +24,7 @@
 
 .. pubdate:: 2020-04-22
 
-.. updated-date:: 2020-09-02
+.. updated-date:: 2020-09-30
 
 .. type:: article
 
@@ -40,6 +40,7 @@
 
 .. related::
 
+   * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
    * `MongoDB University M320: Data Modeling <https://university.mongodb.com/courses/M320/about>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
    * `Data Modeling Introduction <https://docs.mongodb.com/manual/core/data-modeling-introduction/>`__
@@ -62,6 +63,12 @@ Massive Arrays
    We've identified several common mistakes developers make with MongoDB.  We call these mistakes "schema design anti-patterns."
 
    Throughout this blog series, I'll introduce you to six common anti-patterns.  Let's start today with the Massive Arrays anti-pattern.
+
+   .. blockquote::
+
+      .. youtube:: 8CZs-0it9r4?start=236
+
+      Prefer to learn by video? I've got you covered.
 
 .. content::
 
