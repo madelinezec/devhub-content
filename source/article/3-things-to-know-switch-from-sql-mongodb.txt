@@ -22,6 +22,8 @@
 
 .. pubdate:: 2020-04-01
 
+.. updated-date:: 2020-10-05
+
 .. type:: article
 
 .. level:: beginner
@@ -317,7 +319,7 @@
    optimization. Resist the urge to normalize your data for the sake of
    normalizing your data.
 
-   *Data this is accessed together should be stored together*. If you end
+   *Data that is accessed together should be stored together*. If you end
    up repeating data in your database, that's ok—especially if you won't be
    updating the data very often.
 
