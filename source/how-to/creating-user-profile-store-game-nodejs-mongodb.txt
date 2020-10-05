@@ -409,7 +409,7 @@ Creating a User Profile Store for a Game With Node.js and MongoDB
     your player, it should be stored through the API.
 
     Realm Webhook Functions: An Alternative Method for Interacting With the User Profile Store: 
-    ----------------------------------------------------------------------------------
+    -------------------------------------------------------------------------------------------
 
     While Node.js with Express.js might be popular, it isn't the only way to
     build a user profile store API. In fact, it might not even be the

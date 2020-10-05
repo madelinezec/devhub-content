@@ -29,7 +29,6 @@
 .. tags:: 
 
    * Mobile
-   * Realm
 
 .. products::
 
@@ -115,7 +114,7 @@ The MongoDB Realm Hackathon Experience
 
    A working version of our iOS project can be found in our `GitHub repo. <https://github.com/divakarlasrinivas/PurpleBlack>`__ 
 
-   This project is based on the Task Tracker app with some tweaks that helped us build the features we wanted. In our app, we wanted to download two objects into the same Realm – Assets and Issues. This means when a user successfully logs into the app, all assets and issues available in MongoDB Atlas will be downloaded to the client. 
+   This project is based on the Task Tracker app with some tweaks that helped us build the features we wanted. In our app, we wanted to download two objects into the same Realm - Assets and Issues. This means when a user successfully logs into the app, all assets and issues available in MongoDB Atlas will be downloaded to the client.
    Initially, a list of issues is displayed.
 
    .. image:: /images/article/hackathon/screen5.png 
