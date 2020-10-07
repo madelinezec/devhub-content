@@ -1,0 +1,151 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
+
+.. meta-description::
+
+   The Realm JavaScript team has reimplemented the Realm JS Node.js SDK from the ground up to use N-API. Here we describe how and why.
+
+.. twitter::
+   :creator: @_blagoev
+   :title: Reimplementing the Realm JS Node.js SDK  to Use N-API
+   :image: /images/social/twitter/twitter-realm-functions.jpg
+   :image-alt: Realm  
+
+   The Realm JavaScript team has reimplemented the Realm JS Node.js SDK from the ground up to use N-API. Here we describe how and why.
+
+.. og::
+   :title: Reimplementing the Realm JS Node.js SDK to Use N-API
+   :image: /images/social/open-graph/og-realm-functions.jpg
+
+.. include:: /includes/authors/blagoev-lubo.rst
+
+.. pubdate:: 2020-10-06
+
+.. type:: article
+
+.. level:: intermediate
+
+.. tags:: 
+
+   * Mobile
+   * Node.js
+
+.. products::
+
+   * Realm
+
+==================================================
+How We Migrated Realm JavaScript From NAN to N-API
+==================================================
+ 
+.. introduction:: 
+
+   Recently, the Realm JavaScript team has reimplemented the Realm JS Node.js SDK from the ground up to use `N-API <https://nodejs.org/api/n-api.html#n_api_n_api>`__. In this post, we describe the need to migrate to N-API because of breaking changes in the JavaScript Virtual Machine and how we approached it in an iterative way. 
+
+.. content:: 
+
+   HISTORY
+   -------
+
+   `Node.js <https://nodejs.org/en/>`__ and `Electron <https://www.electronjs.org/>`__ are supported platforms for the `Realm JS SDK <https://docs.mongodb.com/realm/node/install/>`__. Our embedded library consists of a JavaScript library and a native code Node.js addon that interacts with the Realm Database native code. This provides the database functionality to the JS world. It interacts with the V8 engine, which is the JavaScript virtual machine used in Node.js that executes the JavaScript user code. 
+
+   There are different ways to write a Node.js addon. One way is to use the V8 APIs directly. Another is to use an abstraction layer that hides the V8 specifics and provides a stable API across versions of Node.js.
+
+   The JavaScript V8 virtual machine is a moving target. Its APIs are constantly changing between versions. Some are deprecated, and new APIs are introduced all the time. Previous versions of Realm JS used `NAN <https://www.npmjs.com/package/nan>`__ to interact with the V8 virtual machine because we wanted to have a more stable layer of APIs to integrate with. 
+
+   While useful, this had its drawbacks since NAN also needed to handle deprecated V8 APIs across versions. And since NAN integrates tightly with the V8 APIs, it did not shield us from the virtual machine changes underneath it. In order to work across the different Node.js versions, we needed to create a native binary for every major Node.js version. This sometimes required major effort from the team, resulting in delayed releases of Realm JS for a new Node.js version.
+
+   The changing VM API functionality meant handling the deprecated V8 features ourselves, resulting in various version checks across the code base and bugs, when not handled in all places. 
+
+   There were many other native addons that have experienced the same problem. Thus, the Node.js team decided to create a stable API layer build within Node.js itself, which guarantees API stability across major Node.js versions regardless of the virtual machine API changes underneath. This API layer is called `N-API <https://nodejs.org/api/n-api.html#n_api_n_api>`__. It not only provides API stability but also guarantees ABI stability. This means binaries compiled for one major version are able to run on later major versions of Node.js.
+
+   N-API is a C API. To support C++ for writing Node.js addons, there is a module called `node-addon-api <https://github.com/nodejs/node-addon-api>`__. This module is a more efficient way to write code that calls N-API. It provides a layer on top of N-API. Developers use this to create and manipulate JavaScript values with integrated exception handling that allows handling JavaScript exceptions as native C++ exceptions and vice versa.
+
+   N-API Challenges
+   ----------------
+
+   When we started our move to N-API, the Realm JavaScript team decided early on that we would build an N-API native module using the node-addon-api library. This is because Realm JS is written in C++ and there is no reason not to choose the C++ layer over the pure N-API C layer.
+
+   The motivation of needing to defend against breaking changes in the JS VM became one of the goals when doing a complete rewrite of the library. We needed  to provide exactly the same behavior that currently exists. Thankfully, the Realm JS library has an extensive suite of tests which cover all of the supported features. The tests are written in the form of integration tests which test the specific user API, its invocation, and the expected result.
+
+   Thus, we didn't need to handle and rewrite fine-grained unit tests which test specific details of how the implementation is done. We chose this tack because we could iteratively convert our codebase to N-API, slowly converting sections of code while running regression tests which confirmed correct behavior, while still running NAN and N-API at the same time. This allowed us to not tackle a full rewrite all at once.
+
+   One of the early challenges we faced is how we were going to approach such a big rewrite of the library. Rewriting a library with a new API while at the same time having the ability to test as early as possible is ideal to make sure that code is running correctly. We wanted the ability to perform the N-API migration partially, reimplementing different parts step by step, while others still remained on the old NAN API. This would allow us to build and test the whole project with some parts in NAN and others in N-API. Some of the tests would invoke the new reimplemented functionality and some tests would be using the old one.
+
+   Unfortunately, NAN and N-API diverged too much starting from the initial setup of the native addon. Most of the NAN code used the ``v8::Isolate`` and the N-API code had the opaque structure ``Napi::Env`` as a substitute to it. Our initialization code with NAN was using the v8::Isolate to initialize the Realm constructor in the init function
+
+   .. code:: C++
+
+      static void init(v8::Local<v8::Object> exports, 
+         v8::Local<v8::Value> module, v8::Local<v8::Context> context) {
+         v8::Isolate* isolate = context->GetIsolate();
+         v8::Local<v8::Function> realm_constructor =        
+       js::RealmClass<Types>::create_constructor(isolate);
+ 
+         Nan::Set(exports, realm_constructor->GetName(), realm_constructor);
+         }
+      NODE_MODULE_CONTEXT_AWARE(Realm, realm::node::init);
+
+   and our N-API equivalent for this code was going to be
+
+   .. code:: cpp
+
+         static Napi::Object NAPI_Init(Napi::Env env, Napi::Object exports) {
+            return exports;
+         }
+      NODE_API_MODULE(realm, NAPI_Init)
+
+   When we look at the code, we can see that we can't call ``v8::isolate``, which we used in our old implementation, from the exposed N-API. The problem becomes clear: We don't have any access to the ``v8::Isolate``, which we need if we want to invoke our old initialization logic.
+
+   Fortunately, it turned out we could just use a hack in our initial implementation. This enabled us to convert certain parts of our Realm JS implementation while we continued to build and ship new versions of Realm JS with parts using NAN. Since ``Napi::Env`` is just an equivalent substitute for ``v8::Isolate``, we can check if it has a ``v8::Isolate`` hiding in it. As it turns out, this is a way to do this -  but it's a private member. We can grab it from memory with
+
+   .. code:: cpp
+
+         napi_env e  =  env;
+         v8::Isolate* isolate = (v8::Isolate*)e + 3;
+
+   and our NAPI_init method becomes
+
+   .. code:: cpp
+
+         static Napi::Object NAPI_Init(Napi::Env env, Napi::Object exports) {
+         //NAPI: FIXME: remove when NAPI complete
+             napi_env e  =  env;
+             v8::Isolate* isolate = (v8::Isolate*)e + 3;
+           //the following two will fail if isolate is not found at the expected location
+              auto currentIsolate = isolate->GetCurrent();
+              auto context = currentIsolate->GetCurrentContext();
+            //
+ 
+            realm::node::napi_init(env, currentIsolate, exports);
+             return exports;
+         }
+
+   Here, we invoke two functions — ``isolate->GetCurrent()`` and ``isolate->GetCurrentContext()`` — to verify early on that the pointer to the ``v8::Isolate`` is correct and there are no crashes.
+
+   This allowed us to extract a simple function which can return a ``v8::Isolate`` from the ``Napi::Env`` structure any time we needed it. We continued to switch all our function signatures to use the new ``Napi::Env`` structure, but the implementation of these functions could be left unchanged by getting the ``v8::Isolate`` from ``Napi::Env`` where needed. Not every NAN function of Realm JS could be reimplemented this way but still, this hack allowed for an easy process by converting the function to NAPI, building and testing. It then gave us the freedom to ship a fully NAPI version without the hack once we had time to convert the underlying API to the stable version.
+
+.. summary::
+
+   What We Learned
+   ---------------
+
+   Having the ability to build the entire project early on and then even run it in hybrid mode with NAN and N-API allowed us to both refactor and continue to ship net new features. We were able to run specific tests with the new functionality while the other parts of the library remained untouched. Being able to build the project is more valuable than spending months reimplementing with the new API, only then to discover something is not right. As the saying goes, "Test early, fail fast."
+
+   Our experience while working with N-API and node-addon-api was positive. The API is easy to use and reason. The integrated error handling is of a great benefit. It catches JS exceptions from JS callbacks and rethrows them as C++ exceptions and vice versa. There were some quirks along the way with how node-addon-api handled allocated memory when exceptions were raised, but we were easily able to overcome them. We have submitted PRs for some of these fixes to the node-addon-api library. 
+
+   Recently, we flipped the switch to one of the major features we gained from N-API - the build system release of the Realm JS native binary. Now, we build and release a single binary for every Node.js major version. 
+
+   When we finished, the Realm JS with N-API implementation resulted in much cleaner code than we had before and our test suite was green. The N-API migration fixed some of the major issues we had with the previous implementation and ensures our future support for every new major Node.js version. 
+
+   For our community, it means a peace of mind that Realm JS will continue to work regardless of which Node.js or Electron version they are working with - this is the reason why the Realm JS team chose to replatform on N-API.
+
+
+   To learn more, ask questions, leave feedback, or simply connect with other MongoDB developers, visit our `community forums. <https://developer.mongodb.com/community/forums/>`__ Come to learn. Stay to connect.
+
+   .. blockquote::
+ 
+      To get started with RealmJS, visit our `GitHub Repo <https://github.com/realm/realm-js>`__. Getting started with Atlas is also easy. Sign up for a `free MongoDB Atlas <https://mongodb.com/cloud/atlas>`__ account to start working with all the exciting new features of MongoDB, including Realm and Charts, today!
+
+         
