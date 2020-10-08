@@ -1,0 +1,413 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to get started with Unity for moving an object on the screen with physics and collisions.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Getting Started with Unity for Creating a 2D Game
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to get started with Unity for moving an object on the screen with physics and collisions.
+
+.. og::
+   :title: Getting Started with Unity for Creating a 2D Game
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-10-08
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * C#
+
+.. tags::
+
+   * Game Development
+
+=================================================
+Getting Started with Unity for Creating a 2D Game
+=================================================
+
+.. introduction::
+
+    If you've been keeping up with the content on the `MongoDB Developer
+    Portal <https://developer.mongodb.com>`__, you'll know that a few of us
+    at MongoDB (`Nic Raboy <https://www.nraboy.com>`__, `Adrienne
+    Tacke <https://www.twitter.com/adriennetacke>`__, `Karen
+    Huaulme <https://www.twitter.com/youoldmaid>`__) have been working on a
+    game titled Plummeting People, a `Fall Guys: Ultimate
+    Knockout <https://fallguys.com/>`__ tribute game. Up until now we've
+    focused on `game
+    planning <https://developer.mongodb.com/how-to/designing-strategy-develop-game-unity-mongodb>`__
+    and part of our backend infrastructure with a `user profile
+    store <https://>`__.
+
+    As part of the natural progression in our development of the game and
+    part of this tutorial series, it makes sense to get started with the
+    actual gaming aspect, and that means diving into
+    `Unity <https://unity.com/>`__, our game development framework.
+
+    In this tutorial, we're going to get familiar with some of the basics
+    behind Unity and get a sprite moving on the screen as well as handing
+    collision. If you're looking for how we plan to integrate the game into
+    MongoDB, that's going to be saved for another tutorial.
+
+    An example of what we want to accomplish can be seen in the following
+    animated image:
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-2d-game-example.gif
+        :alt: Unity 2D Game Example
+
+    The framerate in the image is a little stuttery, but the actual result
+    is quite smooth.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    Before we get started, it's important to understand the requirements for
+    creating the game.
+
+    -  Unity 2020+
+    -  Image to be used for player
+    -  Image to be used for the background
+
+    I'm using Unity 2020.1.6f1, but any version around this particular
+    version should be fine. You can download `Unity <https://unity.com/>`__
+    at no cost for macOS and Windows, but make sure you understand the
+    licensing model if you plan to sell your game.
+
+    Since the goal of this tutorial is around moving a game object and
+    handling collisions with another game object, we're going to need images.
+    I'm using a 1x1 pixel image for my player, obstacle, and background, all
+    scaled differently within Unity, but you can use whatever images you
+    want.
+
+.. content::
+
+    Creating a New Unity Project with Texture and Script Assets
+    -----------------------------------------------------------
+
+    To keep things easy to understand, we're going to start with a fresh
+    project. Within the **Unity Hub** application that becomes available
+    after installing Unity, choose to create a new project.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-new-2d-project.png
+        :alt: Unity Create New 2D Project
+
+    You'll want to choose **2D** from the available templates, but the name
+    and project location doesn't matter as long as you're comfortable with
+    it.
+
+    The project might take a while to generate, but when it's done, you
+    should be presented with something that looks like the following:
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-empty-2d-project.png
+        :alt: Unity Empty New Project
+
+    As part of the first steps, we need to make the project a little more
+    development ready. Within the **Project** tree, right click on
+    **Assets** and choose to create a new folder for **Textures** as well as
+    **Scripts**.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-new-asset-folder.jpg
+        :alt: Create New Unity Asset Folder
+
+    Any images that we plan to use in our game will end up in the
+    **Textures** folder and any game logic will end up as a script within
+    the **Scripts** folder. If you have your player, background, and
+    obstacle images, place them within the **Textures** directory now.
+
+    As of right now there is a single scene for the game titled
+    **SampleScene**. The name for this scene doesn't properly represent what
+    the scene will be responsible for. Instead, let's rename it to
+    **GameScene** as it will be used for the main gaming component for our
+    project. A scene for a game is similar to a scene in a television show or movie. You'll likely have more than one
+    scene, but each scene is responsible for something distinct. For example, in
+    a game you might have a scene for the menu that appears when the user
+    starts the game, a scene for game-play, and a scene for what happens
+    when they've gotten game over. The use cases are limitless.
+
+    With the scene named appropriately, it's time to add game objects for
+    the player, background, and obstacle. Within the project hierarchy
+    panel, right click underneath the **Main Camera** item (if your hierarchy is expanded) or just under **GameScene** (if not expanded) and choose **Create
+    Empty** from the list.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-create-empty-gameobject.jpg
+        :alt: Create Empty Game Object in Unity
+
+    We'll want to create a game object for each of the following: the player, background, and
+    obstacle. The name isn't too important, but it's probably a good idea to
+    give them names based around their purpose.
+
+    To summarize what we've done, double-check the following:
+
+    - Created a **Textures** and **Scripts** directory within the **Assets** directory.
+    - Added an image that represents a player, an obstacle, and a background to the **Textures** directory.
+    - Renamed **SampleScene** to **GameScene**.
+    - Created a **Player** game object within the scene.
+    - Created an **Obstacle** game object within the scene.
+    - Created a **Background** game object within the scene.
+
+    At this point in time we have the project properly laid out.
+
+    Adding Sprite Renders, Physics, Collision Boxes, and Scripts to a Game Object
+    -----------------------------------------------------------------------------
+
+    We have our game objects and assets ready to go and are now ready to
+    configure them. This means adding images to the game object, physics
+    properties, and any collision related data.
+
+    With the player game object selected from the project hierarchy, choose
+    **Add Component** and search for **Sprite Renderer**.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-2d-sprite-renderer-component.png
+        :alt: Add Sprite Renderer to Game Object
+
+    The **Sprite Renderer** allows us to associate an image to our game
+    object. Click the circle icon next to the **Sprite** property's input box. A panel will pop up that allows you to select the image you want to associate to the selected game object. You're going to want to use the
+    image that you've added to the **Textures** directory. Follow the same
+    steps for the obstacle and the background.
+
+    You may or may not notice that the layering of your sprites with images
+    are not correct in the sense that some images are in the background and
+    some are in the foreground. To fix the layering, we need to add a
+    **Sorting Layer** to the game objects.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-sprite-renderer-sorting-layer.png
+        :alt: Add Sorting Layer to Sprite Rendering in Unity
+
+    Rather than using the default sorting layer, choose to **Add Sorting
+    Layer...** so we can use our own strategy. Create two new layers titled
+    **Background** and **GameObject** and make sure that **Background** sits
+    above **GameObject** in the list. The list represents the rendering
+    order so higher in the list gets rendered first and lower in the list
+    gets rendered last. This means that the items rendering last appear at
+    the highest level of the foreground. Think about it as layers in Adobe Photoshop, only reversed in terms of which layers are most visible.
+
+    With the sorting layers defined, set the correct **Sorting Layer** for
+    each of the game objects in the scene.
+
+    For clarity, the background game object should have the **Background** sorting layer applied and the obstacle as well as the player game object should have the **GameObject** 
+    sorting layer applied. We are doing it this way because based on the order of our layers, we want the background game object to truly sit behind the other game objects.
+
+    The next step is to add physics and collision box data to the game
+    objects that should have such data. Select the player game object and
+    search for a **Rigidbody 2D** component.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-rigidbody2d-component.png
+        :alt: Add Rigid Body 2D to Game Object in Unity
+
+    Since this is a 2D game that has no sense of flooring, the **Gravity
+    Scale** for the player should be zero. This will prevent the player from
+    falling off the screen as soon as the game starts. The player is the
+    only game object that will need a rigid body because it is the only game
+    object where physics might be important.
+
+    In addition to a rigid body, the player will also need a collision box.
+    Add a new **Box Collider 2D** component to the player game object.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-box-collider-2d.png
+        :alt: Add Box Collider 2D to Game Object in Unity
+
+    The **Box Collider 2D** component should be added to the obstacle as
+    well. The background, since it has no interaction with the player or
+    obstacle does not need any additional component added to it.
+
+    The final configuration for the game objects is the adding of the
+    scripts for game logic.
+
+    Right click on the **Scripts** directory and choose to create a new **C#
+    Script**. You'll want to rename the script to something that represents
+    the game object that it will be a part of. For this particular script,
+    it will be associated to the player game object.
+
+    .. image:: /images/how-to/getting-started-unity-creating-2d-game/unity-new-script.png
+        :alt: Add Script to Game Object in Unity
+
+    After selecting the game object for the player, drag the script file to
+    the **Add Component** area of the inspector to add it to the game
+    object.
+
+    At this point in time everything for this particular game is configured. However, before we move onto the next step, let's confirm the components added to each of the 
+    game objects in the scene.
+
+    - Background has one sprite renderer with a **Background** sorting layer.
+    - Player has one sprite renderer, one rigid body, and one box collider with the **GameObject** sorting layer.
+    - Obstacle has one sprite renderer, and one box collider with the **GameObject** sorting layer.
+
+    The next step is to apply some game logic.
+
+    Controlling a Game Object with a Unity C# Script
+    ------------------------------------------------
+
+    In Unity, everything in a scene is controlled by a script. These scripts
+    exist on game objects which make it easy to separate the bits and
+    pieces that make up a game. For example the player might have a script
+    with logic. The obstacles might have a different script with logic.
+    Heck, even the grass within your scene might have a script. It's totally
+    up to you how you want to script every part of your scene.
+
+    In this particular game example, we're only going to add logic to the
+    player object script.
+
+    The script should already be associated to a player object, so open the
+    script file and you should see the following code:
+
+    .. code:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public class Player : MonoBehaviour
+        {
+
+            void Start()
+            {
+                // ...
+            }
+
+            void Update()
+            {
+                // ...
+            }
+
+        }
+
+    To move the player we have a few options. We could transform the
+    position of the game object, we can transform the position of the rigid
+    body, or we can apply physics force to the rigid body. Each will give us
+    different results, with the force option being the most unique.
+
+    Because we do have physics, let's look at the latter two options,
+    starting with the movement through force.
+
+    Within your C# script, change your code to the following:
+
+    .. code:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public class Player : MonoBehaviour
+        {
+
+            public float speed = 1.5f;
+
+            private Rigidbody2D rigidBody2D;
+
+            void Start()
+            {
+                rigidBody2D = GetComponent<Rigidbody2D>();
+            }
+
+            void Update()
+            {
+                
+            }
+
+            void FixedUpdate() {
+                float h = 0.0f;
+                float v = 0.0f;
+                if (Input.GetKey("w")) { v = 1.0f; }
+                if (Input.GetKey("s")) { v = -1.0f; }
+                if (Input.GetKey("a")) { h = -1.0f; }
+                if (Input.GetKey("d")) { h = 1.0f; }
+
+                rigidBody2D.AddForce(new Vector2(h, v) * speed);
+            }
+
+        }
+
+    We're using a ``FixedUpdate`` because we're using physics on our game
+    object. Had we not been using physics, the ``Update`` function would
+    have been fine.
+
+    When any of the directional keys are pressed (not arrow keys), force is
+    applied to the rigid body in a certain direction at a certain speed. If
+    you ran the game and tried to move the player, you'd notice that it
+    moves with a kind of sliding on ice effect. Rather than moving the
+    player at a constant speed, the player increases speed as it builds up
+    momentum and then when you release the movement keys it gradually slows
+    down. This is because of the physics and the applying of force.
+
+    Moving the player into the obstacle will result in the player stopping.
+    We didn't even need to add any code to make this possible.
+
+    So let's look at moving the player without applying force. Change the
+    ``FixedUpdate`` function to the following:
+
+    .. code:: csharp
+
+        void FixedUpdate() {
+            float h = 0.0f;
+            float v = 0.0f;
+            if (Input.GetKey("w")) { v = 1.0f; }
+            if (Input.GetKey("s")) { v = -1.0f; }
+            if (Input.GetKey("a")) { h = -1.0f; }
+            if (Input.GetKey("d")) { h = 1.0f; }
+
+            rigidBody2D.MovePosition(rigidBody2D.position + (new Vector2(h, v) * speed * Time.fixedDeltaTime));
+        }
+
+    Instead of using the ``AddForce`` method we are using the
+    ``MovePosition`` method. We are now translating our rigid body which
+    will also translate our game object position. We have to use the
+    ``fixedDeltaTime``, otherwise we risk our translations happening too
+    quickly if the ``FixedUpdate`` is executed too quickly.
+
+    If you run the game, you shouldn't get the moving on ice effect, but
+    instead nice smooth movement that stops as soon as you let go of the
+    keys.
+
+    In both examples, the movement was limited to the letter keys on the
+    keyboard.
+
+    If you want to move based on the typical WASD letter keys and the arrow
+    keys, you could do something like this instead:
+
+    .. code:: csharp
+
+        void FixedUpdate() {
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+
+            rigidBody2D.MovePosition(rigidBody2D.position + (new Vector2(h, v) * speed * Time.fixedDeltaTime));
+        }
+
+    The above code will generate a value of -1.0, 0.0, or 1.0 depending on
+    if the corresponding letter key or arrow key was pressed.
+
+    Just like with the ``AddForce`` method, when using the ``MovePosition``
+    method, the collisions between the player and the obstacle still happen.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to get started with Unity and building a simple 2D
+    game. Of course what we saw in this tutorial wasn't an actual game, but
+    it has all of the components that can be applied towards a real game.
+    This was discussed by `Karen
+    Huaulme <https://www.twitter.com/youoldmaid>`__ and myself (`Nic
+    Raboy <https://www.nraboy.com>`__) in the fourth part of our `game
+    development Twitch
+    stream <https://www.youtube.com/watch?v=wDRf2jHrCPM>`__.
+
+    The player movement and collisions will be useful in the Plummeting
+    People game as players will not only need to dodge other players, but
+    obstacles as well as they race to the finish line.
