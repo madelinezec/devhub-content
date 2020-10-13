@@ -24,6 +24,8 @@
 
 .. pubdate:: 2020-05-28
 
+.. updated-date:: 2020-10-08
+
 .. type:: article
 
 .. level:: beginner
@@ -38,7 +40,8 @@
 
 .. related::
 
-   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
 
@@ -52,6 +55,12 @@ Unnecessary Indexes
 
    Today, let's talk about indexes.  Indexes are great (seriously!), but it's easy to get carried away and make indexes that you'll never actually use.  Let's examine why an index may be unnecessary and what the consequences of keeping it around are.
 
+   .. blockquote::
+
+      .. youtube:: mHeP5IbozDU?start=32
+
+      Would you rather watch than read? The video above is just for you.
+      
 .. content::
 
    Unnecessary Indexes

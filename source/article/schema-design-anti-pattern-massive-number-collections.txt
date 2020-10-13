@@ -41,7 +41,7 @@
 .. related::
 
    * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
-   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
    * `The Bucket Pattern <https://developer.mongodb.com/how-to/bucket-pattern>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
 

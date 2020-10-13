@@ -24,6 +24,8 @@
 
 .. pubdate:: 2020-06-23
 
+.. updated-date:: 2020-10-08
+
 .. type:: article
 
 .. level:: beginner
@@ -38,7 +40,8 @@
 
 .. related::
 
-   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
    * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
 
@@ -52,6 +55,11 @@ Bloated Documents
 
    Today, let's discuss document size.  MongoDB has a `16 MB document size limit <https://docs.mongodb.com/manual/reference/limits/#BSON-Document-Size>`__.  But should you use all 16 MBs?  Probably not.  Let's find out why.
 
+   .. blockquote::
+
+      .. youtube:: mHeP5IbozDU?start=389
+
+      If your brain feels bloated from too much reading, sit back, relax, and watch this video.
 
 .. content::
 

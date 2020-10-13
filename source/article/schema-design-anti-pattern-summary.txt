@@ -24,6 +24,8 @@
 
 .. pubdate:: 2020-07-14
 
+.. updated-date:: 2020-10-08
+
 .. type:: article
 
 .. level:: beginner
@@ -38,8 +40,8 @@
 
 .. related::
 
-   * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
-   * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
    * `Anti-Pattern: Separating Data That is Accessed Together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__
    * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
 
@@ -70,6 +72,15 @@ A Summary of Schema Design Anti-Patterns and How to Spot Them
    - `Separating data that is accessed together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__: separating data between different documents and collections that is frequently accessed together.
    - `Case-insensitive queries without case-insensitive indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-case-insensitive-query-index>`__: frequently executing a case-insensitive query without having a case-insensitive index to cover it.
 
+   .. blockquote::
+
+      .. youtube:: videoseries?start=948&amp;list=PL4RCxklHWZ9uluV0YBxeuwpEa0FWdmCRy
+
+      If you'd like to learn more about each of the anti-patterns, check out this YouTube playlist. The third and final video in this playlist is coming soon.
+   
+   Building Your Data Modeling Foundation
+   --------------------------------------
+   
    Now that you know what **not** to do, let's talk about what you **should** do instead.  Begin by learning the MongoDB schema design patterns.  `Ken Alger <https://twitter.com/kenwalger>`__ and `Daniel Coupal <https://twitter.com/danielcoupal>`__ wrote a fantastic `blog series <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__ that details each of the 12 patterns.  Daniel also co-created a `free MongoDB University Course <https://university.mongodb.com/courses/M320/about>`__ that walks you through how to model your data.
 
    Once you have built your data modeling foundation on schema design patterns and anti-patterns, carefully consider your use case:

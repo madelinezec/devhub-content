@@ -24,6 +24,8 @@
 
 .. pubdate:: 2020-07-07
 
+.. updated-date:: 2020-10-08
+
 .. type:: article
 
 .. level:: beginner
@@ -38,10 +40,10 @@
 
 .. related::
 
+   * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
    * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
-   * `Anti-Pattern: Unnecessary Indexes <https://developer.mongodb.com/article/schema-design-anti-pattern-unnecessary-indexes>`__
-   * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
 
 =========================================================
 Case-Insensitive Queries Without Case-Insensitive Indexes
@@ -65,6 +67,11 @@ Case-Insensitive Queries Without Case-Insensitive Indexes
 
    Once you know the details of how case-insensitive queries work, the implementation is fairly simple.  Let's dive in!
 
+   .. blockquote::
+
+      .. youtube:: mHeP5IbozDU?start=948
+
+      Check out the video above to see the case-insensitive queries and indexes in action.
 
 .. content::
 
