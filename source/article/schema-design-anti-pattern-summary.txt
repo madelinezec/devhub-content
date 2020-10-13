@@ -42,7 +42,7 @@
 
    * `Video: MongoDB Schema Design Anti-Patterns Part 1 <https://youtu.be/8CZs-0it9r4>`__
    * `Video: MongoDB Schema Design Anti-Patterns Part 2 <https://youtu.be/mHeP5IbozDU>`__
-   * `Anti-Pattern: Separating Data That is Accessed Together <https://developer.mongodb.com/article/schema-design-anti-pattern-separating-data>`__
+   * `Video: MongoDB Schema Design Anti-Patterns Part 3 <https://youtu.be/dAN76_47WtA>`__
    * `Anti-Pattern: Bloated Documents <https://developer.mongodb.com/article/schema-design-anti-pattern-bloated-documents>`__
 
 =============================================================
@@ -74,9 +74,9 @@ A Summary of Schema Design Anti-Patterns and How to Spot Them
 
    .. blockquote::
 
-      .. youtube:: videoseries?start=948&amp;list=PL4RCxklHWZ9uluV0YBxeuwpEa0FWdmCRy
+      .. youtube:: videoseries?list=PL4RCxklHWZ9uluV0YBxeuwpEa0FWdmCRy
 
-      If you'd like to learn more about each of the anti-patterns, check out this YouTube playlist. The third and final video in this playlist is coming soon.
+      If you'd like to learn more about each of the anti-patterns, check out this YouTube playlist. 
    
    Building Your Data Modeling Foundation
    --------------------------------------
