@@ -1,0 +1,505 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/realm-appgyver-logo.png
+
+.. meta-description:: 
+
+   Tutorial on Realm Serverless platform integration with the No-Code platform from AppGyver
+
+.. twitter::
+   :creator: @pavelduchovny
+   :title: Realm platform integration with No-Code platform from AppGyver
+   :image: /images/social/twitter/twitter-realm-appgyver.png
+   :image-alt: MongoDB Realm
+
+   Tutorial on Realm Serverless platform integration with the No-Code platform from AppGyver
+
+.. og::
+   :title: Realm platform integration with No-Code platform from AppGyver
+   :image: /images/social/open-graph/og-realm-appgyver.png
+
+.. include:: /includes/authors/duchovny-pavel.rst
+
+.. include:: /includes/authors/sarsa-harri.rst
+
+.. pubdate:: 2020-10-19
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags::
+
+   * API
+   * Data Visualization
+   * GraphQL
+   * Full-Text Search
+   * React
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * Atlas
+   * Realm 
+
+=========================================================================
+Realm Serverless platform integration with No-Code Composer from AppGyver
+=========================================================================
+
+.. introduction::
+
+   TL;DR
+   -----
+
+   In this tutorial, we will be exploring how to use `MongoDB Realm <https://www.mongodb.com/realm>`__ and `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ with Composer Pro No-Code platform from `AppGyver Inc <https://www.appgyver.com/>`__.
+ 
+   We will be covering the following topics:
+
+   * Authentication and data permissions
+   * Data access from MongoDB Realm
+   * Integrating GraphQL
+   
+   This article is focused more on the MongoDB Atlas and Realm side. If you wish to understand the AppGyver side, please visit the twin post on AppGyver's `documentation <https://docs.appgyver.com/tutorials/mongodb-realm-with-composer>`__.
+   
+   Introduction
+   ------------
+
+   We always want to build simple, robust, and fast-growing applications. Together with technology, development methodologies evolve, helping us to build applications faster without
+   all the unneeded boilerplate coding and allowing us to focus on the important aspects of our applications. 
+
+   MongoDB Realm and AppGyver's Composer Pro are exactly the tools you need to build your Cross-Platform applications using as little code as possible while maintaining all the advantages of modern versatile applications.
+
+   In this tutorial, we will cover all needed aspects to get you going from Authentication routing to consuming/storing and reacting to your data changes.  
+
+   It's important to note that both platforms have a generous free tier, so you can complete this tutorial and many more completely free of charge. 
+
+   Let's go!
+
+   .. image:: /images/article/realm-appgyver/AppGyverMovie.gif
+      :alt: My sample Movie Search application using sample mflix data set
+   
+.. prerequisites::
+
+   Development Prerequisites
+   -------------------------
+   * `MongoDB Atlas account <https://docs.atlas.mongodb.com/tutorial/create-atlas-account/>`__, `Atlas cluster <https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/>`__, and a new `MongoDB Realm Application <https://docs.mongodb.com/realm/procedures/create-realm-app/>`__.
+   * AppGyver account and a new `Application <https://docs.appgyver.com/overview/introduction>`__.
+
+   .. include:: /includes/callouts/atlas-signup.rst
+
+   If you are new to either platform, I recommend watching the following tutorials before continuing:
+   
+   MongoDB Realm
+   ~~~~~~~~~~~~~
+
+   - `Introduction to Realm <https://docs.mongodb.com/realm/get-started/introduction-web/>`__
+   - `MongoDB Realm (Former "Stitch") Basics blog <https://www.mongodb.com/blog/post/start-here-a-video-introduction-to-mongodb-stitch>`__ (The blog uses the old name "Stitch," since product was lately rebranded to MongoDB Realm)
+
+   AppGyver Platform
+   ~~~~~~~~~~~~~~~~~
+   
+   - `AppGyver ToDo Tutorial <https://docs.appgyver.com/#todo-app-tutorial-video>`__
+
+   Once we have our application and clusters defined, we can start building our application.
+   On the backend side, I will load data for the movie search application based on MongoDB's `"mflix" dataset <https://docs.atlas.mongodb.com/sample-data/sample-mflix/#sample-mflix>`__ which I can load to my cluster via the `sample data load button <https://docs.atlas.mongodb.com/sample-data/>`__.
+
+   In Composer Pro, I will configure three initial pages with the `canvas editor <https://docs.appgyver.com/overview/view-canvas#view-canvas>`__:
+
+   1. The login page with username/password login form for my `Auth process <https://docs.appgyver.com/data/authentication>`__, created by going:
+   
+   - **Auth** global toolbar section
+   - **Enable authentication**
+   - **Direct third party authentication**
+   
+   2. The main movies feed list.
+   3. A movie details page, to be opened once we click on the movie and its comments.
+
+.. content::
+
+   Authentication
+   --------------
+
+   Email/Password
+   ~~~~~~~~~~~~~~
+
+   On the AppGyver side, I will need to fix my created login page:
+
+   1. Add any additional components like title and input fields.
+   2. Perform the desired design via the `style tab <https://docs.appgyver.com/ui/component-style-panel>`__ of each component.
+   3. Use the relevant `page variables <https://docs.appgyver.com/ui/variable-editor>`__ (``credentials.username``, ``credentials.password`` etc.) and confirm the `binding <https://docs.appgyver.com/app-logic/binding-data>`__  with the input fields via the `properties <https://docs.appgyver.com/ui/component-properties-panel>`__ bar, so the variables will be populated upon user input.
+
+   Once successfully bound, the variable name will be presented on the fields (similar to the below picture).
+
+   .. image:: /images/article/realm-appgyver/LoginPage.png
+      :alt: Login form with page variables bound to the inputs
+
+   On the Realm Application, I should enable the Email/Password provider by:
+
+   1. Going to ``Users`` > ``Authentication Providers`` > Toggling ``Email/Password`` to enable. 
+   2. Choosing "Automatically confirm users" and "Run a password reset function." Potentially, you can use any of the `providers <https://docs.mongodb.com/realm/authentication/providers/#auth-provider-list>`__; I will showcase a custom-function provider later in the tutorial in :ref:`this section <appgyver-custom-function>`.
+
+   For more details, read more on Realm authentication concepts `here <https://docs.mongodb.com/realm/authentication/>`__.
+
+   .. image:: /images/article/realm-appgyver/UsersEnable.png
+      :alt: Login form with page variables bound to the inputs
+
+   On Composer side, I  will need to define a `REST API direct integration <https://docs.appgyver.com/data/rest-api-direct-integration>`__ data resource called ``auth`` where my Base URL is pointing to my current authentication provider:
+
+   1. Go to "DATA" on the upper toolbar for your AppGyver application.
+   2. Click "ADD DATA RESOURCE" button > "REST API direct integration."
+   3. Choose any meaningful Resource ID (eg. "Auth" or "User_Password_API").
+   4. Input the Base URL page with the relevant Realm authentication URL (This is based on the following `convention <https://docs.mongodb.com/realm/reference/authenticate-http-client-requests/#get-a-client-api-access-token>`__ ``https://realm.mongodb.com/api/client/v2.0/app/<yourappid>/auth/providers/<provider type>/login``).
+   
+   .. code-block:: auto
+
+      https://realm.mongodb.com/api/client/v2.0/app/movies-abcd/auth/providers/local-userpass
+
+   - ``movies-abcd`` is my `Application ID <https://docs.mongodb.com/realm/get-started/find-your-app-id/>`__ from Realm.
+   
+   4. Since authentication requires a POST request, I have used the "Create Record" section and pointed it to the /login path. I also added a ``Content-Type: application/json`` header.
+
+   If I wanted to implement a user registration flow, I would need to use the Administration API for a user creation. I created my test users through the UI.
+
+   .. image:: /images/article/realm-appgyver/LoginAPI.png
+      :alt: Create record (POST) configuration
+
+   Next, I've set up my schema. The request schema needs to be configured manually:
+
+   1. When on the "Create Record" page, click the "Schema" tab and add two properties for the request schema: ``username``, ``password``.
+   2. Once you run a "Test" call from the "Test" tab, you can set the "SET SCHEMA FROM RESPONSE" button to populate the response schema automatically.
+   
+   .. image:: /images/article/realm-appgyver/LoginInputData.png
+      :alt: Login button flow functions
+
+   Now all there is left to do is build the login `logic flow <https://docs.appgyver.com/app-logic/overview>`__ when using the `logic canvas <https://docs.appgyver.com/overview/logic-canvas>`__ on our "Login" button.
+
+   .. image:: /images/article/realm-appgyver/AuthFlow2.png
+      :alt: Login button flow functions
+
+   If you want to learn more on the logic part, please visit my `guest tutorial on docs.appgyver.com <https://docs.appgyver.com/tutorials/mongodb-realm-with-composer#email-password>`__.
+
+   The token and the ``user_id`` we get from the Realm authentication API will be needed later for our user-data interaction.
+
+   We are good to go with our username/password authentication. It's that easy!
+
+   .. image:: /images/article/realm-appgyver/SuccessfulLogin.png
+      :alt: Successful login in the MongoDB Realm Logs dashboard
+
+   .. _appgyver-custom-function:
+
+   Custom-Function Authentication - SMS Authentication
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       
+   Email/Password is a common and basic authentication pattern. However, modern applications require better authentication. I wanted to showcase an SMS authentication flow, with the use of MongoDB Realm `custom-function authentication <https://docs.mongodb.com/realm/authentication/custom-function/>`__ and a `Twilio service <https://docs.mongodb.com/realm/services/twilio/>`__ defined on the Realm platform.
+       
+   First, I will amend the login view accordingly, having only a phone number input separated to a country code dropdown and a second field allowing only numbers.
+
+   The dropdown values can be constructed visually via the list of values binding type, or by inputting a formula.
+    
+   .. image:: /images/article/realm-appgyver/SMSAuth.png
+      :alt: Login view for SMS auth
+    
+   1. We need to `configure a webhook <https://docs.mongodb.com/realm/services/configure/service-webhooks/>`__ in Realm that generates an auth code, instructs Twilio to `send <https://docs.mongodb.com/realm/services/twilio-actions/send/>`__ it via SMS to the user, and stores it in the database for verification in our authentication function.
+   2. The Twilio service can be defined in Realm via 3rd Party Services > `Twilio service <https://docs.mongodb.com/realm/services/twilio/>`__ > Input Twilio credentials. 
+   3. We will configure an HTTP service webhook (called ``startLogin``), which we can define to use a "SYSTEM" auth and method POST.
+   
+   The webhook function will look something like the following (see comments for detailed code explanation):
+   
+   .. code-block:: javascript
+
+      // Generate a random number function
+      function getRandomInt(max) {
+       return Math.floor(Math.random() * Math.floor(max));
+      }
+
+      // This function is the webhook's request handler.
+      exports = async function(payload, response) {
+         // Data can be extracted from the request as follows:
+         // Query params phone
+         const {phone} = payload.query;
+
+
+        // Initiate the auth data collection
+          const users = context.services
+         .get("mongodb-atlas")
+         .db("app")
+         .collection("smsAuthLogin");
+
+       // Get an up to 4 digits random code.
+       const authCode = getRandomInt(9999);
+
+      // Send the code via twilio, make sure to place your admin twilio number instead of +1234567
+       const twilio = context.services.get("authSMS");
+         twilio.send({
+             to: phone,
+             from: "+1234567",
+             body: `Please authenticate to AppGyver with: ${authCode}`
+         });
+
+       // Upsert the code for existing user document with the specified phone
+        await users.updateOne({phone},{ phone, "authCode" : authCode.toString(), lastModified : new Date()}, {upsert : true});
+      };
+      
+   Then, we create a new DATA REST API integration on our AppGyver application called ``smsAuth`` which calls our ``startLogin`` webhook URL via the Create record (POST) method:
+
+   1. Again, we will define the base URL as the path to our webhook service without the webhook function name.
+
+   .. code-block:: auto
+
+      https://webhooks.mongodb-realm.com/api/client/v2.0/app/movies-abcd/service/smsLogin/incoming_webhook/
+
+   2. The "Create Record (POST)'' will be pointed to ``startLogin`` with query parameter ``phone``. 
+
+   Now we will need to implement our login button logic:
+
+   1. Once clicked, we will construct our ``appVars.prefixCode + appVars.phoneNumber`` through a formula and bind it to the ``phone`` parameter for our   ``smsAuth``  create record box. 
+   2. When the "Create Record" is executed, we will take its response and mark the SMS Code component as visible. 
+   
+   .. image:: /images/article/realm-appgyver/startSMSLogin.png
+      :alt: Start SMS Login
+
+   If all goes well, you should get an SMS to the inputted number after the logic button is executed. Behind the scenes, the webhook has created the following document in ``app.smsAuthLogin`` collection:
+   
+   .. code-block:: javascript
+      
+      {
+         "_id" : ObjectId(...),
+         "phone" : "+111111111",
+         "authCode" : "5555",
+         "lastModified :  2020-09-01T08:00:00.000
+      }
+      
+   Authentication Function
+   ~~~~~~~~~~~~~~~~~~~~~~~
+
+   On the MongoDB Realm Application, I have enabled custom-function authentication.
+
+   .. image:: /images/article/realm-appgyver/CustomFunction.png
+      :alt: Custom Function Enabled
+   
+   ``authFunc`` is the following small function to authenticate a valid SMS token:
+   
+   .. code-block:: javascript
+
+      exports = async function(loginPayload) {
+          // Get a handle for the app.smsAuthLogin collection
+          const users = context.services
+            .get("mongodb-atlas")
+            .db("app")
+            .collection("smsAuthLogin");
+
+          // Parse out custom data from the FunctionCredential
+          const { phone, authCode } = loginPayload;
+
+          // Query for an existing user document with the specified phone
+          const user = await users.findOne({ "phone" :  phone ,  "authCode" :  authCode});
+
+          if (user) {
+            // If the user document exists, return its unique ID
+            return user._id.toString();
+          } else {
+            throw "Auth failed";
+          }
+      };
+
+   The function expects a ``phone`` and ``authCode`` in the request body, matching them with the values stored in the previous step. If a match is found, the function returns the user's ``_id`` to the auth provider, thereby authenticating the user and, for example, returning a valid access token.
+   
+   We can change our auth integration to point to the new URL:
+   
+   .. code-block:: javascript
+
+      https://realm.mongodb.com/api/client/v2.0/app/movies-abcd/auth/providers/custom-function
+      
+   We also need to change the request body to have phone and authCode instead of email and password. Now, when we call Create record for auth with the phone number and auth code inputted by the user, if the code is the one we sent to the user's phone, the authentication will return a 200 status code. If the response comes through the success output, we can log in our user.
+
+   The  ``access_token`` or/and the ``user_id`` we get at the end of the flow will be tested against rules such as "Read your own data"/"Write your own Data" on the MongoDB side when using the data access methods in the following section. Read here for more `information <https://docs.mongodb.com/realm/mongodb/query-roles/>`__.
+  
+   Full logic can be seen here and explained in detail in my `AppGyver tutorial <https://docs.appgyver.com/tutorials/mongodb-realm-with-composer#authentication-function>`__.
+   
+   .. image:: /images/article/realm-appgyver/SMSLogic.png
+      :alt: SMS Logic
+
+   Data Access and Permissions
+   ---------------------------
+   
+   MongoDB has always been known for its stunningly easy and robust way of querying, updating, and aggregating data with the flexible schema approach and built-in redundancy and scalability mechanics. With MongoDB Realm, we get a fully scalable and managed backend that utilizes the familiar MongoDB technology. Combining this with the state-of-the-art frontend produced by Composer brings about one heck of a powerful stack.
+
+   There are two main ways we can currently quickly consume data for our AppGyver application from MongoDB Realm.
+   
+   Using HTTP Service Webhooks to Retrieve Data
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+   With `HTTP Service webhooks <https://docs.mongodb.com/realm/services/configure/service-webhooks/>`__, we can define little microservices, which receive query parameters/headers and body data to perform reading or writing of data. Since we can quickly access any of the provided services, like our ``mongodb-atlas`` instance, we can use any of the available `CRUD commands, including the aggregation framework <https://docs.mongodb.com/realm/mongodb/#crud-aggregation-operations>`__. Then we can respond with this array of documents or a single document back to our application.
+   
+   However, since Atlas offers some additional capabilities like the `Atlas Search <https://docs.atlas.mongodb.com/atlas-search/>`__ service we can, for example, dramatically boost our search capabilities, which is what I've done in my Movies application when searching for my movies.
+   
+   First, I've defined an HTTP service called ``MoviesAPI`` and an incoming webhook on method ``GET``. Since our API is public for all our users, I have used a ``SYSTEM`` authentication and toggled the ``"Response with Result"`` on. Atlas Search currently also requires a ``SYSTEM`` base authentication for sensitive information to `secure <https://docs.mongodb.com/realm/services/configure/service-webhooks/#specify-an-authorization-expression>`__ a webhook with a Secret or a payload signature with an authorization expression.
+
+   .. image:: /images/article/realm-appgyver/RealmDataWebhook.png
+      :alt: GetMovies webhook
+      
+      
+   The code I've used for my Movie search webhook body is:
+   
+   .. code-block:: javascript
+
+      /* 
+         This API searches movies from db("sample_mflix").collection("movies") using Atlas Search aggregation
+      */
+      exports = async function(payload, response) {
+
+       // Extract, the search query param
+       const {Search} = payload.query;
+       var filter;
+
+       // Get the collection object
+       const movies = await context.services.get("mongodb-atlas").db("sample_mflix").collection("movies");
+       var doc = [];
+
+          console.log(`ID ${Search}`);
+          // If Search term is not empty use atlas search $search operator
+          if (Search !== "")
+          {
+            filter = [{
+                '$search': {
+                  'text': {
+                    'path': ['title', 'plot','fullplot','generes'], 
+                    'query': Search, 
+                    'fuzzy': {}
+                  }
+              }
+            },{"$limit" : 100}];
+             doc = await movies.aggregate(filter).toArray();
+          }
+          else
+          {
+             // If no Search term provided return first found 100 results
+             doc = await movies.aggregate([{"$limit" : 100}]).toArray();
+          }
+
+          // Return the found documents through the response object
+          response.setBody(JSON.stringify(doc));
+          response.setStatusCode(200);
+
+      };
+
+   Now, we integrate this webhook the same way we integrated the previous APIs: by defining a new REST API data resource and using the ``Get collection (GET)`` method.
+
+   .. image:: /images/article/realm-appgyver/MovieSearchAPI.png
+      :alt: MovieSearch data resource config
+ 
+   We can then define a data variable MovieSearchApp on our movies list page. We define a SearchTerm page variable and bind it to the data variable's Search input and a search field on our page. Now, whatever the user inputs in the search field gets stored in the variable, and when the data variable refresh loop triggers again, a new API call gets made with the updated search term.
+ 
+   .. image:: /images/article/realm-appgyver/MovieSearchApp.png
+      :alt: MovieSearch data resource config
+      
+   To get the list of movies to show based on the data, I set the rating card component I created to repeat based on the data variable, binding each property to a field in my data (``title``, ``plot``, ``rating`` etc). For some properties, I used a formula to mangle the data into the correct format.
+   
+   .. image:: /images/article/realm-appgyver/MoviesSearchUI.png
+      :alt: MovieSearch UI
+      
+   Now we have a full search engine connected to a MongoDB Atlas database through Realm webhooks, with beautiful, automatically reactive UI.
+   
+   Using HTTP Service Webhooks to Store Data
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+   The same way we can define our ``GET`` collection, we can define a ``"Create Record"`` API with a POST webhook service. In my application, I have defined a ``CommentsAPI`` integration, where in the POST section, I have placed the URL for a webhook called ``UpsertComment``, defined in MongoDB Realm.
+   
+   Here is where MongoDB Realm permissions come to play. We will define our comment collection with a template of "Users can read all data, but write only their own data." Here is where the received ``user_id`` will also be useful as this will be added as the field name to distinguish user documents.
+
+   .. image:: /images/article/realm-appgyver/RealmPermissions.png
+      :alt: Permissions
+
+   Now, when we set up our webhook, we will use the ``Script`` based authentication and set the executor as the provided ``user_id`` in payload. Since we will store the provided payload as the comment object, we will also cover the needed collection rule.
+
+   .. image:: /images/article/realm-appgyver/ScriptAuth.png
+      :alt: Script Auth
+
+   The webhook function performs an upsert by the provided comment ``ID``, updating the record if it exists and creating a new one if nothing is found with the ``ID``. It also sets the ``user_id`` which is linked from the authentication object we got from our "login" flow.
+
+   .. code-block:: javascript
+
+      // This function is storing comments
+      exports = async function(payload, response) {
+
+         // Extract JSON object from the body
+         const body = JSON.parse(payload.body.text());
+
+         const updateObj = body;
+         // Set comment time from string to date
+         updateObj.commentTime =  new Date(`${updateObj.commentTime}`);
+
+         // Upsert the comment for insert or update
+         const comments = await context.services.get("mongodb-atlas").db("sample_mflix").collection("comments");
+
+         const upsert_res = await comments.updateOne({"id" : updateObj.id}, updateObj, {"upsert" : true});
+
+         return  upsert_res;
+      };
+
+   By wiring this integration up to our UI, we can now create new comments and update existing ones by simply calling the Create record function. Only users with correct ``user_id`` can edit their comments.
+   
+   GraphQL Integration
+   -------------------
+   
+   Webhooks are a good tool to define your data microservices to perform common and complex application tasks. However, sometimes we need a service to be flexible and able to quickly query arbitrary data as well as perform data "Mutations" for us. `MongoDB's Realm GraphQL <https://docs.mongodb.com/realm/graphql/>`__ service allows just that. 
+   
+   With the already defined rules on our collections, we can generate their schema, done automatically through the schema tab, and start consuming them right away.
+   
+   .. image:: /images/article/realm-appgyver/GenSchema.png
+      :alt: Generated Schema
+ 
+   The resulted generated schema will be automatically available under the GraphQL tab, for example, the Movie type:
+   
+   .. code-block:: javascript
+
+      type Movie {
+           _id: ObjectId
+           awards: MovieAward
+           cast: [String]
+           countries: [String]
+           directors: [String]
+           fullplot: String
+           genres: [String]
+           imdb: MovieImdb
+           languages: [String]
+           lastupdated: String
+           metacritic: Int
+           num_mflix_comments: Int
+           plot: String
+           poster: String
+           rated: String
+           released: DateTime
+           runtime: Int
+           title: String
+           tomatoes: MovieTomato
+           type: String
+           writers: [String]
+           year: Int
+         }
+         
+   All that's left to do is to build our AppGyver Data API around the GraphQL endpoint providing an ``Authorization`` header with our ``access_token`` from the authentication step as a ``Bearer`` value. See `GraphQL Authentication documentation <https://docs.mongodb.com/realm/graphql/authenticate/>`__ for more information. 
+   
+   .. code-block:: javascript
+   
+      https://realm.mongodb.com/api/client/v2.0/app/movies-abcd/graphql
+      
+   .. image:: /images/article/realm-appgyver/GraphQLAPI.png
+      :alt: GraphQL API
+     
+   The service is ready for use in our application flows. Since a POST method is required, we will run all our queries and mutations via the "Create Record" method and provide our headers and queries using a formula object. As an example, I have queried and populated my view with all movies from the 2000s and fetched their ``title`` , ``year``, and ``runtime``. Those can be automatically mapped to a data variable or directly into a UI attribute. 
+  
+   .. image:: /images/article/realm-appgyver/GraphQLQuery.png
+      :alt: GraphQL Query
+
+.. summary::
+      
+   Wrap-Up
+   -------
+   
+   `AppGyver's No-Code Platform <https://www.appgyver.com/>`__ offers a significant addition to fast application development, and when integrated with powerful platforms like `MongoDB Realm <https://www.mongodb.com/realm>`__ and `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__,  the development cycle boosts by orders of magnitude.
+   
+   Developers might need some time to digest these concepts, but I am certain they will fall in love with it right after their first app.
