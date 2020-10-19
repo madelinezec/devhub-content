@@ -4,7 +4,7 @@
 
 .. meta-description::
 
-   Explaining Realm Database 6.0 and Frozen Objects
+   Explaining Realm Core Database 6.0 and Frozen Objects
 
 .. twitter::
    :creator: @shaneymac
@@ -12,19 +12,21 @@
    :image: /images/social/twitter/twitter-realm-mobilesync.jpg
    :image-alt: MongoDBRealm
 
-   New Realm Database 6.0 - Archtitecture and Frozen Objects
+   New Realm Core Database 6.0 - Archtitecture and Frozen Objects
 
 .. og::
-   :title: Realm Core 6.0 release and support for frozen objects
+   :title: Realm Core Database 6.0 release and support for frozen objects
    :image: /images/social/open-graph/og-realm-mobilesync.jpg
 
 .. include:: /includes/authors/mcallister-shane.rst
 
 .. include:: /includes/authors/maughan-katherine.rst
 
+.. include:: /includes/authors/ward-ian.rst
+
 .. pubdate:: 2020-05-29
 
-.. updated-date:: 2020-06-05
+.. updated-date:: 2020-10-19
 
 .. type:: article
 
@@ -34,12 +36,14 @@
 
    * API
    * iOS
+   * .NET
 
 .. languages::
 
    * Java
    * JavaScript
    * Swift
+   * C#
 
 .. products::
 
@@ -47,7 +51,7 @@
    * Realm
 
 =========================================================
-Realm Database 6.0: A New Architecture and Frozen Objects
+Realm Core Database 6.0: A New Architecture and Frozen Objects
 =========================================================
 
 .. introduction::
@@ -57,9 +61,9 @@ Realm Database 6.0: A New Architecture and Frozen Objects
 
    `Realm <https://www.mongodb.com/realm>`__ is an easy-to-use, offline-first database that lets mobile developers build better apps faster.
    
-   Since the acquisition by MongoDB of Realm in May 2019, MongoDB has continued investing in building an updated version of our mobile database, Realm Database 6.0. 
+   Since the acquisition by MongoDB of Realm in May 2019, MongoDB has continued investing in building an updated version of our mobile database; culimating in the Realm Core Database 6.0. 
    
-   We're thrilled to announce that it's now out of beta, and released, meaning we've hit a major milestone on our `MongoDB Realm Roadmap <https://www.mongodb.com/realm#roadmap>`__. Realm Database 6.0 is now included in the Realm Java 7.0, Cocoa 5.0, and JS/RN 6.0 SDKs and will follow later in .NET/Xamarin 5.0. Access the release details `here <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__.
+   We're thrilled to announce that it's now out of beta and released; we look forward to seeing what apps you build with Realm in production. The Realm Core Database 6.0 is now included in the 10.0 versions of each SDK: Kotlin/Java, Swift/Obj-C, Javascript on the node.js & React Native, as well as .NET support for a variety of UWP platforms and Xamarin. Take a look at the docs `here <https://docs.mongodb.com/realm/get-started/introduction-mobile/>`__.
 
 
 	
@@ -82,35 +86,60 @@ Realm Database 6.0: A New Architecture and Frozen Objects
 
    With this release, we're also thrilled to announce that Realm now supports Frozen Objects, making it easier to use Realm with reactive frameworks.
 
-   Since our initial release of the Realm database, our concept of live, thread-confined objects has been key to reducing the code that mobile developers need to write. Objects are the data, so when the local database is updated for a particular thread, all objects are automatically updated too. This design ensures you have a consistent view of your data and makes it extremely easy to hook the local database up to the UI. But it historically came at a cost for developers using reactive frameworks.
+   Since our initial release of the Realm database, our concept of live, thread-confined objects, has been key to reducing the code that mobile developers need to write. Objects are the data, so when the local database is updated for a particular thread, all objects are automatically updated too. This design ensures you have a consistent view of your data and makes it extremely easy to hook the local database up to the UI. But it historically came at a cost for developers using reactive frameworks.
    
-   Now, Frozen Objects allow you to work with immutable data without needing to extract it from the database. Instead, Frozen Objects act like immutable objects, meaning they won't change. They allow you to freeze elements of your data and hand it over to other threads and operations, without throwing an exception - so it's simple to use Realm when working with platforms like RxJava.
+   Now, Frozen Objects allows you to work with immutable data without needing to extract it from the database. Frozen Objects act like immutable objects, meaning they won't change. They allow you to freeze elements of your data and hand it over to other threads and operations without throwing an exception - so it's simple to use Realm when working with platforms like RxJava & LiveData, RxSwift & Combine, and React.
 
    Using Frozen Objects
    ~~~~~~~~~~~~~~~~~~~~
 
-   Freeze any 'Realm', 'RealmList', or 'RealmObject' and it will not be possible to modify them in any way. These Frozen Objects have none of the threading restrictions that live objects have, meaning they can be read and queried across all threads.
+   Freeze any 'Realm', 'RealmList', or 'RealmObject' and it will not be possible to modify them in any way. These Frozen Objects have none of the threading restrictions that live objects have; meaning they can be read and queried across all threads.
    
-   As an example, consider what it would look like if you were listening to changes on a live Realm using kotlin, and then wanted to freeze query results before sending them on for further processing:
+   As an example, consider what it would look like if you were listening to changes on a live Realm using Kotlin or .NET, and then wanted to freeze query results before sending them on for further processing. If you're an iOS developer please check out our blog post on `RealmSwift integration with Combine <https://developer.mongodb.com/article/realm-cocoa-swiftui-combine>`__ 
 
-   .. code-block:: kotlin
+   The Realm team is proud to say that we've heard you, and we hope that you give this feature a try to simplify your code and improve your development experience.
 
-      val realm: Realm = Realm.getDefaultInstance();
-      val results: RealmResults<Person> = realm.where<Person>().beginsWith("name", "Jane").findAllAsync()
-      results.addChangeListener { liveResults ->
-         val frozenResults: RealmResults<Person> = liveResults.freeze()
-         val t  = Thread(Runnable {
-            assertTrue(frozenResults.isFrozen())
+   .. tabs::
 
-            // It is now possible to read objects on another thread
-            val person: Person = frozenResults.first()
-            person.name
-         })
-         t.start()
-         t.join()
-      }
-   
+     .. tab:: .NET
+       :tabid: .NET Code
 
+       .. code:: csharp
+
+          var realm = Realm.GetInstance();
+          var frozenResults = realm.All<Person>()
+            .Where(p => p.Name.StartsWith("Jane"))
+            .Freeze();
+
+          Assert.IsTrue(results.IsFrozen());
+          Task.Run(() =>
+          {
+             // it is now possible to read objects on another thread
+             var person = frozenResults.First();
+             Console.WriteLine($"Person from a background thread:  {person.Name}");
+          });
+
+     .. tab:: Kotlin 
+       :tabid: Kotlin Code
+
+       .. code:: Kotlin
+
+          val realm: Realm = Realm.getDefaultInstance();
+          val results: RealmResults<Person> = realm.where<Person>().beginsWith("name", "Jane").findAllAsync()
+          results.addChangeListener { liveResults ->
+             val frozenResults: RealmResults<Person> = liveResults.freeze()
+             val t  = Thread(Runnable {
+                assertTrue(frozenResults.isFrozen())
+
+                // It is now possible to read objects on another thread
+                val person: Person = frozenResults.first()
+                person.name
+                })
+             t.start()
+             t.join()
+          }
+
+ 
    Since Java needs immutable objects, we also updated our Java support so all Realm Observables and Flowables now emit frozen objects by default. This means that it should be possible to use all operators available in RxJava without either using ``Realm.copyFromRealm()`` or running into an ``IllegalStateException:``
 
    .. code-block:: java 
@@ -132,13 +161,28 @@ Realm Database 6.0: A New Architecture and Frozen Objects
 
    If you have feedback please post it in Github and the Realm team will check it out!
 
+     - `RealmJS <https://github.com/realm/realm-js>`__
+     - `RealmSwift <https://github.com/realm/realm-cocoa>`__
+     - `RealmJava <https://github.com/realm/realm-java>`__
+     - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
+
 .. summary::
 
    A Strong Foundation for the Future
    ----------------------------------
 
-   With the Realm Database 6.0 now released with Frozen Objects, we're now focused on hitting the next milestones on our roadmap as we bring MongoDB Realm to public beta and we will be revealing more on June 9th & 10th at `MongoDB .Live <https://www.mongodb.com/world>`__.
+   The Realm Core Database 6.0 now released with Frozen Objects and we're now focused on adding new features; such as new types, new SDKs, andunlocking new use cases for our developers. 
 
-   Want to learn more? Review the `documentation <https://realm.io/docs>`__.
 
-   Ready to get started? Get `Realm Core 6.0 and the SDK's <https://developer.mongodb.com/community/forums/t/realm-releases-core-6-and-multiple-sdk-updates/4276>`__.
+   Want to Ask a Question? Visit our `Forums <https://developer.mongodb.com/community/forums/c/realm/>`__
+
+   Want to make a feature request? Visit our `Feedback Portal <https://feedback.mongodb.com/forums/923521-realm>`__
+
+   Want to be notified of upcoming Realm events such as our iOS Hackathon in November2020? Visit our `Global Community Page <https://live.mongodb.com/realm-global-community/>`__
+
+
+   .. blockquote::
+      
+      Safe Harbor
+
+      The development, release, and timing of any features or functionality described for our products remains at our sole discretion. This information is merely intended to outline our general product direction and it should not be relied on in making a purchasing decision nor is this a commitment, promise or legal obligation to deliver any material, code, or functionality.

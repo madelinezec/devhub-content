@@ -1,0 +1,547 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/realm-functions.jpg
+
+.. meta-description::
+
+   The Realm SDK 10.0 is now Generally Available with new capabilities such as Cascading Deletes and new types like Decimal128.
+
+.. twitter::
+   :creator: @ianpward
+   :title: Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
+   :image: /images/social/twitter/twitter-realm-functions.jpg
+   :image-alt: Realm  
+
+   The Realm SDK 10.0 is now Generally Available with new capabilities such as Cascading Deletes and new types like Decimal128.
+
+.. og::
+   :title: Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
+   :image: /images/social/open-graph/og-realm-functions.jpg
+
+.. include:: /includes/authors/ward-ian.rst
+
+.. pubdate:: 2020-10-19
+
+.. type:: article
+
+.. level:: intermediate
+
+.. tags:: 
+
+   * Mobile
+   * Node.js
+   * .NET
+   * React
+
+.. languages::
+
+   * Java
+   * Swift
+   * JavaScript
+   * Kotlin
+   * Objective-C
+   * C#
+
+.. products::
+
+   * Realm
+
+===================================================================
+Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
+===================================================================
+ 
+.. introduction:: 
+
+   The Realm SDK 10.0 is now Generally Available with new capabilities such as Cascading Deletes and new types like Decimal128.
+
+.. content:: 
+
+   Release Highlights
+   ------------------
+
+   We're happy to announce that as of this month, the new Realm Mobile Database 10.0 is now Generally Available for our Java/Kotlin, Swift/Obj-C, and JavaScript SDKs. 
+
+   This is the culmination of all our hard work for the last year and lays a new foundation for Realm. With Realm 10.0 we've increased the stability of the database, and improved performance. We've responded to the Realm Community's feedback and built key new features like cascading deletes, to make it simpler to implement changes and maintain data integrity. We've also added new data types. 
+
+   `Realm .NET <https://developer.mongodb.com/article/realm-database-and-frozen-objects>`__ is now released as a feature-complete beta. And, we're promoting the Realm Web library to 1.0, replacing the MongoDB Stitch Browser SDK. Realm Studio is also getting released as 10.0 as a local Realm Database viewer for the 10.0 version of the SDKs.
+
+   With this release, the Realm SDKs also support all functionality unlocked by `MongoDB Realm <https://www.mongodb.com/realm>`__ . You can call a serverless function from your mobile app, making it simple to build a feature like sending a notification via Twilio. Or, you could use triggers to call a Square API once an Order object has been synced to MongoDB Realm. `Realm's Functions <https://docs.mongodb.com/realm/functions/>`__ and `Triggers <https://docs.mongodb.com/realm/triggers/>`__  speed up your development, and reduce the code you need to write as well as having to stand up and maintain web servers to wait for these requests.
+   And you now have full access to all of MongoDB Realm's `built-in authentication providers <https://docs.mongodb.com/realm/authentication/providers/>`__ , including the ability to call your own custom logic.
+
+   Cascading Deletes
+   -----------------
+
+   We're excited to announce that one of our most requested features - cascading deletes - is now available. Previous versions of Realm put the burden of cascading deletes on you as the developer. Now, we're glad to be reducing the complexity and amount of code you need to write. 
+
+   If you're a Realm user, you know that object relationships are a key part of the Realm Database. 
+   Realm doesn't impose restrictions on how you can link your objects, no matter how complex relationships become. Realm allows one-to-one, one-to-many, many-to-many, and backlinks. 
+   Realm stores relationships by reference, so even when you end up with a complicated object graph, Realm delivers incredibly fast lookups by traversing pointers.
+
+   But historically, some use cases prevented us from delivering cascading deletes. For instance, you might have wanted to delete a Customer object, but still keep a record of all of the Order objects they placed over the years. The Realm SDKs wouldn't know if a parent-child object relationship had strict ownership to safely allow for cascading deletes.
+
+   In this release, we've made cascading deletes possible by introducing a new type of object that we're calling Embedded Objects. With Embedded Objects, you can convey ownership to whichever object creates a link to the embedded object. Using embedded object references gives you the ability to delete all objects that are linked to the parent upon deletion.
+
+   Imagine you have a BusRoute object that has a list of BusStop embedded objects, and a BusDriver object who is assigned to the route. You want to delete BusRoute, and automatically delete only the BusStop objects, without deleting the BusDriver object, because he still works for the company and can drive other routes. Here's what it looks like: when you delete the BusRoute, the Realm SDK will automatically delete all BusStops. For the BusDriver objects you don't want deleted, you use a regular object reference. Your BusDriver objects will not be automatically deleted and can drive other routes. 
+
+   The Realm team is proud to say that we've heard you, and we hope that you give this feature a try to simplify your code and improve your development experience.
+
+   .. tabs::
+
+     .. tab:: Swift 
+       :tabid: Swift Code
+
+       .. code:: Swift
+
+            // Define an object with one embedded object
+            
+            class Contact: Object {
+                @objc dynamic var _id = ObjectId.generate()
+                @objc dynamic var name = ""
+         
+                // Embed a single object.
+                // Embedded object properties must be marked optional. 
+                @objc dynamic var address: Address? = nil
+         
+                override static func primaryKey() -> String? {
+                   return "_id"
+                }
+         
+                convenience init(name: String, address: Address) {
+                   self.init()
+                   self.name = name
+                   self.address = address
+                  }    
+                }
+
+            // Define an embedded object
+            class Address: EmbeddedObject {
+                @objc dynamic var street: String? = nil
+                @objc dynamic var city: String? = nil
+                @objc dynamic var country: String? = nil
+                @objc dynamic var postalCode: String? = nil
+            }
+
+            let sanFranciscoContact = realm.objects(Contact.self)
+            guard let sanFranciscoContact = realm.objects(Contact.self)
+                .filter("address.city = %@", "San Francisco")
+                .sorted(byKeyPath: "address.street")
+                 .first,
+            let sanFranciscoAddress = sanFranciscoContact.address else {
+                print("Could not find San Francisco Contact!")
+                return
+            }
+            
+            // prints City: San Francisco
+            print("City: \(sanFranciscoAddress.city ?? "nil")")
+
+            try! realm.write {
+               // Delete the instance from the realm.
+               realm.delete(sanFranciscoContact)
+            }
+
+            // now the embedded Address will be invalid.
+            // prints Is Invalidated: true
+            print("Is invalidated: \(sanFranciscoAddress.isInvalidated)")
+
+     .. tab:: Kotlin 
+       :tabid: Kotlin Code
+
+       .. code:: Kotlin
+
+            // Define an object containing one embedded object
+            open class Contact(
+                @RealmField("_id")
+                @PrimaryKey
+                var id: ObjectId = ObjectId(),
+                var name: String = "",
+                // Embed a single object.
+                // Embedded object properties must be marked optional
+                var address: Address? = null) : RealmObject() {}
+
+            // Define an embedded object
+            @RealmClass(embedded = true)
+            open class Address(
+                var street: String? = null,
+                var city: String? = null,
+                var country: String? = null,
+                var postalCode: String? = null
+            ): RealmObject() {}
+
+            // insert some data
+            realm.executeTransaction {
+                val contact = it.createObject<Contact>()
+                val address = it.createEmbeddedObject<Address>(contact, "address")
+                address.city = "San Francisco"
+                address.street = "495 3rd St"
+                contact.name = "Ian"
+            }
+            val sanFranciscoContact = realm.where<Contact>()
+                .equalTo("address.city", "San Francisco")
+                .sort("address.street").findFirst()
+         
+            Log.v("EXAMPLE", "City: ${sanFranciscoContact?.address?.city}")
+            // prints San Francisco
+
+            // Get a contact to delete which satisfied the previous query
+            val contact = realm.where<Contact>()
+                .equalTo("name", "Ian").findFirst()
+         
+            Log.v("EXAMPLE", "IAN = : ${contact?.name}")
+
+            realm.executeTransaction {
+                // Delete the contact instance from its realm.
+                contact?.deleteFromRealm()
+            }
+            // now lets print an address query
+            Log.v("EXAMPLE", "Number of addresses: ${realm.where<Address>().count()}") // == 0
+            if (BuildConfig.DEBUG && sanFranciscoContact?.isValid != false) {
+                error("Assertion failed") 
+            }  
+            Log.v("EXAMPLE", "sanFranciscoContact is valid: ${sanFranciscoContact?.address?.isValid}") // false
+
+     .. tab:: Javascript 
+       :tabid: Javascript Code
+
+       .. code:: js
+
+            const ContactSchema = {
+            name: "Contact",
+            primaryKey: "_id",
+            properties: {
+               _id: "objectId",
+               name: "string",
+               address: "Address", // Embed a single object
+            },
+            };
+
+            const AddressSchema = {
+            name: "Address",
+            embedded: true, // default: false
+            properties: {
+               street: "string?",
+               city: "string?",
+               country: "string?",
+               postalCode: "string?",
+            },
+            };
+
+            const sanFranciscoContact = realm.objects("Contact")
+                .filtered("address.city = 'San Francisco'")
+                .sorted("address.street");
+            
+            let ianContact = sanFranciscoContacts[0];
+            console.log(ianContact.address.city); // prints San Francisco
+            
+            realm.write(() => {
+            // Delete ian from the realm.
+
+                realm.delete(ianContact);
+            });
+
+            //now lets see print the same query returns - 
+            console.log(ianContact.address.city);
+            
+            // address returns null
+
+     .. tab:: .NET
+       :tabid: .NET Code
+
+       .. code:: csharp 
+
+               public class Contact : RealmObject
+            {
+               [PrimaryKey]
+               [MapTo("_id")]
+               public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+            ​
+               [MapTo("name")]
+               public string Name { get; set; }
+            ​
+               // Embed a single object.
+               [MapTo("address")]
+               public Address Address { get; set; }
+            }
+
+
+            public class Address : EmbeddedObject
+            {
+               [MapTo("street")]
+               public string Street { get; set; }
+            ​
+               [MapTo("city")]
+               public string City { get; set; }
+            ​
+               [MapTo("country")]
+               public string Country { get; set; }
+            ​
+               [MapTo("postalCode")]
+               public string PostalCode { get; set; }
+            }
+            ​
+            var sanFranciscoContact = realm.All<Contact>()
+                                          .Filter("Contact.Address.City == 'San Francisco'").
+                                          .OrderBy(c => c.Address.Street)
+                                          .First();
+            ​
+            // Prints Ian
+            Console.WriteLine(sanFranciscoContact.Name);
+            ​
+            var iansAddress = sanFranciscoContact.Address;
+            ​
+            // Prints San Francisco
+            Console.WriteLine(iansAddress.City);
+            ​
+            // Delete an object with a transaction
+            realm.Write(() =>
+            {
+               realm.Remove(sanFranciscoContact);
+            });
+            ​
+            // Prints false - since the parent object was deleted, the embedded address
+            // was removed too.
+            Console.WriteLine(iansAddress.IsValid);
+            ​
+            // This will throw an exception because the object no longer belongs
+            // to the Realm.
+            // Console.WriteLine(iansAddress.City);
+            
+
+
+
+
+   Want to try it out? Head over to our docs page for your respective SDK and take it for a spin!
+      - `iOS SDK <https://docs.mongodb.com/realm/ios/embedded-objects/>`__
+      - `Android SDK <https://docs.mongodb.com/realm/android/embedded-objects/>`__
+      - `React Native SDK <https://docs.mongodb.com/realm/react-native/embedded-objects/>`__
+      - `Node.js SDK <https://docs.mongodb.com/realm/node/embedded-objects/>`__
+      - `.NET SDK <https://docs.mongodb.com/realm/dotnet/embedded-objects>`__
+
+
+
+
+   ObjectIds
+   ---------
+
+   ObjectIds are a new type introduced to the Realm SDKs, used to provide uniqueness between objects. Previously, you would need to create your own unique identifier, using a function you wrote or imported. You'd then cast it to a string or some other Realm primitive type. Now, ObjectIds save space by being smaller, making it easier to work with your data. 
+
+   An ObjectId is a 12-byte hexadecimal value that follows this order:
+
+   - a 4-byte timestamp value, representing the ObjectId's creation, measured in seconds since the Unix epoch 
+   - a 5-byte random value 
+   - a 3-byte incrementing counter, initialized to a random value
+
+   Because of the way ObjectIds are generated - with a timestamp value in the first 4 bytes - you can sort them by time using the ObjectId field. You no longer need to create another timestamp field for ordering. ObjectIDs are also smaller than the string representation of UUID. A UUID string column will take 36 bytes, whereas an ObjectId is only 12. 
+
+   The Realm SDKs contain a built-in method to automatically generate an ObjectId.
+
+   .. tabs::
+
+     .. tab:: Swift 
+       :tabid: Swift Code
+
+       .. code:: Swift
+
+            class Task: Object {
+                @objc dynamic var _id: ObjectId = ObjectId.generate()
+                @objc dynamic var _partition: ProjectId? = nil
+                @objc dynamic var name = ""
+
+            override static func primaryKey() -> String? {
+                return "_id"
+            }
+    
+            convenience init(partition: String, name: String) {
+                self.init()
+                self._partition = partition
+                self.name = name
+               }
+            }
+
+     .. tab:: Kotlin 
+       :tabid: Kotlin Code
+
+       .. code:: Kotlin
+
+            open class Task(
+                @PrimaryKey var _id: ObjectId = ObjectId(),
+                var name: String = "Task", 
+                _partition: String = "My Project") : RealmObject() {}
+
+     .. tab:: Javascript 
+       :tabid: Javascript Code
+
+       .. code:: js
+
+            const TaskSchema = {
+               name: "Task",
+               properties: {
+                  _id: "objectId",
+                  _partition: "string?",
+                  name: "string",
+                  },
+               primaryKey: "_id",
+            };
+
+     .. tab:: .NET
+       :tabid: .NET Code
+
+       .. code:: csharp 
+
+            public class Task : RealmObject
+            {
+               [PrimaryKey]
+               [MapTo("_id")]
+               public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+   
+               [MapTo("_partition")]
+               public string Partition { get; set; }
+
+               [MapTo("name")]
+               public string Name { get; set; }
+
+            }
+         
+
+   Take a look at our documentation on Realm models by going here - 
+    - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
+    - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
+    - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
+    - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
+    - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
+
+ 
+
+
+
+   Decimal128
+   ----------
+
+   We're also introducing Decimal128 as a new type in the Realm SDKs. With Decimal128, you're able to store the exact value of a decimal type, and avoid the potential for rounding errors in calculations.  
+
+   In previous versions of Realm, you were limited to int64 and double, which only stored 64 bits of range. Decimal128 is a 16 byte decimal floating-point number format. It's intended for calculations on decimal numbers where high levels of precision are required, like financial (i.e. tax calculations, currency conversions) and scientific computations. 
+
+   Decimal128 has over 128 bits of range and precision, it supports 34 decimal digits of significance and an exponent range of −6143 to +6144. It's become the industry standard, and we're excited to see how the community leverages this new type in your mathematical calculations. Let us know if it unlocks new use cases for you.
+
+   .. tabs::
+
+     .. tab:: Swift 
+       :tabid: Swift Code
+
+       .. code:: Swift
+
+            class Task: Object {
+               @objc dynamic var _id: ObjectId = ObjectId.generate()
+               @objc dynamic var _partition: String = ""
+               @objc dynamic var name: String = ""
+               @objc dynamic var owner: String? = nil
+               @objc dynamic var myDecimal: Decimal128? = nil
+               override static func primaryKey() -> String? {
+               return "_id"
+            }
+
+     .. tab:: Kotlin 
+       :tabid: Kotlin Code
+
+       .. code:: Kotlin
+
+            open class Task(_name: String = "Task") : RealmObject() {
+               @PrimaryKey var _id: ObjectId = ObjectId()
+               var name: String = _name
+               var owner: String? = null
+               var myDecimal: Decimal128? = null
+            }
+
+     .. tab:: Javascript 
+       :tabid: Javascript Code
+
+       .. code:: js
+
+            const TaskSchema = {
+               name: "Task",
+               properties: {
+                  _id: "objectId",
+                  _partition: "string?",
+                  myDecimal: "decimal128?",
+                  name: "string",
+               },
+               primaryKey: "_id",
+            };
+
+     .. tab:: .NET
+       :tabid: .NET Code
+
+       .. code:: csharp 
+
+            public class Foo : RealmObject
+            {
+               [PrimaryKey]
+               [MapTo("_id")]
+               public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+
+               [MapTo("_partition")]
+               public string Partition { get; set; }
+
+               public string Name { get; set; };
+
+               public Decimal128 MyDecimal { get; set; }
+            }
+
+    Take a look at our documentation on Realm models by going here - 
+
+    - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
+    - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
+    - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
+    - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
+    - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
+
+
+
+
+
+
+   Open Sourcing Realm Sync
+   ------------------------
+
+   Since launching MongoDB Realm and `Realm Sync <https://www.mongodb.com/realm/mobile/sync>`__ in June, we've also made the decision to open source the code for Realm Sync.
+
+   Since Realm's founding, we've committed to open source principles in our work. As we continue to invest in building the Realm SDKs and MongoDB Realm, we want to remain transparent in how we're developing our products.
+
+   We want you to see the algorithm we're using for Realm Sync's automatic conflict resolution, built upon Operational Transformation. Know that any app you build with Realm now has the source algorithm available. We hope that you'll give us feedback and show us the projects you're building with it.
+
+   `See the repo to check out the code <https://github.com/realm/realm-core/tree/monorepo>`__
+
+   
+
+
+   About the New Versioning
+   ------------------------
+
+   You may have noticed that with this release, we've updated our versioning across all SDKs to Realm 10.0. Our hope is that by aligning all SDKs, we're making it easier to know how database versions align across languages. We can't promise that all versions will stay aligned in the future. But for now, we hope this helps you to notice major changes and avoid accidental upgrades.
+
+
+
+
+   Looking Ahead
+   -------------
+
+   The Realm SDKs continue to evolve as a part of MongoDB, and we truly believe that this new functionality gives you the best experience yet when using Realm. Looking ahead, we're continuing to invest in providing a best-in-class solution, and are working to to support new platforms and use cases. 
+   
+   Stay tuned by following `@realm <https://twitter.com/realm>`__ on Twitter. 
+
+   Want to Ask a Question? Visit our `Forums <https://developer.mongodb.com/community/forums/c/realm/>`__
+
+   Want to make a feature request? Visit our `Feedback Portal <https://feedback.mongodb.com/forums/923521-realm>`__
+
+   Want to be notified of upcoming Realm events such as our iOS Hackathon in November 2020? Visit our `Global Community Page <https://live.mongodb.com/realm-global-community/>`__
+
+   Running into issues? Visit our Github to file an Issue
+     - `RealmJS <https://github.com/realm/realm-js>`__
+     - `RealmSwift <https://github.com/realm/realm-cocoa>`__
+     - `RealmJava <https://github.com/realm/realm-java>`__
+     - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
+
+
+   .. blockquote::
+      Safe Harbor
+
+      The development, release, and timing of any features or functionality described for our products remains at our sole discretion. This information is merely intended to outline our general product direction and it should not be relied on in making a purchasing decision nor is this a commitment, promise or legal obligation to deliver any material, code, or functionality.
