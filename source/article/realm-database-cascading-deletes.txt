@@ -61,12 +61,12 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
 
    We're happy to announce that as of this month, the new Realm Mobile Database 10.0 is now Generally Available for our Java/Kotlin, Swift/Obj-C, and JavaScript SDKs. 
 
-   This is the culmination of all our hard work for the last year and lays a new foundation for Realm. With Realm 10.0 we've increased the stability of the database, and improved performance. We've responded to the Realm Community's feedback and built key new features like cascading deletes, to make it simpler to implement changes and maintain data integrity. We've also added new data types. 
+   This is the culmination of all our hard work for the last year and lays a new foundation for Realm. With Realm 10.0, we've increased the stability of the database and improved performance. We've responded to the Realm Community's feedback and built key new features, like cascading deletes, to make it simpler to implement changes and maintain data integrity. We've also added new data types. 
 
    `Realm .NET <https://developer.mongodb.com/article/realm-database-and-frozen-objects>`__ is now released as a feature-complete beta. And, we're promoting the Realm Web library to 1.0, replacing the MongoDB Stitch Browser SDK. Realm Studio is also getting released as 10.0 as a local Realm Database viewer for the 10.0 version of the SDKs.
 
-   With this release, the Realm SDKs also support all functionality unlocked by `MongoDB Realm <https://www.mongodb.com/realm>`__ . You can call a serverless function from your mobile app, making it simple to build a feature like sending a notification via Twilio. Or, you could use triggers to call a Square API once an Order object has been synced to MongoDB Realm. `Realm's Functions <https://docs.mongodb.com/realm/functions/>`__ and `Triggers <https://docs.mongodb.com/realm/triggers/>`__  speed up your development, and reduce the code you need to write as well as having to stand up and maintain web servers to wait for these requests.
-   And you now have full access to all of MongoDB Realm's `built-in authentication providers <https://docs.mongodb.com/realm/authentication/providers/>`__ , including the ability to call your own custom logic.
+   With this release, the Realm SDKs also support all functionality unlocked by `MongoDB Realm <https://www.mongodb.com/realm>`__. You can call a serverless function from your mobile app, making it simple to build a feature like sending a notification via Twilio. Or, you could use triggers to call a Square API once an Order object has been synced to MongoDB Realm. `Realm's Functions <https://docs.mongodb.com/realm/functions/>`__ and `Triggers <https://docs.mongodb.com/realm/triggers/>`__  speed up your development and reduce the code you need to write as well as having to stand up and maintain web servers to wait for these requests.
+   And you now have full access to all of MongoDB Realm's `built-in authentication providers <https://docs.mongodb.com/realm/authentication/providers/>`__, including the ability to call your own custom logic.
 
    Cascading Deletes
    -----------------
@@ -77,17 +77,17 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
    Realm doesn't impose restrictions on how you can link your objects, no matter how complex relationships become. Realm allows one-to-one, one-to-many, many-to-many, and backlinks. 
    Realm stores relationships by reference, so even when you end up with a complicated object graph, Realm delivers incredibly fast lookups by traversing pointers.
 
-   But historically, some use cases prevented us from delivering cascading deletes. For instance, you might have wanted to delete a Customer object, but still keep a record of all of the Order objects they placed over the years. The Realm SDKs wouldn't know if a parent-child object relationship had strict ownership to safely allow for cascading deletes.
+   But historically, some use cases prevented us from delivering cascading deletes. For instance, you might have wanted to delete a Customer object but still keep a record of all of the Order objects they placed over the years. The Realm SDKs wouldn't know if a parent-child object relationship had strict ownership to safely allow for cascading deletes.
 
    In this release, we've made cascading deletes possible by introducing a new type of object that we're calling Embedded Objects. With Embedded Objects, you can convey ownership to whichever object creates a link to the embedded object. Using embedded object references gives you the ability to delete all objects that are linked to the parent upon deletion.
 
-   Imagine you have a BusRoute object that has a list of BusStop embedded objects, and a BusDriver object who is assigned to the route. You want to delete BusRoute, and automatically delete only the BusStop objects, without deleting the BusDriver object, because he still works for the company and can drive other routes. Here's what it looks like: when you delete the BusRoute, the Realm SDK will automatically delete all BusStops. For the BusDriver objects you don't want deleted, you use a regular object reference. Your BusDriver objects will not be automatically deleted and can drive other routes. 
+   Imagine you have a BusRoute object that has a list of BusStop embedded objects, and a BusDriver object who is assigned to the route. You want to delete BusRoute and automatically delete only the BusStop objects, without deleting the BusDriver object, because he still works for the company and can drive other routes. Here's what it looks like: When you delete the BusRoute, the Realm SDK will automatically delete all BusStops. For the BusDriver objects you don't want deleted, you use a regular object reference. Your BusDriver objects will not be automatically deleted and can drive other routes. 
 
    The Realm team is proud to say that we've heard you, and we hope that you give this feature a try to simplify your code and improve your development experience.
 
    .. tabs::
 
-     .. tab:: Swift 
+     .. tab:: Swift
        :tabid: Swift Code
 
        .. code:: Swift
@@ -143,7 +143,7 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
             // prints Is Invalidated: true
             print("Is invalidated: \(sanFranciscoAddress.isInvalidated)")
 
-     .. tab:: Kotlin 
+     .. tab:: Kotlin
        :tabid: Kotlin Code
 
        .. code:: Kotlin
@@ -199,7 +199,7 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
             }  
             Log.v("EXAMPLE", "sanFranciscoContact is valid: ${sanFranciscoContact?.address?.isValid}") // false
 
-     .. tab:: Javascript 
+     .. tab:: Javascript
        :tabid: Javascript Code
 
        .. code:: js
@@ -310,11 +310,12 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
 
 
    Want to try it out? Head over to our docs page for your respective SDK and take it for a spin!
-      - `iOS SDK <https://docs.mongodb.com/realm/ios/embedded-objects/>`__
-      - `Android SDK <https://docs.mongodb.com/realm/android/embedded-objects/>`__
-      - `React Native SDK <https://docs.mongodb.com/realm/react-native/embedded-objects/>`__
-      - `Node.js SDK <https://docs.mongodb.com/realm/node/embedded-objects/>`__
-      - `.NET SDK <https://docs.mongodb.com/realm/dotnet/embedded-objects>`__
+   
+   - `iOS SDK <https://docs.mongodb.com/realm/ios/embedded-objects/>`__
+   - `Android SDK <https://docs.mongodb.com/realm/android/embedded-objects/>`__
+   - `React Native SDK <https://docs.mongodb.com/realm/react-native/embedded-objects/>`__
+   - `Node.js SDK <https://docs.mongodb.com/realm/node/embedded-objects/>`__
+   - `.NET SDK <https://docs.mongodb.com/realm/dotnet/embedded-objects>`__
 
 
 
@@ -326,9 +327,9 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
 
    An ObjectId is a 12-byte hexadecimal value that follows this order:
 
-   - a 4-byte timestamp value, representing the ObjectId's creation, measured in seconds since the Unix epoch 
-   - a 5-byte random value 
-   - a 3-byte incrementing counter, initialized to a random value
+   - A 4-byte timestamp value, representing the ObjectId's creation, measured in seconds since the Unix epoch 
+   - A 5-byte random value 
+   - A 3-byte incrementing counter, initialized to a random value
 
    Because of the way ObjectIds are generated - with a timestamp value in the first 4 bytes - you can sort them by time using the ObjectId field. You no longer need to create another timestamp field for ordering. ObjectIDs are also smaller than the string representation of UUID. A UUID string column will take 36 bytes, whereas an ObjectId is only 12. 
 
@@ -402,12 +403,13 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
             }
          
 
-   Take a look at our documentation on Realm models by going here - 
-    - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
-    - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
-    - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
-    - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
-    - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
+   Take a look at our documentation on Realm models by going here:
+
+   - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
+   - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
+   - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
+   - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
+   - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
 
  
 
@@ -416,15 +418,15 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
    Decimal128
    ----------
 
-   We're also introducing Decimal128 as a new type in the Realm SDKs. With Decimal128, you're able to store the exact value of a decimal type, and avoid the potential for rounding errors in calculations.  
+   We're also introducing Decimal128 as a new type in the Realm SDKs. With Decimal128, you're able to store the exact value of a decimal type and avoid the potential for rounding errors in calculations.  
 
-   In previous versions of Realm, you were limited to int64 and double, which only stored 64 bits of range. Decimal128 is a 16 byte decimal floating-point number format. It's intended for calculations on decimal numbers where high levels of precision are required, like financial (i.e. tax calculations, currency conversions) and scientific computations. 
+   In previous versions of Realm, you were limited to int64 and double, which only stored 64 bits of range. Decimal128 is a 16-byte decimal floating-point number format. It's intended for calculations on decimal numbers where high levels of precision are required, like financial (i.e. tax calculations, currency conversions) and scientific computations. 
 
-   Decimal128 has over 128 bits of range and precision, it supports 34 decimal digits of significance and an exponent range of −6143 to +6144. It's become the industry standard, and we're excited to see how the community leverages this new type in your mathematical calculations. Let us know if it unlocks new use cases for you.
+   Decimal128 has over 128 bits of range and precision. It supports 34 decimal digits of significance and an exponent range of −6143 to +6144. It's become the industry standard, and we're excited to see how the community leverages this new type in your mathematical calculations. Let us know if it unlocks new use cases for you.
 
    .. tabs::
 
-     .. tab:: Swift 
+     .. tab:: Swift
        :tabid: Swift Code
 
        .. code:: Swift
@@ -486,13 +488,13 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
                public Decimal128 MyDecimal { get; set; }
             }
 
-    Take a look at our documentation on Realm models by going here - 
+   Take a look at our documentation on Realm models by going here - 
 
-    - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
-    - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
-    - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
-    - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
-    - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
+   - `iOS SDK <https://docs.mongodb.com/realm/ios/objects/>`__
+   - `Android SDK <https://docs.mongodb.com/realm/android/objects/>`__
+   - `React Native SDK <https://docs.mongodb.com/realm/react-native/objects/>`__
+   - `Node.js SDK <https://docs.mongodb.com/realm/node/objects/>`__
+   - `.NET SDK <https://docs.mongodb.com/realm/dotnet/objects/>`__
 
 
 
@@ -510,7 +512,7 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
 
    `See the repo to check out the code <https://github.com/realm/realm-core/tree/monorepo>`__
 
-   
+
 
 
    About the New Versioning
@@ -524,7 +526,7 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
    Looking Ahead
    -------------
 
-   The Realm SDKs continue to evolve as a part of MongoDB, and we truly believe that this new functionality gives you the best experience yet when using Realm. Looking ahead, we're continuing to invest in providing a best-in-class solution, and are working to to support new platforms and use cases. 
+   The Realm SDKs continue to evolve as a part of MongoDB, and we truly believe that this new functionality gives you the best experience yet when using Realm. Looking ahead, we're continuing to invest in providing a best-in-class solution and are working to to support new platforms and use cases. 
    
    Stay tuned by following `@realm <https://twitter.com/realm>`__ on Twitter. 
 
@@ -534,11 +536,12 @@ Realm SDKs 10.0: Cascading Deletes, ObjectIds, Decimal128, and more
 
    Want to be notified of upcoming Realm events such as our iOS Hackathon in November 2020? Visit our `Global Community Page <https://live.mongodb.com/realm-global-community/>`__
 
-   Running into issues? Visit our Github to file an Issue
-     - `RealmJS <https://github.com/realm/realm-js>`__
-     - `RealmSwift <https://github.com/realm/realm-cocoa>`__
-     - `RealmJava <https://github.com/realm/realm-java>`__
-     - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
+   Running into issues? Visit our Github to file an Issue.
+
+   - `RealmJS <https://github.com/realm/realm-js>`__
+   - `RealmSwift <https://github.com/realm/realm-cocoa>`__
+   - `RealmJava <https://github.com/realm/realm-java>`__
+   - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
 
 
    .. blockquote::

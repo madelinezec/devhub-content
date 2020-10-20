@@ -50,9 +50,9 @@
    * MongoDB
    * Realm
 
-=========================================================
+==============================================================
 Realm Core Database 6.0: A New Architecture and Frozen Objects
-=========================================================
+==============================================================
 
 .. introduction::
 
@@ -161,10 +161,10 @@ Realm Core Database 6.0: A New Architecture and Frozen Objects
 
    If you have feedback please post it in Github and the Realm team will check it out!
 
-     - `RealmJS <https://github.com/realm/realm-js>`__
-     - `RealmSwift <https://github.com/realm/realm-cocoa>`__
-     - `RealmJava <https://github.com/realm/realm-java>`__
-     - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
+   - `RealmJS <https://github.com/realm/realm-js>`__
+   - `RealmSwift <https://github.com/realm/realm-cocoa>`__
+   - `RealmJava <https://github.com/realm/realm-java>`__
+   - `RealmDotNet <https://github.com/realm/realm-dotnet>`__
 
 .. summary::
 
