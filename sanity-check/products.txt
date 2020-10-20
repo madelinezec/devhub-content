@@ -9,3 +9,4 @@ Ops Manager
 Realm
 Realm Studio
 Stitch
+VS Code

@@ -8,6 +8,7 @@ BSON
 Change Streams
 Cloud
 Containers
+CRUD
 Data
 Data Structures
 Data Visualization
@@ -38,5 +39,6 @@ Testing
 Time Series
 Transactions
 University
+VS Code
 Public Speaking
 Speaker Program
