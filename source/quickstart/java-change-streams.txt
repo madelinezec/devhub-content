@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-02-27
 
-.. updated-date:: 2020-02-27
+.. updated-date:: 2020-10-21
 
 .. type:: quickstart
 
@@ -42,6 +42,8 @@ Java - Change Streams
 =====================
 
 .. introduction::
+
+   .. include:: /includes/callouts/java-updates.rst
 
    Introduction
    ------------
@@ -532,9 +534,7 @@ Java - Change Streams
    
       import java.util.List;
       import java.util.function.Consumer;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-   
+
       import static com.mongodb.client.model.Aggregates.match;
       import static com.mongodb.client.model.Filters.eq;
       import static com.mongodb.client.model.Filters.in;
@@ -547,7 +547,6 @@ Java - Change Streams
       public class ChangeStreams {
    
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               ConnectionString connectionString = new ConnectionString(System.getProperty("mongodb.uri"));
               CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
               CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);

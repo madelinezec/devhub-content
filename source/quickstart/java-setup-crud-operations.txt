@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-02-29
 
-.. updated-date:: 2020-02-29
+.. updated-date:: 2020-10-21
 
 .. type:: quickstart
 
@@ -42,6 +42,8 @@ MongoDB & Java - CRUD Operations Tutorial
 =========================================
 
 .. introduction::
+
+   .. include:: /includes/callouts/java-updates.rst
 
    Introduction
    ------------
@@ -275,13 +277,10 @@ MongoDB & Java - CRUD Operations Tutorial
 
       import java.util.ArrayList;
       import java.util.List;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       public class Connection {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               String connectionString = System.getProperty("mongodb.uri");
               try (MongoClient mongoClient = MongoClients.create(connectionString)) {
                   List<Document> databases = mongoClient.listDatabases().into(new ArrayList<>());
@@ -455,13 +454,9 @@ MongoDB & Java - CRUD Operations Tutorial
       import com.mongodb.client.MongoDatabase;
       import org.bson.Document;
 
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-
       public class Create {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
 
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
@@ -526,15 +521,12 @@ MongoDB & Java - CRUD Operations Tutorial
       import org.bson.types.ObjectId;
 
       import java.util.Random;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       import static java.util.Arrays.asList;
 
       public class Create {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
 
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
@@ -717,8 +709,6 @@ MongoDB & Java - CRUD Operations Tutorial
       import java.util.ArrayList;
       import java.util.List;
       import java.util.Random;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       import static java.util.Arrays.asList;
 
@@ -727,7 +717,6 @@ MongoDB & Java - CRUD Operations Tutorial
           private static final Random rand = new Random();
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
 
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
@@ -848,8 +837,6 @@ MongoDB & Java - CRUD Operations Tutorial
 
       import java.util.ArrayList;
       import java.util.List;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       import static com.mongodb.client.model.Filters.*;
       import static com.mongodb.client.model.Projections.*;
@@ -858,7 +845,6 @@ MongoDB & Java - CRUD Operations Tutorial
       public class Read {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
                   MongoCollection<Document> gradesCollection = sampleTrainingDB.getCollection("grades");
@@ -1102,8 +1088,6 @@ MongoDB & Java - CRUD Operations Tutorial
       import java.util.ArrayList;
       import java.util.List;
       import java.util.function.Consumer;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       import static com.mongodb.client.model.Filters.*;
       import static com.mongodb.client.model.Projections.*;
@@ -1112,7 +1096,6 @@ MongoDB & Java - CRUD Operations Tutorial
       public class Read {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
                   MongoCollection<Document> gradesCollection = sampleTrainingDB.getCollection("grades");
@@ -1189,9 +1172,6 @@ MongoDB & Java - CRUD Operations Tutorial
       import org.bson.conversions.Bson;
       import org.bson.json.JsonWriterSettings;
 
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-
       import static com.mongodb.client.model.Filters.and;
       import static com.mongodb.client.model.Filters.eq;
       import static com.mongodb.client.model.Updates.*;
@@ -1199,7 +1179,6 @@ MongoDB & Java - CRUD Operations Tutorial
       public class Update {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               JsonWriterSettings prettyPrint = JsonWriterSettings.builder().indent(true).build();
 
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
@@ -1476,9 +1455,6 @@ MongoDB & Java - CRUD Operations Tutorial
       import org.bson.conversions.Bson;
       import org.bson.json.JsonWriterSettings;
 
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-
       import static com.mongodb.client.model.Filters.and;
       import static com.mongodb.client.model.Filters.eq;
       import static com.mongodb.client.model.Updates.*;
@@ -1486,7 +1462,6 @@ MongoDB & Java - CRUD Operations Tutorial
       public class Update {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               JsonWriterSettings prettyPrint = JsonWriterSettings.builder().indent(true).build();
 
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
@@ -1563,16 +1538,12 @@ MongoDB & Java - CRUD Operations Tutorial
       import org.bson.Document;
       import org.bson.conversions.Bson;
 
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-
       import static com.mongodb.client.model.Filters.eq;
       import static com.mongodb.client.model.Filters.gte;
 
       public class Delete {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
 
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
@@ -1692,17 +1663,12 @@ MongoDB & Java - CRUD Operations Tutorial
       import org.bson.conversions.Bson;
       import org.bson.json.JsonWriterSettings;
 
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
-
       import static com.mongodb.client.model.Filters.eq;
       import static com.mongodb.client.model.Filters.gte;
 
       public class Delete {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
-
               try (MongoClient mongoClient = MongoClients.create(System.getProperty("mongodb.uri"))) {
                   MongoDatabase sampleTrainingDB = mongoClient.getDatabase("sample_training");
                   MongoCollection<Document> gradesCollection = sampleTrainingDB.getCollection("grades");

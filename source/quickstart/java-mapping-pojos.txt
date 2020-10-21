@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-01-07
 
-.. updated-date:: 2020-01-23
+.. updated-date:: 2020-10-21
 
 .. type:: quickstart
 
@@ -42,6 +42,8 @@ Java - Mapping POJOs
 ====================
 
 .. introduction::
+
+   .. include:: /includes/callouts/java-updates.rst
 
    Introduction
    ------------
@@ -323,8 +325,6 @@ Java - Mapping POJOs
 
       import java.util.ArrayList;
       import java.util.List;
-      import java.util.logging.Level;
-      import java.util.logging.Logger;
 
       import static com.mongodb.client.model.Filters.eq;
       import static java.util.Collections.singletonList;
@@ -334,7 +334,6 @@ Java - Mapping POJOs
       public class MappingPOJO {
 
           public static void main(String[] args) {
-              Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
               ConnectionString connectionString = new ConnectionString(System.getProperty("mongodb.uri"));
               CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
               CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
