@@ -20,7 +20,7 @@
  
 .. include:: /includes/authors/karlsson-joe.rst
 
-.. pubdate:: 2020-10-30
+.. pubdate:: 2020-10-20
 
 .. type:: how-to
 
@@ -409,7 +409,6 @@ How To Use The MongoDB Visual Studio Code Plugin
    .. code:: javascript
 
       // Run an aggregation to view total sales for each product in 2014.
-
       const aggregation = [
          { $match: {
             date: {
