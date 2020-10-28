@@ -1,0 +1,411 @@
+:template: devhub-article
+
+.. ---------------------------------------------------------------
+.. META FIELDS FOR SEO / SOCIAL
+.. ---------------------------------------------------------------
+
+.. meta-description:: 
+
+   Learn about the journey from developer to solutions architect with Tosin Ajayi.
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: Learn about the journey from developer to solutions architect with Tosin Ajayi.
+   :image: /images/social/twitter/mongodb-podcast.png
+   :image-alt: MongoDB Podcast
+
+   Learn about the journey from developer to solutions architect with Tosin Ajayi.
+
+.. og::
+   :url: http://developer.mongodb.com/article/
+   :type: article
+   :title: Learn about the journey from developer to solutions architect with Tosin Ajayi.
+   :image: /images/social/open-graph/og-mongodb-podcast.png
+ 
+   Learn about the journey from developer to solutions architect with Tosin Ajayi.
+
+.. ---------------------------------------------------------------
+.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
+.. ---------------------------------------------------------------
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-10-26
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Technical
+
+.. products::
+
+   * MongoDB
+
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
+.. ---------------------------------------------------------------
+.. ARTICLE CONTENT
+.. ---------------------------------------------------------------
+
+=====================================
+From Developer to SA with Tosin Ajayi
+=====================================
+ 
+.. introduction::
+
+   Developers, engineers, and solutions architects do a lot of the same things. These roles are each very technical, involve developing software,
+   and require a deep understanding of data. They do, however, differ in many ways. In this article, we're presenting the transcript
+   from a conversation between myself, Nic Raboy, and Tosin Ajayi that took place on October 23rd, 2020. In this episode of the podcast,
+   Tosin shares details of his journey from a developer to a solutions architect and more recently to a leader on the Solutions Architecture team. Tosin's journey is a terrific example of someone leaning into their strengths and becoming an inspiration, a mentor, and a leader.
+
+   If you're an engineer, developer, or in a similar role and considering your options, read on. I think you'll enjoy this content.
+
+.. content::
+
+   .. youtube:: LMyg3gwr6nY
+
+   Michael Lynn (00:57):
+   Tosin, welcome to the show. Would you give the folks who are tuning in a little bit of a description? Who are you?
+
+   Tosin Ajayi (01:03):
+   Yeah, thanks for the introduction, Mike. So I'm Tosin Ajayi, as you mentioned. I have been at MongoDB now for about four and three quarters, maybe four-and-a-half years, somewhere thereabout, a good minute certainly by MongoDB standards, right? Especially how fast we're growing. Well, before I came to MongoDB, actually before I got into pre-sales altogether, I actually started my career in development, right? So I'm actually going to talk to you a little about that later, but I have a bachelor's degree in Computer Science, master's in Electrical Engineering. So definitely a techie by education, and by design, by preference, and all those kind of things, you know?
+
+   .. blockquote::
+
+      "...Pre-sales is as much of a science as it is an art, right? If you master the art component, you know how to talk to people, you know how to engage them, find commonalities, you find that they are a little bit more receptive to what you have to say."
+
+   Tosin Ajayi (01:48):
+   But today, I lead a team of solution architects worldwide for our corporate business, right? So I run the Corporate Solution Architecture team, as well as building out this new team of associate solution architects called our Pre-Sale Service Center, right? Which I'm super excited about, and I can talk about that later as well. In fact, what will be interesting to talk about will be the transition from maybe the traditional way of how people become solution architects, right? Which obviously, Mike, you've been a solution architect in your career, so you can certainly relate to a different way of actually getting there, maybe getting introduced to that field much earlier in your career. So I became a solution architect actually just out of interest, man. You know what I mean? It was trying to understand what customers do, understand their problems, I was heads down coding all the time, anyway, it made a transition to solution architecture because I just wanted to get closer to the customers.
+
+   Tosin Ajayi (02:48):
+   By background, I mean, he totally said to tell you about myself, so I'll tell you a little bit about my history as well, Mike. I'm actually Nigerian, so I was born and raised in Nigeria. Yeah, go figure. And started basically in all the sciences and math and so-and-so. I've always been predisposed to technology, and happy to be here, happy to talk more about my history. Looking for this to be a very fun conversation, man.
+
+   Michael Lynn (03:17):
+   Awesome. Yeah, we really appreciate you joining us. As you mentioned, I did spend time here at MongoDB as a solutions architect and I think the role is one that I don't think that I would have seen myself in, way back when I was working as a developer, working as a technology architect in FinServ. But as I started to get into the role, I found that the skillset required is very similar to that required of an engineer. But you also get to use some of those skills like communication, and interpersonal relationships. How have you found that to be aligned with your own personal preferences around what you do?
+
+   Tosin Ajayi (04:01):
+   Yeah, I mean, that's a really good point because it really goes back to what I mentioned earlier, right? You mentioned communication and so, I've always liked engaging with people and obviously not all developers are created equal, so I'm talking more than others, and so on. So, I've always enjoyed technology, but I've also always enjoyed just shooting the breeze with people, talking tech, talking all kinds of things. I think Mike, you and I always talk about things that we do outside of work like jiu-jitsu, for example, right?
+
+   Tosin Ajayi (04:36):
+   So I enjoy things like that, and ultimately what I found personally, at least for me was in development, while I was good and I enjoyed it, I find myself asking a very critical question is, every time a feature request comes in, right? Every time we have to fix a bug, every time there's a new epic story, so to speak, right? How did that come about? Who cares? Why are we doing it, right? And I constantly find myself asking those questions. And while I will find that answer, I felt that I wanted to hear it more from the customer, right? So my first transition, even while I was in development, was into something called customer advocacy at my old job where I was a developer at, right? So I was somewhat of a customer advocate whilst I would still be a developer, right? And I figured, I enjoy talking to customers, wanted to learn more. And I started researching fields and roles that got me into a realm where I could communicate more with people and I ended up in pre-sales.
+
+   Nic Raboy (05:37):
+   So would you say that you were looking to bring more purpose to your developer journey by engaging with the people who were using what you were developing?
+
+   Tosin Ajayi (05:45):
+   Yeah for sure, right? I mean, I would love to be altruistic about it Nic, right? Certainly, you know what I mean? But certainly the altruism is part of it, but a part of it was also frankly speaking curiosity, you know what I mean? I enjoy talking to customers, I enjoyed solving problems, right? And I figured what could I do that brought both of those things together? You know what I mean? And so to your point, Nic, I do agree that bringing purpose, there's certainly an outcome for it and it's one of the areas that has given me the most fulfillment, in the role, right? But I would say what sparked that journey for me at least was, frankly speaking, just the curiosity. I wanted to learn more about what got the customers going, what got them thinking about the ways they wanted problems solved, right? How they positioned the issues they were facing, those kinds... I wanted to hear more from them.
+
+   Michael Lynn (06:36):
+   So, obviously, dealing with customers is drastically different than spending time in that thought space as a developer. Have you encountered challenges around working in the customer space?
+
+   Tosin Ajayi (06:49):
+   Oh, definitely, right? I mean, every customer is different, so there is no one-size-fits-all when it comes to dealing with customers. One thing you got to understand, obviously, with dealing with customers and people in general is that we bring ourselves, whether we try or not, whether we want to, or not, we bring our true selves to work in some form or another in some capacity, right? And so learning how to deal with people outside of the problems they are facing is also absolutely important, right? So really being in tune with the human aspect of the role is absolutely, absolutely critical, you know? So yeah, I think, and understanding how to navigate the human bit of it is, frankly speaking, is just as challenging as the technology part itself.
+
+   Michael Lynn (07:41):
+   But it's a different set of skills, I think. I don't know, it's almost like you're using a different part of your brain, for sure.
+
+   Tosin Ajayi (07:47):
+   Yeah, exactly. People talk about left brain, right brain kind of thing, I feel like in pre-sales. you just got to be both, right? And you, not just both at different times, oftentimes you have to be both at the same time, right? So that's why, frankly, I call people who are in pre-sales unicorns, right? One of my colleagues would call them three-legged unicorns that fart rainbows, you know what I mean? And that's just because of the rarity, of pre-sales folks. So it's a really fun role, and I think to Nic's point, you can find a lot of fulfillment in it, but it certainly requires you to use both your left and your right brain.
+
+   Michael Lynn (08:30):
+   We've got a great question from Adrienne. I don't think you can see that, but how do you approach the initial interactions with customers when you're really trying to understand the problem they have?
+
+   Tosin Ajayi (08:39):
+   Oh, that's an age old question, right? I mean, that's a very, very typical thing we face, right? And the thing about customers is, one phrase that I like to use, and this is... I like that question because it talks about the problem they have, right? I'm always a big proponent of you're solving problems rather than answering questions, okay? And there's a very subtle difference between those two things, answering questions and solving problems. Somebody poses, "Hey Mike, how do you write this code to do this? Or, explain why this is... How to make this thing work." And my thing is really number one, trying to relate with the customer, right? Ultimately if the customer is saying, "I..." Customers generally won't tell you the problems they have, they'll tell you what they want to do, right?
+
+   Tosin Ajayi (09:28):
+   And I think it's key to take a step back, slow down to speed up, ask the customer exactly what problems are they having, and that could be, how things are working today, what the environment looks like, what their strategies are, where they're trying to get to, what does good look like to them? Those kinds of things. It's really trying to connect with the customer, and when you find something that you say, "Aha, I think I understand what their problems are," or at least, when the customer starts to tell you the impact of the issue they're having, that's what allows you to know, okay, I found a problem, right? But if they're telling me what they want to solve, sure, I can tell you how to do it. I don't know if it amounts to anything.
+
+   Michael Lynn (10:07):
+   And so, before we get to Lauren's question, I'm curious about how you got into the position. You're obviously a very effective solutions architect and now you're leading a team. To what degree do you think it was nature versus nurture? Did you learn this? Is there a process that you studied, or is some of this just Tosin naturally?
+
+   Tosin Ajayi (10:32):
+   Yeah, I would love to take all the credit, Mike, but I'd say, it's a little bit of both. And when I say a little bit of both, I mean, there is an inherent preference that you have to have some of the things that we do in pre-sales, right? You have to enjoy talking to people, or you have to be somewhat social, you know? And some people have a preference for that, and some people don't. However, I would say, "I appreciate the compliment, Mike," right?
+
+   Tosin Ajayi (11:04):
+   But I'd definitely say a lot of my success in pre-sales has been due to a lot of what I've learned through education, but also through mentors. What's the right way to do things? Number one, being coachable, understand when something is not going well, being extremely adaptable, right? Say, "Okay, this is not working, how do I pivot? How do I change it? What can I do differently?" And so on. So, it's, you learn. There's a lot to be learned in pre-sales, my friend. I don't need to tell you that Mike, right? But you also have to have a preference with some of the things we do at pre-sales. And just one more thing, Mike, I know really great developers, right? And I actually think will be great in pre-sales, right? But just one thing is missing. They tell me, "I don't like talking to people." Right? And I say, "Well, you know what? Maybe the role is not for you then." Right?
+
+   Michael Lynn (11:51):
+   That's a great answer. And I think some of the folks listening may be developers, maybe they're in a development position, and this might sound interesting to them and that may scare them away, the level of social interaction. And I just want to say in a public forum, that I'm not a hundred percent social. Some of this does not come naturally to me all the time. I feel like I go in and out of these phases where I'm really comfortable talking to people, really comfortable presenting. And then other times I just don't... It's not there. And those are the times I think I grow the most, when I force through that because I think, ultimately, I enjoy every aspect of the role. So let's get to L.J. Hayward's question. Go ahead, Nic.
+
+   Nic Raboy (12:37):
+   Yeah. So this question is saying, "How do you ramp up and sound confident when you're an SA who's new to the product that you're ramping?"
+
+   Tosin Ajayi (12:46):
+   Yeah, that's true. Yeah, so ramping is a huge part of what we do, at least a huge part of the process that I've put in place for my team. And one thing I always say is that there is being productive and then there is ramping. And there's a difference between both, right? Productivity is basically when I can operate in the role, to a certain degree of effectiveness, right? And I look at ramping, mean, I know what I need, I know everything, right? Or at least to some degree, I know more, right? And so I don't think people need to be fully ramped in everything before they can sound effective and be productive in a role. What I would say for sure is that number one, there should be a baseline of knowledge, right? Depending on the tool you're working on, whether it's MongoDB and the ecosystem, there's a fundamental baseline in what you need to know. Generally, your leaders should put that in place for you, based on the responses we've gotten from customers, the kind of issues and questions customer was raised in meetings and so on, right?
+
+   Tosin Ajayi (13:47):
+   But the other skill that frankly, I think a lot of people utilize, sometimes we get... A lot of people have Imposter Syndrome, right? You want to... And maybe you feel like you don't belong, or some people would try to act like... I see you, Mike. A lot of people want to act like they know more than they actually know. A very hugely underutilized skill is just that of saying, "You know what? Let me get back to you." Right? I don't know the answer to that, let me get back to you. I'm a huge fan of researching things around psychology and things like that. So I encourage people to look at this chart called the Dunning-Kruger effect. Yeah. The Dunning-Kruger effect is this chart of when you're learning something new, what phases do you go through? And if you've never seen it, it's actually quite interesting. A lot of other philosophies are built off of that Dunning-Kruger effect.
+
+   Tosin Ajayi (14:43):
+   But there's a part where you feel like you know everything, right? And it's basically a thing of knowledge versus time, right? And if you think about it, it's like when you don't know anything, you think, more than you do. The more you know, the less you realize you don't know... The more you realize you don't know and the more you continue to learn, the more your skill grows, right? And I encourage everyone to really pay attention to that. Don't beat yourself up too much when you don't know the answer to something, don't be afraid to say, "I don't know, let me find out the answer." But be diligent about following up. And you'll find out that in no time you become more and more comfortable, right? So, yeah.
+
+   Michael Lynn (15:22):
+   No, that's great. So, I have a question regarding the role, and I've never been a solutions architect before. I've, at one point in time, thought about it. If you're going to customers as the technical muscle behind sales and you're dealing with technical teams at those customer sites, I mean, I assume that a lot of those technical teams, the people on those teams will have the mentality that they know more than you do on the subject that you're an expert at. What's your strategy behind that to make sure that you are still getting the customer, what they need and getting past those barriers?
+
+   Tosin Ajayi (16:02):
+   All right. Yeah, that's a really good question because that can be a very tricky position for especially brand new SAs. When you experienced in skill, then we have a lot of those super experienced and skilled SAs here at MongoDB, right? You know that you're going to walk into the room and probably within 10 minutes you will command a room's respect and then, you just walk around with that swagger, if you will. The other thing, frankly, is that part of what we do in pre-sales is also building champions, right? So the goal should never really be to, you know, walk in as the expert in everything, okay? And so frankly, I think when you walk to a customer, the customer will position themselves as they know the question, or at least they know the answer, or they know the topic, or so on and so forth, right?
+
+   Tosin Ajayi (16:58):
+   For me, I would say, "Find a connection with the customer." Right? Find something that you can attach to, that they can attach to, right? And so a lot of people talk about breaking the ice, if you're comfortable doing that, do that, right? If it's about an area of technology, bring up an area of technology that could be pertinent to someone in the room. The bottom line is you try to break the ice, rather than jumping into the conversation cold turkey, right? Get people comfortable.
+
+   Tosin Ajayi (17:23):
+   Because again, I call it pre-sales as much of a science as it is an art, right? If you master the art component, you know how to talk to people, you know how to engage them, find commonalities, you find that they are a little bit more receptive to what you have to say. And if you're really good at reading a room, you can say, "Okay, who are people deferring to? All right, let me try to build that person as my ally." Right? And if you build a person as an ally, maybe you addressing their question especially, you addressing them personally, you find that everyone else who's deferring to them would automatically look at you a little bit differently, right?
+
+   Michael Lynn (18:01):
+   Yeah. I love the approach and I found it to be so true. It's the difference between satisfying the customer's true needs and really just talking about product. The golden rule with solutions architecture is really to get to the source of the problem that the customer may be experiencing. And I guess the opposite of doing the right thing there would be, just to go in with a demo of a product. Like you may know that product inside and out, but the worst thing in the world for a customer is to sit through what we used to call a harbor cruise, right? Where you just click all the buttons, and you touch all the menu items, all [inaudible 00:18:41] the features. So, as you work with your team now, you're, you're leading your team, how do you instruct them? How do you nurture them and what do you give them in terms of resources to come up to speed in this?
+
+   .. blockquote::
+      "No growth happens in your comfort zone, right? 
+      You have to stretch yourself, you have to be uncomfortable. Sometimes you have to fall on your face, right? 
+      As long as the impact of that failure is not terminal, right? Then absolutely, fail and learn, you see?" -- Tosin
+
+   Tosin Ajayi (18:54):
+   Yeah, so my style, and for good or for bad, and I hope for good, is that I try to teach and mentor and coach people by allowing them to fail, right? 
+   And what do I mean by that? As what as I want... I know, right? I know people will be like, "Oh wait, fail." Right? But failure
+   comes in different forms, right? No growth happens in your comfort zone, right? 
+   You have to stretch yourself, you have to be uncomfortable. Sometimes you have to fall on your face, right? 
+   As long as the impact of that failure is not terminal, right? Then absolutely, fail and learn, you see? 
+   So, you're absolutely right. We don't do demo jockeys around here, Mike, we're not about the demo. We don't do demo jockeys, you have to be able to tie to pain.
+
+   Tosin Ajayi (19:49):
+   And so as far as material and the ways that I encourage people to learn, right? I put a very regimented program in front of people when they join my team. But at the same time, allow them to actually flex their wings. So rather than being overly prescriptive, it's really more of a guideline around what I expect you to have learned, or what I expect you to have known, right? Not exactly how you do it, but the outcomes that I'm expecting from you in every way. The other thing I also look for is, are you coachable? Are you self-aware, right? Are you asking questions? Right? Are you spinning your wheels endlessly on something that you realize you've tried everything you need to try and it's time now to seek help. Are you able to do that at the right time?
+
+   Tosin Ajayi (20:37):
+   So, I wish I could say there's this one way to learn, but I'm a strong believer that learning really comes through doing... I saw a chart a while back, Mike, that says, "70% of learning is structured." Right? Or something to that effect. Sorry, I take that back. About 10 or 20% of learning is structured, I think another 10% is maybe instructor-led. Some, you actually study your own, but 70% of it is really self-taught, right? Meaning you have to do it yourself, you have to learn it, you have to try it, you have to put your hands on it, you have to make mistakes, and that's really where you learn, that's where the most learning happens.
+
+   Nic Raboy (21:21):
+   We have another question. Go ahead [inaudible 00:21:23]. Oh yeah, sorry. So this is another question from LJ [haywire 00:21:27]. What are you looking for when you interview an SA?
+
+   Tosin Ajayi (21:31):
+   Yeah, so when I interview an SA, and really depends on the role that I'm interviewing for and so on. But generally speaking, I mean, obviously the role that I'm in, and that I recruit for are fairly technical roles. So I look with someone who has an openness to technology, they like it, they enjoy it, they want to do it, and want to use it, and so on, right? So technology is one bit, but also the curiosity around technologies is another thing. So a lot of people think, hey, when I'm interviewing, I'm looking for you to be expert in MongoDB. No, I absolutely don't expect you to be an expert in [inaudible 00:22:09], right?
+
+   Tosin Ajayi (22:10):
+   But what I expect these a certain level of curiosity, that's shown what have you done in your spare time, right? What do you enjoy doing? Are you a fast learner? Do you like learning new things? So, that's one bit of it. The other thing as well is, MongoDB is a fast growth organization, right? So Mike and Nic, you guys both been around for a little while. I know Mike quite longer than Nic, right? But you know, MongoDB has evolved so much in the time that we both joined, Mike. So, are you adaptable? We are a fast based organization, so if you're not adaptable, if you get really bogged down by changes, then that could be a problem as well, right?
+
+   Tosin Ajayi (22:52):
+   So I look for adaptability, propensity, and interest in technology, right? I look for good team player. We are a team and we operate as a team and that will not change, that's exactly how we do it, right? And one of the things that made us really, really strong is how well we work together, right? So I look for how well are you going to fit within a team as well? Right? So those are probably the three main areas, everything else I think can be taught, to be honest.
+
+   Michael Lynn (23:17):
+   So, let's talk a little bit more about the profile of a successful candidate. What does that look like?
+
+   Tosin Ajayi (23:24):
+   Are you talking in terms of experience? Are you talking in terms of ability?
+
+   Michael Lynn (23:30):
+   [00:23:30] Yeah, I think a little bit of everything there. What do you look for in a candidate? If a candidate resume comes across your desk, what are you looking for, that might be an indication that this could be a successful candidate?
+
+   Tosin Ajayi (23:41):
+   Right. So, generally again, it goes by different roles, but for MongoDB, if you look at our portfolio, if you look at our product portfolio, and you look at the kinds of customers that we deal with, you want to have some degree of development exposure, right? Again, it doesn't mean that you have all the years of development, you've been a hardcore developer, but it means that you've tinkered, you understand the different languages that are out there. You understand what customers are using, what's more popular, you've played with some of them. For me, when I was in school, and when I worked, and in my side projects, I mostly used Java, right? In my first job, I did a lot of C and C++, I tinkered with things like Python, and so I played with MongoDB before I [inaudible 00:24:30] MongoDB, right?
+
+   Tosin Ajayi (24:30):
+   So these are the kinds of things I look for. So do you have some development experience? Do you have exposure to databases, kind of a tech stack, right? So from a front-end, maybe application level development, middleware, infrastructure, backend databases, you have some exposure to those kinds of things. Now again, I want to be very clear, I don't expect everyone to be an expert in everything, right? But a certain exposure to all of those would be really useful. And if I can then identify a specific area that you've decided to hone your skills even better, right?
+
+   Tosin Ajayi (25:05):
+   If you think about our teams, teams are extremely diverse in skills. And what I also like to build is a balanced team, right? I can't have everyone on our team super expert on development, and no one knows anything about infrastructure. Our product suite is growing, you need to know about cloud, infrastructure, databases, application, and so on, you know? Do you have a breadth of knowledge that comes by way of curiosity? And you have an area that you focus on, and that could be any of those areas I mentioned, and now will absolutely, absolutely talk to any candidate that shows that kind of profile, right? You don't have to be an expert in database, you can be an expert in infrastructure, you can be an expert in application development, right?
+
+   Michael Lynn (25:44):
+   Yeah. And I think the key thing there is, like you said earlier, having the curiosity and then having some way of proving that you can translate that curiosity into some type of success, and then also being able to talk about some failures. So, to finish up the profile, I liked that you said that you don't have to be super expert in everything, but what are some of the languages, if someone's listening to this or watching this and thinking, "I want to dig into this and maybe even pursue a role at MongoDB," what are the common frameworks and languages that you're seeing that are popular out there in the customer space?
+
+   Tosin Ajayi (26:24):
+   Yeah. So, we see a lot and depends on the market, right? So, as I mentioned, I manage, or I lead a team for our corporate side of the business, I was leading a team on the enterprise side as well. So I've certainly seen a gamut, right? I would say generally speaking, the common language is all apply, right? Java, even C++, No.js, Python, all those are extremely applicable. I also see a lot of people with things around Go. I see more Go now, and that's also quite interesting, and I would absolutely look at that, right? So from a programming language perspective, that's perfectly fine. So I say Python, Java, even C++, Go, Node, I've even seen some PHP.
+
+   Tosin Ajayi (27:14):
+   What I generally find, though, is that it's rare to find someone who has one, and not at least one or two more, right? I'll be extremely surprised if I find a developer and say, "I know very much about this programming language, and I know nothing else about nothing." Right? I mean, I'd be extremely surprised, right? So yeah, those are... And I'm pretty sure I'm not being exhaustive here, Mike, to be very, very clear, right? There's a lot more that I'll certainly take a look at.
+
+   Tosin Ajayi (27:40):
+   I'd say I'm also a believer that if you know one program in language well, you can easily pick up another, right? With relative ease. It doesn't mean you'll become an expert overnight, right? But you can certainly read code, you can certainly debug if you need to, and then maybe over time do much better at learning things like constructs, and architecture, and benefits and so on and so forth, right?
+
+   Tosin Ajayi (28:04):
+   But again, I don't want to belabor this point, but I think this is really important to say, when you think about customers as well, especially in pre-sales, our goal is not to write production-grade code, that's not what we do, right? We essentially write code to solve a problem at a point in time, maybe to prove something can work, not to make sure that it is absolutely foolproof and completely error-free, right?
+
+   Nic Raboy (28:32):
+   So, we actually have a question coming in from [Ayush 00:28:35], and I have a few questions, so I'll hijack this from Mike for a bit. Firstly, Ayush's question, we're just going to say as a full-stack developer, how do you recognize if being an SA is the right role for you, and how do you make that switch? So this might touch base on your experience of being a dev switching over to SA then, Tosin.
+
+   Tosin Ajayi (28:53):
+   Yes. Thanks for the question, Ayush, and every SA has a different journey, that's what I found, right? And my journey is this. I was in development, I wrote a lot of C and C++ codes, some Java code for a database company in fact, right? I was writing database backend code, not a DBA. I was more of a backend developer for database engine. And as I mentioned earlier, what tends to happen in development, as Ayush can probably relate to, is that you work on Epic stories, if you in the Agile Scrum type of methodology, for example, right? You work on Epics and then Epics become user stories and then you have tasks associated, and you said you just kind of work on them. My question always was where did those Epic stories come from? Right? That curiosity was what started my own search, okay?
+
+   Tosin Ajayi (29:45):
+   For you, it could be an exposure that starts a search, right? Meaning you talk to a customer and you enjoyed it. I've heard pre-sales people who had that experience where it was like, "Yeah, I had this one meeting, there was no one who could take that meeting, I was thrown into it, I was super nervous and I just loved it." Right? And so you got to find out if it's something you enjoy in terms of actually talking to people, solving problems. And I'll be honest with you, a lot of people would like to say, as a pre-sales person, you're a developer. You transition when you become pre-sales, frankly, right? You transition and it doesn't mean you become non-technical, but it means you become, especially depending on the tool you work on, you work on a wide variety of things. Whereas in development, you go deep into one thing, in pre-sales, you tend to touch on a lot of things.
+
+   Tosin Ajayi (30:34):
+   You got to ask yourself, "Am I going to enjoy this one thing?" Now, how do you transition, right? A few ways that I would encourage, engaging anything that has to do with customer relationship, talking to customers, engaging with people, showcasing that scale and your ability, or at least desire to talk to people. And the other thing, there are other roles that you can look at, that may not be immediately pre-sales, but they can start your journey into pre-sales, right? Frankly speaking, I think developer advocacy's one, if we're being honest with ourselves, right? Developer advocacy is where you get to evangelize product. You're still very technical, but you become an evangelist of product. You become exposed to customers, right?
+
+   Tosin Ajayi (31:18):
+   Another way, frankly speaking, that I've seen people transition could be even just from things like product management, right? You can try this from development to product management, and you can come into pre-sales from that. And in pre-sales, in my organization, I recently built a team of Associate Star Solution Architects, right? It's an entry-entry level, or early-stage career role for people who want to become pre-sales engineers or pre-sales professionals, right? You can look for organizations that have something like that, and see, yeah can I get into it? Is it the right stage of my career to do something like that? Right? So there are several ways and hope those make some sense and help out some.
+
+   Michael Lynn (31:58):
+   So-
+
+   Nic Raboy (31:58):
+   So I was going to bring up the next question. Sorry, Mike, I cut you off again. And I understand, Tosin, if this might be out of your area of knowledge and it might be more appropriate for Mike, but since you brought up developer advocacy, I mean, where's the line between the two roles, because on paper, they look very similar. So what would be the true differences, would you say?
+
+   Tosin Ajayi (32:19):
+   Yeah, so, I mean, I'll certainly let Mike chime in on this one, right? But pre-sales and developer advocacy are extremely important roles in any organization. Now I will say the difference is in pre-sales, you're working with potential customers, right? Customers who maybe they have a specific problem, and they're looking for a solution to that problem, right? In pre-sales, that's who you deal with, right? So while you still do some evangelism work, you really attaching and focusing more on specific problems a customer has. Whereas in developer advocacy, you really are evangelizing the product and its capabilities and the ecosystem, and it's the value essentially to a community, right? So you're bringing the value to a community, almost bring building groundswell and having people truly see what the product is capable of in the market. Mike, I may have completely butchered what your does [crosstalk 00:33:20].
+
+   Michael Lynn (33:20):
+   [crosstalk 00:33:20] No, not at all. Spot on. I think you're more often faced with that one-on-one customer interaction as a pre-sales engineer. And I think that the key difference is also that, most of the time in the sales engineering, or sales architecture role, you're paired off with one or a few sales executives. So these are people that manage the relationship with the company and oftentimes they're navigating through the customer ecosystem to actually find where the product may be needed. Maybe talk a little bit about that relationship with the salespeople. Some of the developers listening may not know what that's like.
+
+   Tosin Ajayi (34:02):
+   Yeah, the more we have this conversation, Mike, the more I realize, there's a lot of things that I also take for granted just by being in a role, but you're absolutely right, right? As in pre-sales, you work with a lot of people, but when you think about your core objectives, it's really supporting sales. And who are the people you support in sales? They're the sales executives, as you mentioned, Mike. So depending on your organization, the pairing may be different, right? But the bottom line is these are the people that you work with day in, day out to talk to customers, understand their problems, show them how your product can potentially solve their problem, right? Essentially sway them if they need to be swayed, right? Understand your competition, right? Differentiate yourselves from your competition, and ultimately bring value and revenue to your company, right?
+
+   Tosin Ajayi (34:54):
+   So that's a very key component of pre-sales. Now, we also work with the entire ecosystem so as Nic and Mike and myself, we know each other and we talk a lot of junk to one another, right? And that really goes to say that we work well with the ecosystem, even within the organization, because frankly speaking, we have to work together, right? I need help from the product team, right? So you have to know how to work with all the other teams, whether it be the marketing team, the product management team, the developer relations team, the customer success team, the support team, the development team, I can go on and on and on. And I can tell you that I know people within each part of the organization because we always have to work together. We obviously have to work together.
+
+   Michael Lynn (35:41):
+   So on your journey... Well, I'll talk about myself, because that's what I'm really good at. So, my journey, I really relied heavily upon my leadership team and there were leaders that I may have worked for a while, and then I stayed in contact with them and they became mentors for me. And it sounds like you've probably got that going on with some of the people that have worked for you, but I'm curious about you. To what degree do you credit mentorship to your success?
+
+   Tosin Ajayi (36:15):
+   I mean, so in an earlier question, I think that was one of the things that I'd love to say, I learned this and I figured it out, I think it was how I made a transition, or how your ramp or something to that effect, right? Ultimately for me, I'd say mentors have played an invaluable role in my own career, in my own success, in pre-sales and just in general in life, right? Here's the reason I say that. One of my favorite quotes is that, "Learn from other people's mistakes because you will not live long enough to make them all yourself." Right? And that's just the reality of it. So I'd say mentors play a very huge role because they've made the mistakes, or they have learned from other people's mistakes that they can share with me. But again, it becomes an entire ecosystem of knowledge that I tap from. You know what I mean?
+
+   Nic Raboy (37:12):
+   So, I mean, on the topic of mentorship, previously you mentioned when you were looking for SAs, you didn't need to be an expert in any of the technologies, you just had to meet some criterias. What's the ramp-up look like when somebody joins your team? How, do they go out in the field and be successful? Is there a... Do they team up with somebody during the process? How does mentorship actually work?
+
+   Tosin Ajayi (37:38):
+   Yeah. So, to be clear, one thing I said is, you don't have to be an expert in everything, but I would like to see a depth in at least one thing, right? I don't want to be a whole bunch of fluff and... You know what I mean? And so you got to at least be good at one thing. It shows interest, it shows focus, it shows all those kinds of things. But to your point, Nic, I'd say ramping is also a strong area of us here at MongoDB, especially in the pre-sales organization. Yes, so when you join, at least for MongoDB, you have a mentor, right? So, meaning you'll be paired with someone who helps you get prepared for... We have a boot camp for sales, we have the pre-sales boot camp that you go through. And then you also have your entire onboarding program that you go through, that's essentially a three-month-long program that you kind of taper off as you learn more, right?
+
+   Tosin Ajayi (38:36):
+   So it's extremely structured, right? In that the goal is not to get out to put you through the ringer just for the sake of it, but it's to put a program in front of you so that you understand what good looks like at the end of three months, right? And you also have a mentor that guides you through the way that you can go to for questions if you have them, right? And so on. But at the end of the day, I would say, "Here, you're not going to learn everything from that program that I put together, right? You're not going to learn everything." This is where, when I'm vetting for good candidates, that curiosity aspect plays a huge part as well, right?
+
+   Michael Lynn (39:13):
+   Yeah, I love that. And I love that you give your team members some autonomy so they can not only learn on their own, but also find out where their interests are so that they can grow into that space. And I think that probably leads to a really good solid team. Yeah, so you can talk a little bit about, what is the makeup of your team? Do you have folks that are expert in particular area? What's the makeup of the team?
+
+   Tosin Ajayi (39:45):
+   Oh man, you want me bragging about my team, Mike.
+
+   Michael Lynn (39:50):
+   Shout-outs welcome.
+
+   Tosin Ajayi (39:51):
+   I know exactly. I have a fantastic team, and I'm not just saying that because it's my team. It's the amazing work that they've done. Hey look, I took over the Global Corporate Solution Architecture team at MongoDB in April... March of this year actually. And I can go on and on about the team, but just to keep it brief, the makeup of the team at a high level, I have people who are really great at databases, right? I have folks who have years of experience, even in some cases, decades of experience, and I have people who are brand new into pre-sales, maybe two, three years into pre-sales, right? So it spans the gamut. And as I mentioned, we not only want, or I not only want a team that's really strong, but I also want a team that can grow others, right?
+
+   Tosin Ajayi (40:44):
+   Because if you think about it, I mean, that's how you build a great company. It's not you bring it where everyone is an expert in everything, but you also create an opportunity for people to grow, right? So I have that. So databases, I have really strong application developers, right? I have people who are really strong in infrastructure, okay? I have people that come from product management, okay? I have people that come from DBA world, doing DBA, I have people from business intelligence, right? They work with things like BI reporting tools, those kinds of things. And it's super, super good, you know what I mean?
+
+   Tosin Ajayi (41:20):
+   Again, when you really look at the team, I can literally right now say, "Hey, I have this issue that we need to address for a specific customer, I know who the expert is on my team and I can go immediately to get them."
+
+   Michael Lynn (41:31):
+   Fantastic. So one question I will always ask whenever we're looking at a different role, and I'm sure there's developers considering this, how does the compensation differ? Are you, as a solutions architect, you're working with salespeople, do you have a quota?
+
+   Tosin Ajayi (41:48):
+   Solution architects don't get quotas and I will say that that's by design, meaning the solution architect is not specifically tied to a number, and that's by design, right? Sales reps that we assign to, do get quotas. The solution architects themselves don't get quotas that we attached to a number, right? There's a number that we work towards as a team, and so we keep it that way. And generally, the solution architects numbers that we look at is based on a broader team number, you know what I mean? Yeah, so, maybe it's a region territory, those kinds of things, geography, those are how the numbers are tied to, okay? Now to be very clear, that's not the only component that makes up how SAs get compensated, right? The other factors as well. But yeah, we're not tied to... SAs don't have numbers attached to each SA. So let's put it that way. 
+
+   Michael Lynn (42:50):
+   So, maybe you're contributing as a team to maybe a larger regional number, or something like that, right?
+
+   Tosin Ajayi (42:57):
+   Correct. Exactly. Now to be very clear, different organizations may have different structures. You know what I mean? I'm simply speaking to how we do it at MongoDB.
+
+   Michael Lynn (43:07):
+   Okay, good to consider. Well, this has been a fantastic chat, so we're at about 50 minutes. Nic, what am I forgetting? What else do we need to cover?
+
+   Nic Raboy (43:19):
+   I don't know, Mike. That's [crosstalk 00:43:20]-
+
+   Michael Lynn (43:20):
+   [crosstalk 00:43:20] Oh, I know what I'd wanted to ask.
+
+   Nic Raboy (43:21):
+   I mean, I had a-
+
+   Michael Lynn (43:22):
+   Yeah, I wanted to ask about some of the common questions that you're faced with by customers. Are there a set of common questions that customers ask you?
+
+   Tosin Ajayi (43:31):
+   Yeah. The first one... Yeah, exactly. Tell me about MongoDB, or how's Mongo DB different from fill in the blank, right? Because every customer today is using some database of some kind, or at least has some knowledge of a database. So tell me about how MondoDB differs from... Now some of the interesting ones that we get will be, how we differ from maybe things that we don't even compete with per se, right? So that's a very, very interesting one. Another very interesting one and I would say is super important, is really around, "Explain to me what other customers are doing with MongoDB." Right? And these are the questions you get very early on in the conversation, okay? Which are, what are the customers doing with MongoDB? How do you differ from this other piece of technology? Explain the document model to me, that's a really good one, right? Because the document model is the complete change in mentality and philosophy around how data is structured, right? So if you haven't learned about MongoDB, certainly go learn about the document model. It's really cool the way we store data in MongoDB, right?
+
+   Tosin Ajayi (44:43):
+   So a lot of people really want knowledge and education about that subject itself, right? So explain the document model to me. Now with Atlas, we get a lot of other questions that relate to the entire product suite in the product portfolio, which is... Or not Atlas, but maybe the MongoDB data platform altogether, so, questions about Realm come up now, explain Realm, talk to me about the region supported, what cloud providers is Atlas available on. I mean, I can go on and on and on, but these are early-stage questions we get with customers who are getting maybe initial exposure to MongoDB data platform as a whole.
+
+   Michael Lynn (45:21):
+   Great. That's Awesome. I feel like we've covered quite a bit of ground. I think it's been really helpful for folks trying to understand what this solutions architecture role is all about. I'm just wondering, are there any other questions that are coming in? We had a question about OpenStack. I don't know if you have exposure to that. I certainly don't spend a lot of time with OpenStack. Is that something that you see?
+
+   Tosin Ajayi (45:44):
+   Not too much, to be honest with you. So I don't get a lot of OpenStack questions, at least in the corporate. When I was in the enterprise, we did get some OpenStack questions, right? I'd definitely encourage whoever is asking to basically look at our product page, right? Especially the integration bits that we have, especially with some of these infrastructure-as-a-service providers, and things like that, right? Yeah, to see how we can work with platforms OpenStack.
+
+   Michael Lynn (46:20):
+   And if you're curious about that, about how Atlas works, Atlas sits above the cloud provider level, so you can deploy your MongoDB instances in the cloud provider of your choice. So the top three are covered there. And I will plug the... A future episode of the podcast, we're going to be talking about some additional providers like Terraform, if that's of interest to you, make sure you subscribe to the podcast, that's going to be coming down the pipe. Great conversation, Tosin.
+
+   Tosin Ajayi (46:57):
+   Yeah, thanks for having me Mike. Appreciate it Mike.
+
+   Michael Lynn (46:59):
+   Yeah, It's great to spend time with you. One more question before we begin to close out. What are you reading these days? What's keeping you busy?
+
+   Tosin Ajayi (47:06):
+   Oh man. So, different things, right? Recently I started reading some, I don't know whether you call them self-help books or whatnot, right? But I'm a huge fan of this book called "Essentialism: The Disciplined Pursuit of Less," right? Yeah, so that's not maybe a plug for the book or whatnot, but what I found [inaudible 00:47:31] for me is that my time gets so busy these days, right? And really figuring out the best way to focus on the most important things is something that I think we all can improve on. I certainly know I can improve on that, right? So I've read the book before, I'm just reading it again as the demand for my time grows, right?
+
+   Nic Raboy (47:52):
+   So Tosin-
+
+   Tosin Ajayi (47:54):
+   Yes, sir [crosstalk 00:47:55].
+
+   Nic Raboy (47:55):
+   [crosstalk 00:47:55]... how can people get in contact with you? What's the best way?
+
+   Tosin Ajayi (47:57):
+   Yeah, via email. Yeah, I mean, in person it may not work very well these days because I work from my home four-wall office, right? Yeah, but email's fine. My email's pretty simple, you can get at me at tosin@mongodb.com. LinkedIn as well, I'm over there just Google search, whatever, I think you can probably find me relatively easily, just look for Tosin Ajayi MongoDB, I'm sure that'll come up. Those are probably two ways to get in contact with me.
+
+   Michael Lynn (48:32):
+   Follow up on that is, and I know that this will be published at a later date, but are you hiring at all for your team?
+
+   Tosin Ajayi (48:39):
+   Good question. Always hiring my friend, always hiring. And so yes. As I mentioned, I actually have a fairly broad scope right now for my team, which basically means I have some good news for people out there. Meaning from extremely experienced pre-sales professionals, right? To early-stage career folks who have interest in pre-sales, you know what I mean? So all the way from Associate Solutions Architect, all the way to Senior Solution Architect, I'm recruiting for. So yes, anyone who wants to reach out to me, the best way will be email me, or reach out to me on LinkedIn. I'm always on those media and I'll certainly check it out and respond.
+
+   Michael Lynn (49:22):
+   Fantastic. And Tosin, once again, thank you so much for spending time with us.
+
+   Tosin Ajayi (49:26):
+   Yes, sir. Glad to be here, man. Good to see you, Mike, always a pleasure catching up with you, buddy.
+
+   Michael Lynn (49:31):
+   Good to see you. Hey, are you rolling? Are you doing any jiu-jitsu these days?
+
+   Tosin Ajayi (49:36):
+   Hey man, I wish I could. I tried to virtual jiu-jitsu, it just wasn't working out, Mike, you know what I mean? I don't know you could do jiu-jitsu virtually, so right now it's not really much. How about you?
+
+   Michael Lynn (49:49):
+   No, none. Not at all. Yeah, like you, I tried to virtually, but I kept choking out my monitors.
+
+   Tosin Ajayi (49:56):
+   Exactly. So, jiu-jitsu's on hold for now, all martial arts is on hold for now, and just try to get the workout at home whenever I can. Pull-up bars, push out equipments, all that kind of stuff. Yeah. Yessir, cool, man.
+
+   Michael Lynn (50:14):
+   Thanks again, Tosin.
+
+   Tosin Ajayi (50:16):
+   Awesome. Good to see you guys.
+
+   Nic Raboy (50:17):
+   Thank you.
+
+   Michael Lynn (50:18):
+   Good to see you, speak with you soon.
+
+   Nic Raboy (50:19):
+   Yes, sir. I'll see you later.
+
+   Speaker 2 (50:21):
+   Thanks for listening. If you enjoyed this episode, please like and subscribe. Have a question or a suggestion for the show? Visit us in the MongoDB Community Forums, at community.mongodb.com.
+
+   Summary
+   -------
+
+   While developers and solutions architects do much of the same type of work, SAs tend to work closer to the end consumers of their
+   work and as such, this role can require a greater degree of social interaction. As Tosin mentioned, if you're a developer that enjoys
+   interacting with the users of your work, and if you enjoy communicating with others about the value of the work you do, you may want to
+   consider the solutions architect role. 
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   - `MongoDB Careers: <https://www.mongodb.com/careers>`__
+   - `MongoDB Podcast: <https://www.mongodb.com/podcast>`__
