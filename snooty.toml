@@ -7,8 +7,8 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/how-to/getting-started-atlas-mongodb-query-language-mql", "/article/update-on-monogodb-and-swift", "/article/live2020-keynote-summary", "/how-to/build-animated-timeline-chart-embedding-sdk"]
-"learn" = ["/how-to/use-atlas-on-heroku", "/how-to/serverless-development-lambda-atlas", "/how-to/integration-test-realm-serverless-apps"]
+"home" = ["/how-to/mongodb-visual-studio-code-plugin", "/article/realm-database-cascading-deletes", "/how-to/getting-started-unity-creating-2d-game", "/quickstart/cheat-sheet"]
+"learn" = ["/article/from-developer-to-sa-tosin-ajayi", "/how-to/internet-of-toilets", "/article/mongodb-automation-index-autopilot"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
