@@ -11,11 +11,11 @@
 .. twitter::
    :site: @mongodb
    :creator: @mlynn
-   :title: Learn about the journey from developer to solutions architect with Tosin Ajayi.
-   :image: /images/social/twitter/mongodb-podcast.png
+   :title: From developer to solutions architect with Tosin Ajayi.
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
    :image-alt: MongoDB Podcast
 
-   Learn about the journey from developer to solutions architect with Tosin Ajayi.
+   From developer to solutions architect with Tosin Ajayi.
 
 .. og::
    :url: http://developer.mongodb.com/article/

@@ -1,9 +1,5 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
-
 .. meta-description:: 
 
    Learn about database automation with Rez Kahn - Part 1 - Index Autopilot
@@ -12,7 +8,7 @@
    :site: @mongodb
    :creator: @mlynn
    :title: Podcast Transcript - Database Automation Series Part 1 - Indexes
-   :image: /images/social/twitter/mongodb-podcast.png
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
    :image-alt: Schema Design Patterns
 
    Learn About Database Automation with Rez Kahn - Part 1 - Index Autopilot
@@ -24,10 +20,6 @@
    :image: /images/social/open-graph/og-mongodb-podcast.png
  
    Learn about database automation with Rez Kahn - Part 1 - Index Autopilot
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
 
 .. include:: /includes/authors/lynn-michael.rst
 
@@ -52,10 +44,6 @@
    * `Anti-Pattern: Massive Arrays <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-arrays>`__
    * `Anti-Pattern: Massive Number of Collections <https://developer.mongodb.com/article/schema-design-anti-pattern-massive-number-collections>`__
    * `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 ==============================================
 Database Automation Series - Automated Indexes
