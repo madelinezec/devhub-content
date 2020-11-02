@@ -1,0 +1,277 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/virtual-presentation.png
+
+.. meta-description::
+
+   Presentation of MongoDB's free courses in the MongoDB University online.
+
+.. twitter::
+   :creator: @MBeugnet
+   :title: Learn MongoDB for free online on the MongoDB University website.
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Presentation of MongoDB's free courses in the MongoDB University online.
+
+.. og::
+   :title: Learn MongoDB for free online on the MongoDB University website.
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/beugnet-maxime.rst
+
+.. pubdate:: 2020-11-02
+
+.. type:: article
+
+.. level:: beginner
+
+.. languages::
+
+   * C#
+   * Python
+   * Java
+   * JavaScript
+
+.. tags:: 
+
+   * Node.js
+   * .NET
+   * University
+
+.. products::
+
+   * MongoDB
+
+==================================================
+Learn MongoDB with MongoDB University Free Courses
+==================================================
+
+.. introduction::
+
+   Introduction
+   ------------
+
+   Your cheap boss doesn't want to pay for this awesome MongoDB Training you found online? In-person trainings are quite challenging given the current situation we are all facing with COVID-19. Also, is this training even up-to-date with the most recent MongoDB release?
+
+   Who is better than MongoDB to teach you MongoDB? `MongoDB University <https://university.mongodb.com/>`__ offers free courses for beginners and more advanced MongoDB users. Our education team is dedicated to keep these courses up-to-date and build new content around our latest features.
+
+   In this blog post, we will have a look at `these courses <https://university.mongodb.com/courses/catalog>`__ and what you can learn from each of them.
+
+.. content::
+
+   Course Format
+   -------------
+
+   MongoDB courses are online and free. You can do them at your pace and at the most convenient time for you.
+
+   Each course contains a certain number of chapters, and each chapter contains a few items.
+
+   An item usually contains a five- to 10-minute video in English, focussed around one specific topic you are learning, and a little quiz or a guided lab, which are here to make sure that you understood the core concepts of that particular item.
+
+   .. image:: /images/article/learn-mongodb-university-online-free-mooc/chapter.png
+      :alt: MongoDB University Chapter example
+      :align: center
+
+   Learning Paths
+   --------------
+
+   `MongoDB University <https://university.mongodb.com/>`__ proposes two different learning paths to suit you best. There are also some more courses that are not in the learning paths, but you are completely free to create your own learning path and follow whichever courses you want to. These two are just general guidelines if you don't know where to start.
+
+   - If you are a developer, you will probably want to start with the `developer path <https://university.mongodb.com/learning_paths/developer>`__.
+   - If you are a DBA, you will more likely prefer the `DBA path <https://university.mongodb.com/learning_paths/dba>`__.
+
+   Developer Path
+   ~~~~~~~~~~~~~~
+
+   The developer path contains six recommended trainings, which I will describe more in detail in the next section.
+
+   - M001: MongoDB Basics.
+   - M103: Basic Cluster Administration.
+   - M121: Aggregation Framework.
+   - M220: MongoDB for Developers.
+   - M201: MongoDB Performance.
+   - M320: MongoDB Data Modeling.
+
+   DBA Path
+   ~~~~~~~~
+
+   The DBA path contains five recommended trainings, which I will also describe in detail in the next section.
+
+   - M001: MongoDB Basics.
+   - M103: Basic Cluster Administration.
+   - M201: MongoDB Performance.
+   - M301: MongoDB Security.
+   - M312: Diagnostics and Debugging.
+
+   MongoDB University Courses
+   --------------------------
+
+   Let's see all the courses available in more details.
+
+   M001 - MongoDB Basics
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Introductory
+
+   In this six-chapter course, you will get your hands on all the basics, including querying, computing, connecting to, storing, indexing, and analyzing your data.
+
+   `Learn more and register <https://university.mongodb.com/courses/M001/about>`__.
+
+   M100 - MongoDB for SQL Pros
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Introductory
+
+   In this four-chapter course, you will build a solid understanding of how MongoDB differs from relational databases. You will learn how to model in terms of documents and how to use MongoDB's drivers to easily access the database.
+
+   `Learn more and register <https://university.mongodb.com/courses/M100/about>`__.
+
+   M103 - Basic Cluster Administration
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Introductory
+
+   In this four-chapter course, you'll build standalone nodes, replica sets, and sharded clusters from scratch. These will serve as platforms to learn how administration varies depending on the makeup of a cluster.
+
+   `Learn more and register <https://university.mongodb.com/courses/M103/about>`__.
+
+   M121 - The MongoDB Aggregation Framework
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Introductory
+
+   In this seven-chapter course, you'll build an understanding of how to use MongoDB Aggregation Framework pipeline, document transformation, and data analysis. We will look into the internals of the Aggregation Framework alongside optimization and pipeline building practices.
+
+   `Learn more and register <https://university.mongodb.com/courses/M121/about>`__.
+
+   A300 - Atlas Security
+   ~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   In this one-chapter course, you'll build a solid understanding of Atlas security features such as:
+
+   - Threat Modeling and Security Concepts
+   - Data Flow
+   - Network Access Control
+   - Authentication and Authorization
+   - Encryption
+   - Logging
+   - Compliance
+   - Configuring VPC Peering
+   - VPC Peering Lab
+
+   `Learn more and register <https://university.mongodb.com/courses/A300/about>`__.
+
+   M201 - MongoDB Performance
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   In this five-chapter course, you'll build a good understanding of how to analyze the different trade-offs of commonly encountered performance scenarios.
+
+   `Learn more and register <https://university.mongodb.com/courses/M201/about>`__.
+
+   M220J - MongoDB for Java Developers
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   In this five-chapter course, you'll build the back-end for a movie-browsing application called MFlix.
+
+   Using the MongoDB Java Driver, you will implement MFlix's basic functionality. This includes basic and complex movie searches, registering new users, and posting comments on the site.
+
+   You will also add more features to the MFlix application. This includes writing analytical reports, increasing the durability of MFlix's connection with MongoDB, and implementing security best practices.
+
+   `Learn more and register <https://university.mongodb.com/courses/M220J/about>`__.
+
+   M220JS - MongoDB for JavaScript Developers
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   Same as the one above but with JavaScript and Node.js.
+
+   `Learn more and register <https://university.mongodb.com/courses/M220JS/about>`__.
+
+   M220JS - MongoDB for .NET Developers
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   Same as the one above but with C# and .NET.
+
+   `Learn more and register <https://university.mongodb.com/courses/M220N/about>`__.
+
+   M220P - MongoDB for Python Developers
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Intermediate
+
+   Same as the one above but with Python.
+
+   `Learn more and register <https://university.mongodb.com/courses/M220P/about>`__.
+
+   M310 - MongoDB Security
+   ~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Advanced
+
+   In this three-chapter course, you'll build an understanding of how to deploy a secure MongoDB cluster, configure the role-based authorization model to your needs, set up encryption, do proper auditing, and follow security best practices.
+
+   `Learn more and register <https://university.mongodb.com/courses/M310/about>`__.
+
+   M312 - Diagnostics and Debugging
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Level: Advanced
+
+   In this five-chapter course, you'll build a good understanding of the tools you can use to diagnose the most common issues that arise in production deployments, and how to fix those problems when they arise.
+
+   `Learn more and register <https://university.mongodb.com/courses/M312/about>`__.
+
+   M320 - Data Modeling
+   ~~~~~~~~~~~~~~~~~~~~
+
+   Level: Advanced
+
+   In this five-chapter course, you'll build a solid understanding of frequent patterns to apply when modeling and will be able to apply those in your designs.
+
+   `Learn more and register <https://university.mongodb.com/courses/M320/about>`__.
+
+   Get MongoDB Certified
+   ---------------------
+
+   .. image:: /images/article/learn-mongodb-university-online-free-mooc/university-badges-dev.png
+      :scale: 50%
+      :alt: MongoDB University Developer Associate badge
+      :align: left
+
+   .. image:: /images/article/learn-mongodb-university-online-free-mooc/university-badges-dba.png
+      :scale: 50%
+      :alt: MongoDB University DBA Associate badge
+      :align: right
+
+   If you have built enough experience with MongoDB, you can `get certified <https://university.mongodb.com/certification>`__ and be officially recognised as a MongoDB expert.
+
+   Two certifications are available:
+
+   - `C100DEV <https://university.mongodb.com/certification/developer/about>`__: MongoDB Certified Developer Associate Exam.
+   - `C100DBA <https://university.mongodb.com/certification/dba/about>`__: MongoDB Certified DBA Associate Exam.
+
+   Once certified, you will appear in the list of MongoDB Certified Professionals which can be found in the `MongoDB Certified Professional Finder <https://university.mongodb.com/certified_professional_finder>`__.
+
+   .. image:: /images/article/learn-mongodb-university-online-free-mooc/maxime-mongodb-certified.png
+      :alt: Maxime Beugnet Certified MongoDB Developer and DBA
+
+.. summary::
+   
+   Wrap-Up
+   -------
+
+   `MongoDB University <https://university.mongodb.com/>`__ is the best place to learn MongoDB. There is content available for beginners and more advanced users.
+
+   MongoDB official certifications are definitely a great addition to your LinkedIn profile too once you have built enough experience with MongoDB.
+
+   .. include:: /includes/callouts/community-cta.rst
