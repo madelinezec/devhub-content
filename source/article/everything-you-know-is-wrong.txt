@@ -1,0 +1,432 @@
+:template: devhub-article
+
+.. atf-image:: /images/article/everything-you-know-is-wrong/atf-image.png
+
+.. meta-description::
+
+   There are a bunch of myths floating around about MongoDB. Here's where I bust them.
+
+.. twitter::
+   :creator: @judy2k
+   :title: Everything You Know About MongoDB is Wrong!
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   There are a bunch of myths floating around about MongoDB. Here's where I bust them.
+
+.. og::
+   :title: Everything You Know About MongoDB is Wrong!
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-11-04
+
+.. type:: article
+
+.. level:: beginner
+
+===========================================
+Everything You Know About MongoDB is Wrong!
+===========================================
+
+.. introduction::
+
+   I joined MongoDB less than a year ago, and I've learned a lot in the
+   time since. Until I started working towards my interviews at the company,
+   I'd never actually *used* MongoDB, although I had seen some talks about
+   it and been impressed by how simple it seemed to use.
+
+   But like many other people, I'd also heard the scary stories. "*It
+   doesn't do relationships!*" people would say. "*It's fine if you want to
+   store documents, but what if you want to do aggregation later? You'll be
+   trapped in the wrong database! And anyway! Transactions! It doesn't have
+   transactions!*"
+
+   It wasn't until I started to go looking for the sources of this
+   information that I started to realise two things: First, most of those
+   posts are from a decade ago, so they referred to a three-year-old
+   product, rather than the mature, battle-tested version we have today.
+   Second, almost everything they say is no longer true - and in some cases
+   *has never been true*.
+
+   So I decided to give a talk (and now write this blog post) about the
+   misinformation that's available online, and counter each myth, one by
+   one.
+
+
+.. content::
+
+   Myth 0: MongoDB is Web Scale
+   ============================
+
+   There's a `YouTube
+   video <https://www.youtube.com/watch?v=b2F-DItXtZs>`__ with a couple of
+   dogs in it (dogs? I think they're dogs). You've probably seen it - one
+   of them is that kind of blind follower of new technology who's totally
+   bought into MongoDB, without really understanding what they've bought
+   into. The other dog is more rational and gets frustrated by the first
+   dog's refusal to come down to Earth.
+
+   .. figure:: /images/article/everything-you-know-is-wrong/two-dogs.png
+      :alt: MongoDB is Web Scale, apparently
+      
+      MongoDB is Web Scale, apparently
+
+   I was sent a link to this video by a friend of mine on my first day at
+   MongoDB, just in case I hadn't seen it. (I had seen it.) Check out the
+   date at the bottom! This video's been circulating for over a decade. It
+   was really funny at the time, but these days? Almost everything that's
+   in there is outdated.
+
+   We're not upset. In fact, many people at MongoDB have the character on a
+   T-shirt or a sticker on their laptop. He's kind of an unofficial mascot
+   at MongoDB. Just don't watch the video looking for facts. And stop
+   sending us links to the video - we've all seen it!
+
+   .. figure:: /images/article/everything-you-know-is-wrong/max-is-cool.jpg
+      :scale: 50%
+      :alt: Max is cool, and he's seen the YouTube video.
+      
+      Max is cool, and he's seen the YouTube video
+
+   What Exactly *is* MongoDB?
+   ==========================
+
+   Before launching into some things that MongoDB *isn't*, let's just
+   summarize what MongoDB actually *is.*
+
+   MongoDB is a distributed document database. Clusters (we call them
+   replica sets) are mostly self-managing - once you've told each of the
+   machines which other servers are in the cluster, then they'll handle it
+   if one of the nodes goes down or there are problems with the network. If
+   one of the machines gets shut off or crashes, the others will take over.
+   Each server in the cluster holds a complete copy of all of the data in
+   the database.
+
+   .. figure:: /images/article/everything-you-know-is-wrong/a-cluster.png
+      :scale: 50%
+      :alt: A cluster, or replica set
+      
+      A cluster, or replica set
+
+   Clusters are for redundancy, not scalability. All the clients are
+   generally connected to only one server - the elected primary, which is
+   responsible for executing queries and updates, and transmitting data
+   changes to the secondary machines, which are there in case of server
+   failure.
+
+   There *are* some interesting things you can do by connecting directly to
+   the secondaries, like running analytics queries, because the machines
+   are under less read load. But in general, forcing a connection to a
+   secondary means you're going to be working with slightly stale data, so
+   you shouldn't connect to the primary unless you're prepared to
+   make some compromises.
+
+   So I've covered "distributed." What do I mean by "document database?"
+
+   The thing that makes MongoDB different from traditional relational
+   databases is that instead of being able to store atoms of data in flat
+   rows, stored in tables in the database, MongoDB allows you to store
+   hierarchical structured data in a *document* - which is (mostly)
+   analogous to a JSON object. Documents are stored in a collection, which
+   is really just a bucket of documents. Each document can have a different
+   structure, or *schema*, from all the other documents in the collection.
+   You can (and should!) also index documents in collections, based on the
+   kind of queries you're going to be running and the data that you're
+   storing. And if you want validation to ensure that all the documents in
+   a collection *do* follow a set structure, you can `apply a JSON schema
+   <https://docs.mongodb.com/manual/core/schema-validation/>`__ to
+   the collection as a validator.
+
+   .. code:: javascript
+
+      {
+         '_id': ObjectId('573a1390f29313caabcd4135'),
+         'title': 'Blacksmith Scene',
+         'fullplot': 'A stationary camera looks at a large anvil with a
+         blacksmith behind it and one on either side.',
+         'cast': ['Charles Kayser', 'John Ott'],
+         'countries': ['USA'],
+         'directors': ['William K.L. Dickson'],
+         'genres': ['Short'],
+         'imdb': {'id': 5, 'rating': 6.2, 'votes': 1189},
+         'released': datetime.datetime(1893, 5, 9, 0, 0),
+         'runtime': 1,
+         'year': 1893
+      }
+
+   The above document is an example, showing a movie from 1893! This
+   document was retrieved using the PyMongo driver.
+
+   Note that some of the values are arrays, like 'countries' and 'cast'.
+   Some of the values are objects (we call them subdocuments). This
+   demonstrates the hierarchical nature of MongoDB documents - they're not
+   flat like a table row in a relational database.
+
+   Note *also* that it contains a native Python datetime type for the
+   'released' value, and a special *ObjectId* type for the first value.
+   Maybe these aren't actually JSON documents? I'll come back to that
+   later...
+
+   Myth 1: MongoDB is on v3.2
+   ==========================
+
+   If you install MongoDB on Debian Stretch, with apt get mongodb, it will
+   install version 3.2. Unfortunately, this version is five years old!
+   There have been five major annual releases since then, containing a
+   whole host of new features, as well as security, performance, and
+   scalability improvements.
+
+   **The current version of MongoDB
+   is** `v4.4 <https://docs.mongodb.com/manual/release-notes/4.4/>`__ (in
+   October 2020). If you want to install it, you should install `MongoDB
+   Community Server <https://www.mongodb.com/try/download/community>`__,
+   but first make sure you've read about `MongoDB
+   Atlas <https://www.mongodb.com/cloud/atlas>`__,
+   our hosted database-as-a-service product! 
+
+   Myth 2: MongoDB is a JSON Database
+   ==================================
+
+   You'll almost certainly have heard that MongoDB is a JSON database,
+   especially if you've read the MongoDB.com homepage recently!
+
+   .. figure:: /images/article/everything-you-know-is-wrong/mongodb-says-json.png
+      :alt: The MongoDB homepage, at time of writing, says that MongoDB is a JSON database.
+
+      The MongoDB website calls MongoDB a JSON database.
+
+   As I implied before, though, MongoDB *isn't* a JSON database. It
+   supports extra data types, such as ObjectIds, native date objects, more
+   numeric types, geographic primitives, and an efficient binary type, among
+   others!
+
+   This is because **MongoDB is a BSON database**.
+
+   This may seem like a trivial distinction, but it's important. As well as
+   being more efficient to store, transfer, and traverse than using a
+   text-based format for structured data, as well as supporting more data
+   types than JSON, it's also *everywhere* in MongoDB.
+
+   -  MongoDB stores BSON documents.
+   -  Queries to look up documents are BSON documents.
+   -  Results are provided as BSON documents.
+   -  BSON is even used for the wire protocol used by MongoDB!
+
+   Myth 3: MongoDB Doesn't Support Transactions
+   ============================================
+
+   When reading third-party descriptions of MongoDB, you may come across
+   blog posts describing it as a BASE database. BASE is an acronym for
+   "Basic Availability; Soft-state; Eventual consistency."
+
+   But this is not the case! Some of these parts have never been the case -
+   MongoDB has never been "eventually consistent" - updates are streamed
+   and applied sequentially to secondary nodes, so although they might be
+   *behind*, they're never *inconsistent*. Soft-state apparently describes
+   the need to continually update data or it will expire, which is also not
+   the case.
+
+   And finally, MongoDB *will* go into a read-only state (reducing
+   availability) if so many nodes have been taken down that a quorum cannot
+   be achieved. This is by design. It ensures that consistency and
+   partition tolerance are maintained when everything goes wrong.
+
+   **MongoDB is an ACID database**. It supports atomicity, consistency,
+   isolation, and durability.
+
+   Updates to multiple parts of individual documents have always been
+   atomic; but since v4.0, MongoDB has supported transactions across
+   multiple documents and collections. Since v4.2, this is even supported
+   across shards in a sharded cluster.
+
+   Despite *supporting* transactions, they should be used with care. They
+   have a performance cost, and because MongoDB supports rich, hierarchical
+   documents, if your schema is designed correctly, you should not often
+   have to update across multiple documents.
+
+   Myth 4: MongoDB Doesn't Support Relationships
+   =============================================
+
+   Another out-of-date myth about MongoDB is that you can't have
+   relationships between collections or documents. You *can* do joins with
+   queries that we call aggregation pipelines. They're super-powerful,
+   allowing you to query and transform your data from multiple collections
+   using an intuitive query model that consists of a series of pipeline
+   stages applied to data moving through the pipeline.
+
+   **MongoDB has supported lookups (joins) since v2.2.**
+
+   The example document below shows how, after a query joining an *orders*
+   collection and an *inventory* collection, a returned order document
+   contains the related inventory documents, embedded in an array.
+
+   .. figure:: /images/article/everything-you-know-is-wrong/embedded-documents.png
+      :alt: After a lookup, related documents are *embedded* in the documents returned.
+
+      After a lookup, related documents are embedded in the documents returned.
+
+   My opinion is that being able to embed related documents within the
+   primary documents being returned is more intuitive than duplicating rows
+   for every relationship found in a relational join.
+
+   Myth 5: MongoDB is All About Sharding
+   =====================================
+
+   You may hear people talk about sharding as a cool feature of MongoDB.
+   And it is - it's definitely a cool, and core, feature of MongoDB.
+
+   Sharding is when you divide your data and put each piece in a different
+   replica set or cluster. It's a technique for dealing with huge data
+   sets. MongoDB supports automatically ensuring data and requests are sent
+   to the correct replica sets, and merging results from multiple shards.
+
+   But there's a fundamental issue with sharding.
+
+   I mentioned earlier in this post that the minimum number of nodes in a
+   replica set is three, to allow quorum. As soon as you need sharding, you
+   have at least two replica sets, so that's a minimum of six servers. On top
+   of that, you need to run multiple instances of a server called *mongos*.
+   Mongos is a proxy for the sharded cluster which handles the routing of
+   requests and responses. For high availability, you need at least two
+   instances of mongos.
+
+   .. figure:: /images/article/everything-you-know-is-wrong/minimum-sharded-cluster.png
+      :alt: A minimum sharded cluster consists of at least 8 servers.
+
+      A minimum sharded cluster
+
+   So, this means a minimum sharded cluster is eight servers, and it goes up by
+   at least three servers, with each shard added.
+
+   Clusters also make your data harder to manage, and they add some
+   limitations to the types of queries you can conduct. **Sharding is
+   useful if you need it, but it's often cheaper and easier to simply
+   upgrade your hardware!**
+
+   Scaling data is mostly about RAM, so if you can, buy more RAM. If CPU is
+   your bottleneck, upgrade your CPU, or buy a bigger disk, if that's your
+   issue.
+
+   MongoDB's sharding features are still there for you once you scale
+   beyond the amount of RAM that can be put into a single computer. You can
+   also do some neat things with shards, like geo-pinning, where you can
+   store user data geographically closer to the user's location, to reduce
+   latency.
+
+   If you're attempting to scale by sharding, you should at least consider
+   whether hardware upgrades would be a more efficient alternative, first.
+
+   And before you consider *that*, you should look at `MongoDB
+   Atlas <https://www.mongodb.com/cloud/atlas>`__, MongoDB's hosted
+   Database-as-a-Service product. (Yes, I know I've already mentioned it!)
+   As well as hosting your database for you, MongoDB Atlas will also scale
+   your database up and down as required, keeping you available, while
+   keeping costs low. It'll handle backups and redundancy, and also
+   includes extra features, such as charts, text search, serverless
+   functions, and more.
+
+   Myth 6: MongoDB is Insecure
+   ===========================
+
+   A rather persistent myth about MongoDB is that it's fundamentally
+   insecure. My personal feeling is that this is one of the more unfair
+   myths about MongoDB, but it can't be denied that there are many insecure
+   instances of MongoDB available on the Internet, and there have been
+   several high-profile data breaches involving MongoDB.
+
+   This is historically due to the way MongoDB has been distributed. Some
+   Linux distributions used to ship MongoDB with authentication disabled,
+   and with networking enabled.
+
+   So, if you didn't have a firewall, or if you opened up the MongoDB port
+   on your firewall so that it could be accessed by your web server... then
+   your data would be stolen. Nowadays, it's just as likely that a bot will
+   find your data, encrypt it within your database, and then add a document
+   telling you where to send Bitcoin to get the key to decrypt it again.
+
+   *I* would argue that if you put an unprotected database server on the
+   internet, then that's *your* fault - but it's definitely the case that
+   this has happened many times, and there were ways to make it more
+   difficult to mess this up.
+
+   We've fixed the defaults. **MongoDB will not connect to the network
+   unless authentication is enabled** *or* you provide a specific flag to
+   the server to override this behaviour. So, you can still *be* insecure,
+   but now you have to at least read the manual first!
+
+   Other than this, **MongoDB uses industry standards for security**, such
+   as TLS to encrypt the data in-transit, and SCRAM-SHA-256 to authenticate
+   users securely.
+
+   MongoDB also features `client-side field-level encryption
+   <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ (FLE),
+   which allows you to store data in MongoDB so that it is encrypted both in-transit and at-rest.
+   This means that if a third-party was to gain access to your database server,
+   they would be unable to read the encrypted data without also gaining access to the client.
+
+   Myth 7: MongoDB Loses Data
+   ==========================
+
+   This myth is a classic Hacker News trope. Someone posts an example of
+   how they successfully built something with MongoDB, and there's an
+   immediate comment saying, "I know this guy who once lost all his data in
+   MongoDB. It just threw it away. Avoid."
+
+   If you follow up asking these users to get in touch and file a ticket
+   describing the incident, they never turn up!
+
+   More seriously, MongoDB has paid for several test runs by
+   `Jepsen <https://jepsen.io/>`__, to ensure data consistency even in
+   challenging networking conditions. These tests have been added to our
+   automated test suite. Some of the tests found bugs - they were meant to
+   - and we fixed them. There remain some differences of opinion with
+   Jepsen about MongoDB's defaults, but if you read the manual, **you can
+   rely on MongoDB to store and maintain your data consistently and
+   robustly**.
+
+   MongoDB is used in a range of industries who care deeply about keeping
+   their data. These range from banks such as Morgan Stanley, Barclays and HSBC
+   to massive publishing brands, like Forbes. We've never had a report of
+   large-scale data loss. If you *do* have a first-hand story to tell of
+   data loss, please `file a ticket <https://jira.mongodb.org/>`__. We'll
+   take it seriously whether you're a paying enterprise customer or an open-source
+   user.
+
+   Myth 8: MongoDB is Easy
+   =======================
+
+.. summary::
+
+   MongoDB, like any database, is a big and complex thing. Although it's
+   very easy to get started, if you don't go and read the manual at some
+   point, you're going to struggle.
+
+   You'll miss out on features you really wanted or needed, or you'll want
+   to optimise your database, or scale it out, in a way that's not
+   straightforward.
+
+   You're not going to become an expert overnight. The good news is that
+   there are lots of resources for learning MongoDB, and it's fun!
+
+   The `MongoDB documentation <https://docs.mongodb.com/>`__ is thorough
+   and readable. There are many free courses at `MongoDB
+   University <https://university.mongodb.com/>`__
+
+   On the `MongoDB Developer Blog <https://developer.mongodb.com/>`__, we
+   have detailed some `MongoDB
+   Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
+   for schema design and development. My awesome colleague `Lauren
+   Schaefer <https://developer.mongodb.com/author/lauren-schaefer>`__ has
+   been producing a series of posts describing `MongoDB
+   Anti-Patterns <https://developer.mongodb.com/article/schema-design-anti-pattern-summary>`__
+   to help you recognise when you may not be doing things optimally.
+
+   MongoDB has an active `Community
+   Forum <https://developer.mongodb.com/community/forums/>`__ where you can
+   ask questions or show off your projects.
+
+   So, **MongoDB is big and complex, and there's a lot to learn**, but I
+   hope this article has gone some way to explaining what MongoDB is and
+   what it isn't and how you might go about learning to use it effectively.
