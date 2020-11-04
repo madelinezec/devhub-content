@@ -22,6 +22,8 @@
 
 .. pubdate:: 2020-06-19
 
+.. updated-date:: 2020-11-04
+
 .. type:: article
 
 .. level:: beginner
@@ -52,7 +54,8 @@ The MongoDB Atlas Sample Datasets
    
    In the rest of this post, we'll explore why it was created, how to 
    firstly load the sample data and then we'll outline what the datasets 
-   contain.
+   contain. We'll also cover how you can download these datasets to use 
+   them on your own local machine.
 
    Table of Contents
    -----------------
@@ -70,6 +73,7 @@ The MongoDB Atlas Sample Datasets
       - :ref:`atlas-sample-training-listing-dataset`
       - :ref:`atlas-sample-weather-listing-dataset`
 
+   -  :ref:`atlas-sample-data-local-installation`
    -  :ref:`atlas-sample-data-wrap`
 
 
@@ -435,6 +439,58 @@ The MongoDB Atlas Sample Datasets
 
    If you have ideas or suggestions for new datasets, we are always interested.
    Let us know on the `developer community website <https://community.mongodb.com/>`__.
+
+
+   .. _atlas-sample-data-local-installation:
+
+   Downloading the dataset for use on your local machine
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   It is also possible to download and explore these datasets on your own local
+   machine. You can download the complete sample dataset via the wget command:
+
+   .. code-block:: shell
+
+      wget https://atlas-education.s3.amazonaws.com/sampledata.archive
+
+   Note: You can also use the curl command:
+
+   .. code-block:: shell
+
+      curl https://atlas-education.s3.amazonaws.com/sampledata.archive -o sampledata.archive
+
+   You should check you are running a local ``mongod`` instance or you should 
+   start a new ``mongod`` instance at this point. This ``mongod`` will be used 
+   in conjunction with ``mongorestore`` to unpack and host a local copy of the 
+   sample dataset. You can find more details on `starting mongod instances on
+   this documentation page <https://docs.mongodb.com/manual/tutorial/manage-mongodb-processes/>`__.
+
+   This section assumes that you're connecting to a relatively
+   straightforward setup - with a default authentication database and some
+   authentication set up.
+   (You should *always*
+   `create some users <https://docs.mongodb.com/manual/tutorial/create-users/>`__
+   for authentication!)
+
+   If you don't provide any connection details to ``mongorestore``, it will
+   attempt to connect to MongoDB on your local machine, on port 27017
+   (which is MongoDB's default). This is the same as providing
+   ``--host localhost:27017``.
+
+   .. code:: bash
+
+      mongorestore --archive=sampledata.archive
+
+   You can use a variety of tools to view your documents, you can use `MongoDB 
+   Compass <https://docs.mongodb.com/compass/master/connect#connect>`__,
+   `the CLI <https://docs.mongodb.com/manual/mongo/#start-the-mongo-shell-and-connect-to-mongodb>`__, 
+   or the `MongoDB Visual Studio Code (VSCode) plugin <https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode>`__
+   to interact with the documents in your collections. You can find out how
+   to use `MongoDB Playground for VSCode <https://docs.mongodb.com/mongodb-vscode/playgrounds>`__
+   and integrate MongoDB into a Visual Studio Code environment.
+
+   If you find the sample data useful for building or helpful, let us know on
+   the `community forums <https://developer.mongodb.com/community/forums/>`__!
 
 .. summary::
 
