@@ -27,18 +27,22 @@ MongoDB 4.0
 MongoDB 4.2
 MongoDB 4.4
 Node.js
+Public Speaking
 Raspberry Pi
 React
 Releases
 Schema Design
 Security
-Starlette
+Speaker Program
 SQL
+Starlette
 Technical
 Testing
 Time Series
+Tornado
 Transactions
 University
 VS Code
 Public Speaking
 Speaker Program
+WebSockets

@@ -1,0 +1,231 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/productivity.png
+
+.. meta-description:: 
+
+    Subscribe to MongoDB Change Streams via WebSockets using Python and Tornado.
+
+.. twitter::
+    :creator: @aaronbassett
+    :title: Subscribing to MongoDB Change Streams Via WebSockets
+    :image: /images/social/twitter/twitter-mdb-developer.png
+    :image-alt: MongoDB Change Streams via WebSockets
+
+    Subscribe to MongoDB Change Streams via WebSockets using Python and Tornado
+
+.. og::
+    :title: Subscribing to MongoDB Change Streams Via WebSockets
+    :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/bassett-aaron.rst
+
+.. pubdate:: 2020-11-04
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. tags:: 
+
+    * WebSockets
+    * Tornado
+    * Change Streams
+
+.. languages::
+
+    * Python
+    * JavaScript
+
+.. products::
+
+    * MongoDB
+
+==================================================
+Subscribe to MongoDB Change Streams Via WebSockets
+==================================================
+
+.. introduction::
+
+    `Change streams <https://docs.mongodb.com/manual/changeStreams/>`__ allow applications to access real-time data changes without the complexity and risk of tailing the `oplog <https://docs.mongodb.com/manual/reference/glossary/#term-oplog>`__. Applications can use change streams to subscribe to all data changes on a single collection, a database, or an entire deployment, and immediately react to them. Because  change streams use the aggregation framework, applications can also filter for specific changes or transform the notifications at will.
+
+.. prerequisites::
+
+    Prerequisites
+    -------------
+
+    The example code in this article will assume you have a cluster running in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__, but it will work with any MongoDB version from 3.6 onwards.
+
+    You will also need `Python 3.6+ <https://docs.python.org/3/whatsnew/3.6.html#whatsnew36-pep498>`__ with `Motor <https://motor.readthedocs.io/en/stable/index.html>`__ and `Tornado <https://www.tornadoweb.org/en/stable/>`__ installed.
+
+    .. code-block:: bash
+
+        pip install motor
+        pip install tornado
+        pip install dnspython
+        pip install logzero
+
+
+.. content::
+
+    Creating a WebSocket Server
+    ---------------------------
+
+    To allow clients to subscribe to your change stream via WebSockets, you must first create a WebSocket server. This WebSocket server, written in Python and using Tornado, proxies any new data from the change stream to your connected clients.
+
+    .. code-block:: python
+
+        class ChangesHandler(tornado.websocket.WebSocketHandler):
+
+            connected_clients = set()
+
+            def open(self):
+                ChangesHandler.connected_clients.add(self)
+
+            def on_close(self):
+                ChangesHandler.connected_clients.remove(self)
+
+            @classmethod
+            def send_updates(cls, message):
+                for connected_client in cls.connected_clients:
+                    connected_client.write_message(message)
+
+            @classmethod
+            def on_change(cls, change):
+                message = f"{change['operationType']}: {change['fullDocument']['name']}"
+                ChangesHandler.send_updates(message)
+
+
+
+    Opening and Closing WebSocket Connections
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    As clients connect and disconnect from the WebSocket server, they trigger the ``open`` and ``on_close`` methods. 
+
+    .. code-block:: python
+
+        connected_clients = set()
+
+        def open(self):
+            ChangesHandler.connected_clients.add(self)
+
+        def on_close(self):
+            ChangesHandler.connected_clients.remove(self)
+
+    When a client connects, your server stores a reference to it in the ``connected_clients`` set. This allows it to push new data to the client when it is received from the change stream. Likewise, when a client disconnects from the server, it is removed from the set of connected clients, so your server does not try to push updates on a connection which no longer exists.
+
+    It is worth noting that the server does not have a ``on_message`` handler. As WebSockets are bi-directional, typically a WebSocket server has a ``on_message`` method. When the client sends data to the server, it invokes this method to handle the incoming message. However, as you are only using the WebSocket connection to push change stream data to the connected clients, your WebSocket connection is essentially mono-directional, and your server does not have a method for handling inbound data.
+
+    Pushing Messages to Connected Clients
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. code-block:: python
+
+        @classmethod
+        def send_updates(cls, message):
+            for connected_client in cls.connected_clients:
+                connected_client.write_message(message)
+
+        @classmethod
+        def on_change(cls, change):
+            message = f"{change['operationType']}: {change['fullDocument']['name']}"
+            ChangesHandler.send_updates(message)
+        
+    When you have new data from the change stream, you pass it to the WebSocket server using the ``on_change`` method. This method formats the change stream data into a string ready to be pushed out to the connected clients. This push occurs in the ``send_updates`` method. Within this method, you loop over all clients in the ``connected_clients`` set and use the ``write_message`` action to write the data to the client's WebSocket connection.
+
+    Monitoring a Change Stream for Changes
+    --------------------------------------
+
+    In Motor, `MongoDB Collections <https://docs.mongodb.com/manual/core/databases-and-collections/>`__ have a ``watch()`` method which you can use to monitor the collection for any changes. Then, whenever there is a new change on the stream, you can use the WebSocket server's ``on_change`` method to proxy the data to the WebSocket clients.
+
+    .. code-block:: python
+
+        change_stream = None
+
+        async def watch(collection):
+            global change_stream
+
+            async with collection.watch(full_document='updateLookup') as change_stream:
+                async for change in change_stream:
+                    ChangesHandler.on_change(change)
+
+    This ``watch`` function is attached to your Tornado loop as a callback.
+
+    .. code-block:: python
+
+        def main():
+            client = MotorClient(os.environ["MONGO_SRV"])
+            collection = client["sample_airbnb"]["listingsAndReviews"]
+
+            loop = tornado.ioloop.IOLoop.current()
+            loop.add_callback(watch, collection)
+
+            try:
+                loop.start()
+            except KeyboardInterrupt:
+                pass
+            finally:
+                if change_stream is not None:
+                    change_stream.close()
+
+
+    Subscribing to Changes in the Browser Via WebSockets
+    ----------------------------------------------------
+
+    For this example, your WebSocket client is a simple web page, and it logs any WebSocket messages to the browser's JavaScript console.
+
+    .. code-block:: javascript
+
+        <html>
+            <head>
+                <script>
+                    const websocket = new WebSocket('ws://127.0.0.1:8000/socket')
+                    websocket.onmessage = function(evt) {
+                        console.log(evt.data)
+                    }
+                </script>
+            </head>
+            <body></body>
+        </html>
+
+    You can use Tornado to serve this web page as well.
+
+    .. code-block:: python
+
+        class WebpageHandler(tornado.web.RequestHandler):
+            def get(self):
+                self.render("templates/index.html")
+
+    Putting it All Together
+    -----------------------
+
+    .. image:: /images/how-to/subscribing-changes-browser-websockets/collection-watch-websocket.gif
+        :alt: Screencast showing change being sent in real-time via a WebSocket
+        :align: center
+
+    To try the example for yourself:
+
+    - clone the example code from `GitHub <https://github.com/aaronbassett/mongodb-changestreams-tornado-example>`__.
+    - install the requirements.
+    - set the required environmental variables.
+    - run the Python script.
+
+    .. code-block:: shell
+
+        git clone git@github.com:aaronbassett/mongodb-changestreams-tornado-example.git
+        cd mongodb-changestreams-tornado-example
+        pip install -r requirements.txt
+        export MONGO_SRV=
+        python server.py
+
+    Once the WebSocket server is running in your terminal, open a browser window to `localhost:8000 <http://127.0.0.1:8000>`__ and view your JavaScript console. Then, make some changes to your Collection via `Compass <https://www.mongodb.com/products/compass>`__ or the `MongoDB Shell <https://docs.mongodb.com/manual/mongo/>`__.
+
+
+.. summary::
+
+    Wrap-Up
+    -------
+
+    In this article, you have subscribed to all changes on a single collection. However, you can use change streams to subscribe to all data changes on a single collection, a database, or even an entire deployment. And, because change streams use the `aggregation framework <https://docs.mongodb.com/manual/aggregation/>`__, applications can also filter for specific changes or transform the notifications.
+
+    For more information, see the `MotorChangeStream documentation <https://motor.readthedocs.io/en/stable/api-tornado/motor_change_stream.html>`__.
