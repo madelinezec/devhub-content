@@ -1,0 +1,344 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to use Unity tilemaps to create complex 2D worlds for your game.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Designing and Developing 2D Game Levels with Unity and C#
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to use Unity tilemaps to create complex 2D worlds for your game.
+
+.. og::
+   :title: Designing and Developing 2D Game Levels with Unity and C#
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-11-05
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * C#
+
+.. tags::
+
+   * Game Development
+
+=========================================================
+Designing and Developing 2D Game Levels with Unity and C#
+=========================================================
+
+.. introduction::
+
+   If you've been keeping up with the game development series that me (`Nic
+   Raboy <https://www.nraboy.com>`__) and `Adrienne
+   Tacke <https://www.twitter.com/adriennetacke>`__ have been creating,
+   you've probably seen how to `create a user profile store for a
+   game <https://developer.mongodb.com/how-to/creating-user-profile-store-game-nodejs-mongodb>`__
+   and `move a player around on the screen with
+   Unity <https://developer.mongodb.com/how-to/getting-started-unity-creating-2d-game>`__.
+
+   To continue with the series, which is also being streamed on
+   `Twitch <https://www.twitch.tv/mongodb>`__, we're at a point where we
+   need to worry about designing a level for gameplay rather than just
+   exploring a blank screen.
+
+   In this tutorial, we're going to see how to create a level, which can
+   also be referred to as a map or world, using simple C# and the Unity
+   Tilemap Editor.
+
+   To get a better idea of what we plan to accomplish, take a look at the
+   following animated image.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-tilemap-level-example.gif
+      :alt: Unity Tilemap Level Example
+
+      Unity Tilemap Level Example
+
+   You'll notice that we're moving a non-animated sprite around the screen.
+   You might think at first glance that the level is one big image, but it
+   is actually many tiles placed carefully within Unity. The edge tiles
+   have collision boundaries to prevent the player from moving off the
+   screen.
+
+   If you're looking at the above animated image and wondering where
+   `MongoDB <https://www.mongodb.com>`__ fits into this, the short answer
+   is that it doesn't. The game that Adrienne and I are building will
+   leverage MongoDB, but some parts of the game development process such as
+   level design won't need a database. We're attempting to tell a story
+   with this series.
+
+.. content::
+
+   Using the Unity Tilemap Editor to Draw 2D Game Levels
+   -----------------------------------------------------
+
+   There are many ways to create a level for a game, but as previously
+   mentioned, we're going to be using tilemaps. Unity makes this easy for
+   us because the software provides a paint-like experience where we can
+   draw tiles on the canvas using any available images that we load into
+   the project.
+
+   For this example, we're going to use the following texture sheet:
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/doordash-level.png
+      :alt: Plummeting People Doordash Level
+
+      Plummeting People Doordash Level
+
+   Rather than creating a new project and repeating previously explained
+   steps, we're going to continue where we left off from the `previous
+   tutorial <https://developer.mongodb.com/how-to/getting-started-unity-creating-2d-game>`__.
+   The **doordash-level.png** file should be placed in the
+   **Assets/Textures** directory of the project.
+
+   While we won't be exploring animations in this particular tutorial, if
+   you want the spritesheet used in the animated image, you can download it
+   below:
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/plummie.png
+      :alt: Plummie Spritesheet
+
+      Plummie Spritesheet
+
+   The **plummie.png** file should be added to the project's
+   **Assets/Textures** directory. To learn how to animate the spritesheet,
+   take a look at a `previous
+   tutorial <https://www.thepolyglotdeveloper.com/2020/10/animate-spritesheets-unity-2d-game/>`__
+   I wrote on the topic.
+
+   Inside the Unity editor, click on the **doordash-level.png** file that
+   was added. We're going to want to do a few things before we can work
+   with each tile as independent images.
+
+   -  Change the sprite mode to **Multiple**.
+   -  Define the actual **Pixels Per Unit** of the tiles in the texture
+      packed image.
+   -  Split the tiles using the **Sprite Editor**.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-spritesheet-edit.jpg
+      :alt: Define Spritesheet Information in Unity
+
+      Define Spritesheet Information in Unity
+
+   In the above image, you might notice that the **Pixels Per Unit** value
+   is **255** while the actual tiles are **256**. By defining the tiles as
+   one pixel smaller, we're attempting to remove any border between the
+   tile images that might make the level look weird due to padding.
+
+   When using the **Sprite Editor**, make sure to slice the image by the
+   cell size using the correct width and height dimensions of the tiles. For
+   clarity, the tiles that I attached are 256x256 in resolution.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-sprite-editor.jpg
+      :alt: Unity Sprite Editor
+
+      Unity Sprite Editor
+
+   If you plan to use the spritesheet for the Plummie character, make sure
+   to repeat the same steps for that spritesheet as well. It is important
+   we have access to the individual images in a spritesheet rather than
+   treating all the images as one single image.
+
+   With the images ready for use, let's focus on drawing the level.
+
+   Within the Unity menu, choose **Component -> Tilemap -> Tilemap** to add
+   a new tilemap and parent grid object to the scene. To get the best
+   results, we're going to want to layer multiple tilemaps on our scene.
+   Right click on the **Grid** object in the scene and choose **2D Object
+   -> Tilemap**. You'll want three tilemaps in total for this particular
+   example.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-new-tilemap.jpg
+      :alt: Unity New Tilemap
+
+      Unity New Tilemap
+
+   We want multiple tilemap layers because it will add depth to the scene
+   and more control. For example, one layer will represent the furthest
+   part of our background, maybe dirt or floors. Another layer will
+   represent any kind of decoration that will sit on top of the floors — say,
+   for example, arrows. Then, the final tilemap layer might represent our
+   walls or obstacles.
+
+   To make sure the layers get rendered in the correct order, the **Tilemap
+   Renderer** for each tilemap should have a properly defined **Sorting
+   Layer**. If continuing from the previous tutorial, you'll remember we
+   had created a **Background** layer and a **GameObject** layer. These can
+   be used, or you can continue to create and assign more. Just remember
+   that the render order of the sorting layers is top to bottom, the
+   opposite of what you'd experience in photo editing software like Adobe
+   Photoshop.
+
+   The next step is to open the **Tile Palette** window within Unity. From
+   the menu, choose **Window -> 2D -> Tile Palette**. The palette will be
+   empty to start, but you'll want to drag your images either one at a time
+   or multiple at a time into the window.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-tile-palette-images.jpg
+      :alt: Unity Tile Palette Images
+
+      Unity Tile Palette Images
+
+   With images in the tile palette, they can be drawn on the scene like
+   painting on a canvas. First click on the tile image you want to use and
+   then choose the painting tool you want to use. You can paint on a
+   tile-by-tile basis or paint multiple tiles at a time.
+
+   It is important that you have the proper **Active Tilemap** selected
+   when drawing your tiles. This is important because of the order that
+   each tile renders and any collision boundaries we add later.
+
+   Take a look at the following possible result:
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-tilemap-layer-results.jpg
+      :alt: Unity Tilemaps for Level Design
+
+      Unity Tilemaps for Level Design
+
+   Remember, we're designing a level, so this means that your tiles can
+   exceed the view of the camera. Use your tiles to make your level as big
+   and extravagant as you'd like.
+
+   Assuming we kept the same logic from the previous tutorial, `Getting
+   Started with Unity for Creating a 2D
+   Game <https://developer.mongodb.com/how-to/getting-started-unity-creating-2d-game>`__,
+   we can move our player around in the level, but the player can exceed
+   the screen. The player may still be a white box or the Plummie sprite
+   depending on what you've chosen to do. Regardless, we want to make sure
+   our layer that represents the boundaries acts as a boundary with
+   collision.
+
+   Adding Collision Boundaries to Specific Tiles and Regions on a Level
+   --------------------------------------------------------------------
+
+   Adding collision boundaries to tiles in a tilemap is quite easy and
+   doesn't require more than a few clicks.
+
+   Select the tilemap that represents our walls or boundaries and choose to
+   **Add Component** in the inspector. You'll want to add both a **Tilemap
+   Collider 2D** as well as a **Rigidbody 2D**. The **Body Type** of the
+   **Rigidbody 2D** should be static so that gravity and other physics-related
+   events are not applied.
+
+   After doing these short steps, the player should no longer be able to go
+   beyond the tiles for this layer.
+
+   We can improve things!
+
+   Right now, every tile that is part of our tilemap with the **Tilemap
+   Collider 2D** and **Rigidbody 2D** component has a full collision area
+   around the tile. This is true even if the tiles are adjacent and parts
+   of the tile can never be reached by the player. Imagine having four
+   tiles creating a large square. Of the possible 16 collision regions,
+   only eight can ever be interacted with. We're going to change this, which
+   will greatly improve performance.
+
+   On the tilemap with the **Tilemap Collider 2D** and **Rigidbody 2D**
+   components, add a **Composite Collider 2D** component. After adding,
+   enable the **Used By Composite** field in the **Tilemap Collider 2D**
+   component.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-tilemap-composite-collider-2d.jpg
+      :alt: Unity Composite Collider 2D on Tilemap
+
+      Unity Composite Collider 2D on Tilemap
+
+   Just like that, there are fewer regions that are tracking collisions,
+   which will boost performance.
+
+   Following the Player While Traversing the 2D Game Level using C#
+   ----------------------------------------------------------------
+
+   As of right now, we have our player, which might be a Plummie or might be
+   a white pixel, and we have our carefully crafted level made from tiles.
+   The problem is that our camera can only fit so much into view, which
+   probably isn't the full scope of our level.
+
+   What we can do as part of the gameplay experience is have the camera
+   follow the player as it traverses the level. We can do this with C#.
+
+   Select the **Main Camera** within the current scene. We're going to want
+   to add a new script component.
+
+   Within the C# script that you'll need to attach, include the following
+   code:
+
+   .. code-block:: csharp
+
+      using System.Collections;
+      using System.Collections.Generic;
+      using UnityEngine;
+
+      public class CameraPosition : MonoBehaviour
+      {
+
+         public Transform player;
+
+         void Start() {}
+
+         void Update()
+         {
+            transform.position = new Vector3(player.position.x, 0, -10);
+         }
+      }
+
+   In the above code, we are looking at the transform of another unrelated
+   game object. We'll attach that game object in just a moment. Every time
+   the frame updates, the position of the camera is updated to match the
+   position of the player in the x-axis. In this example, we are fixing the
+   y-axis and z-axis so we are only following the player in the left and
+   right direction. Depending on how you've created your level, this might
+   need to change.
+
+   Remember, this script should be attached to the **Main Camera** or
+   whatever your camera is for the scene.
+
+   .. image:: /images/designing-developing-2d-game-levels-unity-csharp/unity-camera-transform.jpg
+      :alt: Unity Camera to Player Transform
+
+      Unity Camera to Player Transform
+
+   Remember the ``player`` variable in the script? You'll find it in the
+   inspector for the camera. Drag your player object from the project
+   hierarchy into this field and that will be the object that is followed
+   by the camera.
+
+   Running the game will result in the camera being centered on the player.
+   As the player moves through the tilemap level, so will the camera. If
+   the player tries to collide with any of the tiles that have collision
+   boundaries, motion will stop.
+
+.. summary::
+
+   Conclusion
+   ----------
+
+   You just saw how to create a 2D world in Unity using tile images and the
+   Unity Tilemap Editor. This is a very powerful tool because you don't
+   have to create massive images to represent worlds and you don't have to
+   worry about creating worlds with massive amounts of game objects.
+
+   The assets we used in this tutorial are based around a series that myself
+   (`Nic Raboy <https://www.nraboy.com>`__) and `Adrienne
+   Tacke <https://www.twitter.com/adriennetacke>`__ are building titled Plummeting
+   People. This series is on the topic of building a multiplayer game with
+   Unity that leverages MongoDB. While this particular tutorial didn't
+   include MongoDB, plenty of other tutorials in the series will.
+
+   If you feel like this tutorial skipped a few steps, it
+   did. I encourage you to read through some of the previous tutorials in
+   the series to catch up.
+
+   If you want to build Plummeting People with us, follow us on `Twitch <https://www.twitch.tv/mongodb>`__ where we work 
+   toward building it live, every other week.
