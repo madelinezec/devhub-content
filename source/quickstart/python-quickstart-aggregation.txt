@@ -1,0 +1,736 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/quickstart/python.png
+
+.. meta-description::
+
+   Query, group, and join data in MongoDB using aggregation pipelines with Python.
+
+.. twitter::
+   :creator: @judy2k
+   :title: QuickStart: aggregation pipelines in Python
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Query, group, and join data in MongoDB using aggregation pipelines with Python.
+
+.. og::
+   :title: QuickStart: aggregation pipelines in Python
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-11-05
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. languages::
+
+   * Python
+
+.. products::
+
+   * Atlas
+   * MongoDB
+
+.. tags::
+
+   * Aggregation Framework
+
+====================================================
+Getting Started with Aggregation Pipelines in Python
+====================================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-python.png
+      :scale: 30%
+      :alt: Python badge
+      :align: right
+
+   MongoDB's `aggregation
+   pipelines <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__
+   are one of its most powerful features. They allow you to write
+   expressions, broken down into a series of stages, which perform
+   operations including aggregation, transformations, and joins on the data in
+   your MongoDB databases.
+   This allows you to do calculations and analytics across documents and collections within your MongoDB database.
+
+.. prerequisites::
+
+   Prerequisites
+   =============
+
+   This quick start is the second in a series of Python posts.
+   I *highly* recommend you start with my first post,
+   `Basic MongoDB Operations in Python <https://developer.mongodb.com/quickstart/python-quickstart-crud>`__,
+   which will show you how to get set up correctly with a free
+   `MongoDB Atlas <https://www.mongodb.com/cloud>`__ database cluster containing the sample data you'll be working with here.
+   Go read it and come back.
+   I'll wait.
+   Without it, you won't have the database set up correctly to run the code in this quick start guide.
+
+   In summary, you'll need:
+
+   -  An up-to-date version of Python 3. I wrote the code in this tutorial
+      in Python 3.8, but it should run fine in version 3.6+.
+   -  A code editor of your choice. I recommend either
+      `PyCharm <https://www.jetbrains.com/pycharm/>`__ or the free `VS
+      Code <https://code.visualstudio.com/>`__ with the official `Python
+      extension <https://marketplace.visualstudio.com/items?itemName=ms-python.python>`__.
+   -  A MongoDB cluster containing the ``sample_mflix`` dataset.
+      You can find instructions to set that up in 
+      `the first blog post in this series <https://developer.mongodb.com/quickstart/python-quickstart-crud>`__.
+
+
+.. content::
+
+   Getting Started
+   ===============
+
+   MongoDB's aggregation pipelines are very powerful and so they can seem a little overwhelming at first.
+   For this reason, I'll start off slowly.
+   First, I'll show you how to build up a pipeline that duplicates behaviour that you can already achieve with MQL queries,
+   using PyMongo's ``find()`` method,
+   but instead using an aggregation pipeline with ``$match``, ``$sort``, and ``$limit`` stages.
+   Then, I'll show how to make queries that go beyond MQL, demonstrating using ``$lookup`` to include related documents from another collection.
+   Finally, I'll put the "aggregation" into "aggregation pipeline" by showing you how to use ``$group`` to group together documents to form new document summaries.
+  
+   .. blockquote::
+
+      All of the sample code for this quick start series can be found `on GitHub <https://github.com/mongodb-developer/python-quickstart-code>`__.
+      I recommend you check it out if you get stuck, but otherwise, it's worth following the tutorial and writing the code yourself!
+
+   All of the pipelines in this post will be executed against the
+   `sample_mflix <https://docs.atlas.mongodb.com/sample-data/sample-mflix/index.html>`__
+   database's ``movies`` collection.
+   It contains documents that look like this:
+
+   .. code:: python
+
+      {
+         '_id': ObjectId('573a1392f29313caabcdb497'),
+         'awards': {'nominations': 7,
+                     'text': 'Won 1 Oscar. Another 2 wins & 7 nominations.',
+                     'wins': 3},
+         'cast': ['Janet Gaynor', 'Fredric March', 'Adolphe Menjou', 'May Robson'],
+         'countries': ['USA'],
+         'directors': ['William A. Wellman', 'Jack Conway'],
+         'fullplot': 'Esther Blodgett is just another starry-eyed farm kid trying to '
+                     'break into the movies. Waitressing at a Hollywood party, she '
+                     'catches the eye of alcoholic star Norman Maine, is given a test, '
+                     'and is caught up in the Hollywood glamor machine (ruthlessly '
+                     'satirized). She and her idol Norman marry; but his career '
+                     'abruptly dwindles to nothing',
+         'genres': ['Drama'],
+         'imdb': {'id': 29606, 'rating': 7.7, 'votes': 5005},
+         'languages': ['English'],
+         'lastupdated': '2015-09-01 00:55:54.333000000',
+         'plot': 'A young woman comes to Hollywood with dreams of stardom, but '
+                  'achieves them only with the help of an alcoholic leading man whose '
+                  'best days are behind him.',
+         'poster': 'https://m.media-amazon.com/images/M/MV5BMmE5ODI0NzMtYjc5Yy00MzMzLTk5OTQtN2Q3MzgwOTllMTY3XkEyXkFqcGdeQXVyNjc0MzMzNjA@._V1_SY1000_SX677_AL_.jpg',
+         'rated': 'NOT RATED',
+         'released': datetime.datetime(1937, 4, 27, 0, 0),
+         'runtime': 111,
+         'title': 'A Star Is Born',
+         'tomatoes': {'critic': {'meter': 100, 'numReviews': 11, 'rating': 7.4},
+                     'dvd': datetime.datetime(2004, 11, 16, 0, 0),
+                     'fresh': 11,
+                     'lastUpdated': datetime.datetime(2015, 8, 26, 18, 58, 34),
+                     'production': 'Image Entertainment Inc.',
+                     'rotten': 0,
+                     'viewer': {'meter': 79, 'numReviews': 2526, 'rating': 3.6},
+                     'website': 'http://www.vcientertainment.com/Film-Categories?product_id=73'},
+         'type': 'movie',
+         'writers': ['Dorothy Parker (screen play)',
+                     'Alan Campbell (screen play)',
+                     'Robert Carson (screen play)',
+                     'William A. Wellman (from a story by)',
+                     'Robert Carson (from a story by)'],
+         'year': 1937}
+
+   There's a lot of data there,
+   but I'll be focusing mainly on the ``_id``, ``title``, ``year``, and ``cast`` fields.
+
+
+   Your First Aggregation Pipeline
+   ===============================
+
+   Aggregation pipelines are executed by PyMongo using Collection's
+   `aggregate() <https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.aggregate>`__
+   method.
+
+   The first argument to ``aggregate()`` is a sequence of pipeline stages to be executed.
+   Much like a query, each stage of an aggregation pipeline is a
+   `BSON document <https://docs.mongodb.com/manual/core/document/>`__,
+   and PyMongo will automatically convert a ``dict`` into a BSON document for you.
+
+   An aggregation pipeline operates on *all* of the data in a collection.
+   Each stage in the pipeline is applied to the documents passing through,
+   and whatever documents are emitted from one stage are passed as input to the next stage,
+   until there are no more stages left.
+   At this point, the documents emitted from the last stage in the pipeline are returned to the client program,
+   in a similar way to a call to ``find()``.
+
+   Individual stages, such as ``$match``, can act as a filter, to only pass through documents matching certain criteria.
+   Other stage types, such as ``$project``, ``$addFields``, and ``$lookup`` will modify the content of individual documents as they pass through the pipeline.
+   Finally, certain stage types, such as ``$group``, will create an entirely new set of documents based on the documents passed into it taken as a whole.
+   None of these stages change the data that is stored in MongoDB itself. They just change the data before returning it to your program!
+   There *is* a stage,
+   `$set <https://docs.mongodb.com/manual/reference/operator/aggregation/set/>`__,
+   which can save the results of a pipeline back into MongoDB,
+   but I won't be covering it in this quick start.
+   
+   I'm going to assume that you're working in the same environment that you used for the `last post <https://developer.mongodb.com/quickstart/python-quickstart-crud>`__,
+   so you should already have PyMongo and python-dotenv installed,
+   and you should have a ``.env`` file containing your ``MONGODB_URI`` environment variable.
+
+   Finding and Sorting
+   -------------------
+
+   First, paste the following into your Python code:
+
+   .. code:: python
+
+      import os
+      from pprint import pprint
+
+      import bson
+      from dotenv import load_dotenv
+      import pymongo
+
+      # Load config from a .env file:
+      load_dotenv(verbose=True)
+      MONGODB_URI = os.environ["MONGODB_URI"]
+
+      # Connect to your MongoDB cluster:
+      client = pymongo.MongoClient(MONGODB_URI)
+
+      # Get a reference to the "sample_mflix" database:
+      db = client["sample_mflix"]
+
+      # Get a reference to the "movies" collection:
+      movie_collection = db["movies"]
+   
+
+   The above code will provide a global variable, a Collection object called ``movie_collection``,
+   which points to the ``movies`` collection in your database.
+
+   Here is some code which creates a pipeline,
+   executes it with ``aggregate``,
+   and then loops through and prints the detail of each movie in the results.
+   Paste it into your program.
+
+   .. code:: python
+
+      pipeline = [
+         {
+            "$match": {
+               "title": "A Star Is Born"
+            }
+         }, 
+         {
+            "$sort": {
+               "year": pymongo.ASCENDING
+            }
+         },
+      ]
+      results = movie_collection.aggregate(pipeline)
+      for movie in results:
+         print(" * {title}, {first_castmember}, {year}".format(
+               title=movie["title"],
+               first_castmember=movie["cast"][0],
+               year=movie["year"],
+         ))
+
+   This pipeline has two stages. 
+   The first is a `$match
+   <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__ stage,
+   which is similar to querying a collection with ``find()``.
+   It filters the documents passing through the stage based on an MQL query.
+   Because it's the first stage in the pipeline, its input is all of the documents in the ``movie`` collection.
+   The MQL query for the ``$match`` stage filters on the ``title`` field of the input documents,
+   so the only documents that will be output from this stage will have a title of "A Star Is Born."
+
+   The second stage is a `$sort <https://docs.mongodb.com/manual/reference/operator/aggregation/sort/>`__
+   stage.
+   Only the documents for the movie "A Star Is Born" are passed to this stage,
+   so the result will be all of the movies called "A Star Is Born,"
+   now sorted by their year field,
+   with the oldest movie first.
+
+   Calls to `aggregate() <https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.aggregate>`__ return a cursor pointing to the resulting documents.
+   The cursor can be looped through like any other sequence.
+   The code above loops through all of the returned documents and prints a short summary,
+   consisting of the title, the first actor in the ``cast`` array,
+   and the year the movie was produced.
+
+   Executing the code above results in:
+
+   .. code:: none
+
+      * A Star Is Born, Janet Gaynor, 1937
+      * A Star Is Born, Judy Garland, 1954
+      * A Star Is Born, Barbra Streisand, 1976
+
+
+   Refactoring the Code
+   --------------------
+
+   It is possible to build up whole aggregation pipelines as a single data structure,
+   as in the example above,
+   but it's not necessarily a good idea.
+   Pipelines can get long and complex.
+   For this reason,
+   I recommend you build up each stage of your pipeline as a separate variable,
+   and then combine the stages into a pipeline at the end, like this:
+
+   .. code:: python
+
+      # Match title = "A Star Is Born":
+      stage_match_title = {
+         "$match": {
+               "title": "A Star Is Born"
+         }
+      }
+
+      # Sort by year, ascending:
+      stage_sort_year_ascending = {
+         "$sort": { "year": pymongo.ASCENDING }
+      }
+
+      # Now the pipeline is easier to read:
+      pipeline = [
+         stage_match_title, 
+         stage_sort_year_ascending,
+      ]
+
+   Limit the Number of Results
+   ---------------------------
+
+   Imagine I wanted to obtain the most recent production of "A Star Is Born" from the movies collection.
+
+   This can be thought of as three stages, executed in order:
+
+   #. Obtain the movie documents for "A Star Is Born."
+   #. Sort by year, descending.
+   #. Discard all but the first document.
+
+   The first stage is already the same as ``stage_match_title`` above.
+   The second stage is the same as ``stage_sort_year_ascending``, but with ``pymongo.ASCENDING`` changed to ``pymongo.DESCENDING``.
+   The third stage is a `$limit <https://docs.mongodb.com/manual/reference/operator/aggregation/limit/>`__ stage.
+
+   The **modified and new** code looks like this:
+
+   .. code:: python
+
+      # Sort by year, descending:
+      stage_sort_year_descending = {
+         "$sort": { "year": pymongo.DESCENDING }
+      }
+
+      # Limit to 1 document:
+      stage_limit_1 = { "$limit": 1 }
+
+      pipeline = [
+         stage_match_title, 
+         stage_sort_year_descending,
+         stage_limit_1,
+      ]
+
+   If you make the changes above and execute your code, then you should see just the following line:
+
+   .. code:: none
+
+      * A Star Is Born, Barbra Streisand, 1976
+
+   .. blockquote::
+
+      Wait a minute! Why isn't there a document for the amazing production with Lady Gaga and Bradley Cooper?
+
+      Hold on there! You'll find the answer to this mystery, and more, later on in this blog post.
+
+
+   Okay, so now you know how to filter, sort, and limit the contents of a collection using an aggregation pipeline.
+   But these are just operations you can already do with ``find()``!
+   Why would you want to use these complex, new-fangled aggregation pipelines?
+
+   Read on, my friend, and I will show you the *true power* of MongoDB aggregation pipelines.
+
+   Look Up Related Data in Other Collections
+   =========================================
+
+   There's a dirty secret, hiding in the ``sample_mflix`` database.
+   As well as the ``movies`` collection, there's also a collection called ``comments``.
+   Documents in the ``comments`` collection look like this:
+
+   .. code:: python
+
+      {
+         '_id': ObjectId('5a9427648b0beebeb69579d3'),
+         'movie_id': ObjectId('573a1390f29313caabcd4217'),
+         'date': datetime.datetime(1983, 4, 27, 20, 39, 15),
+         'email': 'cameron_duran@fakegmail.com',
+         'name': 'Cameron Duran',
+         'text': 'Quasi dicta culpa asperiores quaerat perferendis neque. Est animi '
+                  'pariatur impedit itaque exercitationem.'}
+
+   It's a comment for a movie.
+   I'm not sure why people are writing Latin comments for these movies, but let's go with it.
+   The second field, ``movie_id,`` corresponds to the ``_id`` value of a document in the ``movies`` collection.
+   
+   So, it's a comment *related* to a movie!
+
+   Does MongoDB enable you to query movies and embed the related comments, like a JOIN in a relational database?
+   *Yes it does!*
+   With the `$lookup
+   <https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/>`__ stage.
+
+   I'll show you how to obtain related documents from another collection, and embed them in the documents from your primary collection.
+   First, create a new pipeline from scratch, and start with the following:
+
+   .. code:: python
+
+      # Look up related documents in the 'comments' collection:
+      stage_lookup_comments = {
+         "$lookup": {
+               "from": "comments", 
+               "localField": "_id", 
+               "foreignField": "movie_id", 
+               "as": "related_comments",
+         }
+      }
+
+      # Limit to the first 5 documents:
+      stage_limit_5 = { "$limit": 5 }
+
+      pipeline = [
+         stage_lookup_comments,
+         stage_limit_5,
+      ]
+
+      results = movie_collection.aggregate(pipeline)
+      for movie in results:
+         pprint(movie)
+
+
+   The stage I've called ``stage_lookup_comments`` is a ``$lookup`` stage.
+   This ``$lookup`` stage will look up documents from the ``comments`` collection that have the same movie id.  The matching comments will be listed as an array in a field named 'related_comments,'
+   with an array value containing all of the comments that have this movie's '_id' value as 'movie_id.'
+
+   I've added a ``$limit`` stage just to ensure that there's a reasonable amount of output without being overwhelming.
+
+   Now, execute the code.
+
+   .. blockquote::
+
+      You may notice that the pipeline above runs pretty slowly!
+      There are two reasons for this:
+
+      * There are 23.5k movie documents and 50k comments.
+      * There's a missing index on the ``comments`` collection.
+        It's missing on purpose, to teach you about indexes!
+      
+      I'm not going to show you how to fix the index problem right now. 
+      I'll write about that in a later post in this series, focusing on indexes.
+      Instead, I'll show you a trick for working with slow aggregation pipelines while you're developing.
+
+      Working with slow pipelines is a pain while you're writing and testing the pipeline.
+      *But*, if you put a temporary ``$limit`` stage at the *start* of your pipeline,
+      it will make the query faster (although the results may be different because you're not running on the whole dataset).
+      
+      When I was writing this pipeline, I had a first stage of ``{ "$limit": 1000 }``.
+
+      When you have finished crafting the pipeline, you can comment out the first stage so that the pipeline will now run on the whole collection.
+      **Don't forget to remove the first stage, or you're going to get the wrong results!**
+
+   The aggregation pipeline above will print out all of the contents of five movie documents.
+   It's quite a lot of data, but if you look carefully, you should see that there's a new field in each document that looks like this:
+
+   .. code:: python
+
+      'related_comments': []
+
+   Matching on Array Length
+   ------------------------
+
+   If you're *lucky*, you may have some documents in the array, but it's unlikely, as most of the movies have no comments.
+   Now, I'll show you how to add some stages to match only movies which have more than two comments.
+
+   Ideally, you'd be able to add a single ``$match`` stage which obtained the length of the ``related_comments`` field and matched it against the expression ``{ "$gt": 2 }``.
+   In this case, it's actually two steps:
+
+   * Add a field (I'll call it ``comment_count``) containing the length of the ``related_comments`` field.
+   * Match where the value of ``comment_count`` is greater than two.
+
+   Here is the code for the two stages:
+
+   .. code:: python
+
+      # Calculate the number of comments for each movie:
+      stage_add_comment_count = {
+         "$addFields": {
+               "comment_count": {
+                  "$size": "$related_comments"
+               }
+         } 
+      }
+
+      # Match movie documents with more than 2 comments:
+      stage_match_with_comments = {
+         "$match": {
+               "comment_count": {
+                  "$gt": 2
+               }
+         } 
+      }
+
+   The two stages go after the ``$lookup`` stage, and before the ``$limit`` 5 stage:
+
+   .. code:: python
+
+      pipeline = [
+         stage_lookup_comments,
+         stage_add_comment_count,
+         stage_match_with_comments,
+         limit_5,
+      ]
+
+   While I'm here, I'm going to clean up the output of this code,
+   instead of using ``pprint``:
+
+   .. code:: python
+
+      results = movie_collection.aggregate(pipeline)
+      for movie in results:
+         print(movie["title"])
+         print("Comment count:", movie["comment_count"])
+
+         # Loop through the first 5 comments and print the name and text:
+         for comment in movie["related_comments"][:5]:
+               print(" * {name}: {text}".format(
+                  name=comment["name"],
+                  text=comment["text"]))
+
+   *Now* when you run this code, you should see something more like this:
+
+   .. code:: none
+
+      Footsteps in the Fog
+      --------------------
+      Comment count: 3
+      * Sansa Stark: Error ex culpa dignissimos assumenda voluptates vel. Qui inventore quae quod facere veniam quaerat quibusdam. Accusamus ab deleniti placeat non.
+      * Theon Greyjoy: Animi dolor minima culpa sequi voluptate. Possimus necessitatibus voluptatem hic cum numquam voluptates.
+      * Donna Smith: Et esse nulla ducimus tempore aliquid. Suscipit iste dignissimos voluptate velit. Laboriosam sequi quae fugiat similique alias. Corporis cumque labore veniam dignissimos.
+
+   It's good to see Sansa Stark from Game of Thrones really knows her Latin, isn't it?
+
+   Now I've shown you how to work with lookups in your pipelines,
+   I'll show you how to use the ``$group`` stage to do actual *aggregation*.
+
+   Grouping Documents with ``$group``
+   ==================================
+
+   I'll start with a new pipeline again.
+
+   The ``$group`` stage is one of the more difficult stages to understand, so I'll break this down slowly.
+
+   Start with the following code:
+
+   .. code:: python
+
+      # Group movies by year, producing 'year-summary' documents that look like:
+      # {
+      #     '_id': 1917,
+      # }
+      stage_group_year = {
+         "$group": {
+               "_id": "$year",
+         }
+      }
+
+      pipeline = [
+         stage_group_year,
+      ]
+      results = movie_collection.aggregate(pipeline)
+
+      # Loop through the 'year-summary' documents:
+      for year_summary in results:
+         pprint(year_summary)
+
+   Execute this code, and you should see something like this:
+
+   .. code:: none
+
+      {'_id': 1978}
+      {'_id': 1996}
+      {'_id': 1931}
+      {'_id': '2000è'}
+      {'_id': 1960}
+      {'_id': 1972}
+      {'_id': 1943}
+      {'_id': '1997è'}
+      {'_id': 2010}
+      {'_id': 2004}
+      {'_id': 1947}
+      {'_id': '1987è'}
+      {'_id': 1954}
+      ...
+
+   Each line is a document emitted from the aggregation pipeline.
+   But you're not looking at *movie* documents any more.
+   The ``$group`` stage groups input documents by the specified ``_id`` expression and output one document for each unique ``_id`` value.
+   In this case, the expression is ``$year``, which means one document will be emitted for each unique value of the ``year`` field.
+   Each document emitted can (and usually will) also contain values generated from aggregating data from the grouped documents.
+
+   Change the stage definition to the following:
+
+   .. code:: python
+
+      stage_group_year = {
+         "$group": {
+               "_id": "$year",
+               # Count the number of movies in the group:
+               "movie_count": { "$sum": 1 }, 
+         }
+      }
+
+   This will add a ``movie_count`` field, containing the result of adding ``1`` for every document in the group.
+   In other words, it counts the number of movie documents in the group.
+   If you execute the code now, you should see something like the following:
+
+   .. code:: none
+   
+      {'_id': '1997è', 'movie_count': 2}
+      {'_id': 2010, 'movie_count': 970}
+      {'_id': 1947, 'movie_count': 38}
+      {'_id': '1987è', 'movie_count': 1}
+      {'_id': 2012, 'movie_count': 1109}
+      {'_id': 1954, 'movie_count': 64}
+      ...
+
+   There are a number of
+   `accumulator operators
+   <https://docs.mongodb.com/manual/reference/operator/aggregation/group/#accumulator-operator>`__, like ``$sum``,
+   that allow you to summarize data from the group.
+   If you wanted to build an array of all the movie titles in the emitted document,
+   you could add ``"movie_titles": { "$push": "$title" },`` to the ``$group`` stage.
+   In that case, you would get documents that look like this:
+
+   .. code:: python
+
+      {
+         '_id': 1917,
+         'movie_count': 3,
+         'movie_titles': [
+            'The Poor Little Rich Girl',
+            'Wild and Woolly',
+            'The Immigrant'
+         ]
+      }
+
+   Something you've probably noticed from the output above is that some of the years contain the "è" character.
+   This database has some messy values in it. 
+   In this case, there's only a small handful of documents, and I think we should just remove them.
+   Add the following two stages to only match documents with a numeric ``year`` value, and to sort the results:
+
+   .. code:: python
+
+      stage_match_years = {
+         "$match": {
+               "year": {
+                  "$type": "number",
+               }
+         }
+      }
+
+      stage_sort_year_ascending = {
+        "$sort": {"_id": pymongo.ASCENDING}
+      }
+
+      pipeline = [
+         stage_match_years,         # Match numeric years
+         stage_group_year,
+         stage_sort_year_ascending, # Sort by year
+      ]
+
+   Note that the ``$match`` stage is added to the start of the pipeline, and the ``$sort`` is added to the end.
+   A general rule is that you should filter documents out early in your pipeline, so that later stages have fewer documents to deal with.
+   It also ensures that the pipeline is more likely to be able to take advantages of any appropriate indexes assigned to the collection.
+
+   .. blockquote::
+
+      Remember, all of the sample code for this quick start series can be found `on GitHub <https://github.com/mongodb-developer/python-quickstart-code>`__.
+   
+   Aggregations using ``$group`` are a great way to discover interesting things about your data.
+   In this example, I'm illustrating the number of movies made each year,
+   but it would also be interesting to see information about movies for each country,
+   or even look at the movies made by different actors.
+
+.. summary::
+
+   What Have You Learned?
+   ======================
+
+   You've learned how to construct aggregation pipelines to filter, group, and join documents with other collections.
+   You've hopefully learned that putting a ``$limit`` stage at the start of your pipeline can be useful to speed up development (but should be removed before going to production).
+   You've also learned some basic optimization tips, like putting filtering expressions towards the start of your pipeline instead of towards the end.
+
+   As you've gone through, you'll probably have noticed that there's a
+   *ton* of different
+   `stage types <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/>`__,
+   `operators
+   <https://docs.mongodb.com/manual/reference/operator/aggregation/>`__, and
+   `accumulator operators
+   <https://docs.mongodb.com/manual/reference/operator/aggregation/group/#accumulator-operator>`__.
+   Learning how to use the different components of aggregation pipelines is
+   a big part of learning to use MongoDB effectively as a developer.
+
+   I love working with aggregation pipelines, and I'm always surprised at
+   what you can do with them!
+
+   Next Steps
+   ==========
+
+   Aggregation pipelines are super powerful, and because of this, they're a
+   big topic to cover. Check out the `full
+   documentation <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__
+   to get a better idea of their full scope.
+
+   MongoDB University also offers a *free* online course on
+   `The MongoDB Aggregation Framework
+   <https://university.mongodb.com/courses/M121/about>`__.
+
+   Note that aggregation pipelines can also be used to generate new data and write it back into a collection,
+   with the `$out <https://docs.mongodb.com/manual/reference/operator/aggregation/out/#pipe._S_out>`__ stage.
+
+   MongoDB provides a *free* GUI tool called `Compass <https://www.mongodb.com/products/compass>`__.
+   It allows you to connect to your MongoDB cluster,
+   so you can browse through databases and analyze the structure and contents of your collections.
+   It includes an
+   `aggregation pipeline builder <https://docs.mongodb.com/compass/master/aggregation-pipeline-builder/>`__
+   which makes it easier to build aggregation pipelines.
+   I highly recommend you install it,
+   or if you're using MongoDB Atlas,
+   use its similar `aggregation pipeline builder
+   <https://www.mongodb.com/blog/post/aggregation-pipeline-builder-comes-to-atlas>`__
+   in your browser.
+   I often use them to build aggregation pipelines,
+   and they include export buttons which will export your pipeline as Python code.
+
+   I don't know about you, but when I was looking at some of the results
+   above, I thought to myself, "It would be fun to visualise this with a
+   chart." MongoDB provides a hosted service called
+   `Charts <https://docs.mongodb.com/charts/master/>`__ which just
+   *happens* to take aggregation pipelines as input. So, now's a good time
+   to give it a try!
+
+   I consider aggregation pipelines to be one of MongoDB's two "power tools,"
+   along with `Change Streams <https://docs.mongodb.com/manual/changeStreams/>`__.
+   If you want to learn more about change streams,
+   check out this `blog
+   post <http://developer.mongodb.com/quickstart/python-change-streams>`__
+   by my awesome colleague, `Naomi Pentrel <https://developer.mongodb.com/author/naomi-pentrel>`__.
