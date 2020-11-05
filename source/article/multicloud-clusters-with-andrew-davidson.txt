@@ -1,0 +1,400 @@
+:template: devhub-article
+
+.. meta-description:: 
+
+   Learn about multi-cloud clusters with Andrew Davidson
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: Learn about multi-cloud clusters with Andrew Davidson
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
+   :image-alt: Schema Design Patterns
+
+   Learn about multi-cloud clusters with Andrew Davidson
+
+.. og::
+   :url: http://developer.mongodb.com/article/
+   :type: article
+   :title: Learn about multi-cloud clusters with Andrew Davidson
+   :image: /images/social/open-graph/og-mongodb-podcast.png
+ 
+   Learn about multi-cloud clusters with Andrew Davidson
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-11-03
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Cloud
+
+.. products::
+
+   * Atlas
+
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
+.. related::
+
+   * `Introducing Multicloud Clusters <https://www.mongodb.com/blog/post/introducing-multicloud-clusters-on-mongodb-atlas>`__
+
+=================================
+MongoDB Atlas Multicloud Clusters
+=================================
+ 
+.. introduction:: 
+
+   In this episode of the podcast, Nic and I are joined by Andrew Davidson, VP of Cloud Product at MongoDB. Andrew shares 
+   some details of the latest innovation in MongoDB Atlas and talks about some of the ways multi-cloud clusters can help 
+   developers.
+
+   .. youtube:: GWKa_VJNv7I
+
+.. content::
+
+   Michael Lynn (00:00):
+   Welcome to the podcast. On this episode, Nick and I sit down with Andrew Davidson, VP of cloud product here at MongoDB. We're talking today about the latest innovation built right into MongoDB Atlas, our database-as-a-service multi-cloud. So this gives you the ability to deploy and manage your instances of MongoDB in the cloud across the three major cloud providers: AWS, Azure, and GCP. Andrew tells us all about this innovation and how it could be used and some of the benefits. So stay tuned. I hope you enjoyed the episode.
+
+   Michael Lynn (00:52):
+   Andrew Davidson, VP of cloud product with MongoDB. How are you, sir?
+
+   Andrew Davidson (00:57):
+   Good to see you, Mike. I'm doing very well. Thank you. It's been a busy couple of weeks and I'm super excited to be here to talk to you about what we've been doing.
+
+   Michael Lynn (01:05):
+   Absolutely. We're going to talk about multi-cloud today and innovation added to MongoDB Atlas. But before we get there, Andrew, I wonder if you would just explain or just introduce yourself to the audience. Who are you and what do you do?
+
+   Andrew Davidson (01:19):
+   Sure. Yeah. Yeah. So as Mike introed me earlier, I'm VP of cloud products here at MongoDB, which basically means that I focus on our cloud business and what we're bringing to market for our customers and also thinking about how those services for our customers evolve over time and the roadmap around them and how we explain them to the world as well and how our users use them and over time, grow on them in deep partnership with us. So I've been around MongoDB for quite some time, for eight years. In that time, have really sort of seen this huge shift that everyone involved at MongoDB has been part of with our DNA shifting from being more of a software company, to being a true cloud company. It's been a really, a five-year journey over the last five years. To me, this announcement we made last week that Mike was just alluding to is really the culmination in many ways of that journey. So couldn't be more excited.
+
+   Michael Lynn (02:12):
+   Yeah, fantastic. Eight years. Eight years at a software company is a lifetime. You were at Google prior to this. What did you do at Google?
+
+   Andrew Davidson (02:23):
+   I was involved in a special team. They're called Ground Truth. It was remapping the world and it was all about building a new map dataset using Google's unique street view and other inputs to basically make all of the maps that you utilize every day on Google maps better and for Google to be able to evolve that dataset faster. So it was a very human project that involved thousands of human operators doing an enormous amount of complex work because the bottom line was, this is not something that you could do with ML at that point anyway. I'm sure they've evolved a little bit since then. It's been a long time.
+
+   Michael Lynn (02:59):
+   Fantastic. So in your eight years, what other things have you done at MongoDB?
+
+   Andrew Davidson (03:05):
+   So I really started out focusing on our traditional, on-prem management software, something called MongoDB ops manager, which was kind of the core differentiated in our enterprise advanced offering. At that time, the company was more focused on essentially, monetizing getting off the ground, through traditional IT operations. Even though we were always about developers and developers were always building great new applications on the database, in a way, we had sort of moved our focus from a monetization perspective towards a more ops centered view, and I was a big part of that. But I was able to make that shift and kind of recenter, recenter on the developer when we kind of moved into a true cloud platform and that's been a lot of fun ever since.
+
+   Michael Lynn (03:52):
+   Yeah. Amazing journey. So from ops manager to Atlas. I want to be cognizant that not all of our listeners will be familiar with Atlas. So maybe give a description of what Atlas is from your perspective.
+
+   Andrew Davidson (04:08):
+   Totally. Yeah. So MongoDB Atlas as a global cloud database service. It's available on the big three cloud providers, AWS, Google Cloud, and Azure. And it's truly elastic and declarative, meaning you can describe a database cluster in any part of the world, in any region, 79 regions across the three providers and Atlas does all the heavy lifting to get you there, to do the lifecycle management. You can do infrastructure as code, you can manage your database clusters in Terraform, or you can use our beautiful user interface to learn and deploy. We realized it's not enough to have an elastic database service. That's the starting point. It's also not enough to have the best modern database, one that's so native to developers, one that speaks to that rich data model of MongoDB with the secondary indexes and all the rest. Really, we needed to go beyond the database.
+
+   Andrew Davidson (04:54):
+   So we focused heavily on helping our customers with prescriptive guidance, schema advice, index suggestions, and you'll see us keep evolving there because we recognize that really every week, tens of thousands of people are coming onto the platform for the first time. We need to just lower the barrier to entry to build successful applications on the database. We've also augmented Atlas with key platform expansions by including search. We have Lucene-based search indexes now native to Atlas. So you don't have to ETL that data to a search engine and basically, build search right into your operational applications. We've got online archive for data tiering into object storage economics. With MongoDB Realm, we now have synchronization all the way back to the Realm mobile database and data access services all native to the platform. So it's all very exciting, but fundamentally what has been missing until just last week was true multi-cloud clusters, the ability to mix and match those databases across the clouds to have replicas that span the cloud providers or to seamlessly move from one provider to the other with no downtime, no change in connection string. So that's really exciting.
+
+   Nic Raboy (06:02):
+   Hey, Andrew, I have a question for you. This is a question that I received quite a bit. So when setting up your Atlas cluster, you're of course asked to choose between Amazon, Google, and Microsoft for your hosting. Can you maybe talk about how that's different or what that's really for in comparison to the multi-cloud that we're talking about today?
+
+   Andrew Davidson (06:25):
+   Yeah, sure. Look, being intellectually honest, most customers of ours, most developers, most members of the community have a preferred cloud platform and all of the cloud platforms are great in their own ways. I think they shine in so many ways. There's lots of reasons why folks will start on Google, or start on Azure, or start at AWS. Usually, there's that preferred provider. So most users will deploy an Atlas cluster into their target provider where their other infrastructure lives, where their application tier lives, et cetera. That's where the world is today for the most part. We know though that we're kind of at the bleeding edge of a new change that's happening in this market where over time, people are going to start more and more, mixing and take advantage of the best of the different cloud providers. So I think those expectations are starting to shift and over time, you'll see us probably boost the prominence of the multi-cloud option as the market kind of moves there as well.
+
+   Michael Lynn (07:21):
+   So this is available today and what other requirements are there if I want to deploy an instance of MongoDB and leverage multi-cloud?
+
+   Andrew Davidson (07:30):
+   Yeah, that's a great question. Fundamentally, in order to use the multi-cloud database cluster, I think it kind of depends on what your use case is, what you're trying to achieve. But generally speaking, database in isolation on a cloud provider isn't enough. You need to use something that's connecting to and using that database. So broadly speaking, you're going to want to have an application tier that's able to connect the database and if you're across multiple clouds and you're doing that for various reasons, like for example, high availability resiliency to be able to withstand the adage of a full cloud provider, well then you would want your app tier to also be multi-cloud.
+
+   Andrew Davidson (08:03):
+   That's the kind of thing that traditionally, folks have not thought was easy, but it's getting easier all the time. That's why it kind of... We're opening this up at the data tier, and then others, the Kubernetes platform, et cetera, are really opening up that portability at the app tier and really making this possible for the market. But before we sort of keep focusing on kind of where we are today, I think it wouldn't hurt to sort of rewind a little bit and talk about why multi-cloud is so difficult.
+
+   Michael Lynn (08:32):
+   That makes sense.
+
+   Andrew Davidson (08:35):
+   There's broadly been two main reasons why multi-cloud is so hard. They kind of boil down to data and how much data gravity there is. Of course, that's what our announcement is about changing. In other words, your data has to be stored in one cloud or another, or traditionally had to be. So actually moving that data to another cloud or making it present or available in the other cloud, that was enormously difficult and traditionally, made it so that people just felt multi-cloud was essentially not achievable. The second key reason multi-cloud has traditionally been very difficult is that there hasn't been essentially, a community created or company backed sort of way of standardizing operations around a multi-cloud posture.
+
+   Andrew Davidson (09:21):
+   In other words, you had to go so deep in your AWS environment, or your Google environment, your Azure environment, to manage all that infrastructure to be completely comfortable with the governance and life cycle management, that the idea of going and learning to go do that again in another cloud platform was just overwhelming. Who wants to do that? What's starting to change that though, is that there's sort of best in class software vendors, as well as SaaS offerings that are starting to basically, essentially build consistency around the clouds and really are best in breed for doing so. So when you look at what maybe Datadog is doing for monitoring or what Hashi Corp is doing with Terraform and vault, infrastructure is code and secrets management, all the other exciting announcements they're always making, these dynamics are all kind of contributing to making it possible for customers to actually start truly doing this. Then we're coming in now with true multi-cloud data tier. So it's highly complimentary with those other offerings. I think over the next couple of years, this is going to start becoming very popular.
+
+   Michael Lynn (10:26):
+   Sort of the next phase in the evolution of cloud computing?
+
+   Andrew Davidson (10:29):
+   Totally, totally.
+
+   Michael Lynn (10:30):
+   I thought it might be good if we could take a look at it. I know that some of the folks listening to this will be just that, just listening to it. So we'll try and talk our way through it as well. But let's give folks a peek at what this thing looks like. So I'm going to share my screen here.
+
+   Andrew Davidson (10:48):
+   Cool. Yeah. While you're pulling that up- [crosstalk 00:10:50] Go ahead, Nic. Sorry.
+
+   Nic Raboy (10:51):
+   I was going to ask, and then maybe this is something that Mike is going to show when he brings up his screen-
+
+   Andrew Davidson (10:55):
+   Yeah.
+
+   Nic Raboy (10:56):
+   ... but from a user perspective, how much involvement does the multi-cloud wire? Is it something that just happens behind the scenes and I don't have to worry a thing about it, or is there going to be some configurations that we're going to see?
+
+   Andrew Davidson (11:11):
+   Yeah. It's pretty straightforward. It's a very intuitive user interface for setting it up and then boom, your cluster's multi-cloud, which Mike will show, but going back to the question before, in order to take... Depending on what use case you've got for multi-cloud, and I would say there's about maybe four kinds of use cases and happy to go through them, depending on the use case, I think there's a different set of things you're going to need to worry about for how to use this from the perspective of your applications.
+
+   Michael Lynn (11:36):
+   Okay. So for the folks listening in, I've opened my web browser and I'm visiting cloud.MongoDB.com. I provided my credentials and I'm logged into my Atlas console. So I'm on the first tab, which is Atlas, and I'm looking at the list of clusters that I've previously deployed. I've got a free tier cluster and some additional project-based clusters. Let's say I want to deploy a new instance of MongoDB, and I want to make use of multi-cloud. The first thing I'm going to do is click the "Create New Cluster" button, and that's going to bring up the deployment wizard. Here's where you make all the decisions about what you want that cluster to look like. Andrew, feel free to add color as I go through this.
+
+   Andrew Davidson (12:15):
+   Totally.
+
+   Michael Lynn (12:16):
+   So the first question is a global cluster configuration. Just for this demo, I'm going to leave that closed. We'll leave that for another day. The second panel is cloud provider and region, and here's where it gets interesting. Now, Andrew, at the beginning when you described what Atlas is, you mentioned that Atlas is available on the top three cloud providers. So we've got AWS, Google Cloud, and Azure, but really, doesn't it exist above the provider?
+
+   Andrew Davidson (12:46):
+   In many ways, it does. You're right. Look, thinking about kind of the history of how we got here, Atlas was launched maybe near... about four and a half years ago in AWS and then maybe three and a half years ago on Google Cloud and Azure. Ever since that moment, we've just been deepening what Atlas is on all three providers. So we've gotten to the point where we can really sort of think about the database experience in a way that really abstracts away the complexity of those providers and all of those years of investment in each of them respectively, is what has enabled us to sort of unify them together today in a way that frankly, would just be a real challenge for someone to try and do on their own.
+
+   Andrew Davidson (13:28):
+   The last thing you want to be trying to set up is a distributed database service across multiple clouds. We've got some customers who've tried to do it and it's giant undertaking. We've got large engineering teams working on this problem full time and boom, here it is. So now, you can take advantage of it. We do it once, everyone else can use it a thousand times. That's the beauty of it.
+
+   Michael Lynn (13:47):
+   Beautiful. Fantastic. I was reading the update on the release schedule changes for MongoDB, the core server product, and I was just absolutely blown away with the amount of hours that goes into a major release, just incredible amount of hours and then on top of that, the ability that you get with Atlas to deploy that in multiple cloud's pretty incredible.
+
+   Nic Raboy (14:09):
+   Let me interject here for a second. We've got a question coming in from the chat. So off the band is asking, "Will Atlas support DigitalOcean or OVH or Ali Cloud?"
+
+   Andrew Davidson (14:19):
+   Great questions. We don't have current plans to do so, but I'll tell you. Everything about our roadmap is about customer demand and what we're hearing from you. So hearing that from you right now helps us think about it.
+
+   Michael Lynn (14:31):
+   Great. Love the questions. Keep them coming. So back to the screen. We've got our create new cluster wizard up and I'm in the second panel choosing the cloud provider and region. What I notice, something new I haven't seen before, is there's a call-out box that is labeled, "multi-cloud multi-region workload isolation." So this is the key to multi-cloud. Am I right?
+
+   Andrew Davidson (14:54):
+   That's right.
+
+   Michael Lynn (14:54):
+   So if I toggle that radio button over to on, I see some additional options available to me and here is where I'm going to specify the electable nodes in a cluster. So we have three possible configurations. We've got the electable nodes for high availability. We have the ability or the option to add read-only nodes, and we can specify the provider and region. We've got an option to add analytics nodes. Let's just focus on the electable nodes for the moment. By default, AWS is selected. I think that's because I selected AWS as the provider, but if I click "Add a Provider/Region," I now have the ability to change the provider to let's say, GCP, and then I can select a region. Of course, the regions are displaying Google's data center list. So I can choose something that's near the application. I'm in Philadelphia, so North Virginia is probably the closest. So now, we have a multi-cloud, multi-provider deployment. Any other notes or things you want to call out, Andrew?
+
+   Andrew Davidson (16:01):
+   Yeah- [crosstalk 00:16:02]
+
+   Nic Raboy (16:01):
+   Actually, Mike, real quick.
+
+   Michael Lynn (16:03):
+   Yeah.
+
+   Nic Raboy (16:04):
+   I missed it. When you added GCP, did you select two or did it pre-populate with that? I'm wondering what's the thought process behind how it calculated each of those node numbers.
+
+   Andrew Davidson (16:15):
+   It's keeping them on automatically. For electrical motors, you have to have an odd number. That's based on- [crosstalk 00:16:20]
+
+   Nic Raboy (16:20):
+   Got it.
+
+   Andrew Davidson (16:20):
+   ... we're going to be using a raft-like consensus protocol, which allows us to maintain read and write availability continuously as long as majority quorum is online. So if you add a third one, if you add Azure, for example, for fun, why not? What that means is we're now spread across three cloud providers and you're going to have to make an odd number... You're going to have to either make it 111 or 221, et cetera. What this means is you can now withstand a global outage of any of the three cloud providers and still have your application be continuously available for both reads and writes because the other two cloud providers will continue to be online and that's where you'll receive your majority quorum from.
+
+   Andrew Davidson (17:03):
+   So I think what we've just demonstrated here is kind of one of the four sort of dominant use cases for multi-cloud, which is high availability resilience. It's kind of a pretty intuitive one. In practice, a lot of people would want to use this in the context of countries that have fewer cloud regions. In the US, we're a bit spoiled. There's a bunch of AWS regions, bunch of Azure regions, a bunch of Google Cloud regions. But if you're a UK based, France based, Canada based, et cetera, your preferred cloud provider might have just one region that country. So being able to expand into other regions from another cloud provider, but keep data in your country for data sovereignty requirements can be quite compelling.
+
+   Michael Lynn (17:46):
+   So I would never want to deploy a single node in each of the cloud providers, right? We still want a highly available cluster deployed in each of the individual cloud providers. Correct?
+
+   Andrew Davidson (17:57):
+   You can do 111. The downside with 111 is that during maintenance rounds, you would essentially have rights that would move to the second region on your priority list. That's broadly reasonable actually, if you're using majority rights from a right concern perspective. It kind of depends on what you want to optimize for. One other thing I want to quickly show, Mike, is that there's little dotted lines on the left side or triple bars on the left side. You can actually drag and drop your preferred regional order with that. That basically is choosing which region by default will take rights if that region's online.
+
+   Michael Lynn (18:35):
+   So is zone deployment with the primary, in this case, I've moved Azure to the top, that'll take the highest priority and that will be my primary right receiver.
+
+   Andrew Davidson (18:47):
+   Exactly. That would be where the primaries are. If Azure were to be down or Azure Virginia were to be down, then what would have initially been a secondary in USC's one on AWS would be elected primary and that's where rights would start going.
+
+   Michael Lynn (19:03):
+   Got you. Yeah.
+
+   Andrew Davidson (19:04):
+   Yeah.
+
+   Michael Lynn (19:05):
+   So you mentioned majority rights. Can you explain what that is for anyone who might be new to that concept?
+
+   Andrew Davidson (19:12):
+   Yeah, so MongoDB has a concept of a right concern and basically our best practice is to configure your rights, which is a MongoDB client side driver configuration to utilize the right concern majority, which essentially says the driver will not acknowledge the right from the perspective of the database and move on to the next operation until the majority of the nodes in the replica set have acknowledged that right. What that kind of guarantees you is that you're not allowing your rights to sort of essentially, get past what your replica set can keep up with. So in a world in which you have really bursty momentary rights, you might consider a right concern of one, just make sure it goes to the primary, but that can have some risks at scale. So we recommend majority.
+
+   Michael Lynn (20:01):
+   So in the list of use cases, you mentioned the first and probably the most popular, which was to provide additional access and availability in a region where there's only one provider data center. Let's talk about some of the other reasons why would someone want to deploy multi-cloud,
+
+   Andrew Davidson (20:19):
+   Great question. The second, which actually think may even be more popular, although you might tell me, "It's not exactly as multi-cloudy as what we just talked about," but what I think is going to be the most popular is being able to move from one cloud provider to the other with no downtime. In other words, you're only multi-cloud during the transition, then you're on the other cloud. So it's kind of debatable, but having that freedom, that flexibility, and basically the way this one would be configured, Mike, is if you were to click "Cancel" here and just go back to the single cloud provider view, in a world in which you have a cluster deployed on AWS just like you have now, if this was a deployed cluster, you could just go to the top, select Azure or GCP, click "Deploy," and we would just move you there. That's also possible now.
+
+   Andrew Davidson (21:07):
+   The reason I think this will be the most commonly used is there's lots of reasons why folks need to be able to move from one cloud provider to the other. Sometimes you have sort of an organization that's been acquired into another organization and there's a consolidation effort underway. Sometimes there's just a feeling that another cloud provider has key capabilities that you want to start taking advantage of more, so you want to make the change. Other times, it's about really feeling more future-proof and just being able to not be locked in and make that change. So this one, I think, is more of a sort of boardroom level concern, as well as a developer empowerment thing. It's really exciting to have at your fingertips, the power to feel like I can just move my data around to anywhere in the world across 79 regions and nothing's holding me back from doing that. When you sit at your workstation, that's really exciting.
+
+   Michael Lynn (22:00):
+   Back to that comment you made earlier, really reducing that data gravity-
+
+   Andrew Davidson (22:05):
+   Totally.
+
+   Michael Lynn (22:05):
+   ... and increasing fungibility. Yeah, go ahead, Nic.
+
+   Nic Raboy (22:09):
+   Yeah. So you mentioned being able to move things around. So let me ask the same scenario, same thing, but when Mike was able to change the priority of each of those clouds, can we change the priority after deployment? Say Amazon is our priority right now for the next year, but then after that, Google is our now top priority. Can we change that after the fact?
+
+   Andrew Davidson (22:34):
+   Absolutely. Very great point. In general with Atlas, traditionally, the philosophy was always that basically everything in this cluster builder that Mike's been showing should be the kind of thing that you could configure when you first deploying declaratively, and that you could then change and Atlas will just do the heavy lifting to get you to that new declarative state. However, up until last week, the only major exception to that was you couldn't change your cloud provider. You could already change the region inside the cloud provider, change your multi-region configs, et cetera. But now, you can truly change between cloud providers, change the order of priority for a multi-region environment that involves multiple cloud providers. All of those things can easily be changed.
+
+   Andrew Davidson (23:15):
+   When you make those changes, these are all no downtime operations. We make that possible by doing everything in a rolling manner on the backend and taking advantage of MongoDB's, in what we were talking about earlier, the distributed system, the consensus that allows us to ensure that we always have majority quorum online, and it would just do all that heavy lifting to get you from any state to any other state in a wall preserving that majority. It's really kind of a beautiful thing.
+
+   Michael Lynn (23:39):
+   It is. And so powerful. So what we're showing here is the deployer, like you said, but all this same screen comes up when I take a look at a previously deployed instance of MongoDB and I can make changes right in that same way.
+
+   Andrew Davidson (23:55):
+   Exactly.
+
+   Michael Lynn (23:55):
+   Very powerful.
+
+   Andrew Davidson (23:56):
+   Exactly.
+
+   Michael Lynn (23:56):
+   Yeah.
+
+   Andrew Davidson (23:57):
+   So there's a few other use cases I think we should just quickly talk about because we've gone through two sort of future-proof mobility moving from one to the other. We talked about high availability resilience and how that's particularly useful in countries where you might want to keep data in country and you might not have as many cloud provider regions in that country. But the third use case that's pretty exciting is, and I think empowering more for developers, is sometimes you want to take advantage of the best capabilities of the different cloud providers. You might love AWS because you just love serverless and you love Lambda, and who doesn't? So you want to be there for that aspect of your application.
+
+   Andrew Davidson (24:34):
+   Maybe you also want to be able to take advantage of some of the capabilities that Google offers around machine learning and AI, and maybe you want to be able to have the ML jobs on the Google side be able to access your data with low latency in that cloud provider region. Well, now you can have a read replica in that Google cloud region and do that right there. Maybe you want to take advantage of Azure dev ops, just love the developer centricity that we're seeing from Microsoft and Azure these days, and again, being able to kind of mix and match and take advantage of the cloud provider you want unlocks possibilities and functional capabilities that developers just haven't really had at their fingertips before. So that's pretty exciting too.
+
+   Michael Lynn (25:18):
+   Great. So any other use cases that we want to mention?
+
+   Andrew Davidson (25:23):
+   Yeah. The final one is kind of a little bit of a special category. It's more about saying that sometimes... So many of our own customers and people listening are themselves, building software services and cloud services on top of MongoDB Atlas. For people doing that, you'll likely be aware that sometimes your end customers will stipulate which underlying cloud provider you need to use for them. It's a little frustrating when they do that. It's kind of like, "Oh my, I have to go use a different cloud provider to service you." You can duke it out with them and maybe make it happen without doing that. But now, you have the ability to just easily service your end customers without that getting in the way. If they have a rule that a certain cloud provider has to be used, you can just service them too. So we power so many layers of the infrastructure stack, so many SaaS services and platforms, so many of them, this is very compelling.
+
+   Michael Lynn (26:29):
+   So if I've got my data in AWS, they have a VPC, I can establish a VPC between the application and the database?
+
+   Andrew Davidson (26:36):
+   Correct.
+
+   Michael Lynn (26:37):
+   And the same with Google and Azure.
+
+   Andrew Davidson (26:39):
+   Yeah. There's an important note. MongoDB Atlas offers VPC peering, as well as private link on AWS and Azure. We offer VPC peering on Google as well. In the context of our multi-cloud clusters that we've just announced, we don't yet have support for private link and VPC peering. You're going to use public IP access list management. That will be coming, along with global cluster support, those will be coming in early 2021 as our current forward-looking statement. Obviously, everything forward looking... There's uncertainty that you want me to disclaimer in there, but what we've launched today is really first and foremost, for accessless management. However, when you move one cluster from one cloud to the other, you can absolutely take advantage of peering today or privately.
+
+   Nic Raboy (27:30):
+   Because Mike has it up on his screen, am I able to remove nodes from a cloud region on demand, at will?
+
+   Andrew Davidson (27:37):
+   Absolutely. You can just add more replicas. Just as we were saying, you can move from one to the other or sort of change your preferred order of where the rights go, you can add more replicas in any cloud at any time or remove them at any time [crosstalk 00:27:53] ... of Atlas vertical auto scaling too.
+
+   Nic Raboy (27:55):
+   That was what I was going to ask. So how does that work? How would you tell it, if it's going to auto-scale, could you tell it to auto-scale? How does it balance between three different clouds?
+
+   Andrew Davidson (28:07):
+   That's a great question. The way Atlas auto-scaling works is you really... So if you choose an M30, you can see the auto-scaling in there.
+
+   Nic Raboy (28:20):
+   For people who are listening, this is all in the create a new cluster screen.
+
+   Andrew Davidson (28:25):
+   Basically, the way it works is we will vertically scale you. If any of the nodes in the cluster are essentially, getting to the point where they require scaling based on underlying compute requirements, the important thing to note is that it's a common misconception, I guess you could say, on MongoDB that you might want to sort of scale only certain replicas and not others. In general, you would want to scale them all symmetrically. The reason for that is that the workload needs to be consistent across all the nodes and the replica sets. That's because even though the rights go to the primary, the secondaries have to keep up with those rights too. Anyway.
+
+   Michael Lynn (29:12):
+   I just wanted to show that auto-scale question here.
+
+   Andrew Davidson (29:16):
+   Oh, yes.
+
+   Michael Lynn (29:17):
+   Yeah, there we go. So if I'm deploying an M30, I get to specify at a minimum, I want to go down to an M20 and at a maximum, based on the read-write profile and the activity application, I want to go to a maximum of an M50, for example.
+
+   Andrew Davidson (29:33):
+   Exactly.
+
+   Nic Raboy (29:35):
+   But maybe I'm missing something or maybe it's not even important based on how things are designed. Mike is showing how to scale up and down from M20 to M50, but what if I wanted all of the new nodes to only appear on my third priority tier? Is that a thing?
+
+   Andrew Davidson (29:55):
+   Yeah, that's a form of auto-scaling that's definitely... In other words, you're basically saying... Essentially, what you're getting at is what if I wanted to scale my read throughput by adding more read replicas?
+
+   Nic Raboy (30:04):
+   Sure.
+
+   Andrew Davidson (30:05):
+   It's generally speaking, not the way we recommend scaling. We tend to recommend vertical scaling as opposed to adding read replicas. [crosstalk 00:30:14]
+
+   Nic Raboy (30:14):
+   Got it.
+
+   Andrew Davidson (30:14):
+   The reason for that with MongoDB is that if you scale reads with replicas, the risk is that you could find yourself in a compounding failure situation where you're overwhelming all your replicas somehow, and then one goes down and then all of a sudden, you have the same workload going to an even smaller pool. So we tend to vertically scale and/or introduce sharding once you're talking about that kind of level of scale. However, there's scenarios, in which to your point, you kind of want to have read replicas in other regions, let's say for essentially,. servicing traffic from that region at low latency and those kinds of use cases. That's where I think you're right. Over time, we'll probably see more exotic forms of auto-scaling we'll want to introduce. It's not there today.
+
+   Michael Lynn (31:00):
+   Okay. So going back and we'll just finish out our create a new cluster. Create a new cluster, I'll select multi-cloud and I'll select electable nodes into three providers.
+
+   Andrew Davidson (31:15):
+   So analytics on Azure- [crosstalk 00:31:18] That's fine. That's totally fine.
+
+   Michael Lynn (31:20):
+   Okay.
+
+   Andrew Davidson (31:21):
+   Not a problem.
+
+   Michael Lynn (31:22):
+   Okay. So a single cluster across AWS, GCP, and Azure, and we've got odd nodes. Okay. Looking good there. We'll select our cluster tier. Let's say an M30 is fine and we'll specify the amount of disk. Okay. So anything else that we want to bring into the discussion? Any other features that we're missing?
+
+   Andrew Davidson (31:47):
+   Not that I can think of. I'll say we've definitely had some interesting early adoption so far. I'm not going to name names, but we've seen folks, both take advantage of moving between the cloud providers, we've seen some folks who have spread their clusters across multiple cloud providers in a target country like I mentioned, being able to keep my data in Canada, but across multiple cloud providers. We've seen use cases in e-commerce. We've seen use cases in healthcare. We've seen use cases in basically monitoring. We've seen emergency services use cases. So it's just great early validation to have this out in the market and to have so much enthusiasm for the customers. So if anyone is keen to try this out, it's available to try on MongoDB Atlas today.
+
+   Nic Raboy (32:33):
+   So this was a pretty good episode. Actually, we have a question coming. Let's address this one first. Just curious that M stands for multi-tiered? Where did this naming convention derive from?
+
+   Andrew Davidson (32:48):
+   That's a great question. The cluster tiers in Atlas from the very beginning, we use this nomenclature of the M10, the M20, the M30. The not-so-creative answer is that it stands for MongoDB, [crosstalk 00:33:00] but it's a good point that now we can start claiming that it has to do with multi-cloud, potentially. I like that.
+
+   Michael Lynn (33:08):
+   Can you talk anything about the roadmap? Is there anything that you can share about what's coming down the pike?
+
+   Andrew Davidson (33:13):
+   Look, we're just going to keep going bigger, faster, more customers, more scale. It's just so exciting. We're now powering on Atlas some of the biggest games in the world, some of the most popular consumer financial applications, applications that make consumers' lives work, applications that enable manufacturers to continue building all the things that we rely on, applications that power for a truly global audience. We're seeing incredible adoption and growth and developing economies. It's just such an exciting time and being on the front edge of seeing developers really just transforming the economy, the digital transformation that's happening.
+
+   Andrew Davidson (33:57):
+   We're just going to continue it, focus on where our customers want us to go to unlock more value for them, keep going broader on the data platform. I think I mentioned that search is a big focus for us, augmenting the traditional operational transactional database, realm, the mobile database community, and essentially making it possible to build those great mobile applications and have them synchronize back up to the cloud mothership. I'm super excited about that and the global run-up to the rollout of 5g. I think the possibility in mobile are just going to be incredible to watch in the coming year. Yeah, there's just a lot. There's going to be a lot happening and we're all going to be part of it together.
+
+   Michael Lynn (34:34):
+   Sounds awesome.
+
+   Nic Raboy (34:34):
+   If people wanted to get in contact with you after this episode airs, you on Twitter, LinkedIn? Where would you prefer people to reach out?
+
+   Andrew Davidson (34:43):
+   I would just recommend people email directly: Andrew.Davidson@MongoDB..com. Love to hear product feedback, how we can improve. That's what we're here for is to hear it from you directly, connect you with the right people, et cetera.
+
+   Michael Lynn (34:56):
+   Fantastic. Well, Andrew, thanks so much for taking time out of your busy day. This has been a great conversation. Really enjoyed learning more about multi-cloud and I look forward to having you on the podcast again.
+
+   Andrew Davidson (35:08):
+   Thanks so much. Have a great rest of your day, everybody.
+
+
+   Summary
+   -------
+
+   With multi-cloud clusters on MongoDB Atlas, customers can realize the benefits of a multi-cloud strategy with true data 
+   portability and a simplified management experience. Developers no longer have to deal with manual data replication, and 
+   businesses can focus their technical resources on building differentiated software.
+
+   Related Links
+   -------------
+
+   Check out the following resources for more information:
+
+   `Introducing Multi-Cloud Clusters <https://www.mongodb.com/blog/post/introducing-multicloud-clusters-on-mongodb-atlas>`__
