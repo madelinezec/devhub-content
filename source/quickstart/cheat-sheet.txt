@@ -368,7 +368,7 @@ MongoDB Cheat Sheet
       rs.printReplicationInfo()
       rs.printSlaveReplicationInfo()
       rs.reconfig(<valid_conf>)
-      rs.salveOk()
+      rs.slaveOk()
       rs.stepDown(20, 5) // (stepDownSecs, secondaryCatchUpPeriodSecs)
 
    Sharded Cluster
