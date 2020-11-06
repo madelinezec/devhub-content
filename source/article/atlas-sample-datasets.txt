@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-06-19
 
-.. updated-date:: 2020-11-04
+.. updated-date:: 2020-11-05
 
 .. type:: article
 
@@ -47,15 +47,13 @@ The MongoDB Atlas Sample Datasets
    to help you learn faster? The `Load Sample Data <https://docs.atlas.mongodb.com/sample-data/>`__
    feature enables you to load eight datasets into your database to 
    explore. You can use this with the MongoDB Atlas M0 "free tier" to try 
-   out MongoDB Atlas and MongoDB's features. The sample data helps you 
-   tryout features such as indexing, querying including geospatial, 
-   aggregations as well as using MongoDB Tooling such as MongoDB 
-   Charts or MongoDB Compass. 
-   
-   In the rest of this post, we'll explore why it was created, how to 
-   firstly load the sample data and then we'll outline what the datasets 
-   contain. We'll also cover how you can download these datasets to use 
-   them on your own local machine.
+   out MongoDB Atlas and MongoDB's features. The sample data helps you try
+   out features such as indexing, querying including geospatial, and aggregations, as
+   well as using MongoDB Tooling such as MongoDB Charts and MongoDB Compass.
+
+   In the rest of this post, we'll explore why it was created, how to first load
+   the sample data, and then we'll outline what the datasets contain. We'll also cover
+   how you can download these datasets to use them on your own local machine.
 
    Table of Contents
    -----------------
@@ -81,21 +79,21 @@ The MongoDB Atlas Sample Datasets
 
    .. _atlas-sample-data-why-created:
 
-   Why did we create the sample data set ?
-   ---------------------------------------
+   Why Did We Create This Sample Data Set ?
+   ----------------------------------------
 
    Before diving into how we load the sample data, it's worth highlighting
    why we built the feature in the first place. We built this feature 
    because often people would create a new empty Atlas cluster and they'd
    then have to wait until they wrote their application or imported data
    into it before they were able to learn and explore the platform. Atlas's
-   Sample Data was the solution, it removes this roadblock and quickly 
+   Sample Data was the solution. It removes this roadblock and quickly
    allows you to get a feel for how MongoDB works with different types of
    data.
 
    .. _atlas-sample-data-loading:
 
-   Loading the Sample Data Set into your Atlas Cluster
+   Loading The Sample Data Set Into Your Atlas Cluster
    ---------------------------------------------------
 
    Loading the Sample Data requires an existing Atlas cluster and 
@@ -110,22 +108,21 @@ The MongoDB Atlas Sample Datasets
       :alt: Selecting the additional options (...) for your Atlas cluster
       :align: center
 
-   - Then click the button "Load Sample Dataset".
+   - Then, click the button "Load Sample Dataset".
 
    .. figure:: /images/article/atlas-sample-data/load_sample_data_step_2.png
       :alt: Selecting the option "Load Sample Dataset"
       :align: center
 
-   - Click the correspondingly named button "Load Sample Dataset".
+   - Click the correspondingly named button, "Load Sample Dataset."
 
    .. figure:: /images/article/atlas-sample-data/load_sample_data_step_3.png
       :alt: Click the button "Load Sample Dataset"
       :align: center
 
-   This process will take a few minutes to complete so let's look at 
-   exactly what kind of data we're going to load. Once the process is
-   completed you should see a banner on your Atlas cluster similar to this image
-   below.
+   This process will take a few minutes to complete, so let's look at exactly
+   what kind of data we're going to load. Once the process is completed, you
+   should see a banner on your Atlas Cluster similar to this image below.
 
    .. figure:: /images/article/atlas-sample-data/load_sample_data_step_4.png
       :alt: The Atlas Sample Data loading process will show this banner if successful.
@@ -137,12 +134,10 @@ The MongoDB Atlas Sample Datasets
    A deeper dive into the Atlas Sample Data
    ----------------------------------------
 
-   The Atlas Sample Datasets comprise of eight databases and their 
-   associated collections. Each individual dataset is documented to
-   illustrate the schema, the collections, the indexes and a sample
-   document from each collection. 
+   The Atlas Sample Datasets are comprised of eight databases and their associated collections.
+   Each individual dataset is documented to illustrate the schema, the collections, the
+   indexes, and a sample document from each collection.
 
-   
    .. _atlas-sample-airbnb-listing-dataset:
 
    Sample AirBnB Listings Dataset
@@ -268,7 +263,7 @@ The MongoDB Atlas Sample Datasets
    This dataset consists of five collections with information on movies, 
    movie theatres, movie metadata, and user movie reviews and their ratings
    for specific movies. The data is a subset of the IMDB dataset. There are 
-   three additional indexes beyond ``_id``, on the sessions collection on the 
+   three additional indexes beyond ``_id``: on the sessions collection on the
    ``user_id`` field, on the theatres collection on the ``location.geo`` field,
    and on the users collection on the ``email`` field. You can see this dataset 
    used in this `MongoDB Charts tutorial <https://docs.mongodb.com/charts/saas/tutorial/movie-details/movie-details-tutorial-overview/>`__.
@@ -305,10 +300,10 @@ The MongoDB Atlas Sample Datasets
 
    In order to use the collections for geographical searching, we need to add an
    index, specifically a `2dsphere index <https://docs.mongodb.com/manual/core/2dsphere/index.html>`__.
-   We can add this index and then search for all restaurants in a one kilometer
-   radius of a given location with the results being sorted by those closest to
-   those furtherest away. The mongo consists of a nine  code below creates the index, then add a 
-   helper variable to represent 1km and our query then uses these details with the
+   We can add this index and then search for all restaurants in a one-kilometer
+   radius of a given location, with the results being sorted by those closest to
+   those furthest away. The code below creates the index, then adds a
+   helper variable to represent 1km, which our query then uses with the
    `$nearSphere <https://docs.mongodb.com/manual/reference/operator/query/nearSphere/index.html>`__
    criteria to return the list of restaurants within 1km of that location.
 
@@ -392,7 +387,7 @@ The MongoDB Atlas Sample Datasets
    This dataset consists of nine collections with no additional indexes. It 
    represents a selection of realistic data and is used in the `MongoDB private training courses <https://www.mongodb.com/products/training/private>`__. 
    
-   It includes a number of public well known data sources such as the 
+   It includes a number of public, well-known data sources such as the
    `OpenFlights <https://openflights.org/data.html>`__, 
    `NYC's OpenData <https://opendata.cityofnewyork.us/>`__, 
    and `NYC's Citibike Data <https://www.citibikenyc.com/system-data>`__.
@@ -431,7 +426,7 @@ The MongoDB Atlas Sample Datasets
    Sample Weather Dataset
    ~~~~~~~~~~~~~~~~~~~~~~
 
-   This dataset consist of a single collection with no additional indexes. It
+   This dataset consists of a single collection with no additional indexes. It
    represents detailed weather reports from locations across the world. It 
    holds geospatial data on the locations in the form of legacy coordinate pairs.
 
@@ -443,7 +438,7 @@ The MongoDB Atlas Sample Datasets
 
    .. _atlas-sample-data-local-installation:
 
-   Downloading the dataset for use on your local machine
+   Downloading the Dataset for Use on Your Local Machine
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    It is also possible to download and explore these datasets on your own local
@@ -466,7 +461,7 @@ The MongoDB Atlas Sample Datasets
    this documentation page <https://docs.mongodb.com/manual/tutorial/manage-mongodb-processes/>`__.
 
    This section assumes that you're connecting to a relatively
-   straightforward setup - with a default authentication database and some
+   straightforward setup, with a default authentication database and some
    authentication set up.
    (You should *always*
    `create some users <https://docs.mongodb.com/manual/tutorial/create-users/>`__
@@ -481,7 +476,7 @@ The MongoDB Atlas Sample Datasets
 
       mongorestore --archive=sampledata.archive
 
-   You can use a variety of tools to view your documents, you can use `MongoDB 
+   You can use a variety of tools to view your documents. You can use `MongoDB
    Compass <https://docs.mongodb.com/compass/master/connect#connect>`__,
    `the CLI <https://docs.mongodb.com/manual/mongo/#start-the-mongo-shell-and-connect-to-mongodb>`__, 
    or the `MongoDB Visual Studio Code (VSCode) plugin <https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode>`__
@@ -503,14 +498,13 @@ The MongoDB Atlas Sample Datasets
    explore MongoDB's features and prototype your next project without having
    to worry about where you'll find the data.
 
-   Checkout the documentation on `Load Sample Data <https://docs.atlas.mongodb.com/sample-data/>`__ 
+   Check out the documentation on `Load Sample Data <https://docs.atlas.mongodb.com/sample-data/>`__
    to learn more on these datasets and load it into your Atlas Cluster 
    today to start exploring it!
 
-   To learn more about schema patterns and MongoDB, please checkout our
+   To learn more about schema patterns and MongoDB, please check out our
    blog series `Building with Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
    and the free MongoDB University Course `M320: Data Modeling <http://bit.ly/M320_DataModeling>`__
    to level up your schema design skills.
 
    .. include:: /includes/callouts/community-cta.rst
-
