@@ -1,0 +1,469 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to interact with MongoDB from a Unity game with C# and the UnityWebRequest class.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Sending and Requesting Data from MongoDB in a Unity Game
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to interact with MongoDB from a Unity game with C# and the UnityWebRequest class.
+
+.. og::
+   :title: Sending and Requesting Data from MongoDB in a Unity Game
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-11-12
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * C#
+
+.. tags::
+
+   * Game Development
+
+========================================================
+Sending and Requesting Data from MongoDB in a Unity Game
+========================================================
+
+.. introduction::
+
+    Are you working on a game in `Unity <https://unity.com/>`__ and finding
+    yourself needing to make use of a database in the cloud? Storing your
+    data locally works for a lot of games, but there are many gaming
+    scenarios where you'd need to leverage an external database. Maybe you
+    need to submit your high score for a leaderboard, or maybe you need to
+    save your player stats and inventory so you can play on numerous
+    devices. There are too many reasons to list as to why a remote database
+    might make sense for your game.
+
+    If you've been keeping up with the content publishing on the `MongoDB
+    Developer Hub <https://developer.mongodb.com>`__ and our
+    `Twitch <https://www.twitch.tv/mongodb>`__ channel, you'll know that I'm
+    working on a game development series with `Adrienne
+    Tacke <https://www.twitter.com/adriennetacke>`__. This series is
+    centered around creating a 2D multiplayer game with Unity that uses
+    MongoDB as part of the online component. Up until now, we haven't
+    actually had the game communicate with MongoDB.
+
+    In this tutorial, we're going to see how to make HTTP requests from a
+    Unity game to a back end that communicates with
+    `MongoDB <https://www.mongodb.com>`__. The back end was already developed
+    in a tutorial titled, `Creating a User Profile Store for a Game With
+    Node.js and
+    MongoDB <https://developer.mongodb.com/how-to/creating-user-profile-store-game-nodejs-mongodb>`__.
+    We're now going to leverage it in our game.
+
+    To get an idea where we're at in the tutorial series, take a look at the
+    animated image below:
+
+    .. image:: /images/how-to/plummeting-people-fake-doors-example.gif
+        :alt: Plummeting People Fake Doors Example
+
+    To take this to the next level, it makes sense to send data to MongoDB
+    when the player crosses the finish line. For example, we can send how
+    many steps were taken by the player in order to reach the finish line,
+    or how many times the player collided with something, or even what place
+    the player ranked in upon completion. The data being sent doesn't truly
+    matter as of now.
+
+    The assumption is that you've been following along with the tutorial
+    series and are jumping in where we left off. If not, some of the steps
+    that refer to our project may not make sense, but the concepts can be
+    applied in your own game. The tutorials in this series so far are:
+
+    - `Designing a Strategy to Develop a Game with Unity and MongoDB <https://developer.mongodb.com/how-to/designing-strategy-develop-game-unity-mongodb>`__
+    - `Creating a User Profile Store for a Game with Node.js and MongoDB <https://developer.mongodb.com/how-to/creating-user-profile-store-game-nodejs-mongodb>`__
+    - `Getting Started with Unity for Creating a 2D Game <https://developer.mongodb.com/how-to/getting-started-unity-creating-2d-game>`__
+    - `Designing and Developing 2D Game Levels with Unity and C# <https://developer.mongodb.com/how-to/designing-developing-2d-game-levels-unity-csharp>`__
+
+    If you'd like to view the source code to the project, it can be found on `GitHub <https://github.com/mongodb-developer/plummeting-people-game>`__.
+
+.. content::
+
+    Creating a C# Class in Unity to Represent the Data Model Within MongoDB
+    -----------------------------------------------------------------------
+
+    Because Unity, as of now, doesn't have an official MongoDB driver,
+    sending and receiving MongoDB data from Unity isn't handled for you.
+    We're going to have to worry about marshalling and unmarshalling our
+    data as well as making the request. In other words, we're going to need to manipulate our data manually to and from JSON and C# classes.
+
+    To make this possible, we're going to need to start with a class that
+    represents our data model in MongoDB.
+
+    Within your project's **Assets/Scripts** directory, create a
+    **PlayerData.cs** file with the following code:
+
+    .. code-block:: csharp
+
+        using UnityEngine;
+
+        public class PlayerData
+        {
+            public string plummie_tag;
+            public int collisions;
+            public int steps;
+        }
+
+    Notice that this class does not extend the ``MonoBehavior`` class. This
+    is because we do not plan to attach this script as a component on a game
+    object. The ``public``-defined properties in the ``PlayerData`` class
+    represent each of our database fields. In the above example, we only have
+    a select few, but you could add everything from our user profile store
+    if you wanted to.
+
+    It is important to use the ``public`` identifier for anything that will
+    have relevance to the database.
+
+    We need to make a few more changes to the ``PlayerData`` class. Add the
+    following functions to the class:
+
+    .. code-block:: csharp
+
+        using UnityEngine;
+
+        public class PlayerData
+        {
+            // 'public' variables here ...
+
+            public string Stringify() 
+            {
+                return JsonUtility.ToJson(this);
+            }
+
+            public static PlayerData Parse(string json)
+            {
+                return JsonUtility.FromJson<PlayerData>(json);
+            }
+        }
+
+    Notice the function names are kind of like what you'd find in JavaScript
+    if you are a JavaScript developer. Unity expects us to send string data
+    in our requests rather than objects. The good news is that Unity also
+    provides a helper ``JsonUtility`` class that will convert objects to
+    strings and strings to objects.
+
+    The ``Stringify`` function will take all ``public`` variables in the
+    class and convert them to a JSON string. The fields in the JSON object
+    will match the names of the variables in the class. The ``Parse``
+    function will take a JSON string and convert it back into an object that
+    can be used within C#.
+
+    Sending Data with POST and Retrieving Data with GET in a Unity Game
+    -------------------------------------------------------------------
+
+    With a class available to represent our data model, we can now send data
+    to MongoDB as well as retrieve it. Unity provides a `UnityWebRequest <https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html>`__
+    class for making HTTP requests within a game. This will be used to
+    communicate with either a back end designed with a particular programming
+    language or a `MongoDB Realm <https://www.mongodb.com/realm>`__ webhook. If you'd like to learn about
+    creating a back end to be used with a game, check out my `previous
+    tutorial <https://developer.mongodb.com/how-to/creating-user-profile-store-game-nodejs-mongodb>`__
+    on the topic.
+
+    We're going to spend the rest of our time in the project's
+    **Assets/Scripts/Player.cs** file. This script is attached to our player
+    as a component and was created in the tutorial titled, `Getting Started
+    with Unity for Creating a 2D
+    Game <https://developer.mongodb.com/how-to/getting-started-unity-creating-2d-game>`__.
+    In your own game, it doesn't really matter which game object script you
+    use.
+
+    Open the **Assets/Scripts/Player.cs** file and make sure it looks
+    similar to the following:
+
+    .. code-block:: csharp
+
+        using UnityEngine;
+        using System.Text;
+        using UnityEngine.Networking;
+        using System.Collections;
+
+        public class Player : MonoBehaviour
+        {
+            public float speed = 1.5f;
+
+            private Rigidbody2D _rigidBody2D;
+            private Vector2 _movement;
+
+            void Start()
+            {
+                _rigidBody2D = GetComponent<Rigidbody2D>();
+            }
+
+            void Update()
+            {
+                // Mouse and keyboard input logic here ...
+            }
+
+            void FixedUpdate() {
+                // Physics related updates here ...
+            }
+        }
+
+    I've stripped out a bunch of code from the `previous
+    tutorial <https://developer.mongodb.com/how-to/designing-developing-2d-game-levels-unity-csharp>`__ as it doesn't affect anything we're planning on
+    doing. The previous code was very heavily related to moving the player
+    around on the screen and should be left in for the real game, but is
+    overlooked in this example, at least for now.
+
+    Two things to notice that are important are the imports:
+
+    .. code-block:: csharp
+
+        using System.Text;
+        using UnityEngine.Networking;
+
+    The above two imports are important for the networking features of
+    Unity. Without them, we wouldn't be able to properly make GET and POST
+    requests.
+
+    Before we make a request, let's get our ``PlayerData`` class included.
+    Make the following changes to the **Assets/Scripts/Player.cs** code:
+
+    .. code-block:: csharp
+
+        using UnityEngine;
+        using System.Text;
+        using UnityEngine.Networking;
+        using System.Collections;
+
+        public class Player : MonoBehaviour
+        {
+            public float speed = 1.5f;
+
+            private Rigidbody2D _rigidBody2D;
+            private Vector2 _movement;
+            private PlayerData _playerData;
+
+            void Start()
+            {
+                _rigidBody2D = GetComponent<Rigidbody2D>();
+                _playerData = new PlayerData();
+                _playerData.plummie_tag = "nraboy";
+            }
+
+            void Update() { }
+
+            void FixedUpdate() { }
+
+            void OnCollisionEnter2D(Collision2D collision) 
+            {
+                _playerData.collisions++;
+            }
+        }
+
+    In the above code, notice that we are creating a new ``PlayerData``
+    object and assigning the ``plummie_tag`` field a value. We're also
+    making use of an ``OnCollisionEnter2D`` function to see if our game
+    object collides with anything. Since our function is very vanilla,
+    collisions can be with walls, objects, etc., and nothing in particular.
+    The collisions will increase the ``collisions`` counter.
+
+    So, we have data to work with, data that we need to send to MongoDB. To
+    do this, we need to create some ``IEnumerator`` functions and make use of
+    coroutine calls within Unity. This will allow us to do asynchronous
+    activities such as make web requests.
+
+    Within the **Assets/Scripts/Player.cs** file, add the following
+    ``IEnumerator`` function:
+
+    .. code-block:: csharp
+
+        IEnumerator Download(string id, System.Action<PlayerData> callback = null)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Get("http://localhost:3000/plummies/" + id))
+            {
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debug.Log(request.error);
+                    if (callback != null)
+                    {
+                        callback.Invoke(null);
+                    }
+                }
+                else
+                {
+                    if (callback != null)
+                    {
+                        callback.Invoke(PlayerData.Parse(request.downloadHandler.text));
+                    }
+                }
+            }
+        }
+
+    The ``Download`` function will be responsible for retrieving data from
+    our database to be brought into the Unity game. It is expecting an
+    ``id`` which we'll use a ``plummie_id`` for and a ``callback`` so we can
+    work with the response outside of the function. The response should be
+    ``PlayerData`` which is that of the data model we just made.
+
+    After sending the request, we check to see if there were errors or if it
+    succeeded. If the request succeeded, we can convert the JSON string into
+    an object and invoke the callback so that the parent can work with the
+    result.
+
+    Sending data with a payload, like that in a POST request, is a bit
+    different. Take the following function:
+
+    .. code-block:: csharp
+
+        IEnumerator Upload(string profile, System.Action<bool> callback = null)
+        {
+            using (UnityWebRequest request = new UnityWebRequest("http://localhost:3000/plummies", "POST"))
+            {
+                request.SetRequestHeader("Content-Type", "application/json");
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(profile);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debug.Log(request.error);
+                    if(callback != null) 
+                    {
+                        callback.Invoke(false);
+                    }
+                }
+                else
+                {
+                    if(callback != null) 
+                    {
+                        callback.Invoke(request.downloadHandler.text != "{}");
+                    }
+                }
+            }
+        }
+
+    In the ``Upload`` function, we are expecting a JSON string of our
+    profile. This profile was defined in the ``PlayerData`` class and it is
+    the same data we received in the ``Download`` function.
+
+    The difference between these two functions is that the POST is sending a
+    payload. For this to work, the JSON string needs to be converted to
+    ``byte[]`` and the upload and download handlers need to be defined. Once
+    this is done, it is business as usual.
+
+    It is up to you what you want to return back to the parent. Because we
+    are creating data, I thought it'd be fine to just return ``true`` if
+    successful and ``false`` if not. To demonstrate this, if there are no
+    errors, the response is compared against an empty object string. If an
+    empty object comes back, then false. Otherwise, true. This probably isn't
+    the best way to respond after a creation, but that is up to the creator
+    (you, the developer) to decide.
+
+    The functions are created. Now, we need to use them.
+
+    Let's make a change to the ``Start`` function:
+
+    .. code-block:: csharp
+
+        void Start()
+        {
+            _rigidBody2D = GetComponent<Rigidbody2D>();
+            _playerData = new PlayerData();
+            _playerData.plummie_tag = "nraboy";
+            StartCoroutine(Download(_playerData.plummie_tag, result => {
+                Debug.Log(result);
+            }));
+        }
+
+    When the script runs—or in our, example when the game runs—and the
+    player enters the scene, the ``StartCoroutine`` method is executed. We
+    are providing the ``plummie_tag`` as our lookup value and we are
+    printing out the results that come back.
+
+    We might want the ``Upload`` function to behave a little differently.
+    Instead of making the request immediately, maybe we want to make the
+    request when the player crosses the finish line. For this, maybe we add
+    some logic to the ``FixedUpdate`` method instead:
+
+    .. code-block:: csharp
+
+        void FixedUpdate() 
+        {
+            // Movement logic here ...
+
+            if(_rigidBody2D.position.x > 24.0f) {
+                StartCoroutine(Upload(_playerData.Stringify(), result => {
+                    Debug.Log(result);
+                }));
+            }
+        }
+
+    In the above code, we check to see if the player position is beyond a
+    certain value in the x-axis. If this is true, we execute the ``Upload``
+    function and print the results.
+
+    The above example isn't without issues though. As of now, if we cross the finish line, we're going to experience many requests as our code will continuously execute. We 
+    can correct this by adding a boolean variable into the mix.
+
+    At the top of your **Assets/Scripts/Player.cs** file with the rest of your variable declarations, add the following:
+
+    .. code-block:: csharp
+
+        private bool _isGameOver;
+
+    The idea is that when the ``_isGameOver`` variable is true, we shouldn't be executing certain logic such as the web requests. We are going to initialize the variable as false 
+    in the ``Start`` method like so:
+
+    .. code-block:: csharp
+
+        void Start()
+        {
+            // Previous code here ...
+            _isGameOver = false;
+        }
+
+    With the variable initialized, we can make use of it prior to sending an HTTP request after crossing the finish line. To do this, we'd make a slight adjustment to the code 
+    like so:
+
+    .. code-block:: csharp
+    
+        void FixedUpdate() 
+        {
+            // Movement logic here ...
+
+            if(_rigidBody2D.position.x > 24.0f && _isGameOver == false) {
+                StartCoroutine(Upload(_playerData.Stringify(), result => {
+                    Debug.Log(result);
+                }));
+                _isGameOver = true;
+            }
+        }
+
+    After the player crosses the finish line, the HTTP code is executed and the game is marked as game over for the player, preventing further requests.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to use the ``UnityWebRequest`` class in Unity to make
+    HTTP requests from a game to a remote web server that communicates with
+    MongoDB. This is valuable for any game that needs to either store game
+    information remotely or retrieve it.
+
+    There are plenty of other ways to make use of the ``UnityWebRequest``
+    class, even in our own player script, but the examples we used should be
+    a great starting point.
+
+    This tutorial series is part of a series streamed on Twitch. To see
+    these streams live as they happen, follow the
+    `Twitch <https://www.twitch.tv/mongodb>`__ channel and tune in.
