@@ -1,19 +1,22 @@
 # Author Checklist
+The post author should complete this section. If your post is not ready for review, please add the `WIP - Do not review yet` label.
+* [ ] [Jira ticket link](PUT JIRA LINK HERE)
 * [ ] The name of this PR starts with the Jira ticket ID (e.g. "DA-123: Awesome blog post title").
-* [ ] I ran the `sanity-check.py` script, and I fixed all the warnings about my blog post.
 * [ ] I created and linked a DEVSOCIAL Jira ticket to my DA ticket following the [Social Media Content request process](https://wiki.corp.mongodb.com/pages/viewpage.action?pageId=100263451).
 * [ ] If I need new images, I created a DESIGN ticket and linked it to the DA ticket.
-* [ ] I built my branch and the builder log doesn't contain warnings or errors.
-* [Jira ticket link](PUT JIRA LINK HERE)
-* [Builder log link](PUT LOG LINK HERE)
-* [Staging blog post link](PUT BLOG POST LINK HERE)
-* [ ] I swear that I will re-run the `sanity-check.py` and update the 2 links above EACH TIME I push a new version. Else, I will give Max a tremendous amount of bonusly to seek mercy.
-* [ ] The post has received LGTM from a technical reviewer and an editorial reviewer and is ready for publication. Please publish this post...
+* [ ] For EVERY new commit, I have taken the actions below and updated the links: 
+  * [ ] I ran the `sanity-check.py` script, and I fixed all the warnings about my blog post.
+  * [ ] I built my branch and the builder log doesn't contain warnings or errors.
+  * [ ] [Builder log link](PUT LOG LINK HERE)
+  * [ ] [Staging blog post link](PUT BLOG POST LINK HERE)
+* [ ] The post has received LGTM from a technical reviewer and an editorial reviewer. I am finished making updates based on the reviews, and the post is ready for publication. Please publish this post...
   * [ ] As soon as possible
   * [ ] On the following date: TBD
 
 # Technical Reviewer Checklist
-Name of reviewer:
+When you (the author) are ready for a technical review, add the `Technical Review Wanted` label. If you want a review from someone in particular, add them as a reviewer in the PR. If not, someone from the [Response Team](https://wiki.corp.mongodb.com/display/DEVREL/Response+Team) will review the post. If you want to get a technical review before creating a PR, copy this checklist to your DA ticket and request a review there.
+
+Name of technical reviewer:
 * [ ] LGTM!
 
 ## Correctness
@@ -30,12 +33,14 @@ Name of reviewer:
 * [ ] Code samples follow best practices of their language and/or MongoDB
 
 # Editorial Reviewer Checklist
-Once you have a LGTM from a technical reviewer above, request a review from Megan Grant (GitHub id Meg528). She will complete the fields below.
+Once you have a LGTM from a technical reviewer above, request a review from Megan Grant (GitHub id Meg528) and add the `Editorial Review Wanted` label. She will complete the fields below.
+
 * [ ] LGTM!
 
 ## Correctness
 * [ ] Sentences are grammatically correct
 * [ ] Post is free of typos
+* [ ] Post contains a Community Call to Action (either using `source/includes/callouts/community-cta.rst` or custom `blockquote`)
 
 ## Accessibility
 * [ ] All images have alternate text
