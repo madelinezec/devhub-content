@@ -7,8 +7,8 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/how-to/sending-requesting-data-mongodb-unity-game", "/quickstart/python-quickstart-aggregation", "/article/everything-you-know-is-wrong", "/article/multicloud-clusters-with-andrew-davidson",]
-"learn" = ["/article/atlas-sample-datasets", "/article/can-you-keep-a-secret", "/how-to/designing-developing-2d-game-levels-unity-csharp"]
+"home" = ["/article/everything-you-know-is-wrong", "/article/multicloud-clusters-with-andrew-davidson", "/article/can-you-keep-a-secret", "/article/learn-mongodb-university-online-free-mooc"]
+"learn" = ["/how-to/designing-developing-2d-game-levels-unity-csharp", "/quickstart/python-quickstart-aggregation", "/how-to/subscribing-changes-browser-websockets"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
