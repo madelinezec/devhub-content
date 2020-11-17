@@ -7,7 +7,7 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/article/everything-you-know-is-wrong", "/article/multicloud-clusters-with-andrew-davidson", "/article/can-you-keep-a-secret", "/article/learn-mongodb-university-online-free-mooc"]
+"home" = ["/article/everything-you-know-is-wrong", "/article/getting-to-day-zero", "/article/can-you-keep-a-secret", "/article/learn-mongodb-university-online-free-mooc"]
 "learn" = ["/how-to/designing-developing-2d-game-levels-unity-csharp", "/quickstart/python-quickstart-aggregation", "/how-to/subscribing-changes-browser-websockets"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]

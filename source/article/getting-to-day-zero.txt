@@ -50,11 +50,11 @@ Day Zero: An Interactive MongoDB Thriller
 .. introduction::
 
    Day Zero is a mini-thriller that tells an exhilarating and suspenseful story about a talented game developer 
-   named Malena who is forced to navigate a perilous string of system challenges in order to save her kidnapped colleague, `Ji <https://developer.mongodb.com/article/day-zero-glossary#std-label-ji>`__. 
+   named Malena who is forced to navigate a perilous string of system challenges in order to save her kidnapped colleague, `Ji <https://developer.mongodb.com/article/day-zero-glossary#ji>`__. 
    Along the way, Malena must release her code ahead of schedule, recover from several system failures and potential breaches, 
    and avoid a complete system outage due to a massive influx of unplanned subscribers. 
    
-   Throughout the film, `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__ remains calm. 
+   Throughout the film, `Malena <https://developer.mongodb.com/article/day-zero-glossary#malena>`__ remains calm. 
    She's selected `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ for her production data platform and demonstrates the powerful capabilities available to developers 
    as she navigates the onslaught of attacks and tests.  In this article, I will provide a breakdown of the movie and reveal the 
    behind-the-scenes details about each of the tests that Malena faces and how she did it.
@@ -106,7 +106,7 @@ Day Zero: An Interactive MongoDB Thriller
    scenarios were authentic. 
 
    Day Zero is an interactive mini-movie produced by MongoDB Atlas to tell that story. It's the story of a young, successful game 
-   developer, `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__.  She's thrust into a series of bizarre, extraordinary, and challenging tasks in order to save a kidnapped 
+   developer, `Malena <https://developer.mongodb.com/article/day-zero-glossary#malena>`__.  She's thrust into a series of bizarre, extraordinary, and challenging tasks in order to save a kidnapped 
    colleague and prevent her latest game, Operand, from failing under the strain of an early, forced release to the public. 
 
    This mini-thriller has all of the suspense and intrigue of an episode of `Black Mirror <https://www.netflix.com/title/70264888>`__ or `Mr. Robot <https://www.amazon.com/Mr-Robot-Season-1/dp/B00YBX664Q>`__. While it's true that there's 
@@ -137,7 +137,7 @@ Day Zero: An Interactive MongoDB Thriller
       in the cluster and providing the ability to resume at any time. This can provide developers with a way to reduce hourly charges 
       associated with their clusters while they're not currently in use.
 
-   Although `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__ had previously completed development on Level 13 of Operand, it was not ready and in fact, Malena hadn't planned 
+   Although `Malena <https://developer.mongodb.com/article/day-zero-glossary#malena>`__ had previously completed development on Level 13 of Operand, it was not ready and in fact, Malena hadn't planned 
    to release this level for several weeks after the release of her new game. 
 
    .. image:: /images/day-zero/we_know_you_have_level_13.png
