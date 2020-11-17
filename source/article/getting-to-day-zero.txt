@@ -1,0 +1,418 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/day-zero.png
+
+.. meta-description:: 
+
+   Getting to Day Zero - The story behind the MongoDB Mini-thriller
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: Getting to Day Zero - The story behind the MongoDB Mini-thriller
+   :image: /images/social/twitter/twitter-day-zero.png
+   :image-alt: MongoDB Atlas: Day Zero
+
+   Getting to Day Zero - The story behind the MongoDB Mini-thriller
+
+.. og::
+   :title: Getting to Day Zero - The story behind the MongoDB Mini-thriller
+   :image: /images/social/open-graph/og-day-zero.png
+ 
+   Getting to Day Zero - The story behind the MongoDB Mini-thriller
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-11-17
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * MongoDB 4.4
+   * DevOps
+
+.. products::
+
+   * Atlas
+
+.. related::
+
+   - `Day Zero Glossary of Terms <https://developer.mongodb.com/article/day-zero-glossary>`__
+   - `MongoDB Podcast <https://www.mongodb.com/podcast>`__
+
+=========================================
+Day Zero: An Interactive MongoDB Thriller
+=========================================
+   
+.. introduction::
+
+   Day Zero is a mini-thriller that tells an exhilarating and suspenseful story about a talented game developer 
+   named Malena who is forced to navigate a perilous string of system challenges in order to save her kidnapped colleague, `Ji <https://developer.mongodb.com/article/day-zero-glossary#std-label-ji>`__. 
+   Along the way, Malena must release her code ahead of schedule, recover from several system failures and potential breaches, 
+   and avoid a complete system outage due to a massive influx of unplanned subscribers. 
+   
+   Throughout the film, `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__ remains calm. 
+   She's selected `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ for her production data platform and demonstrates the powerful capabilities available to developers 
+   as she navigates the onslaught of attacks and tests.  In this article, I will provide a breakdown of the movie and reveal the 
+   behind-the-scenes details about each of the tests that Malena faces and how she did it.
+
+   .. image:: /images/social/twitter/twitter-day-zero.png
+      :alt: Day Zero
+      :scale: 100%
+      :align: center
+
+   .. blockquote::
+
+      STOP! The terms defined in this article may give away certain aspects of the movie. If you haven't seen Day Zero, pause this article, and `go watch it now <https://www.mongodb.com/day-zero?utm_source=gmail&utm_medium=email&utm_term=devhub_blog&utm_campaign=dayzero>`__.
+
+   Table of Contents
+   -----------------
+   - :ref:`day-zero-introduction`
+   - :ref:`day-zero-challenge-1`
+
+     - :ref:`day-zero-test-or-no-test`
+
+   - :ref:`day-zero-challenge-2`
+
+     - :ref:`day-zero-field-level-or-at-rest`
+
+   - :ref:`day-zero-challenge-3`
+
+     - :ref:`day-zero-horizontal-scale`
+     - :ref:`day-zero-vertical-scale`
+
+   - :ref:`day-zero-behind-the-scenes`
+
+     - :ref:`day-zero-scripts-and-interactions`
+     - :ref:`day-zero-clusters-and-data`
+     - :ref:`day-zero-easter-eggs`
+     - :ref:`day-zero-extras`
+
+   -  :ref:`day-zero-summary`
+
+.. content::
+
+   .. _day-zero-introduction:
+
+   Introduction
+   ------------
+   
+   As an engineer and someone who communicates with developers as part of my job, I was intrigued at the possibility of teaching 
+   developers about the power of MongoDB Atlas through the lens of a thrilling and suspenseful story. My colleagues on the creative 
+   team had this wonderful concept, and they reached out to a few of us on the Developer Advocacy team for help on how to ensure the 
+   scenarios were authentic. 
+
+   Day Zero is an interactive mini-movie produced by MongoDB Atlas to tell that story. It's the story of a young, successful game 
+   developer, `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__.  She's thrust into a series of bizarre, extraordinary, and challenging tasks in order to save a kidnapped 
+   colleague and prevent her latest game, Operand, from failing under the strain of an early, forced release to the public. 
+
+   This mini-thriller has all of the suspense and intrigue of an episode of `Black Mirror <https://www.netflix.com/title/70264888>`__ or `Mr. Robot <https://www.amazon.com/Mr-Robot-Season-1/dp/B00YBX664Q>`__. While it's true that there's 
+   a bit more drama than someone might experience in a real-life startup scenario in my experience, it's not too far from the truth. 
+   This is the story of Day Zero. 
+
+   .. image:: /images/day-zero/malena_at_console.png
+      :alt: Malena gears up for the challenges ahead
+      :align: center
+
+   Most developers will never experience the pressure of a kidnapped co-worker, but anyone supporting a production application can 
+   likely relate to the pressure of a massive release.
+
+   Let's take a look at the challenges Malena faced in Day Zero and delve a bit deeper into how MongoDB Atlas enabled her to 
+   meet these challenges head-on. The story is punctuated by several interactive challenges through which you, the viewer, will help 
+   Malena navigate. 
+
+   .. _day-zero-challenge-1:
+
+   Challenge 1: Release Level 13
+   -----------------------------
+
+   The premise of this challenge is that Malena has created this new level in the game but has not released it. 
+
+   .. blockquote:: 
+
+      `Pausing clusters <https://docs.atlas.mongodb.com/pause-terminate-cluster/>`__ gives customers the ability to freeze resources associated with a cluster, thereby retaining the information
+      in the cluster and providing the ability to resume at any time. This can provide developers with a way to reduce hourly charges 
+      associated with their clusters while they're not currently in use.
+
+   Although `Malena <https://developer.mongodb.com/article/day-zero-glossary#std-label-malena>`__ had previously completed development on Level 13 of Operand, it was not ready and in fact, Malena hadn't planned 
+   to release this level for several weeks after the release of her new game. 
+
+   .. image:: /images/day-zero/we_know_you_have_level_13.png
+      :alt: We know you have level 13 - push it or else
+      :align: center
+
+   Believing that her colleague Ji is in danger, Malena is forced to release Level 13 and move it into production. 
+
+   This will involve pushing her code and moving the databases upon which this level depends into production. To accomplish this,
+   Malena `resumes a cluster <https://www.mongodb.com/blog/post/pause-resume-atlas-clusters>`__ in MongoDB Atlas called Level13-Prod 
+   and then turns her attention to the code for Level 13.
+
+   She's given a choice, and this is where YOU get to help Malena. Using the interactive viewer, you can make the choice to perform 
+   additional tests, or release the level without testing.
+
+   .. _day-zero-test-or-no-test:
+
+   Test or No Test
+   ~~~~~~~~~~~~~~~
+
+   Malena is faced with a choice many of us will find familiar. Release the code immediately and be certain to meet the deadline - 
+   or take the extra step to run a testing cycle risking a missed deadline. Now, from personal experience, I'd suggest running tests 
+   in every single case but I understand the need for agility - especially when someone's life is on the line.
+
+   If you choose TEST, you'll see Malena running some commands. These commands were scripts I wrote in JavaScript to mock Malena's 
+   continuous integration system. In this case, the tests complete, and Malena pushes the application to production with only seconds 
+   spare. 
+
+   .. image:: /images/day-zero/test-or-no-test.png
+      :alt: Time is running out... test, or no test?
+      :align: center
+
+   If, however, you chose to release without testing, shame, shame. What happens next is an all-too-common disaster scenario: data 
+   corruption. This outcome is something I'd not wish on my worst enemy. Unpredictable data corruption is almost impossible to recover 
+   from without some type of backup. Fortunately, Malena has just that. She's using MongoDB's point in time recovery. Because she's 
+   got regular backups, along with a continuous log of all updates made since that backup, recovering to any minute in time is 
+   extremely straightforward. Malena recovers the database from before the botched release, and what you don't get to see is her 
+   amend the offending code. 
+
+   .. _day-zero-challenge-2:
+
+   Challenge 2: They Are Not Safe
+   ------------------------------
+
+   Having successfully cleared the first challenge, Malena wanders into the next scene greeted by the words "THEY ARE NOT SAFE" 
+   on the screens in front of her.  A computer-generated voice informs Malena that in exactly 10 minutes, a malicious AI will 
+   break into the accounts of Operand's highest-profile players, exposing their personal details and taking over their accounts. 
+   A data breach of this magnitude would almost certainly kill the game's reputation and destroy any hope of a successful launch. 
+
+   .. image:: /images/day-zero/they_are_not_safe.gif
+      :alt: They are not safe
+      :align: center
+
+   Malena is using MongoDB Atlas to store player profile data. How could someone possibly break into her database? MongoDB Atlas 
+   leverages strong SSL/TLS encryption of data at rest and in flight.
+
+   The premise of this threat is that the "Malicious AI" has access to the infrastructure... Essentially, it is an administrator. 
+   At this point, Malena should be clued into the fact that she's dealing with someone very close to her. Who else would have 
+   access to her database infrastructure? Regardless, she must act to protect player profile data before the AI takes action.
+
+   As Malena ponders the challenge, she begins to think about how the AI may be able to access player data. Once again, you, 
+   the viewer, are asked to help Malena choose the appropriate type of encryption to secure her player data. 
+
+   .. image:: /images/day-zero/who_are_these_people.png
+      :alt: Who Are These People - Do Any Look Familiar?
+      :align: center
+
+   .. _day-zero-field-level-or-at-rest:
+
+   Field Level Encryption or Data Encryption at Rest
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Malena checks the configuration of her Level-13 Cluster and verifies that all data is encrypted at rest by default. This 
+   would be sufficient were it not for the fact that the attacker apparently has administrative access. This is a critical 
+   point because as you may know when the data is encrypted on disk - this does us little good if the attacker has gained access 
+   to the infrastructure with administrative privileges. 
+
+   Choosing `field-level encryption <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ gives Malena the 
+   comfort of knowing that regardless of whether or not the AI has access to the infrastructure, they cannot decrypt and view the 
+   data elements once they're encrypted using this type of client-side encryption. 
+
+   .. _day-zero-challenge-3:
+
+   Challenge 3: Room for More?
+   ---------------------------
+
+   In this challenge, the malicious AI has leaked the new game online and due to the massive popularity of the game, users begin 
+   immediately registering, placing an incredible load on the application and database tiers.
+
+   .. image:: /images/day-zero/room_for_more.png
+      :alt: Looks like Operand was leaked
+      :align: center
+
+   Fortunately, the dark days where we added physical servers to our data center in order to handle increased load are a distant 
+   memory. Malena has chosen a cloud-based deployment model on MongoDB Atlas which gives her the ability to change the configuration 
+   of the database clusters, increasing the resources available to the database, all while incurring zero downtime. 
+
+   There are two primary ways to scale systems: vertically and horizontally. 
+
+   .. image:: /images/day-zero/vertical_or_horizontal_scaling.png
+      :alt: Here's what horizontal and vertical scaling looks like
+      :align: center
+
+   `Horizontal scaling <https://docs.mongodb.com/manual/sharding/>`__ involves increasing the number of servers to provide additional resources to the application. 
+
+   Vertical scaling involves increasing the amount of CPU, memory, and disk space available on each of the servers in the database
+   cluster.
+
+   .. _day-zero-horizontal-scale: 
+   
+   Horizontal Scale
+   ~~~~~~~~~~~~~~~~
+
+   There are many situations where scaling vertically would alleviate performance concerns. In this case, however, Malena realizes 
+   new users are coming in from all over the world. Since the pre-production cluster was built without a global deployment in mind, 
+   she will have to act quickly to deploy a more globally distributed, horizontally scaled database infrastructure. Before Atlas and 
+   cloud, this would have meant several weeks lead-time to order servers, rack, stack, power, and get them on the network. Thankfully, 
+   with Atlas, distributing the very same, regionally centralized database is just as simple as selecting a new tier. 
+   
+   .. _day-zero-vertical-scale:
+
+   Vertical Scale
+   ~~~~~~~~~~~~~~
+
+   As any good DevOps practitioner knows, you should never make changes without truly understanding the source of the problem. 
+   Malena immediately dives into the Atlas console to get more information about the source of the users. She consults the 
+   real-time performance dashboard and notes CPU and memory utilization are both increasing rapidly. Naturally, her first thought 
+   might be to simply add more of each of those resources. Fortunately, this is easy with Atlas. She opens the cluster configuration 
+   settings and selects a larger cluster tier size, taking the cluster from an M30 with 8GB of RAM and two virtual CPUs to an M200 with 
+   256GB of RAM and 64 virtual CPUs. Atlas takes the new configuration, builds the appropriate clusters with the additional resources, 
+   and seamlessly migrates the database to the new, larger infrastructure, thereby saving the day for Malena!
+
+   .. blockquote::
+	
+      Do the ``charts`` Malena consults look familiar? Malena has built a dashboard using MongoDB Charts that enables her to check 
+      the critical metrics associated with operations of the game, Operand. In this case, she's consulting MongoDB Charts which shows 
+      the regional and global distribution of new user signups. 
+
+   Malena quickly edits the configuration of her Level 13 cluster and slides the radio button for 
+   `Global Writes <https://docs.atlas.mongodb.com/global-write-zones/>`__ to the On position. 
+   This exposes additional options enabling Malena to specify precisely what parts of the world she wants to make the database 
+   available for the application. This will effectively reduce latency in the application and provide additional resilience at the 
+   same time. This change is made even easier through the availability of pre-configured Global Zone templates which provide 
+   boilerplate groups of commonly used data centers within each of the cloud providers. 
+   
+   .. image:: /images/day-zero/malena_game_console.png
+      :alt: Malena ponders her scaling options  
+      :align: center
+
+   Once these changes are submitted, MongoDB Atlas will build a deployment that matches Malena's preferences and migrate the data 
+   over to the new, larger, and more distributed infrastructure. 
+
+   This final hurdle cleared, Malena is startled by the bright flash of stage lights - revealing what she believes to be her kidnapped colleague Ji. Malena and Ji then have an interesting one-to-one meeting that certainly puts some perspective on the most awkward meeting I've ever been involved in.
+
+   .. _day-zero-behind-the-scenes:
+
+   Behind the Scenes
+   -----------------
+
+   Let's take a peek behind the scenes of the production and show you some of the things that we put together for the film. 
+
+   .. _day-zero-scripts-and-interactions:
+
+   Scripts and Interactions
+   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Throughout the movie, Malena opens a command line and fires off some commands. These are written in NodeJS and leverage some 
+   interesting packages such as Ora, and Chalk for some interesting terminal effects. 
+
+   These scripts were designed to show interactions Malena would have with her code and the data. One important script was written 
+   to introduce load against the clusters to raise CPU and memory utilization as well as create meaningful data. Here's an overview of 
+   a few of the scripts:
+
+   * `generate-user-load.js <https://github.com/mongodb-developer/operand/blob/main/scripts/generate-user-load.js>`__ creates thousands of users. The script uses faker.js to create random usernames, addresses, and additional user data. faker.js is a JavaScript library perfectly suited for this type of exercise.
+
+   * `enable-fle.js <https://github.com/mongodb-developer/operand/blob/main/scripts/enable-fle.js>`__ was written to mock the interaction between Malena and the database when she wants to implement field level encryption. The script doesn't actually implement field level encryption, however. It merely displays information to the screen in true Hollywood style.
+
+   * `release.js <https://github.com/mongodb-developer/operand/blob/main/scripts/release.js>`__ is featured during Malena's initial challenge when she's forced to push Level 13 into production. Once again, we're not actually pushing code with this script.
+   
+   * `faker-users.js <https://github.com/mongodb-developer/operand/blob/main/data/fake-users.js>`__ populates the Operand user database with randomized, fake user data. Each registered user of the game will have a user document in the user's collection. Once again, we're leveraging faker.js to help create realistic user details such as first names, last names, etc.
+
+   .. image:: /images/day-zero/test-encryption.gif
+      :alt: On-screen encryption effect
+      :align: center
+
+   * `test-encryption.sh <https://github.com/mongodb-developer/operand/blob/main/scripts/test-encryption.sh>`__ is a bash script that flashes on the screen briefly as Malena completes the encryption challenge. You'll see on the left portion of her screen a user document randomly unscrambling to display in clear text on the screen. To accomplish this on-screen decryption, we're using a tool called `No More Secrets (nms) <https://github.com/mongodb-developer/operand/blob/main/scripts/test-encryption.sh>`__. It randomly scrambles a text file to the screen and uses ncurses to perform what appears to be a decryption. This is the same effect used on-screen during the 1992 movie, `Sneakers <https://youtu.be/F5bAa6gFvLs?t=41>`__. 
+
+   You can clone my `repo <https://github.com/mongodb-developer/operand>`__ and see how these very simple scripts work and even incorporate some of the fancy terminal interactions into your own projects to give your scripts more of a Hollywood vibe.
+   
+   .. _day-zero-clusters-and-data:
+   
+   Clusters and Data
+   ~~~~~~~~~~~~~~~~~
+
+   While the storyline of Day Zero is fictional, the infrastructure and data you see throughout the movie is quite real. In order to 
+   provide the most realistic depiction of Atlas as possible, my colleagues and I built an infrastructure that would mimic that of a 
+   real game-based startup ready for launch.
+
+   In the first challenge, Malena resumes a cluster named Level13-Prod. This is an M30 Tier cluster with all of the default 
+   configuration. You will also notice we deployed instances for the other environments Malena relies on for her deployment 
+   lifecycle: level12-prod, level13-dev, level13-qa.
+
+   With MongoDB Atlas, it's easy to build separate clusters and separate environments. MongoDB Atlas backup, restore, and 
+   snapshot capabilities make preparing similar environments extremely easy. You will also be interested in the `Atlas API which 
+   exposes these capabilities through a RESTful interface <https://docs.atlas.mongodb.com/reference/api/cloud-backup/backup/take-one-ondemand-backup/>`__ 
+   so you can script the creation and promotion of environments through your development lifecycle.
+
+   .. _day-zero-easter-eggs:
+
+   Easter Eggs
+   ~~~~~~~~~~~
+   
+   I love a good easter egg and *Day Zero* doesn't disappoint. Here are some hints about just a couple of the hidden gems. Can you 
+   find more?
+
+   * Can you find the latest version of MongoDB hidden in plain sight?
+   * During the player profile - data encryption challenge, the screen briefly shows the faces of some of Operand's highest-profile players... Who are these people? Do they look familiar?
+
+   .. _day-zero-extras:
+
+   Extras!
+   ~~~~~~~
+
+   If you loved this mini-movie like I did, you'll probably want to grab a screenshot for your web conference background.  Here are some images you can use for that, or for social media.
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_COLDOPEN.jpg
+      :alt: Cold Open 2
+      :scale: 75%
+   
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_COLDOPEN.jpg>`__
+
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_COMPUTERWALL.jpg
+      :alt: Computer Wall
+      :scale: 75%
+   
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_COMPUTERWALL.jpg>`__
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_DAYZERO1.jpg
+      :alt: Day Zero #1
+      :scale: 75%
+   
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_DAYZERO1.jpg>`__
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_DAYZERO2.jpg
+      :alt: Day Zero #2
+      :scale: 75%
+   
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_DAYZERO2.jpg>`__
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_ELEVATORS.jpg
+      :alt: Elevators
+      :scale: 75%
+      
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_ELEVATORS.jpg>`__
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_GREENROOM.jpg
+      :alt: Green Room
+      :scale: 75%
+
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_GREENROOM.jpg>`__
+
+   .. image:: /images/day-zero/ZoomBG_FINAL_MASK.jpg
+      :alt: Fox Mask
+      :scale: 75%
+   
+   `Download <https://developer.mongodb.com/images/day-zero/ZoomBG_FINAL_MASK.jpg>`__
+
+   .. _day-zero-summary:
+
+   Summary
+   -------
+
+   While this short-form mini-thriller takes theatrical liberties with some of the challenges presented, it paints an authentic 
+   picture of the capabilities of the MongoDB Atlas platform and gives developers a fun and unique setting upon which some of its 
+   powerful features can be showcased. Whether you're a game developer at a startup company, an enterprise developer, or you're just 
+   getting started, MongoDB Atlas will provide you with the tools you need to successfully navigate your own challenging journey 
+   through the intriguing world of software development and production application support.

@@ -1,0 +1,295 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/day-zero.png
+
+.. meta-description:: 
+
+   Getting to Day Zero - Glossary
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: Getting to Day Zero - Glossary
+   :image: /images/social/twitter/twitter-day-zero.png
+   :image-alt: MongoDB Atlas: Day Zero
+
+   Getting to Day Zero - Glossary
+
+.. og::
+   :title: Getting to Day Zero - Glossary
+   :image: /images/social/open-graph/og-day-zero.png
+ 
+   Getting to Day Zero - Glossary
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-11-17
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * MongoDB 4.4
+   * DevOps
+
+.. products::
+
+   * Atlas
+
+.. related::
+
+   - `Getting to Day Zero <https://developer.mongodb.com/article/getting-to-day-zero>`__
+   - `MongoDB Podcast <https://www.mongodb.com/podcast>`__
+
+===========================
+Day Zero: Glossary of Terms
+===========================
+
+.. content::
+
+   .. image:: /images/social/twitter/twitter-day-zero.png
+      :alt: Day Zero
+      :scale: 100%
+      :align: center
+
+   .. blockquote::
+
+      STOP! We're about to spoil some of the details of the movie. If you haven't seen Day Zero, pause this article, and `go watch it now <https://www.mongodb.com/day-zero?utm_source=gmail&utm_medium=email&utm_term=devhub_blog&utm_campaign=dayzero>`__.
+
+
+   Here are just a few of the actors, terms and concepts presented in the MongoDB Mini-thriller movie Day Zero. Be sure to read the `accompanying blog article <https://developer.mongodb.com/article/getting-to-day-zero>`__ for additional information.
+
+   Index
+   -----
+
+   -  :ref:`day-zero-glossary-charts`
+   -  :ref:`day-zero-glossary-atrest`
+   -  :ref:`day-zero-glossary-day-zero`
+   -  :ref:`day-zero-glossary-fox_and_rabbit`
+   -  :ref:`day-zero-glossary-malena`
+   -  :ref:`day-zero-glossary-ji`
+   -  :ref:`day-zero-glossary-guillaume`
+   -  :ref:`day-zero-glossary-level13`
+   -  :ref:`day-zero-glossary-csfle`
+   -  :ref:`day-zero-glossary-pause_resume`
+   -  :ref:`day-zero-glossary-operand`
+   -  :ref:`day-zero-glossary-surveillance_room`
+
+   ----------
+
+   .. _day-zero-glossary-charts:
+
+   Charts
+   ------
+
+   .. image:: /images/day-zero/sample-dashboard.png
+      :alt: Malena uses Charts to display data from Operand. 
+      :scale: 50%
+      :align: center
+
+   `MongoDB Charts <https://docs.mongodb.com/charts/master/>`__ is a tool to create visual representations of your MongoDB data. ... MongoDB Charts makes communicating your data a 
+   straightforward process by providing built-in tools to easily share and collaborate on visualizations. Malena uses Charts to display
+   data from the Operand databases - such as incoming, and newly registered users.
+
+   ----------
+
+   .. _day-zero-glossary-day-zero:
+
+   Day Zero
+   --------
+
+   .. image:: /images/day-zero/what-is-day-zero.png
+      :alt: Day Zero 
+      :scale: 50%
+      :align: center
+
+   A zero-day vulnerability is a computer-software vulnerability that is unknown to those who should be interested in mitigating the 
+   vulnerability. Until the vulnerability is mitigated, hackers can exploit it to adversely affect computer programs, data, additional 
+   computers or a network.  Day Zero is a play on this term.
+
+   ----------
+
+   .. _day-zero-glossary-atrest:
+
+   Encryption At Rest
+   ------------------
+
+   .. image:: /images/day-zero/atrest.png
+      :alt: Encryption of data at-rest
+      :scale: 50%
+      :align: center
+
+   During one of the challenges, Malena must choose between field level encryption (FLE), or `encryption at rest <https://docs.mongodb.com/manual/core/security-encryption-at-rest/>`__. This term is used to
+   describe the state of data that has been stored on disk in an encrypted state as opposed to in plain text. 
+
+   Encryption at rest, when used in conjunction with transport encryption and good security policies that protect relevant accounts, 
+   passwords, and encryption keys, can help ensure compliance with security and privacy standards.
+
+   A key reason Malena chooses application-level encryption, or field level encryption is that she learns that the malicious AI has
+   administrative access to the infrastructure and as such, likely has access to the key management system.
+
+   ----------
+
+   .. _day-zero-glossary-fox_and_rabbit:
+
+   Fox and Rabbit
+   --------------
+
+   .. image:: /images/day-zero/fox_and_rabbit_sketch.png
+      :alt: Fox and Rabbit
+      :scale: 50%
+      :align: center
+
+   Stories of interactions between foxes, and rabbits are as old as time. Wiley rabbits have been outsmarting cunning foxes in 
+   native american folk lore and western cultural children's stories for centuries. In nearly every case, the rabbit is the victor.
+   
+   Throughout the course of the film used fox and rabbit avatars from Operand as visual cues. We see the villainous fox snicker 
+   at Malena's failures and the Rabbit wink to acknowledge her successes. 
+   
+   These are initial sketches of the avatars.
+
+   --------------
+
+   .. _day-zero-glossary-malena:
+
+   Malena
+   ------
+
+   .. image:: /images/day-zero/lorna.png
+      :alt: The hero of our story and a successful game developer. 
+      :scale: 50%
+      :align: center
+
+   The hero of our story and a successful game developer.  Lorna plays the part of Malena. Malena started Operand with Ji, and Guillaume.  
+   Malena and Ji, forced Guillaume out and he's got an ax to grind or so it would seem.
+   
+   ----------------
+
+   .. _day-zero-glossary-ji:
+
+   Ji
+   --
+
+   .. image:: /images/day-zero/justine.png
+      :alt: The game designer of our story and a successful game developer. 
+      :scale: 50%
+      :align: center
+   
+   Game designer and founding partner of Operand. Justine plays the part of Ji. Ji is not your ordinary game designer. She displays her
+   thirst for power in the opening scene. Ji has been trying to force Malena to release the newest level despite Malena's insistence that 
+   they delay.
+
+   ----------------
+
+   .. _day-zero-glossary-guillaume:
+
+   Guillaume
+   ---------
+
+   .. image:: /images/day-zero/oliver.png
+      :alt: The villain of our story and a successful game developer. 
+      :scale: 50%
+      :align: center
+   
+   Former partner and co-founder of Operand. In the initial scenes of the movie, it's clear the Guillaume, no longer a part of Operand,
+   is not happy about seeing Malena at the launch party. Guillaume was forced out of Operand by Ji and Malena. 
+
+   ----------------
+
+   .. _day-zero-glossary-level13:
+
+   Level 13
+   --------
+
+   .. image:: /images/day-zero/level13.png
+      :alt: The hero of our story and a successful game developer. 
+      :scale: 50%
+      :align: center
+
+   The latest (and still unreleased)  level of the massively popular game Operand. Level 13 is at the center of our thriller. Ji has been
+   pushing Malena to release the level to bring even more gamers onto the Operand platform.
+
+   ----------------
+
+   .. _day-zero-glossary-csfle:
+
+   Field Level Encryption (FLE)
+   ----------------------------
+
+   .. image:: /images/day-zero/field_level_encryption.jpg
+      :alt: Also referred to as Client-Side Field Level Encryption 
+      :scale: 50%
+      :align: center
+
+   Malena must choose between FLE and Encryption at rest in one of the challenges. This is a choice that many developers must make.
+   
+   Also referred to as Client-Side Field Level Encryption. Applications can encrypt fields in documents prior to transmitting data 
+   over the wire to the server. Only applications with access to the correct encryption keys can decrypt and read the protected data. 
+   Deleting an encryption key renders all data encrypted using that key as permanently unreadable.
+
+   For example, a MongoDB cluster enforcing authentication uses TLS encryption to protect data in transit. The cluster also uses the 
+   MongoDB encrypted storage engine to secure data on disk. 
+
+   Malena uses `Field Level Encryption <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ to protect elements in the Operand User collection. 
+
+   Read `more about encryption and key management <https://docs.mongodb.com/manual/core/security-client-side-encryption-key-management/>`__.
+
+   ----------------
+
+   .. _day-zero-glossary-operand:
+
+   Operand
+   -------
+
+   .. image:: /images/day-zero/operand_shot.png
+      :alt: Operand - the name of the game 
+      :scale: 50%
+      :align: center
+
+   In mathematics, the following expression shows an example of operators and operands:
+
+   ``3 + 9 = 11``
+
+   In the above example, '+' is the symbol for the operation (addition).
+
+   The operand ``3`` is one of the inputs followed by the addition operator, and the operand ``9`` is the other 
+   input necessary for the operation.
+
+   An operand, then, is also referred to as "one of the inputs for an operation"... but in the case of ``Day Zero``, Operand
+   is the name of the company that Malena started.
+
+   ----------
+      
+   .. _day-zero-glossary-pause_resume:  
+   
+   Pause/Resume Cluster
+   --------------------
+
+   .. image:: /images/day-zero/pause_resume_cluster.png
+      :alt: Also referred to as Client-Side Field Level Encryption 
+      :scale: 50%
+      :align: center
+
+   `Pausing a cluster <https://docs.atlas.mongodb.com/pause-terminate-cluster/>`__ places the resources associated with an Atlas cluster in a quiesced state reducing the hourly charges incurred. 
+   It should be noted that a paused cluster is not accessible and cannot be used by an application. Resuming the cluster returns the 
+   cluster to a running state and resumes the normal hourly charge rate. 
+
+   Malena leverages pausing her level13-prod cluster while it's waiting to be released.
+
+   ----------
+
+   .. _day-zero-glossary-surveillance_room:
+
+   Surveillance Room
+   -----------------
+
+   .. image:: /images/day-zero/surveillance_room_props.png
+      :alt: Surveillance room props
+      :scale: 50%
+      :align: center
+
+   What's a good techno-thriller without a dark surveillance room filled with monitors and wires sticking out from the floor and ceiling?
+   A number of the small-ish monitors you see are SONY PVM-9040 Video Monitors - these were popular for use with security surveillance
+   systems.
