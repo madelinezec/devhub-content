@@ -43,6 +43,4 @@ Tornado
 Transactions
 University
 VS Code
-Public Speaking
-Speaker Program
 WebSockets
