@@ -1,4 +1,5 @@
 Atlas
+Atlas Search
 Charts
 Cloud Manager
 Compass

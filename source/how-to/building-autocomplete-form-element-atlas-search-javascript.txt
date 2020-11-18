@@ -26,6 +26,10 @@
 
 .. level:: beginner
 
+.. tags::
+
+   * Full-Text Search
+
 .. languages::
 
    * JavaScript
@@ -34,6 +38,7 @@
 
    * MongoDB
    * Atlas
+   * Atlas Search
 
 ======================================================================
 Building an Autocomplete Form Element with Atlas Search and JavaScript

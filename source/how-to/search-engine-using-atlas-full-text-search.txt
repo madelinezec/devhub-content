@@ -40,6 +40,7 @@
 
    * Realm
    * Atlas
+   * Atlas Search
 
 ================================================================================
 Tutorial: Build a Movie Search Engine Using Atlas Full-Text Search in 10 Minutes

@@ -43,6 +43,7 @@
    * Realm
    * Atlas
    * Compass
+   * Atlas Search
 
 .. related::
 
