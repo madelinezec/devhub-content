@@ -1,0 +1,434 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/atlas-search.png
+
+.. meta-description:: 
+
+   Learn how to use JavaScript and HTML to show MongoDB Atlas Search highlights on the screen.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Visually Showing Atlas Search Highlights with JavaScript and HTML
+   :image: /images/social/twitter/twitter-atlas-search.png
+   :image-alt: MongoDB
+
+   Learn how to use JavaScript and HTML to show MongoDB Atlas Search highlights on the screen.
+
+.. og::
+   :title: Visually Showing Atlas Search Highlights with JavaScript and HTML
+   :image: /images/social/open-graph/og-atlas-search.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-11-19
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. languages::
+
+   * JavaScript
+
+.. tags::
+
+   * Full-Text Search
+
+=================================================================
+Visually Showing Atlas Search Highlights with JavaScript and HTML
+=================================================================
+
+.. introduction::
+
+    When it comes to finding specific words or phrases within text, you're
+    probably going to want to use a natural language search option like full-text search (FTS). Sure, you could probably create a complicated and
+    difficult-to-maintain set of regular expressions to search within text,
+    but that is an option that most developers don't want. Not to mention
+    it won't cover the full scope of what a natural language processor
+    typically accomplishes.
+
+    In a previous tutorial titled `Building an Autocomplete Form Element
+    with Atlas Search and
+    JavaScript <https://developer.mongodb.com/how-to/building-autocomplete-form-element-atlas-search-javascript>`__,
+    I wrote about searching for recipes, as they are being typed, in
+    `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ using the
+    ``autocomplete`` operator. While this tutorial accomplished the job
+    quite well, it didn't elaborate on what exactly was being matched for
+    any given term.
+
+    In this tutorial, we're going to see how to use Atlas Search and work
+    with the highlight data to visually show any matches on the terms in a
+    user facing application. Highlighting is a powerful tool with Search to allow your users to find the exact text that they want in its proper context.
+
+    To get an idea of what we plan to accomplish, take a look at the
+    following animated image:
+
+    .. image:: /images/how-to/atlas-search-highlight.gif
+        :alt: Atlas Search Highlighting
+
+    In the above scenario, we are searching through messages in a chat room.
+    When we enter a term to search, we get the chat messages in return, with
+    any potential hits highlighted. The potential hits can match exactly, or
+    they could have a certain level of fuzziness which we'll explore. In
+    this particular example, the number of highlighted responses is limited
+    to five.
+
+.. content::
+
+    Defining a Data Model for Searching and Creating a Search Index
+    ---------------------------------------------------------------
+
+    Before we jump directly into the creation of the back end for searching
+    and the front end for displaying, we need to have an idea of our data
+    model. Let's assume we are working with user chat data and we want to
+    search for certain words and phrases. With this in mind, our documents
+    could potentially look like this:
+
+    .. code-block:: json
+
+        {
+            "_id": "mongodb",
+            "messages": [
+                {
+                    "sender": "nraboy",
+                    "message": "Hello World"
+                }
+            ]
+        }
+
+    The above document sample isn't the most realistic, but it gives us
+    something. Every time a new message is added to the chat room, it is
+    appended to the ``messages`` array with the associated sender
+    information. We could make this significantly more complex, but we don't
+    need to for this example.
+
+    The next step is to create a default search index on our data collection. For this example, we'll be
+    using a ``gamedev`` database and a ``chats`` collection.
+
+    .. image:: /images/how-to/atlas-create-search-index.png
+        :alt: Create Atlas Search Index
+
+    While we could create an index specific to the fields we're planning to use, for simplicity, creating a dynamic default index will be more than enough. To do this, simply click on the green Create Search Index button. Let's accept the default settings and click Create Index. This will give us the default index with the following configuration:
+
+    .. code-block:: json
+
+        {
+            "mappings": {
+                "dynamic": true
+            }
+        }
+
+    The ``lucene.standard`` analyzer is the default analyzer for Atlas Search and more information on it can be found in the `documentation <https://docs.atlas.mongodb.com/reference/atlas-search/analyzers/standard/#ref-standard-analyzer>`__.
+
+    Developing the Atlas Search and Express Powered Backend with Node.js
+    --------------------------------------------------------------------
+
+    In this example, we'll need a back end to handle the interaction with the
+    database for searching. To keep the stack consistent for this example,
+    we're going to use Node.js with some common dependencies.
+
+    Create a new directory on your computer and from the command line,
+    execute the following:
+
+    .. code-block:: bash
+
+        npm init -y
+        npm install express mongodb cors --save
+
+    The above commands will create a new **package.json** file and download
+    Express Framework, the MongoDB Node.js driver, and a cross-origin
+    resource sharing middleware that will allow us to reach our back end from
+    our front end operating on a different port.
+
+    Within the same project directory, create a **main.js** file and add the
+    following boilerplate Express Framework with MongoDB code:
+
+    .. code-block:: javascript
+
+        const { MongoClient, ObjectID } = require("mongodb");
+        const Express = require("express");
+        const Cors = require("cors");
+        const { request } = require("express");
+
+        const client = new MongoClient(process.env["ATLAS_URI"]);
+        const server = Express();
+
+        server.use(Cors());
+
+        var collection;
+
+        server.get("/search", async (request, response) => { });
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("gamedev").collection("chats");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    In the above code, we are importing each of our dependencies and
+    initializing Express Framework as well as MongoDB. The ``ATLAS_URI`` in
+    the above example should be stored as an environment variable on your
+    computer. You can obtain it from the MongoDB Atlas dashboard and it will
+    look something like this:
+
+    .. code-block:: none
+
+        mongodb+srv://<username>:<password>@cluster0-yyarb.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+    Of course, don't use my example above because you'll need to use your own
+    cluster information. For help with getting started with MongoDB Atlas,
+    check out my `previous
+    tutorial <https://developer.mongodb.com/how-to/getting-started-atlas-mongodb-query-language-mql>`__
+    on the subject.
+
+    Take note of the section of the code where we are listening for
+    connections:
+
+    .. code-block:: javascript
+
+        server.listen("3000", async () => {
+            try {
+                await client.connect();
+                collection = client.db("gamedev").collection("chats");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+    In the above code, we are connecting to the specified MongoDB Atlas
+    cluster and we are obtaining a handle to the ``chats`` collection within
+    the ``gamedev`` database. Feel free to use your own collection and
+    database naming, but note that this example will follow the previously
+    defined data model when it comes to searching.
+
+    With the boilerplate in place, let's jump into the ``/search`` endpoint
+    that is currently empty. Instead, we're going to want to change it to
+    the following:
+
+    .. code-block:: javascript
+
+        server.get("/search", async (request, response) => {
+            try {
+                let result = await collection.aggregate([
+                    {
+                        "$search": {
+                            "text": {
+                                "query": `${request.query.term}`,
+                                "path": "messages.message",
+                                "fuzzy": {
+                                    "maxEdits": 2
+                                }
+                            },
+                            "highlight": {
+                                "path": "messages.message"
+                            }
+                        }
+                    },
+                    {
+                        "$addFields": {
+                            "highlights": {
+                                "$meta": "searchHighlights"
+                            }
+                        }
+                    }
+                ]).toArray();
+                response.send(result);
+            } catch (e) {
+                response.status(500).send({ message: e.message });
+            }
+        });
+
+    In the above endpoint code, we are creating an aggregation pipeline.
+
+    Because we plan to use Atlas Search, the ``$search`` operator needs to be the first stage in
+    the pipeline. In this first stage, we are searching around a provided
+    term. Rather than searching the entire document, we are searching within
+    the ``message`` object of the ``messages`` array. The ``fuzzy`` field
+    with a ``maxEdits`` of ``2`` defines the number of single-character
+    edits required to match the specified search term. For example, if we
+    enter ``hlo``, we might get a hit on ``hello``, where as if we hadn't
+    defined the fuzzy information, a hit might not be found. More information
+    can be found in the
+    `documentation <https://docs.atlas.mongodb.com/reference/atlas-search/text/>`__.
+
+    The second stage of the pipeline will add the highlight data to the
+    results before they are returned to the client. The highlight
+    metadata isn't a part of the original document, hence the need to add it using the $meta operator
+    prior to the response. You can read more about the ``$meta`` operator and the metadata it can surface in the `documentation <https://docs.mongodb.com/manual/reference/operator/aggregation/meta/>`__. 
+    You could also use the ``$meta`` operator in a ``$project`` stage instead of ``$addFields``.
+
+    Since this is a MongoDB aggregation pipeline, you can combine any number of aggregation operators, as long as ``$search`` is the first in the pipeline.
+
+    If there's data in the collection, the application is ready to be used.
+
+    Designing the Visually Appealing Front End for Atlas Search Hits and Adjacent Text
+    ----------------------------------------------------------------------------------
+
+    The next step is to display the search data on the screen. Most of what
+    comes next is in regards to massaging the data into a format that we
+    want to use, which includes visually highlighting the data with HTML
+    markup.
+
+    We're going to need to create another project directory, this time
+    representing the front end instead of the back end. Within this new
+    directory, create an **index.html** file with the following markup:
+
+    .. code-block:: auto
+
+        <!DOCTYPE html>
+        <html>
+            <head></head>
+            <body>
+                <div>
+                    <input id="term" type="text" />
+                    <button type="button" onclick="search()">Search</button>
+                </div>
+                <br />
+                <div id="output"></div>
+                <script>
+                    const search = async () => {
+                        let term = document.getElementById("term");
+                        let output = document.getElementById("output");
+                    };
+                </script>
+            </body>
+        </html>
+
+    In the above code, we have a form that calls a ``search`` function when
+    the button is clicked. As of right now, the ``search`` function only
+    obtains the search term and references the area where search results
+    should be output.
+
+    Let's further narrow down what the ``search`` function should do.
+
+    .. code-block:: javascript
+
+        const search = async () => {
+            let term = document.getElementById("term");
+            let output = document.getElementById("output");
+            output.innerHTML = "";
+            let result = await fetch("http://localhost:3000/search?term=" + term.value)
+                .then(response => response.json());
+            result.forEach(chat => {
+                let messageContainer = document.createElement("div");
+                messageContainer.innerHTML = `<strong>Chat ${chat._id}</strong>`;
+                chat.messages.forEach(msg => {
+                    let message = document.createElement("p");
+                    chat.highlights.forEach(highlight => {
+                        let texts = highlight.texts;
+                        let replacements = texts.map(text => {
+                            if(text.type == "hit") {
+                                return "<mark>" + text.value + "</mark>";
+                            } else {
+                                return text.value;
+                            }
+                        }).join("");
+                        let originals = texts.map(text => {
+                            return text.value;
+                        }).join("");
+                        msg.message = msg.message.replace(originals, replacements);
+                    });
+                    message.innerHTML = msg.sender + ": " + msg.message;
+                    messageContainer.appendChild(message);
+                });
+                output.appendChild(messageContainer);
+            });
+        };
+
+    The above modifications to the function might be a lot to take in. Let's
+    break down what's happening.
+
+    After clearing the output space, we are making a request to the back end:
+
+    .. code-block:: javascript
+
+        let result = await fetch("http://localhost:3000/search?term=" + term.value)
+            .then(response => response.json());
+
+    The results of that request will have the documents found as well as the
+    highlight data associated to the search.
+
+    The next step will be to loop through each of the results and then each
+    of the messages for the results. This is where things can become a bit
+    confusing. MongoDB will return data that looks like the following when
+    it comes to highlighting:
+
+    .. code-block:: json
+
+        {
+            "path": "messages.message",
+            "texts": [
+                {
+                    "value": "This is another ",
+                    "type": "text"
+                },
+                {
+                    "value": "Hello",
+                    "type": "hit"
+                },
+                {
+                    "value": " world example",
+                    "type": "text"
+                }
+            ],
+            "score": 0.7454098463058472
+        },
+
+    It doesn't exactly do the visual highlighting for us. Instead, it will
+    tell us which term or phrase had a potential hit and the adjacent text.
+    With this information, we need to highlight the hit in JavaScript.
+
+    .. code-block:: javascript
+
+        let texts = highlight.texts;
+        let replacements = texts.map(text => {
+            if(text.type == "hit") {
+                return "<mark>" + text.value + "</mark>";
+            } else {
+                return text.value;
+            }
+        }).join("");
+        let originals = texts.map(text => {
+            return text.value;
+        }).join("");
+
+    Here, we are constructing a string from the original
+    highlight pieces as well as a string where the hit is wrapped in markup.
+    The goal is to use the ``replace`` function in JavaScript which requires
+    a search term or phrase as well as the replacement. We can't just do a
+    replace on the hit, because what if our hit was ``hello`` while
+    ``helloworld`` existed in the chat with no spaces? The JavaScript
+    replace doesn't look at words in a natural way, so blindly replacing on
+    ``hello`` would result in ``helloworld`` being incorrectly highlighted.
+    This is why we need to work with the adjacent data that MongoDB returns.
+
+    After doing the JavaScript replacement with the original string and the
+    modified string, we can prepare it for output with the following:
+
+    .. code-block:: javascript
+
+        message.innerHTML = msg.sender + ": " + msg.message;
+        messageContainer.appendChild(message);
+
+    Like previously mentioned, the front end is really just doing a lot of
+    visual manipulations using the result and highlight data that the
+    back end came up with.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to visually highlight search results on the screen
+    using the highlight data returned with MongoDB Atlas Search. While
+    highlighting the search hits with HTML markup and JavaScript isn't
+    completely necessary, it is a great way to learn about your data and how
+    your searches are operating.
+
+    To learn more about Atlas Search and building an autocomplete form, it's
+    worth checking out my `previous
+    tutorial <https://developer.mongodb.com/how-to/building-autocomplete-form-element-atlas-search-javascript>`__
+    on the topic.
