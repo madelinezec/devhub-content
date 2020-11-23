@@ -1,0 +1,825 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/realm-mobile.jpg
+
+.. meta-description:: 
+
+   Build your first iOS mobile app using Realm, SwiftUI, and Combine.
+
+.. twitter::
+   :creator: @andrewmorgan
+   :title: Build your first iOS app with Realm, SwiftUI, & Combine
+   :image: /images/social/twitter/twitter-realm-mobile.jpg
+   :image-alt: Realm mobile app development
+
+   Build your first iOS mobile app using Realm, SwiftUI, and Combine
+
+.. og::
+   :title: Build your first iOS app with Realm, SwiftUI, & Combine
+   :image: /images/social/open-graph/og-realm-mobile.jpg
+
+.. include:: /includes/authors/morgan-andrew.rst
+
+.. pubdate:: 2020-11-23
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. tags:: 
+
+   * Mobile
+   * iOS
+
+.. languages::
+
+   * Swift
+
+.. products::
+
+   * Realm
+   * MongoDB
+
+===============================================================
+Build Your First iOS Mobile App Using Realm, SwiftUI, & Combine
+===============================================================
+
+.. introduction::
+
+   I'm relatively new to building iOS apps (a little over a year's experience), and so I prefer using the latest technologies that make me a more productive developer. That means my preferred app stack looks like this:
+
+
+   .. list-table:: Technologies Used by the App
+      :header-rows: 1
+
+      *  - In 🔥
+         - Out ❄️
+      *  - Swift
+         - Objective C
+      *  - SwiftUI
+         - UIKit
+      *  - Combine
+         - RxSwift
+      *  - Realm
+         - Core Data
+      *  - MongoDB Realm Sync (where needed)
+         - Home-baked cross-platform data sync
+
+   This article presents a simple task management app that I built on that stack. To continue my theme on being productive (lazy), I've borrowed heavily (stolen) from MongoDB's official iOS Swift tutorial:
+
+   - I've refactored the `original front end <https://docs.mongodb.com/realm/tutorial/ios-swift/>`__, adding Combine for event management, and replacing the UIKit ViewControllers with Swift views.
+   - The `back end Realm app <https://docs.mongodb.com/realm/tutorial/realm-app/#tutorial-task-tracker-create-realm-app>`__ is entirely unchanged. Note that once you've stood up this back end, then this app can share its data with the equivalent `Android <https://docs.mongodb.com/realm/tutorial/android-kotlin/>`__, `React/JavaScript <https://docs.mongodb.com/realm/tutorial/react-native/>`__, and `Node.js <https://docs.mongodb.com/realm/tutorial/nodejs-cli/>`__ apps with no changes.
+
+   I'm going to focus here on the iOS app. Check the `official tutorial <https://docs.mongodb.com/realm/tutorial/realm-app/#tutorial-task-tracker-create-realm-app>`__ if you want to understand how the back end works.
+
+   You can download all of the code for the front end app from the `GitHub repo <https://github.com/ClusterDB/task-tracker-swiftui>`__.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   I'm lucky that I don't have to support an existing customer base that's running on old versions of iOS, and so I can take advantage of the latest language, operating system, and SDK features:
+
+   - A Mac (sorry Windows and Linux users)
+   - iOS14+ / XCode 12.2+
+
+     - It would be pretty easy to port the app back to iOS13, but iOS14 makes SwiftUI more of a first-class citizen (though there are still times when a more complex app would need to break out into UIKit code—e.g., if you wanted to access the device's camera).
+     - Apple introduced SwiftUI and Combine in iOS13, and so you'd be better sticking with the original tutorial if you need to support iOS12 or earlier.
+
+   - `Realm Cocoa SDK 10.1+ <https://github.com/realm/realm-cocoa>`__
+
+     - Realm Cocoa 10 adds support for Combine and the ability to `"Freeze" Realm Objects <https://docs.mongodb.com/realm/ios/threading/#frozen-objects>`__, making it simpler and safer to embed them directly within SwiftUI views.
+     - `CocoaPods 1.10+ <https://cocoapods.org/>`__
+
+.. content::
+
+   Running the App for Yourself
+   ----------------------------
+
+   I always prefer to build and run an app before being presented with code snippets; these are the steps:
+
+   #. If you don't already have Xcode 12 installed, install it through the Apple App Store.
+   #. `Set up your back end Realm app <https://docs.mongodb.com/realm/tutorial/realm-app/#tutorial-task-tracker-create-realm-app>`__. Make a note of the ID:
+
+   .. figure:: /images/how-to/realm-ios/Realm-App_ID.png
+      :scale: 70%
+      :align: center
+      :alt: Find the Realm Application ID using the Realm UI
+
+   3. Download the iOS app, install dependencies, and open the workspace in Xcode:
+
+   .. code-block:: bash
+
+      git clone https://github.com/ClusterDB/task-tracker-swiftui.git
+      cd task-tracker-swiftui
+      pod install --repo-update
+      open task-tracker-swiftui.xcworkspace
+
+   4. Within Xcode, edit ``task-tracker-swiftui/task_tracker_swiftuiApp.swift`` and set the Realm application ID to the value you noted in Step 2:
+
+   .. code-block:: swift
+   
+      let app = App(id: "tasktracker-xxxxx")
+
+   5. In Xcode, select an iOS simulator:
+
+   .. figure:: /images/how-to/realm-ios/Select-iOS-simulator.png
+      :scale: 100%
+      :alt: Select an iOS simulator in Xcode
+
+      Select an iOS simulator in Xcode
+
+   6. Build and run the app using ``⌘-R``.
+   7. Go ahead and play with the app:
+
+   .. figure:: /images/how-to/realm-ios/App-Demo.gif
+      :scale: 100%
+      :alt: Demo of the app in an iOS simulator
+      
+      Demo of the app in an iOS simulator
+
+   Key Pieces of Code
+   ------------------
+
+   Usually, when people start explaining SwiftUI, they begin with, "You know how you do X with UIKit? With SwiftUI, you do Y instead." But, I'm not going to assume that you're an experienced UIKit developer.
+
+   The Root of a SwiftUI App
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   If you built and ran the app, you've already seen the "root" of the app in ``swiftui_realmApp.swift``:
+
+   .. code-block:: swift
+
+      import SwiftUI
+      import RealmSwift:
+
+      let app = App(id: "tasktracker-xxxxx") // TODO: Set the Realm application ID
+
+      @main
+      struct swiftui_realmApp: SwiftUI.App {
+         @StateObject var state = AppState()
+
+         var body: some Scene {
+            WindowGroup {
+                  ContentView()
+                  .environmentObject(state)
+            }
+         }
+      }
+
+   ``app`` is the Realm application that will be used by our iOS app to store and retrieve data stored in Realm.
+
+   SwiftUI works with views, typically embedding many views within other views (`a recent iOS app I worked on <https://github.com/WildAid/o-fish-ios>`__ has over 500 views), and you always start with a top-level view for the app—in this case, ``ContentView``.
+
+   Individual views contain their own state (e.g., the details of the task that's currently being edited, or whether a pop-up sheet should be displayed), but we store any app-wide state in the ``state`` variable. ``@ObservedObject`` is a SwiftUI annotation to indicate that a view should be refreshed whenever particular attributes within an object change. We pass state to ``ContentView`` as an ``environmentOject`` so that any of the app's views can access it.
+
+   Application-Wide State Management
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Like other declarative, state-driven frameworks (e.g., React or Vue.js), components/views can pass state up and down the hierarchy. However, it can simplify state management by making some state available application-wide. In this app, we centralize this app-wide state data storage and control in an instance of the ``AppState`` class:
+
+   .. code-block:: swift
+   
+      class AppState: ObservableObject {
+         var loginPublisher = PassthroughSubject<RealmSwift.User, Error>()
+         var logoutPublisher = PassthroughSubject<Void, Error>()
+         let userRealmPublisher = PassthroughSubject<Realm, Error>()
+         var cancellables = Set<AnyCancellable>()
+
+         @Published var shouldIndicateActivity = false
+         @Published var error: String?
+
+         var user: User?
+      }
+
+   We use ``shouldIndicateActivity`` to control whether a "working on it" view should be displayed while the app is busy. error is set whenever we want to display an error message. Both of these variables are annotated with ``@Published`` to indicate that referencing views should be refreshed when their values change.
+
+   ``user`` represents the Realm user that's currently logged into the app.
+
+   The app uses the Realm SDK to interact with the back end Realm application to perform actions such as logging into Realm. Those operations can take some time as they involve accessing resources over the internet, and so we don't want the app to sit busy-waiting for a response. Instead, we use "Combine" publishers and subscribers to handle these events. ``loginPublisher``, ``logoutPublisher``, and ``userRealmPublisher`` are publishers to handle logging in, logging out, and opening a Realm for a user.
+
+   As an example, when an event is sent to ``loginPublisher`` to indicate that the login process has completed, Combine will run this pipeline:
+
+   .. code-block:: swift
+   
+      init() {
+      loginPublisher
+         .receive(on: DispatchQueue.main)
+         .flatMap { user -> RealmPublishers.AsyncOpenPublisher in
+               self.shouldIndicateActivity = true
+               var realmConfig = user.configuration(partitionValue: "user=\(user.id)")
+               realmConfig.objectTypes = [User.self, Project.self]
+               return Realm.asyncOpen(configuration: realmConfig)
+         }
+         .receive(on: DispatchQueue.main)
+         .map {
+               self.shouldIndicateActivity = false
+               return $0
+         }
+         .subscribe(userRealmPublisher)
+         .store(in: &self.cancellables)
+      }
+
+   The pipeline receives the freshly-logged-in Realm user.
+
+   The ``receive(on: DispatchQueue.main)`` stage specifies that the next stage in the pipeline should run in the main thread (because it will update the UI).
+
+   The Realm user is passed to the ``flatMap`` stage which:
+
+   - Updates the UI to show that the app is busy.
+   - Opens a Realm for this user (requesting Objects where the partition matches the string ``"user=\(user.id"``).
+   - Passes a publisher for the opening of the Realm to the next stage.
+
+   The ``.subscribe`` stage subscribes the ``userRealmPublisher`` to outputs from the publisher it receives from the previous stage. In that way, a pipeline associated with the ``userRealmPublisher`` publisher can react to an event indicating when the Realm has been opened.
+
+   The ``.store`` stage stores the publisher in the ``cancellables`` array so that it isn't removed when the ``init()`` function completes.
+   
+   The Object Model
+   ~~~~~~~~~~~~~~~~
+
+   You'll find the Realm object model in the ``Model`` group in the Xcode workspace. These are the objects used in the iOS app and synced to MongoDB Atlas in the back end.
+
+   The ``User`` class represents application users. It inherits from ``Object`` which is a class in the Realm SDK and allows instances of the class to be stored in Realm:
+
+   .. code-block:: swift
+   
+      import RealmSwift
+
+      class User: Object {
+         @objc dynamic var _id: String = UUID().uuidString
+         @objc dynamic var _partition: String = ""
+         @objc dynamic var name: String = ""
+         let memberOf = RealmSwift.List<Project>()
+
+         override static func primaryKey() -> String? {
+               return "_id"
+         }
+      }
+
+   Note that instances of classes that inherit from ``Object`` can be used as ``@ObservedObjects`` without inheriting from ``ObservableObject`` or annotating attributes with ``@Public``.
+
+   Summary of the attributes:
+
+   - ``_id`` uniquely identifies a ``User`` object. We set it to be the Realm primary key.
+   - ``_partition`` is used as the partition key, which can be used by the app to filter which ``User`` ``Objects`` it wants to access.
+   - ``name`` is the username (email address).
+   - ``membersOf`` is a Realm List of projects that the user can access. (It always contains its own project, but it may also include other users' projects if those users have added this user to their teams.)
+
+   The elements in ``memberOf`` are instances of the ``Project`` class. ``Project`` inherits from ``EmbeddedObject`` which means that instances of ``Project`` can be embedded within other Realm ``Objects``:
+
+   .. code-block:: swift
+   
+      import RealmSwift
+
+      class Project: EmbeddedObject {
+         @objc dynamic var name: String?
+         @objc dynamic var partition: String?
+         convenience init(partition: String, name: String) {
+               self.init()
+               self.partition = partition
+               self.name = name
+         }
+      }
+
+   Summary of the attributes:
+
+   - ``name`` is the project's name.
+   - ``partition`` is a string taking the form ``"project=project-name"`` where ``project-name`` is the ``_id`` of the project's owner.
+
+   Individual tasks are represented by the ``Task`` class:
+
+   .. code-block:: swift
+   
+      import RealmSwift
+
+      enum TaskStatus: String {
+         case Open
+         case InProgress
+         case Complete
+      }
+
+      class Task: Object {
+         @objc dynamic var _id: ObjectId = ObjectId.generate()
+         @objc dynamic var _partition: String = ""
+         @objc dynamic var name: String = ""
+         @objc dynamic var owner: String?
+         @objc dynamic var status: String = ""
+         override static func primaryKey() -> String? {
+               return "_id"
+         }
+
+         var statusEnum: TaskStatus {
+               get {
+                  return TaskStatus(rawValue: status) ?? .Open
+               }
+               set {
+                  status = newValue.rawValue
+               }
+         }
+
+         convenience init(partition: String, name: String) {
+               self.init()
+               self._partition = partition
+               self.name = name
+         }
+      }
+   
+   Summary of the attributes:
+
+   - ``_id`` uniquely identifies a ``Task`` object. We set it to be the Realm primary key.
+   - ``_partition`` is used as the partition key, which can be used by the app to filter which ``Task`` ``Objects`` it wants to access. It takes the form ``"project=project-id"``.
+   - ``name`` is the task's title.
+   - ``status`` takes on the value "Open", "InProgress", or "Complete".
+
+   User Authentication
+   ~~~~~~~~~~~~~~~~~~~
+
+   We want app users to only be able to access the tasks from their own project (or the projects of other users who have added them to their team). Our users need to see their tasks when they restart the app or run it on a different device. Realm's username/password authentication is a simple way to enable this.
+
+   Recall that our top-level SwiftUI view is ``ContentView`` (``task-tracker-swiftui/Views/ContentView.swift``). ``ContentView`` selects whether to show the ``LoginView`` or ``ProjectsView`` view based on whether a user is already logged into Realm:
+
+   .. code-block:: swift
+   
+      struct ContentView: View {
+         @EnvironmentObject var state: AppState
+
+         var body: some View {
+               NavigationView {
+                  ZStack {
+                     VStack {
+                           if state.loggedIn && state.user != nil {
+                              if state.user != nil {
+                                 ProjectsView()
+                              }
+                           } else {
+                              LoginView()
+                           }
+                           Spacer()
+                           if let error = state.error {
+                              Text("Error: \(error)")
+                                 .foregroundColor(Color.red)
+                           }
+                     }
+                     if state.shouldIndicateActivity {
+                           ProgressView("Working With Realm")
+                     }
+                  }
+                  .navigationBarItems(leading: state.loggedIn ? LogoutButton() : nil)
+               }
+         }
+      }
+   
+   Note that ``ContentView`` also renders the ``state.error`` message and the ``ProgressView`` views. These will kick in whenever a sub-view updates state.
+
+   ``LoginView`` (``task-tracker-swiftui/Views/User Accounts/LoginView.swift``) presents a simple form for existing app users to log in:
+
+   .. figure:: /images/how-to/realm-ios/LoginView.png
+      :alt: LoginView shown in iOS simulator
+      :scale: 70%
+      :align: center
+   
+   When the user taps "Log In", the ``login`` function is executed:
+
+   .. code-block:: swift
+   
+      private func login(username: String, password: String) {
+         if username.isEmpty || password.isEmpty {
+               return
+         }
+         self.state.error = nil
+         state.shouldIndicateActivity = true
+         app.login(credentials: .emailPassword(email: username, password: password))
+               .receive(on: DispatchQueue.main)
+               .sink(receiveCompletion: {
+                  state.shouldIndicateActivity = false
+                  switch $0 {
+                  case .finished:
+                     break
+                  case .failure(let error):
+                     self.state.error = error.localizedDescription
+                  }
+               }, receiveValue: {
+                  self.state.error = nil
+                  state.loginPublisher.send($0)
+               })
+               .store(in: &state.cancellables)
+      }
+   
+   ``login`` calls ``app.login`` (``app`` is the Realm app that we create when the app starts) which returns a Combine publisher. The results from the publisher are passed to a Combine pipeline which updates the UI and sends the resulting Realm user to ``loginPublisher``, which can then complete the process.
+
+   If it's a first-time user, then they tap "Register new user" to be taken to ``SignupView`` which registers a new user with Realm (``app.emailPasswordAuth.registerUser``) before popping back to ``loginView`` (``self.presentationMode.wrappedValue.dismiss()``):
+
+   .. code-block:: swift
+   
+      private func signup(username: String, password: String) {
+         if username.isEmpty || password.isEmpty {
+               return
+         }
+         self.state.error = nil
+         state.shouldIndicateActivity = true
+         app.emailPasswordAuth.registerUser(email: username, password: password)
+               .receive(on: DispatchQueue.main)
+               .sink(receiveCompletion: {
+                  state.shouldIndicateActivity = false
+                  switch $0 {
+                  case .finished:
+                     break
+                  case .failure(let error):
+                     self.state.error = error.localizedDescription
+                  }
+               }, receiveValue: {
+                  self.state.error = nil
+                  self.presentationMode.wrappedValue.dismiss()
+               })
+               .store(in: &state.cancellables)
+      }
+   
+   To complete the user lifecycle, ``LogoutButton`` logs them out from Realm and then sends an event to ``logoutPublisher``:
+
+   .. code-block:: swift
+
+      struct LogoutButton: View {
+         @EnvironmentObject var state: AppState
+         var body: some View {
+               Button("Log Out") {
+                  state.shouldIndicateActivity = true
+                  app.currentUser?.logOut()
+                     .receive(on: DispatchQueue.main)
+                     .sink(receiveCompletion: { _ in
+                     }, receiveValue: {
+                           state.shouldIndicateActivity = false
+                           state.logoutPublisher.send($0)
+                     })
+                     .store(in: &state.cancellables)
+               }
+               .disabled(state.shouldIndicateActivity)
+         }
+      }
+   
+   Projects View
+   ~~~~~~~~~~~~~
+   
+   |
+
+   .. figure:: /images/how-to/realm-ios/Projects-View.png
+      :alt: Projects view shown in an iOS simulator
+      :scale: 70%
+      :align: center
+      
+   After logging in, the user is shown ``ProjectsView`` (``task-tracker-swiftui/Views/Projects & Tasks/ProjectsView.swift``) which displays a list of projects that they're a member of:
+   
+   .. code-block:: swift
+   
+      var body: some View {
+         VStack(spacing: Dimensions.padding) {
+               if let projects = state.user?.memberOf {
+                  ForEach(projects, id: \.self) { project in
+                     HStack {
+                           LabeledButton(label: project.partition ?? "No partition",
+                                          text: project.name ?? "No project name") {
+                              showTasks(project)
+                           }
+                     }
+                  }
+               }
+               Spacer()
+               if let tasksRealm = tasksRealm {
+                  NavigationLink( destination: TasksView(realm: tasksRealm, projectName: projectName),
+                                 isActive: $showingTasks) {
+                     EmptyView() }
+               }
+         }
+         .navigationBarTitle("Projects", displayMode: .inline)
+         .toolbar {
+               ToolbarItem(placement: .bottomBar) {
+                  Button(action: { self.showingSheet = true }) {
+                     ManageTeamButton()
+                  }
+               }
+         }
+         .sheet(isPresented: $showingSheet) { TeamsView() }
+         .padding(.all, Dimensions.padding)
+      }
+   
+   Recall that ``state.user`` is assigned the data retrieved from Realm when the pipeline associated with ``userRealmPublisher`` processes the event forwarded from the login pipeline:
+
+   .. code-block:: swift
+   
+      userRealmPublisher
+         .sink(receiveCompletion: { result in
+               if case let .failure(error) = result {
+                  self.error = "Failed to log in and open realm: \(error.localizedDescription)"
+               }
+         }, receiveValue: { realm in
+               self.user = realm.objects(User.self).first
+         })
+         .store(in: &cancellables)
+
+   Each project in the list is a button that invokes ``showTasks(project)``: 
+
+   .. code-block:: swift
+
+      func showTasks(_ project: Project) {
+         state.shouldIndicateActivity = true
+         let realmConfig = app.currentUser?.configuration(partitionValue: project.partition ?? "")
+         guard var config = realmConfig else {
+               state.error = "Cannot get Realm config from current user"
+               return
+         }
+         config.objectTypes = [Task.self]
+         Realm.asyncOpen(configuration: config)
+               .receive(on: DispatchQueue.main)
+               .sink(receiveCompletion: { result in
+                  state.shouldIndicateActivity = false
+                  if case let .failure(error) = result {
+                     self.state.error = "Failed to open realm: \(error.localizedDescription)"
+                  }
+               }, receiveValue: { realm in
+                  self.tasksRealm = realm
+                  self.projectName = project.name ?? ""
+                  self.showingTasks = true
+                  state.shouldIndicateActivity = false
+               })
+               .store(in: &self.state.cancellables)
+      }    
+
+   ``showTasks`` opens a new Realm and then sets up the variables which are passed to ``TasksView`` in body (note that the ``NavigationLink`` is automatically followed when ``showingTasks`` is set to ``true``):
+
+   .. code-block:: swift
+
+      NavigationLink(
+         destination: TasksView(realm: tasksRealm, projectName: projectName),
+         isActive: $showingTasks) {
+               EmptyView()
+         }
+
+   Tasks View
+   ~~~~~~~~~~
+
+   |
+   
+   .. figure:: /images/how-to/realm-ios/Tasks-View.png
+      :alt: Tasks view shown in an iOS simulator
+      :scale: 70%
+      :align: center
+
+
+   ``TasksView`` (``task-tracker-swiftui/Views/Projects & Tasks/TasksView.swift``) presents a list of the tasks within the selected project:
+
+   .. code-block:: swift
+
+      var body: some View {
+         VStack {
+               if let tasks = tasks {
+                  List {
+                     ForEach(tasks.freeze()) { task in
+                           if let tasksRealm = tasks.realm {
+                              TaskView(task: (tasksRealm.resolve(ThreadSafeReference(to: task)))!)
+                           }
+                     }
+                     .onDelete(perform: deleteTask)
+                  }
+               } else {
+                  Text("Loading...")
+               }
+               if let lastUpdate = lastUpdate {
+                  LastUpdate(date: lastUpdate)
+               }
+         }
+         .navigationBarTitle("Tasks in \(projectName)", displayMode: .inline)
+         .navigationBarItems(trailing: Button(action: { self.showingSheet = true }) {
+               Image(systemName: "plus.circle.fill")
+                  .renderingMode(.original)
+
+         })
+         .sheet(isPresented: $showingSheet) { AddTaskView(realm: realm) }
+         .onAppear(perform: loadData)
+         .onDisappear(perform: stopWatching)
+      }
+   
+   Tasks can be removed from the projects by other instances of the application or directly from Atlas in the back end. SwiftUI tends to crash if an item is removed from a list which is bound to the UI, and so we use Realm's "freeze" feature to isolate the UI from those changes:
+
+   .. code-block:: swift
+   
+      ForEach(tasks.freeze()) { task in ...
+
+   However, ``TaskView`` can make changes to a task, and so we need to "unfreeze" ``Task`` ``Objects`` before passing them in:
+   
+   .. code-block:: swift
+   
+      TaskView(task: (tasksRealm.resolve(ThreadSafeReference(to: task)))!)
+
+   When the view loads, we must fetch the latest list of tasks in the project. We want to refresh the view in the UI whenever the app observes a change in the list of tasks. The ``loadData`` function fetches the initial list, and then observes the Realm and updates the ``lastUpdate`` field on any changes (which triggers a view refresh):
+   
+   .. code-block:: swift
+   
+      func loadData() {
+         tasks = realm.objects(Task.self).sorted(byKeyPath: "_id")
+         realmNotificationToken = realm.observe { _, _ in
+               lastUpdate = Date()
+         }
+      }
+
+   To conserve resources, we release the refresh token when leaving this view:
+
+   .. code-block:: swift
+   
+      func stopWatching() {
+         if let token = realmNotificationToken {
+               token.invalidate()
+         }
+      }
+
+   We delete a task when the user swipes it to the left:
+
+   .. code-block:: swift
+   
+      func deleteTask(at offsets: IndexSet) {
+         do {
+               try realm.write {
+                  guard let tasks = tasks else {
+                     return
+                  }
+                  realm.delete(tasks[offsets.first!])
+               }
+         } catch {
+               state.error = "Unable to open Realm write transaction"
+         }
+      }
+
+   Task View
+   ~~~~~~~~~
+   
+   |
+
+   .. figure:: /images/how-to/realm-ios/Task-View.png
+      :alt: Task view shown in an iOS simulator
+      :scale: 70%
+      :align: center
+
+   ``TaskView`` (``task-tracker-swiftui/Views/Projects & Tasks/TaskView.swift``) is responsible for rendering a ``Task`` ``Object``; optionally adding an image and format based on the task status:
+
+   .. code-block:: swift
+   
+      var body: some View {
+         Button(action: { self.showingUpdateSheet = true }) {
+               HStack(spacing: Dimensions.padding) {
+                  switch task.statusEnum {
+                  case .Complete:
+                     Text(task.name)
+                           .strikethrough()
+                           .foregroundColor(.gray)
+                     Spacer()
+                     Image(systemName: "checkmark.square")
+                           .foregroundColor(.gray)
+                  case .InProgress:
+                     Text(task.name)
+                           .fontWeight(.bold)
+                     Spacer()
+                     Image(systemName: "tornado")
+                  case .Open:
+                     Text(task.name)
+                     Spacer()
+                  }
+               }
+         }
+         .sheet(isPresented: $showingUpdateSheet) {
+               UpdateTaskView(task: task)
+         }
+         .padding(.horizontal, Dimensions.padding)
+      }
+   
+   The task in the UI is a button that exposes ``UpdateTaskView`` when tapped. That view doesn't cover any new ground, and so I won't dig into it here.
+
+   Teams View
+   ~~~~~~~~~~
+   
+   |
+
+   .. figure:: /images/how-to/realm-ios/Teams-View.png
+      :alt: Teams view shown in iOS simulator
+      :scale: 70%
+      :align: center
+   
+   A user can add others to their team; all team members can view and edit tasks in the user's project. For the logged-in user to add another member to their team, they need to update that user's ``User`` ``Object``. This isn't allowed by the Realm Rules in the back end app. Instead, we make use of Realm Functions that have been configured in the back end to make these changes securely.
+
+   ``TeamsView`` (``task-tracker-swiftui/Views/Teams/TeamsView.swift``) presents a list of all the user's teammates:
+
+   .. code-block:: swift
+
+      var body: some View {
+         NavigationView {
+               VStack {
+                  List {
+                     ForEach(members) { member in
+                           LabeledText(label: member.id, text: member.name)
+                     }
+                     .onDelete(perform: removeTeamMember)
+                  }
+                  Spacer()
+               }
+               .navigationBarTitle(Text("My Team"), displayMode: .inline)
+               .navigationBarItems(
+                  leading: Button(
+                     action: { self.presentationMode.wrappedValue.dismiss() }) { Image(systemName: "xmark.circle") },
+                  trailing: Button(action: { self.showingAddTeamMember = true }) { Image(systemName: "plus.circle.fill")
+                     .renderingMode(.original)
+                  }
+               )
+         }
+         .sheet(isPresented: $showingAddTeamMember) {
+               // TODO: Not clear why we need to pass in the environmentObject, appears that it may
+               // be a bug – should test again in the future.
+               AddTeamMemberView(refresh: fetchTeamMembers)
+                  .environmentObject(state)
+         }
+         .onAppear(perform: fetchTeamMembers)
+      }    
+
+   We invoke a Realm Function to fetch the list of team members, when this view is opened (``.onAppear``) through the ``fetchTeamMembers`` function:
+
+   .. code-block:: swift
+
+      func fetchTeamMembers() {
+         state.shouldIndicateActivity = true
+         let user = app.currentUser!
+
+         user.functions.getMyTeamMembers([]) { (result, error) in
+            DispatchQueue.main.sync {
+                  state.shouldIndicateActivity = false
+                  guard error == nil else {
+                     state.error = "Fetch team members failed: \(error!.localizedDescription)"
+                     return
+                  }
+                  guard let result = result else {
+                     state.error = "Result from fetching members is nil"
+                     return
+                  }
+                  self.members = result.arrayValue!.map({ (bson) in
+                     return Member(document: bson!.documentValue!)
+                  })
+            }
+         }
+      }
+
+   Swiping left removes a team member using another Realm Function:
+
+   .. code-block:: swift
+
+      func removeTeamMember(at offsets: IndexSet) {
+         state.shouldIndicateActivity = true
+         let user = app.currentUser!
+         let email = members[offsets.first!].name
+         user.functions.removeTeamMember([AnyBSON(email)]) { (result, error) in
+            DispatchQueue.main.sync {
+                  state.shouldIndicateActivity = false
+                  if let error = error {
+                     self.state.error = "Internal error, failed to remove member: \(error.localizedDescription)"
+                  } else if let resultDocument = result?.documentValue {
+                     if let resultError = resultDocument["error"]??.stringValue {
+                        self.state.error = resultError
+                     } else {
+                        print("Removed team member")
+                        self.fetchTeamMembers()
+                     }
+                  } else {
+                     self.state.error = "Unexpected result returned from server"
+                  }
+            }
+         }
+      }   
+
+   Tapping on the "+" button opens up the ``AddTeamMemberView`` sheet/modal, but no new concepts are used there, and so I'll skip it here.
+
+.. summary::
+
+   Summary
+   -------
+
+   Our app relies on the latest features in the Realm-Cocoa SDK (notably Combine and freezing objects) to bind the model directly to our SwiftUI views. You may have noticed that we don't have a view model.
+
+   We use Realm's username/password functionality and Realm Sync to ensure that each user can work with all of their tasks from any device.
+
+   You've seen how the front end app can delegate work to the back end app using Realm Functions. In this case, it was to securely work around the data access rules for the ``User`` object; other use-cases for Realm Functions are:
+
+   - Securely access other network services without exposing credentials in the front end app.
+   - Complex data wrangling using the MongoDB Aggregation Framework.
+   - We've used Apple's Combine framework to handle asynchronous events, such as performing follow-on actions once the back end confirms that a user has been authenticated and logged in.
+   
+
+   This iOS app reuses the back end Realm application from the official MongoDB Realm tutorials. This demonstrates how the same data and back end logic can be shared between apps running on iOS, Android, web, Node.js...
+
+   References
+   ----------
+
+   - `GitHub Repo for this app <https://github.com/ClusterDB/task-tracker-swiftui>`__
+   - `UIKit version of this app <https://docs.mongodb.com/realm/tutorial/ios-swift/>`__
+   - `Instructions for setting up the backend Realm app <https://docs.mongodb.com/realm/tutorial/realm-app/>`__
+   - `Freezing Realm Objects <https://docs.mongodb.com/realm/ios/threading/#frozen-objects>`__
+   - `GitHub Repo for Realm-Cocoa SDK <https://github.com/realm/realm-cocoa>`__
+   - `Realm Cocoa SDK documentation <https://realm.io/docs/swift/latest/>`__
+   - `MongoDB's Realm documentation <https://docs.mongodb.com/realm/>`__
+   - `WildAid O-FISH <https://github.com/WildAid/o-fish-ios>`__ – an example of a **much** bigger app built on Realm and MongoDB Realm Sync
+
+   .. include:: /includes/callouts/community-cta.rst

@@ -61,7 +61,7 @@ def read_type_directive(file):
 
 def read_weird_characters(file):
     with open(file.path, encoding='utf-8') as f:
-        weird_chars = '‘’´“”–…'
+        weird_chars = '‘’´“”…'
         regex = r'[' + weird_chars + '].*[' + weird_chars + ']?'
         lines = []
         for line_nb, line in enumerate(f.readlines()):
