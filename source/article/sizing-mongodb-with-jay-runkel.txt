@@ -1,0 +1,378 @@
+:template: devhub-article
+
+.. meta-description:: 
+
+   Sizing MongoDB with Jay Runkel
+
+.. twitter::
+   :site: @mongodb
+   :creator: @mlynn
+   :title: Sizing MongoDB with Jay Runkel
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
+   :image-alt: Schema Design Patterns
+
+   Sizing MongoDB with Jay Runkel
+
+.. og::
+   :url: http://developer.mongodb.com/article/
+   :type: article
+   :title: Sizing MongoDB with Jay Runkel
+   :image: /images/social/open-graph/og-mongodb-podcast.png
+ 
+   Sizing MongoDB with Jay Runkel
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. type:: article
+
+.. pubdate:: 2020-11-23
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Podcast
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
+.. related::
+
+   * `Sizing MongoDB Clusters (MongoDB World 2017) <https://www.mongodb.com/presentations/sizing-mongodb-clusters>`__
+   * `Example Sizing Worksheet <https://github.com/jayrunkel/mdbw2017Sizing>`__
+
+
+==============================
+Sizing MongoDB with Jay Runkel
+==============================
+   
+.. introduction::
+
+   The process of determining the right amount of server resource for your application database is a bit like algebra. The variables are many 
+   and varied. Here are just a few:
+
+   * Total amount of data stored
+   
+     - Number of collections
+     - Number of documents in each collection
+     - Size of each document
+   
+   * Activity against the database
+   
+     - Number and frequency of reads
+     - Number and frequency of writes, updates, deletes
+
+   * Data schema and indexes
+
+     - Number of index entries, size of documents indexed
+
+   * Users
+
+     - Proximity to your database servers
+     - Total number of users, pattern of usage (see reads/writes)
+
+   These are just a few and it's a bit tricky because the answer to one of these questions may depend entirely on the answer to another, 
+   whose answer depends on yet another. Herein lies the difficulty with performing a sizing exercise. 
+
+   One of the best at this part science, part art exercise is `Jay Runkel <https://www.linkedin.com/in/runkel>`__. Jay joined us on the podcast to discuss the process and possibilities. 
+   This article contains the transcript of that episode. 
+
+   If you prefer to listen, here's a link to the episode on YouTube. 
+
+   .. youtube:: OgGLl5KZJQM
+
+   Podcast Transcript
+   ==================
+
+   Michael Lynn (00:00):
+   Welcome to the podcast. On this episode, we're talking about sizing. It's a difficult task sometimes to figure out how much server you need in order to support your application and it can cost you if you get it wrong. So we've got the experts helping us today. We're bringing in Jay Runkel. Jay Runkel is an executive solutions architect here at MongoDB. Super smart guy. He's been doing this quite some time. He's helped hundreds of customers size their instances, maybe even thousands. So a great conversation with Jay Runkel on sizing your MongoDB instances. I hope you enjoy the episode.
+
+   Michael Lynn (00:55):
+   Jay, how are you? It's great to see you again. It's been quite a while for us. Why don't you tell the audience who you are and what you do?
+
+   Jay Runkel (01:02):
+   So I am a executive solution architect at MongoDB. So MongoDB sales teams are broken up into two classes individual. There are the sales reps who handle the customer relationship, a lot of the business aspects of the sales. And there are solution architects who play the role of presales, and we handle a lot of the technical aspects of the sales. So I spend a lot of time working with customers, understanding their technical challenges and helping them understand how MongoDB can help them solve those technical challenges.
+
+   Michael Lynn (01:34):
+   That's an awesome role. I spent some time as a solution architect over the last couple of years, and even here at MongoDB, and it's just such a fantastic role. You get to help customers through their journey, to using MongoDB and solve some of their technical issues. So today we're going to focus on sizing, what it's like to size a MongoDB cluster, whether it be on prem in your own data center or in MongoDB Atlas, the database as a service. But before we get there, I'd like to learn a little bit more about what got you to this point, Jay. Where were you before MongoDB? What were you doing? And how is it that you're able to bridge the gap between something that requires the skills of a developer, but also sort of getting into that sales role?
+
+   Jay Runkel (02:23):
+   Yeah, so my training and my early career experience was as a developer and I did that for about five, six years and realized that I did not want to sit in front of a desk every day. So what I did was I started looking for other roles where I could spend a lot more time with customers. And I happened to give a presentation in front of a sales VP one time about 25 years ago. And after the meeting, he said, "Hey, I really need you to help support the sales team." And that kind of started my career in presales. And I've worked for a lot of different companies over the years, most recently related to MongoDB. Before MongoDB, I worked for MarkLogic where MarkLogic is another big, no SQL database. And I got most of my experience around document databases at MarkLogic, since they have an XML based document database.
+
+   Michael Lynn (03:18):
+   So obviously working with customers and helping them understand how to use MongoDB and the document model, that's pretty technical. But the sales aspect of it is almost on the opposite end of the personality spectrum. How do you find that? Do you find that challenging going between those two types of roles?
+
+   Jay Runkel (03:40):
+   For me, it kind of almost all blurs together. I think in terms of this role, it's technical but sales kind of all merged together. You're either, we can do very non-technical things where you're just trying to understand a customer's business pain and helping them understand how if they went from MongoDB solution, it would address those business pain. But also you can get down into technology as well and work with the developer and understand some technical challenges they have and how MongoDB can solve that pain as well. So to me, it seems really seamless and most interactions with customers start at that high level where we're really understanding the business situation and the pain and where they want to be in the future. And generally the conversation evolves to, "All right, now that we have this business pain, what are the technical requirements that are needed to achieve that solution to remove the pain and how MongoDB can deliver on those requirements?"
+
+   Nic Raboy (04:41):
+   So I imagine that you experience a pretty diverse set of customer requests. Like every customer is probably doing something really amazing and they need MongoDB for a very specific use case. Do you ever feel like stressed out that maybe you won't know how to help a particular customer because it's just so exotic?
+
+   Jay Runkel (05:03):
+   Yes, but that's like the great thing about the job. The great thing about being at MongoDB is that often customers look at MongoDB because they failed with something else, either because they built an app like an Oracle or Postgress or something like that and it's not performing, or they can't roll out new functionality fast enough, or they've just looked at the requirements for this new application they want to build and realize they can't build it on traditional data platforms. So yeah, often you can get in with a customer and start talking about a use case or problem they have, and in the beginning, you can be, "Geez, I don't know how we're ever going to solve this." But as you get into the conversation, you typically work and collaborate with the customer. They know their business, they know their technical infrastructure. You know MongoDB. And by combining those two sources of information, very often, not always, you can come up with a solution to solve the problem. But that's the challenge, that's what makes it fun.
+
+   Nic Raboy (06:07):
+   So would I be absolutely incorrect if I said something like you are more in the role of filling the gap of what the customer is looking for, rather than trying to help them figure out what they need for their problem? It sounds like they came from maybe say an another solution that failed for them, you said. And so they maybe have a rough idea of what they want to accomplish with the database, but you need to get them to that next step versus, "Hey, I've got this idea. How do I execute this idea?" kind of thing.
+
+   Jay Runkel (06:36):
+   Yeah, I would say some customers, it's pretty simple, pretty straightforward. Let's say we want to build the shopping cart application. There's probably hundreds or thousands of shopping cart applications built on MongoDB. It's pretty cookie cutter. That's not a long conversation. But then there are other customers that want to be able to process let's say 500,000 digital payments per second and have all of these requirements around a hundred percent availability, be able to have the application continue running without a hiccup if a whole data center goes down where you have to really dig in and understand their use case and all the requirements to a fine grain detail to figure out a solution that will work for them.
+
+   Nic Raboy (07:20):
+   Awesome.
+
+   Michael Lynn (07:21):
+   Yeah. So before we get into the technical details of exactly how you do what you do in terms of recommending the sizing for a deployment, let's talk a little bit about the possibilities around MongoDB deployments. Some folks may be listening and thinking, "Well, I've got this idea for an app and it's on my laptop now and I know I have to go to production at some point." What are the options they have for deploying MongoDB?
+
+   .. blockquote::
+
+         You can run [MongoDB] on your laptop, move it to a mainframe, move it to the cloud in Atlas, move it from one cloud provider to another within Atlas, and no modifications to your code besides the connection string.
+   
+   Jay Runkel (07:46):
+   So MongoDB supports just about every major platform you can consider. MongoDB realm has a database for a mobile device. MongoDB itself runs on Microsoft and MAC operating systems. It runs on IBM mainframes. It runs on a variety of flavors of Linux. You can also run MongoDB in the cloud either yourself, you can spin up a AWS instance or an Azure instance and install MongoDB and run it. Or we also have our cloud solution called Atlas where we will deploy and manage your MongoDB cluster for you on the cloud provider of your choice. So you essentially have that whole range and you can pick the platform and you can essentially pick who's going to manage the cluster for you.
+
+   Michael Lynn (08:34):
+   Fantastic. I mean, the options are limitless and the great thing is, the thing that you really did mention there, but it's a consistent API across all of those platforms. So you can develop and build your application, which leverages MongoDB in whatever language you're working in and not have to touch that regardless of the deployment target you use. So right on your laptop, run it locally, download MongoDB server and run it on your laptop. Run it in a docker instance and then deploy to literally anywhere and not have to touch your code. Is that the case?
+
+   Jay Runkel (09:07):
+   That's absolutely the case. You can run it on your laptop, move it to a mainframe, move it to the cloud in Atlas, move it from one cloud provider to another within Atlas, and no modifications to your code besides the connection string.
+
+   Michael Lynn (09:20):
+   Fantastic.
+
+   Nic Raboy (09:21):
+   But when you're talking to customers, we have all of these options. How do you determine whether or not somebody should be on prem or somebody should be in Atlas or et cetera?
+
+   Jay Runkel (09:32):
+   That's a great question. Now, I think from a kind of holistic perspective, everybody should be on Atlas because who wants to spend energy resources managing a database when that is something that MongoDB has streamlined, automated, ensured that it's deployed with best practices, with the highest level of security possible? So that's kind of the ideal case. I think that's where most of our customers are going towards. Now, there are certain industries and certain customers that have certain security requirements or policies that prevent them from running in a cloud provider, and those customers are the ones that still do self managed on-prem.
+
+   Nic Raboy (10:15):
+   But when it comes to things that require, say the self managed on-prem, those requirements, what would they be? Like HIPAA and FERPA and all of those other security reasons? I believe Atlas supports that, right?
+
+   Jay Runkel (10:28):
+   Yes. But I would say even if the regulations that will explicitly allow organizations to be in the cloud, many times they have internal policies that are additionally cautious and don't even want to take the risks, so they will just stay on prem. Other options are, if you're a company that has historically been deployed within your own data centers, if you have the new application that you're building, if it's the only thing in the cloud and all your app servers are still within your own data centers, sometimes that doesn't make a lot of sense as well.
+
+   Michael Lynn (11:03):
+   So I want to clear something up. You did mention, and your question was around compliance. And I want to just make sure it's clear. There's no reason why someone who requires compliance can't deploy in an Atlas apart from something internally, some internal compliance. I mean, we're able to manage applications that require HIPAA and FERPA and all of those compliance constraints, right?
+
+   Jay Runkel (11:27):
+   Absolutely. We have financial services organizations, healthcare companies that are running their business, their core applications, within Atlas today, managing all sorts of sensitive data, PII, HIPAA data. So, yeah, that has been done and can be done given all of the security infrastructure provided by Atlas.
+
+   Nic Raboy (11:48):
+   Awesome.
+
+   Michael Lynn (11:49):
+   Just wanted to clear that up. Go ahead, Nic.
+
+   Nic Raboy (11:51):
+   I wanted to just point out as a plug here, for anyone who's listening to this particular podcast episode, we recorded a previous episode with Ken White, right Mike?
+
+   Michael Lynn (12:01):
+   Right.
+
+   Nic Raboy (12:01):
+   ... on the different security practices of MongoDB, in case you want to learn more.
+
+   Michael Lynn (12:06):
+   Yeah. Great. Okay. So we're a couple of minutes in already and I'm chomping at the bit to get into the heart of the matter around sizing. But before we jump into the technical details, let's talk about what is big, what is small and kind of set the stage for the possibilities.
+
+   Jay Runkel (12:24):
+   Okay. So big and small is somewhat relative, but MongoDB has customers that have a simple replica set with a few gigabytes of data to customers that manage upwards of petabytes of data in MongoDB clusters. And the number of servers there can range from three instances in a replica set that maybe have one gigabyte of RAM each to a cluster that has several hundred servers and is maybe 50 or a hundred shards, something like that.
+
+   Michael Lynn (12:59):
+   Wow. Okay. So a pretty big range. And just to clarify the glossary here, Jay's using terms like replica set. For those that are new to MongoDB, MongoDB has built in high availability and you can deploy multiple instances of MongoDB that work in unison to replicate the changes to the database and we call that a cluster or a replica set. Great. So let's talk about the approach to sizing. What do you do when you're approaching a new customer or a new deployment and what do you need to think about when you start to think about how to size and implementation?
+
+   Jay Runkel (13:38):
+   Okay. So before we go there, let's even kind of talk about what sizing is and what sizing means. So typically when we talk about sizing in MongoDB, we're really talking about how big of a cluster do we need to solve a customer's problem? Essentially, how much hardware do we need to devote to MongoDB so that the application will perform well? And the challenge around that is that often it's not obvious. If you're building an application, you're going to know roughly how much data and roughly how the users are going to interact with the application. And somebody wants to know how many servers do you need and how much RAM do they have on them? How many cores? How big should the disks be? So it's a non-obvious, it's a pretty big gap from what you know, to what the answers you need. So what I hope I can do today is kind of walk you through how you get there.
+
+   Michael Lynn (14:32):
+   Awesome. Please do.
+
+   Jay Runkel (14:33):
+   Okay. So let's talk about that. So there's a couple things that we want to get to, like we said. First of all, we want to figure out, is it a sharded cluster? Not like you already kind of defined what sharding is, essentially. It's a way of partitioning the data so that you can distribute the data across a set of servers, so that you can have more servers either managing the data or processing queries. So that's one thing. We want to figure out how many partitions, how many shards of the data we need. And then we also need to figure out what do the specifications of those servers look like? How much RAM should they have? How much CPU? How much disk? That type of thing.
+
+   Jay Runkel (15:12):
+   So the easiest way I find to deal with this is to break this process up into two steps. The first step is just figure out the total amount of RAM we need, the total number of cores, essentially, the total amount of disk space, that type of thing. Once we have the totals, we can then figure out how many servers we need to deliver on those totals. So for example, if we do some math, which I'll explain in a little bit, and we figure out that we need 500 gigabytes of RAM, then we can figure out that we need five shards if all of our servers have a hundred gigabytes of RAM. That's pretty much kind of the steps we're going to go through. Just figure out how much RAM, how much disk, how much IO. And then figure out how many servers we need to deliver on those totals.
+
+   Michael Lynn (15:55):
+   Okay. So some basic algebra, and one of the variables is the current servers that we have. What if we don't have servers available and that's kind of an open and undefined variable?
+
+   Jay Runkel (16:05):
+   Yes, so in Atlas, you have a lot of options. There's not just one. Often if we're deploying in some customer's data center, they have a standard pizza box that goes in a rack, so we know what that looks like, and we can design to that. In something like Atlas, it becomes a price optimization problem. So if we figure out that we need 500 gigabytes of RAM, like I said, we can figure out is it better to do 10 shards where each shard has 50 gigabytes of RAM? Is it cheaper basically? Or should we do five shards where each shard has a hundred gigabytes of RAM? So in Atlas it's like, you really just kind of experiment and find the price point that is the most effective.
+
+   Michael Lynn (16:50):
+   Gotcha, okay.
+
+   Nic Raboy (16:52):
+   But are we only looking at a price point that is effective? I mean, maybe I missed it, but what are we gaining or losing by going with the 50 gigabyte shards versus the hundred gigabytes shards?
+
+   Jay Runkel (17:04):
+   So there are some other considerations. One is backup and restore time. If you partition the data, if you shard the data more, each partition has less data. So if you think about like recovering from a disaster, it will be faster because you're going to restore a larger number of smaller servers. That tends to be faster than restoring a single stream, restoring a fewer larger servers. The other thing is, if you think about many of our customers grow over time, so they're adding shards. If you use shards of smaller machines, then every incremental step is smaller. So it's easier to right size the cluster because you can, in smaller chunks, you can add additional shards to add more capacity. Where if you have fewer larger shards, every additional shard is a much bigger step in terms of capacity, but also cost.
+
+   Michael Lynn (18:04):
+   Okay. So you mentioned sharding and we briefly touched on what that is. It's partitioning of the data. Do you always shard?
+
+   Jay Runkel (18:12):
+   I would say most of our customers do not shard. I mean, a single replica set, which is one shard can typically, this is again going to depend on the workload and the server side and all that. But generally we see somewhere around one to two terabytes of data on a single replica set as kind of the upper bounds. And most of our applications, I don't know the exact percentages, but somewhere 80 - 90% of MongoDB applications are below the one terabyte range. So most applications, you don't even have to worry about sharding.
+
+   Michael Lynn (18:47):
+   I love it because I love rules of thumb, things that we can think about that like kind of simplify the process. And what I got there was look, if you've got one terabyte of data or more under management for your cluster, you're typically going to want to start to think about sharding.
+
+   Jay Runkel (19:02):
+   Think about it. And it might not be necessary, but you might want to start thinking about it. Yes.
+
+   Michael Lynn (19:06):
+   Okay, great. Now we mentioned algebra and one of the variables was the server size and the resources available. Tell me about the individual elements on the server that we look at and and then we'll transition to like what the application is doing and how we overlay that.
+
+   Jay Runkel (19:25):
+   Okay. So when you like look at a server, there's a lot of specifications that you could potentially consider. It turns out that with MongoDB, again let's say 95% of the time, the only things you really need to worry about is how much disk space, how much RAM, and then how fast of an IO system you have, really how many IOPS you need. It turns out other things like CPU and network, while theoretically they could be bottlenecks, most of the time, they're not. Normally it's disk space RAM and IO. And I would say it's somewhere between 98, 99% of MongoDB applications, if you size them just looking at RAM, IOPS, and disk space, you're going to do a pretty good estimate of sizing and you'll have way more CPU, way more network than you need.
+
+   Michael Lynn (20:10):
+   All right. I'm loving it because we're, we're progressing. So super simple rule of thumb, look at the amount of their database storage required. If you've got one terabyte or more, you might want to do some more math. And then the next step would be, look at the disk space, the RAM and the speed of the disks or the IOPS, iOS per second required.
+
+   Jay Runkel (20:29):
+   Yeah. So IOPS is a metric that all IO device manufacturers provide, and it's really a measurement of how fast the IO system can randomly access blocks of data. So if you think about what a database does, MongoDB or any database, when somebody issues a query, it's really going around on disk and grabbing the random blocks of data that satisfy that query. So IOPS is a really good metric for sizing IO systems for database.
+
+   Michael Lynn (21:01):
+   Okay. Now I've heard the term working set, and this is crucial when you're talking about sizing servers, sizing the deployment for a specific application. Tell me about the working set, what it is and how you determine what it is.
+
+   Jay Runkel (21:14):
+   Okay. So we said that we had to size three things: RAM, the IOPS, and the disk space. So the working set really helps us determine how much RAM we need. So the definition of working set is really the size of the indexes plus the set of frequently accessed documents used by the application. So let me kind of drill into that a little bit. If you're thinking about any database, MongoDB included, if you want good performance, you want the stuff that is frequently accessed by the database to be in memory, to be in cache. And if it's not in cache, what that means is the server has to go to the disk, which is really slow, at least in comparison to RAM. So the more of that working set, the indexes and the frequently accessed documents fit into memory, the better performance is going to be. The reason why you want the indexes in memory is that just about every query, whether it is a fine query or an update, is going to have to use the indexes to find the documents that are going to be affected. And therefore, since every query needs to use the indexes, you want them to be in cache, so that performance is good.
+
+   Michael Lynn (22:30):
+   Yeah. That makes sense. But let's double click on this a little bit. How do I go about determining what the frequently accessed documents are?
+
+   Jay Runkel (22:39):
+   Oh, that's a great question. That's unfortunately, that's why there's a little bit of art to sizing, as opposed to us just shipping out a spreadsheet and saying, "Fill it out and you get the answer." So the frequently accessed documents, it's really going to depend upon your knowledge of the application and how you would expect it to be used or how users are using it if it's already an application that's in production. So it's really the set of data that is accessed all the time. So I can give you some examples and maybe that'll make it clear.
+
+   Michael Lynn (23:10):
+   Yeah, perfect.
+
+   Jay Runkel (23:10):
+   Let's say it's an application where customers are looking up their bills. Maybe it's a telephone company or cable company or something like that or Hulu, Netflix, what have you. Most of the time, people only care about the bills that they got this month, last month, maybe two months ago, three months ago. If you're somebody like me that used to travel a lot before COVID, maybe you get really far behind on your expense reports and you look back four or five months, but rarely ever passed that. So in that type of application, the frequently accessed documents are probably going to be the current month's bills. Those are the ones that people are looking at all the time, and the rest of the stuff doesn't need to be in cache because it's not accessed that often.
+
+   Nic Raboy (23:53):
+   So what I mean, so as far as the frequently accessed, let's use the example of the most recent bills. What if your application or your demand is so high? Are you trying to accommodate all most recent bills in this frequently accessed or are you further narrowing down the subset?
+
+   Jay Runkel (24:13):
+   I think the way I would look at it for that application specific, it's probably if you think about this application, let's say you've got a million customers, but maybe only a thousand are ever online at the same time, you really are just going to need the indexes plus the data for the thousand active users. If I log into the application and it takes a second or whatever to bring up that first bill, but everything else is really fast after that as I drill into the different rows in my bill or whatever, I'm happy. So that's typically what you're looking at is just for the people that are currently engaged in the system, you want their data to be in RAM.
+
+   Michael Lynn (24:57):
+   So I published an article maybe two or three years ago, and the title of the article was "Knowing the Unknowable." And that's a little bit of what we're talking about here, because you're mentioning things like indexes and you're mentioning things like frequently accessed documents. So this is obviously going to require that you understand how your data is laid out. And we refer to that as a schema. You're also going to have to have a good understanding of how you're indexing, what indexes you're creating. So tell me Jay, to what degree does sizing inform the schema or vice versa?
+
+   Jay Runkel (25:32):
+   So, one of the things that we do as part of the kind of whole MongoDB design process is make sizing as part of the design processes as you're suggesting. Because what can happen is, you can come up with a really great schema and figure out what index is you use, and then you can look at that particular design and say, "Wow, that's going to mean I'm going to need 12 shards." You can think about it a little bit further, come up with a different schema and say, "Oh, that one's only going to require two shards." So if you think about, now you've got to go to your boss and ask for hardware. If you need two shards, you're probably asking for six servers. If you have 12 shards, you're asking for 36 servers. I guarantee your boss is going to be much happier paying for six versus 36. So obviously it is definitely a trade off that you want to make certain. Schemas will perform better, they may be easier to develop, and they also will have different implications on the infrastructure you need.
+
+   Michael Lynn (26:35):
+   Okay. And so obviously the criticality of sizing is increased when you're talking about an on-prem deployment, because obviously to get a server into place, it's a purchase. You're waiting for it to come. You have to do networking. Now when we move to the cloud, it's somewhat reduced. And I want to talk a little bit about the flexibility that comes with a deployment in MongoDB Atlas, because we know that MongoDB Atlas starts at zero. We have a free forever instance, that's called an M0 tier and it goes all the way up to M700 with a whole lot of RAM and a whole lot of CPU. What's to stop me from saying, "Okay, I'm not really going to concentrate on sizing and maybe I'll just deploy in an M0 and see how it goes."
+
+   .. blockquote::
+
+      MongoDB Atlas offers different tiers of clusters with varying amounts of RAM, CPU, and disk. These tiers are labeled starting with M0 - Free, and continuing up to M700 with massive amounts of RAM and CPU. Each tier also offers differing sizes and speeds of disks.
+   
+   Jay Runkel (27:22):
+   So you could, actually. That's the really fabulous thing about Atlas is you could deploy, I wouldn't start with M0, but you might start with an M10 and you could enable, there's kind of two features in Atlas. One will automatically scale up the disk size for you. So as you load more data, it will, I think as the disk gets about 90% full, it will automatically scale it up. So you could start out real small and just rely on Atlas to scale it up. And then similarly for the instance size itself, there's another feature where it will automatically scale up the instance as the workload. So as you start using more RAM and CPU, it will automatically scale the instance. So that it would be one way. And you could say, "Geez, I can just drop from this podcast right now and just use that feature and that's great." But often what people want is some understanding of the budget. What should they expect to spend in Atlas? And that's where the sizing comes in useful because it gives you an idea of, "What is my Atlas budget going to be?"
+
+   Nic Raboy (28:26):
+   I wanted to do another shameless plug here for a previous podcast episode. If you want to learn more about the `auto-scaling functionality of Atlas <https://podcasts.apple.com/us/podcast/ep-26-automated-database-management-part-2-autoscalability/id1500452446?i=1000498140153>`__, we actually did an episode. It's part of a series with Rez Con from MongoDB. So if this is something you're interested in learning more about, definitely check out that previous episode.
+
+   Michael Lynn (28:44):
+   Yeah, so auto-scaling, an incredible feature. So what I heard Jay, is that you could under deploy and you could manually ratchet up as you review the shards and look at the monitoring. Or you could implement a relatively small instance size and rely on MongoDB to auto-scale you into place.
+
+   Jay Runkel (29:07):
+   Absolutely, and then if your boss comes to you and says, "How much are we going to be spending in November on Atlas?" You might want to go through some of this analysis we've been talking about to figure out, "Well, what size instance do we actually need or where do I expect that list to scale us up to so that I can have some idea of what to tell my boss."
+
+   Michael Lynn (29:27):
+   Absolutely. That's the one end of the equation. The other end of the equation is the performance. So if you're under scaling and waiting for the auto-scale to kick in, you're most likely going to experience some pain on the user front, right?
+
+   Jay Runkel (29:42):
+   So it depends. If you have a workload that is going to take big steps up. I mean, there's no way for Atlas to know that right now, you're doing 10 queries a second and on Monday you're doing a major marketing initiative and you expect your user base to grow and starting Monday afternoon instead of 10 queries a second, you're going to have a thousand queries per second. There's no way for Atlas to predict that. So if that's the case, you should manually scale up the cluster in advance of that so you don't have problems. Alternatively, though, if you just, every day you're adding a few users and over time, they're loading more and more data, so the utilization is growing at a nice, steady, linear pace, then Atlas should be able to predict, "Hey, that trend is going to continue," and scale you up, and you should probably have a pretty seamless auto scale and good customer experience.
+
+   Michael Lynn (30:40):
+   So it sounds like a great safety net. You could do your, do your homework, do your sizing, make sure you're informing your decisions about the schema and vice versa, and then make a bet, but also rely on auto-scaling to select the minimum and also specify a maximum that you want to scale into.
+
+   Jay Runkel (30:57):
+   Absolutely.
+
+   Michael Lynn (30:58):
+   Wow. So we've covered a lot of ground.
+
+   Nic Raboy (30:59):
+   So I have some questions since you actually do interface with customers. When you're working with them to try to find a scaling solution or a sizing solution for them, do you ever come to the scenario where, you know what, the customer assumed that they're going to need all of this, but in reality, they need far less or the other way around?
+
+   Jay Runkel (31:19):
+   So I think both scenarios are true. I think there are customers that are used to using relational databases and doing sizings for those. And those customers are usually positively happy when they see how much hardware they need for MongoDB. Generally, given the fact that MongoDB is a document model and uses way far fewer joints that the server requirements to satisfy the same workload for MongoDB are significantly less than a relational database. I think we also run into customers though that have really high volume workloads and maybe have unrealistic budgetary expectations as well. Maybe it's their first time ever having to deal with the problem of the scale that they're currently facing. So sometimes that requires some education and working with that customer.
+
+   Michael Lynn (32:14):
+   Are there tools available that customers can use to help them in this process?
+
+   .. blockquote::
+
+      ...typically the index size is 10% of the data size. But if you want to get more accurate, what you can do is there are tools out there, one's called Faker...
+
+   Jay Runkel (32:18):
+   So there's a couple of things. We talked about trying to figure out what our index sizes are and things like that. What if you don't, let's say you're just starting to design the application. You don't have any data. You don't know what the indexes are. It's pretty hard to kind of make these kinds of estimates. So there's a couple of things you can do. One is you can use some rule of thumbs, like typically the index size is 10% of the data size. But if you want to get more accurate, what you can do is there are tools out there, one's called Faker for Python. There's a website called Mockaroo where it enables you to just generate a dataset. You essentially provide one document and these tools or sites will generate many documents and you can load those into MongoDB. You can build your indexes. And then you can just measure how big everything is. So that's kind of some tools that give you the ability to figure out what at least the index size of the working set is going to be just by creating a dataset.
+
+   Michael Lynn (33:16):
+   Yeah. Love those tools. So to mention those again, I've used those extensively in sizing exercises. Mockaroo is a great online. It's just in a webpage and you specify the shape of the document that you want and the number of documents you want created. There's a free tier and then there's a paid tier. And then Faker is a JavaScript library I've used a whole lot to generate fake documents.
+
+   Jay Runkel (33:37):
+   Yeah. I think it's also available in Python, too.
+
+   Michael Lynn (33:40):
+   Oh, great. Yeah. Terrific.
+
+   Nic Raboy (33:41):
+   Yeah, this is awesome. If people have more questions regarding sizing their potential MongoDB clusters, are you active in the MongoDB community forums by chance?
+
+   Jay Runkel (33:56):
+   Yes, I definitely am. Feel free to reach out to me and I'd be happy to answer any of your questions.
+
+   Nic Raboy (34:03):
+   Yeah, so that's community.MongoDB.com for anyone who's never been to our forums before.
+
+   Michael Lynn (34:09):
+   Fantastic. Jay, we've covered a lot of ground in a short amount of time. I hope this was really helpful for developers. Obviously it's a topic we could talk about for a long time. We like to keep the episodes around 30 to 40 minutes. And I think we're right about at that time. Is there anything else that you'd like to share with folks listening in that want to learn about sizing?
+
+   Jay Runkel (34:28):
+   So I gave a presentation on sizing in MongoDB World 2017, and that video is still available. So if you just go to MongoDB's website and search for Runkel and sizing, you'll find it. And if you want to get an even more detailed view of sizing in MongoDB, you can kind of take a look at that presentation.
+
+   Nic Raboy (34:52):
+   So 2017 is quite some time ago in tech years. Is it still a valid piece of content?
+
+   Jay Runkel (35:00):
+   I don't believe I mentioned the word Atlas in that presentation, but the concepts are all still valid.
+
+   Michael Lynn (35:06):
+   So we'll include a link to that presentation in the show notes. Be sure to look for that. Where can people find you on social? Are you active in the social space?
+
+   Jay Runkel (35:16):
+   You can reach me at Twitter at `@jayrunkel <https://twitter.com/jayrunkel>`__. I do have a Facebook account and stuff like that, but I don't really pay too much attention to it.
+
+   Michael Lynn (35:25):
+   Okay, great. Well, Jay, it's been a great conversation. Thanks so much for sharing your knowledge around sizing MongoDB. Nic, anything else before we go?
+
+   Nic Raboy (35:33):
+   No, that's it. This was fantastic, Jay.
+
+   Jay Runkel (35:36):
+   I really appreciate you guys having me on.
+
+   Michael Lynn (35:38):
+   Likewise. Have a great day.
+
+   Jay Runkel (35:40):
+   All right. Thanks a lot.
+
+   Speaker 2 (35:43):
+   Thanks for listening. If you enjoyed this episode, please like and subscribe. Have a question or a suggestion for the show? Visit us in the MongoDB Community Forums at `https://community.Mongodb.com <https://community.mongodb.com>`__.
+
+
+
+   Summary
+   -------
+
+   Determining the correct amount of server resource for your databases involves an understanding of the types, amount, and read/write patterns of the data. There's no magic formula that works in every case. Thanks to Jay for helping us explore the process.  Jay put together a `presentation from MongoDB World 2017 <https://www.mongodb.com/presentations/sizing-mongodb-clusters>`__ that is still very applicable. 
