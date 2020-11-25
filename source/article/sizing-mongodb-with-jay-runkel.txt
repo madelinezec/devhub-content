@@ -1,11 +1,12 @@
 :template: devhub-article
 
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
 .. meta-description:: 
 
    Sizing MongoDB with Jay Runkel
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: Sizing MongoDB with Jay Runkel
    :image: /images/social/twitter/twitter-mongodb-podcast.png
@@ -14,8 +15,6 @@
    Sizing MongoDB with Jay Runkel
 
 .. og::
-   :url: http://developer.mongodb.com/article/
-   :type: article
    :title: Sizing MongoDB with Jay Runkel
    :image: /images/social/open-graph/og-mongodb-podcast.png
  
@@ -38,13 +37,10 @@
    * MongoDB
    * Atlas
 
-.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
-
 .. related::
 
    * `Sizing MongoDB Clusters (MongoDB World 2017) <https://www.mongodb.com/presentations/sizing-mongodb-clusters>`__
    * `Example Sizing Worksheet <https://github.com/jayrunkel/mdbw2017Sizing>`__
-
 
 ==============================
 Sizing MongoDB with Jay Runkel
