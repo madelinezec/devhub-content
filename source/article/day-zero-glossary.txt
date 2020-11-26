@@ -7,7 +7,6 @@
    Getting to Day Zero - Glossary
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: Getting to Day Zero - Glossary
    :image: /images/social/twitter/twitter-day-zero.png
@@ -19,8 +18,6 @@
    :title: Getting to Day Zero - Glossary
    :image: /images/social/open-graph/og-day-zero.png
  
-   Getting to Day Zero - Glossary
-
 .. include:: /includes/authors/lynn-michael.rst
 
 .. pubdate:: 2020-11-17

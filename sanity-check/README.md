@@ -9,26 +9,33 @@ This small python script scans the blog posts:
 - unused images from the `source/images/` folder,
 - images used but not found in the `source/images/` folder,
 - missing information in twitter directive:
-  - site,
   - creator (with the @),
   - title (max size 70 characters),
   - image (with a relative path and image in the /images/ folder),
   - image-alt,
   - description (max size 160 characters),
 - missing in the og directive:
-  - url,
   - title (max size 95 characters),
   - image,
-  - type,
-  - description (max size 200 characters),
+- type should not be provided in the OG directive (automatic)
+- URL is populated correctly automatically in the OG directive. (Only set one if you want something different (with https!)),
 - meta-description (max size 155 characters),
 - type,
 - level,
 - "include" directives with non existing content,
-- "atf-image" directive presence
+- "atf-image" directive presence and check image size (squared and >= 299px),
+- twitter image size 1024x512,
+- og image size 1200x630,
+- prevent useless meta fields,
 - links with the correct number of underscores,
 - check "home" and "learn" featured pages are in snooty.toml,
 - check all the blog posts in snooty.toml exist.
+
+## Install packages
+
+```bash
+pip3 install -r requirements.txt
+```
 
 ## Use it
 

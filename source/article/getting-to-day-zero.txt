@@ -7,7 +7,6 @@
    Getting to Day Zero - The story behind the MongoDB Mini-thriller
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: Getting to Day Zero - The story behind the MongoDB Mini-thriller
    :image: /images/social/twitter/twitter-day-zero.png
@@ -19,8 +18,6 @@
    :title: Getting to Day Zero - The story behind the MongoDB Mini-thriller
    :image: /images/social/open-graph/og-day-zero.png
  
-   Getting to Day Zero - The story behind the MongoDB Mini-thriller
-
 .. include:: /includes/authors/lynn-michael.rst
 
 .. pubdate:: 2020-11-17

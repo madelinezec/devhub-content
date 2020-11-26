@@ -1,11 +1,12 @@
 :template: devhub-article
 
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
 .. meta-description:: 
 
    Learn about multi-cloud clusters with Andrew Davidson
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: Learn about multi-cloud clusters with Andrew Davidson
    :image: /images/social/twitter/twitter-mongodb-podcast.png
@@ -14,13 +15,9 @@
    Learn about multi-cloud clusters with Andrew Davidson
 
 .. og::
-   :url: http://developer.mongodb.com/article/
-   :type: article
    :title: Learn about multi-cloud clusters with Andrew Davidson
    :image: /images/social/open-graph/og-mongodb-podcast.png
  
-   Learn about multi-cloud clusters with Andrew Davidson
-
 .. include:: /includes/authors/lynn-michael.rst
 
 .. pubdate:: 2020-11-03
@@ -36,8 +33,6 @@
 .. products::
 
    * Atlas
-
-.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
 
 .. related::
 

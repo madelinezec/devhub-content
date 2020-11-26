@@ -1,6 +1,6 @@
 :template: devhub-article
 
-.. atf-image:: /images/article/everything-you-know-is-wrong/atf-image.png
+.. atf-image:: /images/atf-images/photos/mongodb-is-webscale.png
 
 .. meta-description::
 

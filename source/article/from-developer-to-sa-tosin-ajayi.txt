@@ -1,15 +1,12 @@
 :template: devhub-article
 
-.. ---------------------------------------------------------------
-.. META FIELDS FOR SEO / SOCIAL
-.. ---------------------------------------------------------------
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
 
-.. meta-description:: 
+.. meta-description::
 
    Learn about the journey from developer to solutions architect with Tosin Ajayi.
 
 .. twitter::
-   :site: @mongodb
    :creator: @mlynn
    :title: From developer to solutions architect with Tosin Ajayi.
    :image: /images/social/twitter/twitter-mongodb-podcast.png
@@ -18,17 +15,9 @@
    From developer to solutions architect with Tosin Ajayi.
 
 .. og::
-   :url: http://developer.mongodb.com/article/
-   :type: article
    :title: Learn about the journey from developer to solutions architect with Tosin Ajayi.
    :image: /images/social/open-graph/og-mongodb-podcast.png
  
-   Learn about the journey from developer to solutions architect with Tosin Ajayi.
-
-.. ---------------------------------------------------------------
-.. ARTICLE METADATA FIELDS (TO POPULATE FILTERS AND ARTICLE PAGE)
-.. ---------------------------------------------------------------
-
 .. include:: /includes/authors/lynn-michael.rst
 
 .. pubdate:: 2020-10-26
@@ -44,12 +33,6 @@
 .. products::
 
    * MongoDB
-
-.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
-
-.. ---------------------------------------------------------------
-.. ARTICLE CONTENT
-.. ---------------------------------------------------------------
 
 =====================================
 From Developer to SA with Tosin Ajayi

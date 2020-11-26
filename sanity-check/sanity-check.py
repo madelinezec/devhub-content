@@ -1,6 +1,8 @@
 import os
 import re
 
+from PIL import Image
+
 # Set the exit code to 0 by default to indicate a clean exit
 exit_code = 0
 
@@ -108,10 +110,16 @@ def read_links(file):
 
 def read_atf_image(file):
     with open(file.path, encoding='utf-8') as f:
-        for line in f.readlines():
+        for index, line in enumerate(f.readlines()):
             line_stripped = line.strip()
             if '.. atf-image::' in line_stripped:
-                return {'file': file, 'atf_image_found': True}
+                image = re.findall('/images/.*', line_stripped)
+                if len(image) == 1:
+                    im = Image.open(os.path.join('../source/', image[0][1:]))
+                    width, height = im.size
+                    return {'file': file, 'atf_image_found': True, 'line_number': index, 'size': True, 'width': width, 'height': height, 'image': image[0]}
+                else:
+                    return {'file': file, 'atf_image_found': True, 'line_number': index, 'size': False}
         return {'file': file, 'atf_image_found': False}
 
 
@@ -136,6 +144,8 @@ def check_twitter(files):
             output.append(['=> Missing ":image:" with relative path', file_path])
         if not any(re.compile(':image-alt:.*').match(line) for line in ft['array']):
             output.append(['=> Missing ":image-alt:"', file_path])
+        if any(re.compile(':site:.*').match(line) for line in ft['array']):
+            output.append(['=> :site: is populated automatically. Just remove it.', file_path])
         description = ft['description']
         length_desc = len(description)
         if length_desc > 160:
@@ -147,6 +157,20 @@ def check_twitter(files):
                 title = re.compile(':title:(.*)').search(line).group(1)
                 if '' != title and len(title) > 70:
                     output.append(['=> Twitter title is too long (70 max) - need to remove ' + str(len(title) - 70) + ' characters', file_path])
+            if ':image:' in line:
+                image = re.findall('/images/.*', line)
+                if len(image) == 1:
+                    try:
+                        im = Image.open(os.path.join('../source/', image[0][1:]))
+                        width, height = im.size
+                        if not close_enough(width, 1024) or not close_enough(height, 512):
+                            output.append(['=> Twitter image should be 1024x512. ' + image[0] + ' is ' + str(width) + 'x' + str(height), file_path])
+                        if not image[0].startswith('/images/social/twitter/twitter-'):
+                            output.append(['=> Twitter image should be in the /images/social/twitter folder and named "twitter-.*". ' + image[0], file_path])
+                    except:
+                        output.append(['Cannot open image ../source' + image[0], file_path])
+                else:
+                    output.append(['=> Twitter image is not valid. Impossible to parse.', file_path])
     handle_errors(output, True)
 
 
@@ -158,6 +182,10 @@ def check_og(files):
             output.append(['=> Missing ":title:"', file_path])
         if not any(re.compile(':image:.*').match(line) for line in ft['array']):
             output.append(['=> Missing ":image:" with relative path', file_path])
+        if any(re.compile(':url: http://.*').match(line) for line in ft['array']):
+            output.append(['=> Links in OG URL should always be HTTPS. Remove the URL directive to get the correct one automatically.', file_path])
+        if any(re.compile(':type:.*').match(line) for line in ft['array']):
+            output.append(['=> :type: is populated automatically. Just delete it.', file_path])
         description = ft['description']
         length_desc = len(description)
         if length_desc > 200:
@@ -169,6 +197,20 @@ def check_og(files):
                 title = re.compile(':title:(.*)').search(line).group(1)
                 if '' != title and len(title) > 95:
                     output.append(['=> Twitter title is too long (95 max) - need to remove ' + str(len(title) - 95) + ' characters', file_path])
+            if ':image:' in line:
+                image = re.findall('/images/.*', line)
+                if len(image) == 1:
+                    try:
+                        im = Image.open(os.path.join('../source/', image[0][1:]))
+                        width, height = im.size
+                        if not close_enough(width, 1200) or not close_enough(height, 630):
+                            output.append(['=> OG image should be 1200x630. ' + image[0] + ' is ' + str(width) + 'x' + str(height), file_path])
+                        if not image[0].startswith('/images/social/open-graph/og-'):
+                            output.append(['=> OG image should be in the /images/social/open-graph folder and named "og-.*". ' + image[0], file_path])
+                    except:
+                        output.append(['Cannot open image ../source' + image[0], file_path])
+                else:
+                    output.append(['=> OG image is not valid. Impossible to parse.', file_path])
     handle_errors(output, True)
 
 
@@ -215,13 +257,32 @@ def check_level(files):
 
 
 def check_atf_image(files):
-    output = [['\nList of files without directive atf-image:\n']]
+    output = [['\nList of files with directive atf-image problems:\n']]
     for ft in files:
         file_path = ft['file'].path.replace('../source', '')
         found = ft['atf_image_found']
+        line_number = ft.get('line_number')
+        size = ft.get('size')
+        width = ft.get('width')
+        height = ft.get('height')
+        image = ft.get('image')
         if not found:
             output.append(['=> atf-image directive is missing in this file.', file_path])
+        if line_number != 2:
+            output.append(['=> atf-image directive is not on line 3 in this file.', file_path])
+        if not image.startswith('/images/atf-images/'):
+            output.append(['=> atf-images should be in the /images/atf-images/ folder.', file_path])
+        if not size:
+            output.append(['=> atf-image: impossible check the size of the image.', file_path])
+        else:
+            squared = close_enough(width, height)
+            if not squared or width <= 299:
+                output.append(['=> atf-image: image is not 360x360 or 720x720. Actual size: ' + str(width) + 'x' + str(height), file_path])
     handle_errors(output, True)
+
+
+def close_enough(a, b):
+    return abs(a - b) <= 1
 
 
 def check_weird_characters(files):
@@ -308,7 +369,7 @@ def check_thing_not_found(things, all_images, images_used):
 
 
 def check_snooty(blog_posts):
-    blog_posts = list(map(lambda b: b.path.replace('../source', '').replace('.txt', ''), blog_posts))
+    blog_posts = list(map(lambda b: b.path.replace('../source', '').replace('.txt', '').replace('\\', '/'), blog_posts))
     output = [['\nList of errors in snooty.toml.\n']]
     with open('../snooty.toml', encoding='utf-8') as f:
         home = ''
