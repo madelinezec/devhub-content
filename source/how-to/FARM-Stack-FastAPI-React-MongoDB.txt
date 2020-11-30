@@ -1,0 +1,397 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/starlette.png
+
+.. meta-description::
+
+    Introducing FARM Stack - FastAPI, React, and MongoDB
+
+.. twitter::
+    :creator: @aaronbassett
+    :title: Introducing FARM Stack - FastAPI, React, and MongoDB
+    :image: /images/social/twitter/twitter-starlette.png
+    :image-alt: MongoDB graphic pattern
+
+    Introducing FARM Stack - FastAPI, React, and MongoDB
+
+.. og::
+    :title: Introducing FARM Stack - FastAPI, React, and MongoDB
+    :image: /images/social/open-graph/og-starlette.png
+
+.. include:: /includes/authors/bassett-aaron.rst
+
+.. pubdate:: 2020-11-30
+
+.. type:: how-to
+
+.. level:: beginner
+
+.. tags::
+
+    * FARM Stack
+    * FastAPI
+    * Starlette
+
+.. languages::
+
+    * Python
+    * JavaScript
+
+.. products::
+
+    * MongoDB
+    * Atlas
+
+====================================================
+Introducing FARM Stack - FastAPI, React, and MongoDB
+====================================================
+
+.. introduction::
+
+    When I got my first ever programming job, the LAMP (Linux, Apache, MySQL, PHP) stack—`and its variations <https://en.wikipedia.org/wiki/LAMP_(software_bundle)#Variants>`__—ruled supreme. I used WAMP at work, DAMP at home, and deployed our customers to SAMP. But now all the stacks with memorable acronyms seem to be very JavaScript forward. MEAN (MongoDB, Express, Angular, Node.js), MERN (MongoDB, Express, React, Node.js), MEVN (MongoDB, Express, Vue, Node.js), JAM (JavaScript, APIs, Markup), and so on.
+
+    As much as I enjoy working with React and Vue, Python is still my favourite language for building back end web services. I wanted the same benefits I got from MERN—MongoDB, speed, flexibility, minimal boilerplate—but with Python instead of Node.js. With that in mind, I want to introduce the `FARM stack; FastAPI, React, and MongoDB <https://github.com/mongodb-developer/FARM-Intro>`__.
+
+.. content::
+
+    ****************
+    What is FastAPI?
+    ****************
+
+    The FARM stack is in many ways very similar to MERN. We've kept MongoDB and React, but we've replaced the Node.js and Express back end with Python and FastAPI. `FastAPI is a modern, high-performance, Python 3.6+ web framework <https://fastapi.tiangolo.com/>`__. As far as web frameworks go, it's incredibly new. The earliest git commit I could find is from December 5th, 2018, but it is a rising star in the Python community. It is already used in production by the likes of `Microsoft, Uber, and Netflix <https://fastapi.tiangolo.com/#opinions>`__.
+
+    And it is `speedy <https://fastapi.tiangolo.com/#performance>`__. Benchmarks show that it's not as fast as golang's chi or fasthttp, but it's faster than all the other Python frameworks tested and beats out most of the Node.js ones too.
+
+    ***************
+    Getting Started
+    ***************
+
+    If you would like to give the FARM stack a try, I've created `an example TODO application you can clone from GitHub <https://github.com/mongodb-developer/FARM-Intro>`__.
+
+    .. code-block:: shell
+
+        git clone git@github.com:mongodb-developer/FARM-Intro.git
+    
+    The code is organised into two directories: back end and front end. The back end code is our FastAPI server. The code in this directory interacts with our MongoDB database, creates our API endpoints, and thanks to OAS3 (OpenAPI Specification 3). It also generates our interactive documentation.
+
+    **************************
+    Running the FastAPI Server
+    **************************
+
+    Before I walk through the code, try running the FastAPI server for yourself. You will need Python 3.8+ and a MongoDB database. A `free Atlas Cluster <https://docs.atlas.mongodb.com/tutorial/create-new-cluster/>`__ will be more than enough. `Make a note of your MongoDB username, password, and connection string as you'll need those in a moment <https://docs.atlas.mongodb.com/connect-to-cluster/>`__.
+
+    Installing Dependencies
+    =======================
+
+    .. code-block:: shell
+    
+        cd FARM-Intro/backend
+        pip install -r requirements.txt
+    
+    Configuring Environment Variables
+    =================================
+
+    .. code-block:: shell
+
+        export DEBUG_MODE=True
+        export DB_URL="mongodb+srv://<username>:<password>@<url>/<db>?retryWrites=true&w=majority"
+        export DB_NAME="farmstack"
+    
+    Once you have everything installed and configured, you can run the server with ``python main.py`` and visit `http://localhost:8000/docs <http://localhost:8000/docs>`__ in your browser.
+
+    .. image:: /images/how-to/FARM/intro/FARM-Docs.gif
+        :alt: Screencast of CRUD operations via FastAPI docs
+        :align: center
+
+    This interactive documentation is automatically generated for us by FastAPI and is a great way to try your API during development. You can see we have the main elements of CRUD covered. Try adding, updating, and deleting some Tasks and explore the responses you get back from the FastAPI server.
+
+    *************************
+    Creating a FastAPI Server
+    *************************
+
+    We initialise the server in ``main.py``; this is where we create our app.
+
+    .. code-block:: python
+
+        app = FastAPI()
+    
+    Attach our routes, or API endpoints.
+
+    .. code-block:: python
+
+        app.include_router(todo_router, tags=["tasks"], prefix="/task")
+    
+    Start the async event loop and ASGI server.
+
+    .. code-block:: python
+
+        if __name__ == "__main__":
+            uvicorn.run(
+                "main:app",
+                host=settings.HOST,
+                reload=settings.DEBUG_MODE,
+                port=settings.PORT,
+            )
+    
+    And it is also where we open and close our connection to our MongoDB server.
+
+    .. code-block:: python
+
+        @app.on_event("startup")
+        async def startup_db_client():
+            app.mongodb_client = AsyncIOMotorClient(settings.DB_URL)
+            app.mongodb = app.mongodb_client[settings.DB_NAME]
+
+
+        @app.on_event("shutdown")
+        async def shutdown_db_client():
+            app.mongodb_client.close()
+    
+
+    Because FastAPI is an async framework, we're using Motor to connect to our MongoDB server. `Motor is the officially maintained async Python driver for MongoDB <https://motor.readthedocs.io/en/stable/>`__.
+
+    When the app startup event is triggered, I open a connection to MongoDB and ensure that it is available via the app object so I can access it later in my different routers.
+
+    Defining Models
+    ===============
+
+    Many people think of MongoDB as being schema-less, which is wrong. MongoDB has a flexible schema. That is to say that collections do not enforce document structure by default, so you have the flexibility to make whatever data-modelling choices best match your application and its performance requirements. So, it's not unusual to create models when working with a MongoDB database.
+
+    The models for the TODO app are in ``backend/apps/todo/models.py``, and it is these models which help FastAPI create the interactive documentation.
+
+    .. code-block:: python
+
+        class TaskModel(BaseModel):
+            id: str = Field(default_factory=uuid.uuid4, alias="_id")
+            name: str = Field(...)
+            completed: bool = False
+
+            class Config:
+                allow_population_by_field_name = True
+                schema_extra = {
+                    "example": {
+                        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+                        "name": "My important task",
+                        "completed": True,
+                    }
+                }
+    
+    I want to draw attention to the ``id`` field on this model. MongoDB uses ``_id``, but in Python, underscores at the start of attributes have special meaning. If you have an attribute on your model that starts with an underscore, `pydantic <https://pydantic-docs.helpmanual.io/>`__—the data validation framework used by FastAPI—will assume that it is a private variable, meaning you will not be able to assign it a value! To get around this, we name the field ``id`` but give it an ``alias`` of ``_id``. You also need to set ``allow_population_by_field_name`` to ``True`` in the model's ``Config`` class.
+
+    You may notice I'm not using MongoDB's `ObjectIds <https://docs.mongodb.com/manual/reference/method/ObjectId/>`__. You can `use ObjectIds with FastAPI <https://github.com/tiangolo/fastapi/issues/452#issuecomment-565707812>`__; there is just more work required during serialisation and deserialisation. Still, for this example, I found it easier to generate the UUIDs myself, so they're always strings.
+
+    .. code-block:: python
+
+        class UpdateTaskModel(BaseModel):
+            name: Optional[str]
+            completed: Optional[bool]
+
+            class Config:
+                schema_extra = {
+                    "example": {
+                        "name": "My important task",
+                        "completed": True,
+                    }
+                }
+
+    When users are updating tasks, we do not want them to change the id, so the ``UpdateTaskModel`` only includes the name and completed fields. I've also made both fields optional so that you can update either of them independently. Making both of them optional did mean that all fields were optional, which caused me to spend far too long deciding on how to handle a ``PUT`` request (an update) where the user did not send any fields to be changed. We'll see that next when we look at the routers.
+
+    FastAPI Routers
+    ===============
+
+    The task routers are within ``backend/apps/todo/routers.py``.
+
+    To cover the different CRUD (Create, Read, Update, and Delete) operations, I needed the following endpoints:
+
+    -   POST /task/ - creates a new task.
+    -   GET /task/ - view all existing tasks.
+    -   GET /task/{id}/ - view a single task.
+    -   PUT /task/{id}/ - update a task.
+    -   DELETE /task/{id}/ - delete a task.
+
+    Create
+    ------
+
+    .. code-block:: python
+
+        @router.post("/", response_description="Add new task")
+        async def create_task(request: Request, task: TaskModel = Body(...)):
+            task = jsonable_encoder(task)
+            new_task = await request.app.mongodb["tasks"].insert_one(task)
+            created_task = await request.app.mongodb["tasks"].find_one(
+                {"_id": new_task.inserted_id}
+            )
+
+            return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_task)
+    
+    The create_task router accepts the new task data in the body of the request as a JSON string. We write this data to MongoDB, and then we respond with an HTTP 201 status and the newly created task.
+
+    Read
+    ----
+
+    .. code-block:: python
+
+        @router.get("/", response_description="List all tasks")
+        async def list_tasks(request: Request):
+            tasks = []
+            for doc in await request.app.mongodb["tasks"].find().to_list(length=100):
+                tasks.append(doc)
+            return tasks
+    
+    The list_tasks router is overly simplistic. In a real-world application, you are at the very least going to need to include pagination. Thankfully, there are `packages for FastAPI which can simplify this process <https://fastapi-contrib.readthedocs.io/en/latest/>`__.
+
+    .. code-block:: python
+
+        @router.get("/{id}", response_description="Get a single task")
+        async def show_task(id: str, request: Request):
+            if (task := await request.app.mongodb["tasks"].find_one({"_id": id})) is not None:
+                return task
+
+            raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    
+    While FastAPI supports Python 3.6+, it is my use of assignment expressions in routers like this one, which is why this sample application requires Python 3.8+.
+
+    Here, I'm raising an exception if we cannot find a task with the correct id.
+
+    Update
+    ------
+
+    .. code-block:: python
+
+        @router.put("/{id}", response_description="Update a task")
+        async def update_task(id: str, request: Request, task: UpdateTaskModel = Body(...)):
+            task = {k: v for k, v in task.dict().items() if v is not None}
+
+            if len(task) >= 1:
+                update_result = await request.app.mongodb["tasks"].update_one(
+                    {"_id": id}, {"$set": task}
+                )
+
+                if update_result.modified_count == 1:
+                    if (
+                        updated_task := await request.app.mongodb["tasks"].find_one({"_id": id})
+                    ) is not None:
+                        return updated_task
+
+            if (
+                existing_task := await request.app.mongodb["tasks"].find_one({"_id": id})
+            ) is not None:
+                return existing_task
+
+            raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    
+    We don't want to update any of our fields to empty values, so first of all, we remove those from the update document. As mentioned above, because all values are optional, an update request with an empty payload is still valid. After much deliberation, I decided that in that situation, the correct thing for the API to do is to return the unmodified task and an HTTP 200 status.
+
+    If the user has supplied one or more fields to be updated, we attempt to ``$set`` the new values with ``update_one``, before returning the modified document. However, if we cannot find a document with the specified id, our router will raise a 404.
+
+    Delete
+    ------
+
+    .. code-block:: python
+
+        @router.delete("/{id}", response_description="Delete Task")
+        async def delete_task(id: str, request: Request):
+            delete_result = await request.app.mongodb["tasks"].delete_one({"_id": id})
+
+            if delete_result.deleted_count == 1:
+                return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
+
+            raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    
+    The final router does not return a response body on success, as the requested document no longer exists as we have just deleted it. Instead, it returns an HTTP status of 204 which means that the request completed successfully, but the server doesn't have any data to give you.
+
+    *******************
+    The React Front End
+    *******************
+
+    The React front end does not change as it is only consuming the API and is therefore somewhat back end agnostic. It is mostly the standard files generated by ``create-react-app``. So, to start our React front end, open a new terminal window—keeping your FastAPI server running in the existing terminal—and enter the following commands inside the front end directory.
+
+    .. code-block:: shell
+
+        npm install
+        npm start
+    
+    These commands may take a little while to complete, but afterwards, it should open a new browser window to `http://localhost:3000 <http://localhost:3000>`__.
+
+    .. image:: /images/how-to/FARM/intro/timeline.png
+        :alt: Screenshot of Timeline in browser
+        :align: center
+
+    The React front end is just a view of our task list, but you can update your tasks via the FastAPI documentation and see the changes appear in React!
+
+    .. image:: /images/how-to/FARM/intro/TODO-App.gif
+        :alt: Screencast of final TODO app
+        :align: center
+
+    The bulk of our front end code is in ``frontend/src/App.js``
+
+    .. code-block:: javascript
+
+        useEffect(() => {
+            const fetchAllTasks = async () => {
+                const response = await fetch("/task/")
+                const fetchedTasks = await response.json()
+                setTasks(fetchedTasks)
+            }
+
+            const interval = setInterval(fetchAllTasks, 1000)
+
+            return () => {
+                clearInterval(interval)
+            }
+        }, [])
+    
+    When our component mounts, we start an interval which runs each second and gets the latest list of tasks before storing them in our state. The function returned at the end of the hook will be run whenever the component dismounts, cleaning up our interval.
+
+    .. code-block:: javascript
+
+        useEffect(() => {
+            const timelineItems = tasks.reverse().map((task) => {
+                return task.completed ? (
+                    <Timeline.Item
+                        dot={<CheckCircleOutlined />}
+                        color="green"
+                        style={{ textDecoration: "line-through", color: "green" }}
+                    >
+                        {task.name} <small>({task._id})</small>
+                    </Timeline.Item>
+                ) : (
+                    <Timeline.Item
+                        dot={<MinusCircleOutlined />}
+                        color="blue"
+                        style={{ textDecoration: "initial" }}
+                    >
+                        {task.name} <small>({task._id})</small>
+                    </Timeline.Item>
+                )
+            })
+
+            setTimeline(timelineItems)
+        }, [tasks])
+
+    The second hook is triggered whenever the task list in our state changes. This hook creates a ``Timeline Item`` component for each task in our list.
+
+    .. code-block:: javascript
+
+        <>
+            <Row style={{ marginTop: 50 }}>
+                <Col span={14} offset={5}>
+                    <Timeline mode="alternate">{timeline}</Timeline>
+                </Col>
+            </Row>
+        </>
+    
+    The last part of ``App.js`` is the markup to render the tasks to the page. If you have worked with MERN or another React stack before, this will likely seem very familiar. 
+
+.. summary::
+
+    ***********
+    Wrapping Up
+    ***********
+
+    I'm incredibly excited about the FARM stack, and I hope you are now too. We're able to build highly performant, async, web applications using my favourite technologies! In my next article, we'll look at how you can add authentication to your FARM applications. 
+
+    In the meantime, check out the `FastAPI <https://fastapi.tiangolo.com/>`__ and `Motor documentation <https://motor.readthedocs.io/en/stable/>`__, as well as the other useful packages and links in this `Awesome FastAPI list <https://github.com/mjhea0/awesome-fastapi>`__.
+
+
+    .. include:: /includes/callouts/community-cta.rst
