@@ -101,6 +101,8 @@ Everything You Know About MongoDB is Wrong!
    machines which other servers are in the cluster, then they'll handle it
    if one of the nodes goes down or there are problems with the network. If
    one of the machines gets shut off or crashes, the others will take over.
+   You need a minimum of 3 nodes in a cluster, to achieve
+   `quorum <https://docs.mongodb.com/manual/core/replica-set-elections/>`__.
    Each server in the cluster holds a complete copy of all of the data in
    the database.
 
@@ -119,8 +121,8 @@ Everything You Know About MongoDB is Wrong!
    There *are* some interesting things you can do by connecting directly to
    the secondaries, like running analytics queries, because the machines
    are under less read load. But in general, forcing a connection to a
-   secondary means you're going to be working with slightly stale data, so
-   you shouldn't connect to the primary unless you're prepared to
+   secondary means you could be working with slightly stale data, so
+   you shouldn't connect to a secondary node unless you're prepared to
    make some compromises.
 
    So I've covered "distributed." What do I mean by "document database?"
@@ -157,7 +159,7 @@ Everything You Know About MongoDB is Wrong!
       }
 
    The above document is an example, showing a movie from 1893! This
-   document was retrieved using the PyMongo driver.
+   document was retrieved using the `PyMongo <https://docs.mongodb.com/drivers/python>`__ driver.
 
    Note that some of the values are arrays, like 'countries' and 'cast'.
    Some of the values are objects (we call them subdocuments). This
@@ -172,15 +174,15 @@ Everything You Know About MongoDB is Wrong!
    Myth 1: MongoDB is on v3.2
    ==========================
 
-   If you install MongoDB on Debian Stretch, with apt get mongodb, it will
+   If you install MongoDB on Debian Stretch, with ``apt get mongodb``, it will
    install version 3.2. Unfortunately, this version is five years old!
    There have been five major annual releases since then, containing a
    whole host of new features, as well as security, performance, and
    scalability improvements.
 
-   **The current version of MongoDB
-   is** `v4.4 <https://docs.mongodb.com/manual/release-notes/4.4/>`__ (in
-   October 2020). If you want to install it, you should install `MongoDB
+   The current version of MongoDB
+   is `v4.4 <https://docs.mongodb.com/manual/release-notes/4.4/>`__ (as of late 2020).
+   If you want to install it, you should install `MongoDB
    Community Server <https://www.mongodb.com/try/download/community>`__,
    but first make sure you've read about `MongoDB
    Atlas <https://www.mongodb.com/cloud/atlas>`__,
@@ -214,6 +216,13 @@ Everything You Know About MongoDB is Wrong!
    -  Results are provided as BSON documents.
    -  BSON is even used for the wire protocol used by MongoDB!
 
+   If you're used to working with JSON when doing web development,
+   it's a useful shortcut to think of MongoDB as a JSON database.
+   That's why we sometimes describe it that way!
+   But once you've been working with MongoDB for a little while,
+   you'll come to appreciate the advantages that BSON has to offer.
+
+
    Myth 3: MongoDB Doesn't Support Transactions
    ============================================
 
@@ -221,23 +230,26 @@ Everything You Know About MongoDB is Wrong!
    blog posts describing it as a BASE database. BASE is an acronym for
    "Basic Availability; Soft-state; Eventual consistency."
 
-   But this is not the case! Some of these parts have never been the case -
-   MongoDB has never been "eventually consistent" - updates are streamed
-   and applied sequentially to secondary nodes, so although they might be
-   *behind*, they're never *inconsistent*. Soft-state apparently describes
-   the need to continually update data or it will expire, which is also not
-   the case.
+   But this is not true, and never has been!
+   MongoDB has never been "eventually consistent."
+   Reads and writes to the primary are guaranteed to be strongly consistent,
+   and updates to a single document are always atomic.
+   Soft-state apparently describes the need to continually update data or it will expire,
+   which is also not the case.
 
    And finally, MongoDB *will* go into a read-only state (reducing
-   availability) if so many nodes have been taken down that a quorum cannot
-   be achieved. This is by design. It ensures that consistency and
-   partition tolerance are maintained when everything goes wrong.
+   availability) if so many nodes are unavailable that a quorum cannot
+   be achieved.
+   This is by design.
+   It ensures that consistency is maintained when everything else goes wrong.
 
    **MongoDB is an ACID database**. It supports atomicity, consistency,
    isolation, and durability.
 
    Updates to multiple parts of individual documents have always been
-   atomic; but since v4.0, MongoDB has supported transactions across
+   atomic; but since v4.0, MongoDB has supported
+   `transactions <https://docs.mongodb.com/manual/core/transactions/>`__
+   across
    multiple documents and collections. Since v4.2, this is even supported
    across shards in a sharded cluster.
 
@@ -251,7 +263,9 @@ Everything You Know About MongoDB is Wrong!
 
    Another out-of-date myth about MongoDB is that you can't have
    relationships between collections or documents. You *can* do joins with
-   queries that we call aggregation pipelines. They're super-powerful,
+   queries that we call
+   `aggregation pipelines <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__.
+   They're super-powerful,
    allowing you to query and transform your data from multiple collections
    using an intuitive query model that consists of a series of pipeline
    stages applied to data moving through the pipeline.
@@ -277,7 +291,8 @@ Everything You Know About MongoDB is Wrong!
    You may hear people talk about sharding as a cool feature of MongoDB.
    And it is - it's definitely a cool, and core, feature of MongoDB.
 
-   Sharding is when you divide your data and put each piece in a different
+   `Sharding <https://docs.mongodb.com/manual/sharding/>`__
+   is when you divide your data and put each piece in a different
    replica set or cluster. It's a technique for dealing with huge data
    sets. MongoDB supports automatically ensuring data and requests are sent
    to the correct replica sets, and merging results from multiple shards.
@@ -300,7 +315,7 @@ Everything You Know About MongoDB is Wrong!
    So, this means a minimum sharded cluster is eight servers, and it goes up by
    at least three servers, with each shard added.
 
-   Clusters also make your data harder to manage, and they add some
+   Sharded clusters also make your data harder to manage, and they add some
    limitations to the types of queries you can conduct. **Sharding is
    useful if you need it, but it's often cheaper and easier to simply
    upgrade your hardware!**
@@ -311,7 +326,9 @@ Everything You Know About MongoDB is Wrong!
 
    MongoDB's sharding features are still there for you once you scale
    beyond the amount of RAM that can be put into a single computer. You can
-   also do some neat things with shards, like geo-pinning, where you can
+   also do some neat things with shards, like
+   `geo-pinning <https://docs.mongodb.com/manual/sharding/#zones-in-sharded-clusters>`__,
+   where you can
    store user data geographically closer to the user's location, to reduce
    latency.
 
@@ -320,12 +337,17 @@ Everything You Know About MongoDB is Wrong!
 
    And before you consider *that*, you should look at `MongoDB
    Atlas <https://www.mongodb.com/cloud/atlas>`__, MongoDB's hosted
-   Database-as-a-Service product. (Yes, I know I've already mentioned it!)
-   As well as hosting your database for you, MongoDB Atlas will also scale
+   database-as-a-service product. (Yes, I know I've already mentioned it!)
+   As well as hosting your database for you,
+   on the cloud (or `clouds <https://www.mongodb.com/multicloud>`__) of your choice,
+   MongoDB Atlas will also scale
    your database up and down as required, keeping you available, while
    keeping costs low. It'll handle backups and redundancy, and also
-   includes extra features, such as charts, text search, serverless
-   functions, and more.
+   includes extra features, such as
+   `charts <https://www.mongodb.com/products/charts>`__,
+   `text search <https://www.mongodb.com/atlas/search>`__,
+   `serverless functions <https://docs.mongodb.com/realm/functions/>`__,
+   and more.
 
    Myth 6: MongoDB is Insecure
    ===========================
@@ -351,7 +373,9 @@ Everything You Know About MongoDB is Wrong!
    this has happened many times, and there were ways to make it more
    difficult to mess this up.
 
-   We've fixed the defaults. **MongoDB will not connect to the network
+   We `fixed the defaults <https://docs.mongodb.com/manual/core/security-hardening/#ip-binding>`__
+   in MongoDB 3.6.
+   **MongoDB will not connect to the network
    unless authentication is enabled** *or* you provide a specific flag to
    the server to override this behaviour. So, you can still *be* insecure,
    but now you have to at least read the manual first!
@@ -387,7 +411,7 @@ Everything You Know About MongoDB is Wrong!
    robustly**.
 
    MongoDB is used in a range of industries who care deeply about keeping
-   their data. These range from banks such as Morgan Stanley, Barclays and HSBC
+   their data. These range from banks such as Morgan Stanley, Barclays, and HSBC
    to massive publishing brands, like Forbes. We've never had a report of
    large-scale data loss. If you *do* have a first-hand story to tell of
    data loss, please `file a ticket <https://jira.mongodb.org/>`__. We'll
@@ -417,7 +441,7 @@ Everything You Know About MongoDB is Wrong!
    On the `MongoDB Developer Blog <https://developer.mongodb.com/>`__, we
    have detailed some `MongoDB
    Patterns <https://www.mongodb.com/blog/post/building-with-patterns-a-summary>`__
-   for schema design and development. My awesome colleague `Lauren
+   for schema design and development, and my awesome colleague `Lauren
    Schaefer <https://developer.mongodb.com/author/lauren-schaefer>`__ has
    been producing a series of posts describing `MongoDB
    Anti-Patterns <https://developer.mongodb.com/article/schema-design-anti-pattern-summary>`__
