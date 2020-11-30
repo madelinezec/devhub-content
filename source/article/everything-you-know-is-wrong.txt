@@ -401,15 +401,6 @@ Everything You Know About MongoDB is Wrong!
    If you follow up asking these users to get in touch and file a ticket
    describing the incident, they never turn up!
 
-   More seriously, MongoDB has paid for several test runs by
-   `Jepsen <https://jepsen.io/>`__, to ensure data consistency even in
-   challenging networking conditions. These tests have been added to our
-   automated test suite. Some of the tests found bugs - they were meant to
-   - and we fixed them. There remain some differences of opinion with
-   Jepsen about MongoDB's defaults, but if you read the manual, **you can
-   rely on MongoDB to store and maintain your data consistently and
-   robustly**.
-
    MongoDB is used in a range of industries who care deeply about keeping
    their data. These range from banks such as Morgan Stanley, Barclays, and HSBC
    to massive publishing brands, like Forbes. We've never had a report of
