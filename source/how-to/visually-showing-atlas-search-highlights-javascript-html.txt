@@ -30,9 +30,9 @@
 
    * JavaScript
 
-.. tags::
+.. products::
 
-   * Full-Text Search
+   * Atlas Search
 
 =================================================================
 Visually Showing Atlas Search Highlights with JavaScript and HTML
