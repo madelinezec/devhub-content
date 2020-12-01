@@ -1,0 +1,285 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/data-streaming.png
+
+.. meta-description::
+
+   Discover the new Resumable Initial Sync feature in MongoDB v4.4
+
+.. twitter::
+   :creator: @MongoDB
+   :title: Resumable Initial Sync.
+   :image: /images/social/twitter/twitter-sql-to-mdb.png
+   :image-alt: MongoDB Replication
+
+   Read more about the new Resumable Initial Sync feature in MongoDB v4.4
+
+.. og::
+   :title: Resumable Initial Sync in MongoDB 4.4
+   :image: /images/social/open-graph/og-sql-mdb.png
+ 
+.. include:: /includes/authors/costa-nuno.rst
+
+.. pubdate:: 2020-12-01
+
+.. type:: article
+
+.. level:: advanced
+
+.. tags:: 
+
+   * MongoDB 4.4
+   * Technical
+
+.. products::
+
+   * MongoDB
+
+=====================================
+Resumable Initial Sync in MongoDB 4.4
+=====================================
+ 
+.. introduction:: 
+
+   Introduction
+   ------------
+
+   Hello, everyone. My name is Nuno and I have been working with MongoDB databases for almost eight years now as a sysadmin and as a Technical Services Engineer.
+   
+   One of the most common challenges in MongoDB environments is when a replica set member requires a resync and the `Initial Sync <https://docs.mongodb.com/manual/core/replica-set-sync/#replica-set-initial-sync>`__ process is interrupted for some reason. 
+   
+   Interruptions like network partitions between the sync source and the node doing the initial sync causes the process to fail forcing it to restart from scratch to ensure database consistency. 
+   
+   This began to be particularly problematic when faced with large dataset sizes which can take up to several days when they are in terms of terabytes. 
+      
+   You may have already noticed that I am talking in the past tense as this is no longer a problem you need to face anymore. I am very happy to share with you one of the latest enhancements introduced by MongoDB in v4.4: `Resumable Initial Sync <https://docs.mongodb.com/master/release-notes/4.4/#resumable-initial-sync>`__. 
+   
+   Resumable Initial Sync now enables nodes doing an initial sync to survive events like transient network errors or a sync source restart when fetching data from the sync source node. 
+
+.. content::
+
+   Resumable Initial Sync
+   ----------------------
+
+   The time spent when recovering replica set members with `Initial Sync <https://docs.mongodb.com/manual/core/replica-set-sync/#replica-set-initial-sync>`__ procedures on large data environments has two common challenges:
+
+   - Falling off the oplog 
+   - Transient network failures
+
+   MongoDB became more resilient to these types of failures with `MongoDB v3.4 <https://docs.mongodb.com/v3.4/core/replica-set-sync/#initial-sync>`__ by adding the ability to pull newly added oplog records during the data copy phase, and more recently with `MongoDB v4.4 <https://docs.mongodb.com/master/release-notes/4.4/#resumable-initial-sync>`__ and the ability to resume the initial sync where it left off.
+
+
+   Behavioral Description
+   ----------------------
+    
+   The initial sync process will restart the interrupted or failed command and keep retrying until the command succeeds, a non-resumable error occurs, or a period of time specified by the parameter `initialSyncTransientErrorRetryPeriodSeconds <https://docs.mongodb.com/master/reference/parameters/#param.initialSyncTransientErrorRetryPeriodSeconds>`__  passes (default: 24 hours). These restarts are constrained to use the same sync source, and are not tolerant to rollbacks on the sync source. That is, if the sync source experiences a rollback, the entire initial sync attempt will fail.
+
+   Resumable errors include retriable errors when ``ErrorCodes::isRetriableError`` return ``true``  which includes all network errors as well as some other transient errors.
+
+   The ``ErrorCodes::NamespaceNotFound``, ``ErrorCodes::OperationFailed``, ``ErrorCodes::CursorNotFound``, or ``ErrorCodes::QueryPlanKilled`` mean the collection may have been dropped, renamed, or modified in a way which caused the cursor to be killed. These errors will cause ``ErrorCodes::InitialSyncFailure`` and will be treated the same as transient retriable errors (except for not killing the cursor), mark ``ErrorCodes::isRetriableError`` as ``true``, and will allow the initial sync to resume where it left off.
+
+   On ``ErrorCodes::NamespaceNotFound``, it will skip this entire collection and return success. Even if the collection has been renamed, simply resuming the query is sufficient since we are querying by ``UUID``; the name change will be handled during ``oplog`` application.
+
+   All other errors are ``non-resumable``.
+
+
+   Configuring Custom Retry Period
+   -------------------------------
+
+   The default retry period is 24 hours (86,400 seconds). A database administrator can choose to increase this period with the following command:
+
+   .. code-block:: javascript
+
+       // Default is 86400
+       db.adminCommand({
+           setParameter: 1,
+           initialSyncTransientErrorRetryPeriodSeconds: 86400
+       })
+
+   .. blockquote::
+
+      Note: The 24 hour value is the default period estimated for a database administrator to detect any ongoing failure and be able to act on restarting the sync source node. 
+    
+
+   Upgrade/Downgrade Requirements and Behaviors
+   --------------------------------------------
+
+   The full resumable behavior will always be available between 4.4 nodes regardless of `FCV - Feature Compatibility Version <https://docs.mongodb.com/manual/reference/command/setFeatureCompatibilityVersion/#view-fcv>`__. Between 4.2 and 4.4 nodes, initial sync will not be resumable during the query phase of the ``CollectionCloner`` (where we are actually reading data from collections), nor will it be resumable after collection rename, regardless of which node is 4.4. Resuming after transient failures in other commands will be possible when the syncing node is 4.4 and the sync source is 4.2.
+
+   Diagnosis/Debuggability
+   -----------------------
+
+   During an initial sync, the sync source node can become unavailable (either due to a network failure or process restart) and still be able to resume and complete.
+
+   Here are examples of what messages to expect in the logs.
+
+   Initial Sync attempt successfully started:
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:49:21.826+00:00"},"s":"I",  "c":"INITSYNC", "id":21164,   "ctx":"ReplCoordExtern-0","msg":"Starting initial sync attempt","attr":{"initialSyncAttempt":1,"initialSyncMaxAttempts":10}}
+      {"t":{"$date":"2020-11-10T19:49:22.905+00:00"},"s":"I",  "c":"INITSYNC", "id":21173,   "ctx":"ReplCoordExtern-1","msg":"Initial syncer oplog truncation finished","attr":{"durationMillis":0}}
+
+   Messages caused by network failures (or sync source node restart):
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:50:04.822+00:00"},"s":"D1", "c":"INITSYNC", "id":21078,   "ctx":"ReplCoordExtern-0","msg":"Transient error occurred during cloner stage","attr":{"cloner":"CollectionCloner","stage":"query","error":{"code":6,"codeName":"HostUnreachable","errmsg":"recv failed while exhausting cursor :: caused by :: Connection closed by peer"}}}
+      {"t":{"$date":"2020-11-10T19:50:04.823+00:00"},"s":"I",  "c":"INITSYNC", "id":21075,   "ctx":"ReplCoordExtern-0","msg":"Initial Sync retrying cloner stage due to error","attr":{"cloner":"CollectionCloner","stage":"query","error":{"code":6,"codeName":"HostUnreachable","errmsg":"recv failed while exhausting cursor :: caused by :: Connection closed by peer"}}}
+
+   Initial Sync is resumed after being interrupted:
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:51:43.996+00:00"},"s":"D1", "c":"INITSYNC", "id":21139,   "ctx":"ReplCoordExtern-0","msg":"Attempting to kill old remote cursor with id: {id}","attr":{"id":118250522569195472}}
+      {"t":{"$date":"2020-11-10T19:51:43.997+00:00"},"s":"D1", "c":"INITSYNC", "id":21133,   "ctx":"ReplCoordExtern-0","msg":"Collection cloner will resume the last successful query"}
+
+   Data cloners resume:
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:53:27.345+00:00"},"s":"D1", "c":"INITSYNC", "id":21072,   "ctx":"ReplCoordExtern-0","msg":"Cloner finished running stage","attr":{"cloner":"CollectionCloner","stage":"query"}}
+      {"t":{"$date":"2020-11-10T19:53:27.347+00:00"},"s":"D1", "c":"INITSYNC", "id":21069,   "ctx":"ReplCoordExtern-0","msg":"Cloner running stage","attr":{"cloner":"CollectionCloner","stage":"setupIndexBuildersForUnfinishedIndexes"}}
+      {"t":{"$date":"2020-11-10T19:53:27.349+00:00"},"s":"D1", "c":"INITSYNC", "id":21072,   "ctx":"ReplCoordExtern-0","msg":"Cloner finished running stage","attr":{"cloner":"CollectionCloner","stage":"setupIndexBuildersForUnfinishedIndexes"}}
+      {"t":{"$date":"2020-11-10T19:53:27.350+00:00"},"s":"D1", "c":"INITSYNC", "id":21148,   "ctx":"ReplCoordExtern-0","msg":"Collection clone finished","attr":{"namespace":"test.data"}}
+      {"t":{"$date":"2020-11-10T19:53:27.351+00:00"},"s":"D1", "c":"INITSYNC", "id":21057,   "ctx":"ReplCoordExtern-0","msg":"Database clone finished","attr":{"dbName":"test","status":{"code":0,"codeName":"OK"}}}
+
+   Data cloning phase completes successfully. Oplog cloning phase starts:
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:53:27.352+00:00"},"s":"I",  "c":"INITSYNC", "id":21183,   "ctx":"ReplCoordExtern-0","msg":"Finished cloning data. Beginning oplog replay","attr":{"databaseClonerFinishStatus":"OK"}}
+      {"t":{"$date":"2020-11-10T19:53:27.353+00:00"},"s":"I",  "c":"INITSYNC", "id":21195,   "ctx":"ReplCoordExtern-3","msg":"Writing to the oplog and applying operations until stopTimestamp before initial sync can complete","attr":{"stopTimestamp":{"":{"$timestamp":{"t":1605038002,"i":1}}},"beginFetchingTimestamp":{"":{"$timestamp":{"t":1605037760,"i":1}}},"beginApplyingTimestamp":{"":{"$timestamp":{"t":1605037760,"i":1}}}}}
+      {"t":{"$date":"2020-11-10T19:53:27.359+00:00"},"s":"I",  "c":"INITSYNC", "id":21181,   "ctx":"ReplCoordExtern-1","msg":"Finished fetching oplog during initial sync","attr":{"oplogFetcherFinishStatus":"CallbackCanceled: oplog fetcher shutting down","lastFetched":"{ ts: Timestamp(1605038002, 1), t: 296 }"}}
+
+   Initial Sync completes successfully and statistics are provided:
+
+   .. code-block:: none
+
+      {"t":{"$date":"2020-11-10T19:53:27.360+00:00"},"s":"I",  "c":"INITSYNC", "id":21191,   "ctx":"ReplCoordExtern-1","msg":"Initial sync attempt finishing up"}
+      {"t":{"$date":"2020-11-10T19:53:27.360+00:00"},"s":"I",  "c":"INITSYNC", "id":21192,   "ctx":"ReplCoordExtern-1","msg":"Initial Sync Attempt Statistics","attr":{"statistics":{"failedInitialSyncAttempts":0,"maxFailedInitialSyncAttempts":10,"initialSyncStart":{"$date":"2020-11-10T19:49:21.826Z"},"initialSyncAttempts":[],"appliedOps":25,"initialSyncOplogStart":{"$timestamp":{"t":1605037760,"i":1}},"initialSyncOplogEnd":{"$timestamp":{"t":1605038002,"i":1}},"totalTimeUnreachableMillis":203681,"databases":{"databasesCloned":3,"admin":{"collections":2,"clonedCollections":2,"start":{"$date":"2020-11-10T19:49:23.150Z"},"end":{"$date":"2020-11-10T19:49:23.452Z"},"elapsedMillis":302,"admin.system.keys":{"documentsToCopy":2,"documentsCopied":2,"indexes":1,"fetchedBatches":1,"start":{"$date":"2020-11-10T19:49:23.150Z"},"end":{"$date":"2020-11-10T19:49:23.291Z"},"elapsedMillis":141,"receivedBatches":1},"admin.system.version":{"documentsToCopy":1,"documentsCopied":1,"indexes":1,"fetchedBatches":1,"start":{"$date":"2020-11-10T19:49:23.291Z"},"end":{"$date":"2020-11-10T19:49:23.452Z"},"elapsedMillis":161,"receivedBatches":1}},"config":{"collections":3,"clonedCollections":3,"start":{"$date":"2020-11-10T19:49:23.452Z"},"end":{"$date":"2020-11-10T19:49:23.976Z"},"elapsedMillis":524,"config.system.indexBuilds":{"documentsToCopy":0,"documentsCopied":0,"indexes":1,"fetchedBatches":0,"start":{"$date":"2020-11-10T19:49:23.452Z"},"end":{"$date":"2020-11-10T19:49:23.591Z"},"elapsedMillis":139,"receivedBatches":0},"config.system.sessions":{"documentsToCopy":1,"documentsCopied":1,"indexes":2,"fetchedBatches":1,"start":{"$date":"2020-11-10T19:49:23.591Z"},"end":{"$date":"2020-11-10T19:49:23.801Z"},"elapsedMillis":210,"receivedBatches":1},"config.transactions":{"documentsToCopy":0,"documentsCopied":0,"indexes":1,"fetchedBatches":0,"start":{"$date":"2020-11-10T19:49:23.801Z"},"end":{"$date":"2020-11-10T19:49:23.976Z"},"elapsedMillis":175,"receivedBatches":0}},"test":{"collections":1,"clonedCollections":1,"start":{"$date":"2020-11-10T19:49:23.976Z"},"end":{"$date":"2020-11-10T19:53:27.350Z"},"elapsedMillis":243374,"test.data":{"documentsToCopy":29000000,"documentsCopied":29000000,"indexes":1,"fetchedBatches":246,"start":{"$date":"2020-11-10T19:49:23.976Z"},"end":{"$date":"2020-11-10T19:53:27.349Z"},"elapsedMillis":243373,"receivedBatches":246}}}}}}
+      {"t":{"$date":"2020-11-10T19:53:27.451+00:00"},"s":"I",  "c":"INITSYNC", "id":21163,   "ctx":"ReplCoordExtern-3","msg":"Initial sync done","attr":{"durationSeconds":245}}
+
+   The new InitialSync statistics from `replSetGetStatus.initialSyncStatus <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html>`__ can be useful to review the initial sync progress status. 
+
+   Starting in MongoDB 4.2.1, `replSetGetStatus.initialSyncStatus <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus>`__ metrics are only available when run on a member during its initial sync (i.e. `STARTUP2 <https://docs.mongodb.com/manual/reference/replica-states/#replstate.STARTUP2>`__ state).
+
+   The metrics are:
+   
+   - `syncSourceUnreachableSince <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.syncSourceUnreachableSince>`__ - The date and time at which the sync source became unreachable.
+   - `currentOutageDurationMillis <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.currentOutageDurationMillis>`__ - The time in milliseconds that the sync source has been unavailable.
+   - `totalTimeUnreachableMillis <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.totalTimeUnreachableMillis>`__ - The total time in milliseconds that the member has been unavailable during the current initial sync.
+
+   For each Initial Sync attempt from `replSetGetStatus.initialSyncStatus.initialSyncAttempts <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.initialSyncAttempts>`__:
+
+   - `totalTimeUnreachableMillis <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.initialSyncAttempts>`__ - The total time in milliseconds that the member has been unavailable during the current initial sync.
+   - `operationsRetried <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.initialSyncAttempts>`__ - Total number of all operation retry attempts.
+   - `rollBackId <https://docs.mongodb.com/manual/reference/command/replSetGetStatus/index.html#replSetGetStatus.initialSyncStatus.initialSyncAttempts>`__ - The sync source's rollback identifier at the start of the initial sync attempt.
+
+   An example of this output is:
+
+   .. code-block:: none
+
+      replset:STARTUP2> db.adminCommand( { replSetGetStatus: 1 } ).initialSyncStatus
+      {
+        "failedInitialSyncAttempts" : 0,
+        "maxFailedInitialSyncAttempts" : 10,
+        "initialSyncStart" : ISODate("2020-11-06T20:16:21.649Z"),
+        "initialSyncAttempts" : [ ],
+        "appliedOps" : 0,
+        "initialSyncOplogStart" : Timestamp(1604693779, 1),
+        "syncSourceUnreachableSince" : ISODate("2020-11-06T20:16:32.950Z"),
+        "currentOutageDurationMillis" : NumberLong(56514),
+        "totalTimeUnreachableMillis" : NumberLong(56514),
+        "databases" : {
+            "databasesCloned" : 2,
+            "admin" : {
+                "collections" : 2,
+                "clonedCollections" : 2,
+                "start" : ISODate("2020-11-06T20:16:22.948Z"),
+                "end" : ISODate("2020-11-06T20:16:23.219Z"),
+                "elapsedMillis" : 271,
+                "admin.system.keys" : {
+                    "documentsToCopy" : 2,
+                    "documentsCopied" : 2,
+                    "indexes" : 1,
+                    "fetchedBatches" : 1,
+                    "start" : ISODate("2020-11-06T20:16:22.948Z"),
+                    "end" : ISODate("2020-11-06T20:16:23.085Z"),
+                    "elapsedMillis" : 137,
+                    "receivedBatches" : 1
+                },
+                "admin.system.version" : {
+                    "documentsToCopy" : 1,
+                    "documentsCopied" : 1,
+                    "indexes" : 1,
+                    "fetchedBatches" : 1,
+                    "start" : ISODate("2020-11-06T20:16:23.085Z"),
+                    "end" : ISODate("2020-11-06T20:16:23.219Z"),
+                    "elapsedMillis" : 134,
+                    "receivedBatches" : 1
+                }
+            },
+            "config" : {
+                "collections" : 3,
+                "clonedCollections" : 3,
+                "start" : ISODate("2020-11-06T20:16:23.219Z"),
+                "end" : ISODate("2020-11-06T20:16:23.666Z"),
+                "elapsedMillis" : 447,
+                "config.system.indexBuilds" : {
+                    "documentsToCopy" : 0,
+                    "documentsCopied" : 0,
+                    "indexes" : 1,
+                    "fetchedBatches" : 0,
+                    "start" : ISODate("2020-11-06T20:16:23.219Z"),
+                    "end" : ISODate("2020-11-06T20:16:23.348Z"),
+                    "elapsedMillis" : 129,
+                    "receivedBatches" : 0
+                },
+                "config.system.sessions" : {
+                    "documentsToCopy" : 1,
+                    "documentsCopied" : 1,
+                    "indexes" : 2,
+                    "fetchedBatches" : 1,
+                    "start" : ISODate("2020-11-06T20:16:23.348Z"),
+                    "end" : ISODate("2020-11-06T20:16:23.538Z"),
+                    "elapsedMillis" : 190,
+                    "receivedBatches" : 1
+                },
+                "config.transactions" : {
+                    "documentsToCopy" : 0,
+                    "documentsCopied" : 0,
+                    "indexes" : 1,
+                    "fetchedBatches" : 0,
+                    "start" : ISODate("2020-11-06T20:16:23.538Z"),
+                    "end" : ISODate("2020-11-06T20:16:23.666Z"),
+                    "elapsedMillis" : 128,
+                    "receivedBatches" : 0
+                }
+            },
+            "test" : {
+                "collections" : 1,
+                "clonedCollections" : 0,
+                "start" : ISODate("2020-11-06T20:16:23.666Z"),
+                "test.data" : {
+                    "documentsToCopy" : 29000000,
+                    "documentsCopied" : 714706,
+                    "indexes" : 1,
+                    "fetchedBatches" : 7,
+                    "start" : ISODate("2020-11-06T20:16:23.666Z"),
+                    "receivedBatches" : 7
+                }
+            }
+        }
+      }
+      replset:STARTUP2>
+
+.. summary::
+
+   Wrap-Up
+   -------
+
+   Upgrade your MongoDB database to the new v4.4 and take advantage of the new Resumable Initial Sync feature.  Your deployment will now survive transient network errors or a sync source restarts.
+   
+   .. include:: /includes/callouts/community-cta.rst
+   
