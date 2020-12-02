@@ -409,19 +409,37 @@ Everything You Know About MongoDB is Wrong!
    take it seriously whether you're a paying enterprise customer or an open-source
    user.
 
-   Myth 8: MongoDB is Easy
+   Myth 8: MongoDB is Just a Toy
+   =============================
+
+   If you've read up until this point, you can already see that this one's a myth!
+
+   MongoDB is a general purpose database for storing documents,
+   that can be updated securely and atomically,
+   with joins to other documents and a rich,
+   powerful and intuitive query language for finding and aggregating those documents in the form that you need.
+   When your data gets too big for a single machine,
+   it supports sharding out of the box,
+   and it supports advanced features such as `client-side field level encryption <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ for securing sensitive data,
+   and `change streams <https://docs.mongodb.com/manual/changeStreams/>`__,
+   to allow your applications to respond immediately to changes to your data,
+   using whatever language, framework and set of libraries you prefer to develop with.
+
+   If you want to protect yourself from myths in the future, your best bet is to...
+
+   Become a MongoDB Expert
    =======================
 
 .. summary::
 
-   MongoDB, like any database, is a big and complex thing. Although it's
-   very easy to get started, if you don't go and read the manual at some
-   point, you're going to struggle.
-
-   You'll miss out on features you really wanted or needed, or you'll want
-   to optimise your database, or scale it out, in a way that's not
-   straightforward.
-
+   MongoDB is a database that is easy to get started with,
+   but to build production applications requires that you master the complexities of interacting with a distributed database.
+   MongoDB Atlas simplifies many of those challenges,
+   but you will get the most out of MongoDB if you invest time in learning things like the
+   `aggregation framework <https://docs.mongodb.com/manual/aggregation/>`__,
+   `read concerns <https://docs.mongodb.com/manual/reference/read-concern/>`__,
+   and `write concerns <https://docs.mongodb.com/manual/reference/write-concern/>`__.
+   Nothing hard is easy, but the hard stuff is easier with MongoDB.
    You're not going to become an expert overnight. The good news is that
    there are lots of resources for learning MongoDB, and it's fun!
 
@@ -442,6 +460,6 @@ Everything You Know About MongoDB is Wrong!
    Forum <https://developer.mongodb.com/community/forums/>`__ where you can
    ask questions or show off your projects.
 
-   So, **MongoDB is big and complex, and there's a lot to learn**, but I
-   hope this article has gone some way to explaining what MongoDB is and
-   what it isn't and how you might go about learning to use it effectively.
+   So, **MongoDB is big and powerful, and there's a lot to learn**.
+   I hope this article has gone some way to explaining what MongoDB is,
+   what it isn't, and how you might go about learning to use it effectively.
