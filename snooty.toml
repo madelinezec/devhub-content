@@ -10,6 +10,7 @@ pgp-version = "{+version+}"
 "home" = ["/article/everything-you-know-is-wrong", "/article/getting-to-day-zero", "/article/can-you-keep-a-secret", "/article/learn-mongodb-university-online-free-mooc"]
 "learn" = ["/how-to/designing-developing-2d-game-levels-unity-csharp", "/quickstart/python-quickstart-aggregation", "/how-to/subscribing-changes-browser-websockets"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations", "/quickstart/java-mapping-pojos", "/quickstart/java-aggregation-pipeline", "/quickstart/java-change-streams"]
+"NodeJS Tutorials" = ["/quickstart/node-connect-mongodb", "/quickstart/node-crud-tutorial", "/quickstart/node-aggregation-framework", "/quickstart/node-transactions", "/quickstart/nodejs-change-streams-triggers"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128", "/quickstart/bson-data-types-objectid", "/quickstart/bson-data-types-date"]
 "SQL to MongoDB" = ["/article/map-terms-concepts-sql-mongodb", "/article/top-4-reasons-to-use-mongodb", "/article/3-things-to-know-switch-from-sql-mongodb"]
 "Schema Design Patterns" = ["/how-to/polymorphic-pattern", "/how-to/attribute-pattern", "/how-to/bucket-pattern", "/how-to/outlier-pattern", "/how-to/computed-pattern", "/how-to/subset-pattern"]

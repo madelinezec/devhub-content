@@ -41,13 +41,6 @@
    * MongoDB
    * Atlas
 
-.. related::
-
-   * `How to connect to a MongoDB database using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__
-   * `Video: How to perform the CRUD operations using MongoDB & Node.js <https://www.mongodb.com/blog/post/quick-start-video-nodejs--mongodb--the-crud-operations>`__
-   * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
-   * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
-
 ==============================================
 MongoDB and Node.js Tutorial - CRUD Operations
 ==============================================
@@ -1014,14 +1007,3 @@ MongoDB and Node.js Tutorial - CRUD Operations
     * MongoDB: 4.0 
     * MongoDB Node.js Driver: 3.3 
     * Node.js: 10.16.3
-
-
-    All Posts in the *Quick Start: Node.js and MongoDB* Series:
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    -  `How to connect to a MongoDB database using Node.js <https://developer.mongodb.com/quickstart/node-connect-mongodb>`__
-    -  How to execute the CRUD Operations with MongoDB & Node.js (this post)
-    -  `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://developer.mongodb.com/quickstart/node-aggregation-framework>`__
-    -  `How to implement transactions using Node.js <https://developer.mongodb.com/quickstart/node-transactions>`__
-    -  `How to react to database changes with change streams and triggers <https://developer.mongodb.com/quickstart/nodejs-change-streams-triggers>`__
- 

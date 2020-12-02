@@ -20,7 +20,7 @@
 
 .. include:: /includes/authors/schaefer-lauren.rst
 
-.. pubdate:: 2020-12-01
+.. pubdate:: 2020-12-02
 
 .. type:: quickstart
 
@@ -38,12 +38,6 @@
 
    * MongoDB
    * Atlas
-
-.. related::
-
-   * `Video: How to perform the CRUD operations using MongoDB & Node.js <https://www.mongodb.com/blog/post/quick-start-video-nodejs--mongodb--the-crud-operations>`__
-   * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
-   * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
 
 ===========================================
 Aggregation Framework with Node.js Tutorial
@@ -73,7 +67,7 @@ Aggregation Framework with Node.js Tutorial
 
    The aggregation framework allows you to analyze your data in real time. Using the framework, you can create an aggregation pipeline that consists of one or more `stages <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/#aggregation-pipeline-operator-reference>`__. Each stage transforms the documents and passes the output to the next stage.
 
-   If you're familiar with the Linux pipe \|, you can think of the aggregation pipeline as a very similar concept. Just as output from one command is passed as input to the next command when you use piping, output from one stage is passed as input to the next stage when you use the aggregation pipeline.
+   If you're familiar with the Linux pipe ``|``, you can think of the aggregation pipeline as a very similar concept. Just as output from one command is passed as input to the next command when you use piping, output from one stage is passed as input to the next stage when you use the aggregation pipeline.
 
    The aggregation framework has a variety of `stages <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/>`__ available for you to use. Today, we'll discuss the basics of how to use `$match <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__, `$group <https://docs.mongodb.com/manual/reference/operator/aggregation/group/>`__, `$sort <https://docs.mongodb.com/manual/reference/operator/aggregation/sort/>`__, and `$limit <https://docs.mongodb.com/manual/reference/operator/aggregation/limit/>`__. Note that the aggregation framework has many other powerful stages including `$count <https://docs.mongodb.com/manual/reference/operator/aggregation/count/>`__, `$geoNear <https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/>`__, `$graphLookup <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>`__, `$project <https://docs.mongodb.com/manual/reference/operator/aggregation/project/>`__, `$unwind <https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/>`__, and others.
 
@@ -361,14 +355,5 @@ Aggregation Framework with Node.js Tutorial
         - 3.3.2
       * - Node.js
         - 10.16.3
-
-   All Posts in the *Quick Start: Node.js and MongoDB* Series:
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-   -  `How to connect to a MongoDB database using Node.js <https://developer.mongodb.com/quickstart/node-connect-mongodb>`__
-   -  `How to execute the CRUD Operations with MongoDB & Node.js <https://developer.mongodb.com/quickstart/node-crud-tutorial>`__
-   -  How to analyze your data using MongoDB's Aggregation Framework and Node.js (this post)
-   -  `How to implement transactions using Node.js <https://developer.mongodb.com/quickstart/node-transactions>`__
-   -  `How to react to database changes with change streams and triggers <https://developer.mongodb.com/quickstart/nodejs-change-streams-triggers>`__
 
    Questions? Comments? We'd love to connect with you. Join the conversation on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.
