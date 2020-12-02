@@ -1,0 +1,374 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/quickstart/nodejs.png
+
+.. meta-description::
+
+   Discover how to analyze your data using MongoDB's Aggregation Framework and Node.js.
+
+.. twitter::
+   :creator: @Lauren_Schaefer
+   :title: Aggregation Framework with Node.js Tutorial
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Discover how to analyze your data using MongoDB's Aggregation Framework and Node.js.
+
+.. og::
+   :title: Aggregation Framework with Node.js Tutorial
+   :image: /images/social/open-graph/og-pink-pattern.png
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-12-01
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. tags::
+
+   * Node.js
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. related::
+
+   * `Video: How to perform the CRUD operations using MongoDB & Node.js <https://www.mongodb.com/blog/post/quick-start-video-nodejs--mongodb--the-crud-operations>`__
+   * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
+   * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
+
+===========================================
+Aggregation Framework with Node.js Tutorial
+===========================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-nodejs.png
+      :alt: QuickStart Node.js Logo
+      :scale: 30%
+      :align: right
+
+   When you want to analyze data stored in MongoDB, you can use MongoDB's powerful aggregation framework to do so. Today I'll give you a high level overview of the aggregation framework and show you how to use it.
+
+   If you're just joining us in this Quick Start with MongoDB and Node.js series, we're just over halfway through. So far, we've covered how to `connect to MongoDB <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__ and perform each of the CRUD—`create <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-create-documents>`__, `read <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-read-documents>`__, `update <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-update-documents>`__, and `delete <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-delete-documents>`__ - operations. The code we write today will use the same structure as the code we built in the first post in the series, so, if you have any questions about how to get started or how the code is structured, `head back to that first post <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__.
+
+   And, with that, let's dive into the aggregation framework!
+
+   .. blockquote::
+
+      Get started with an M0 cluster on `Atlas <https://www.mongodb.com/cloud/atlas>`__ today. It's free forever, and it's the easiest way to try out the steps in this blog series.
+
+.. content::
+
+   What is the Aggregation Framework?
+   ----------------------------------
+
+   The aggregation framework allows you to analyze your data in real time. Using the framework, you can create an aggregation pipeline that consists of one or more `stages <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/#aggregation-pipeline-operator-reference>`__. Each stage transforms the documents and passes the output to the next stage.
+
+   If you're familiar with the Linux pipe \|, you can think of the aggregation pipeline as a very similar concept. Just as output from one command is passed as input to the next command when you use piping, output from one stage is passed as input to the next stage when you use the aggregation pipeline.
+
+   The aggregation framework has a variety of `stages <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/>`__ available for you to use. Today, we'll discuss the basics of how to use `$match <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__, `$group <https://docs.mongodb.com/manual/reference/operator/aggregation/group/>`__, `$sort <https://docs.mongodb.com/manual/reference/operator/aggregation/sort/>`__, and `$limit <https://docs.mongodb.com/manual/reference/operator/aggregation/limit/>`__. Note that the aggregation framework has many other powerful stages including `$count <https://docs.mongodb.com/manual/reference/operator/aggregation/count/>`__, `$geoNear <https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/>`__, `$graphLookup <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>`__, `$project <https://docs.mongodb.com/manual/reference/operator/aggregation/project/>`__, `$unwind <https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/>`__, and others.
+
+   How Do You Use the Aggregation Framework?
+   -----------------------------------------
+
+   I'm hoping to visit the beautiful city of Sydney, Australia soon. Sydney is a huge city with many suburbs, and I'm not sure where to start looking for a cheap rental. I want to know which Sydney suburbs have, on average, the cheapest one bedroom Airbnb listings.
+
+   I could write a query to pull all of the one bedroom listings in the Sydney area and then write a script to group the listings by suburb and calculate the average price per suburb. Or I could write a single command using the aggregation pipeline. Let's use the aggregation pipeline.
+
+   There are a variety of ways you can create aggregation pipelines. You can write them manually in a code editor or create them visually inside of `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ or `MongoDB Compass <https://www.mongodb.com/products/compass>`__. In general, I don't recommend writing pipelines manually as it's much easier to understand what your pipeline is doing and spot errors when you use a visual editor. Since you're already setup to use MongoDB Atlas for this blog series, we'll create our aggregation pipeline in Atlas.
+
+   Navigate to the Aggregation Pipeline Builder in Atlas
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The first thing we need to do is navigate to the Aggregation Pipeline Builder in Atlas.
+
+   1. Navigate to `Atlas <https://www.mongodb.com/cloud/atlas>`__ and authenticate if you're not already authenticated.
+   2. In the **CONTEXT** menu in the upper-left corner, select the project you are using for this Quick Start series.
+   3. In the right pane for your cluster, click **COLLECTIONS**.
+   4. In the list of databases and collections that appears, select **listingsAndReviews**.
+   5. In the right pane, select the **Aggregation** view to open the Aggregation Pipeline Builder.
+
+   .. image:: /images/node-quickstart/AggregationView.png
+      :alt: The Aggregation Pipeline Builder in Atlas
+
+   The Aggregation Pipeline Builder provides you with a visual representation of your aggregation pipeline. Each stage is represented by a new row. You can put the code for each stage on the left side of a row, and the Aggregation Pipeline Builder will automatically provide a live sample of results for that stage on the right side of the row.
+
+   Build an Aggregation Pipeline
+   -----------------------------
+
+   Now we are ready to build an aggregation pipeline.
+
+   Add a $match Stage
+   ~~~~~~~~~~~~~~~~~~
+
+   Let's begin by narrowing down the documents in our pipeline to one bedroom listings in the Sydney, Australia market where the room type is Entire home/apt. We can do so by using the `$match <https://docs.mongodb.com/manual/reference/operator/aggregation/match/>`__ stage.
+
+   1. On the row representing the first stage of the pipeline, choose **$match** in the **Select**... box. The Aggregation Pipeline Builder automatically provides sample code for how to use the $match operator in the code box for the stage.
+
+   .. image:: /images/node-quickstart/match-query.png
+      :alt: The $match stage
+
+   2. Now we can input a query in the code box. The query syntax for ``$match`` is the same as the ``findOne()`` syntax that we used in a `previous post <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-read-documents>`__. Replace the code in the $match stage's code box with the following:
+
+   .. code-block:: json
+
+      {
+        bedrooms: 1,
+        "address.country": "Australia",
+        "address.market": "Sydney",
+        "address.suburb": { $exists: 1, $ne: "" },
+        room_type: "Entire home/apt"
+      }
+
+   Note that we will be using the ``address.suburb`` field later in the pipeline, so we are filtering out documents where ``address.suburb`` does not exist or is represented by an empty string.
+
+   The Aggregation Pipeline Builder automatically updates the output on the right side of the row to show a sample of 20 documents that will be included in the results after the ``$match`` stage is executed.
+
+   .. image:: /images/node-quickstart/match-output.png
+      :alt: $match stage output
+
+   Add a $group Stage
+   ~~~~~~~~~~~~~~~~~~
+
+   Now that we have narrowed our documents down to one bedroom listings in the Sydney, Australia market, we are ready to group them by suburb. We can do so by using the `$group <https://docs.mongodb.com/manual/reference/operator/aggregation/group/>`__ stage.
+
+   1. Click **ADD STAGE**. A new stage appears in the pipeline.
+
+   2. On the row representing the new stage of the pipeline, choose **$group** in the **Select**... box. The Aggregation Pipeline Builder automatically provides sample code for how to use the ``$group`` operator in the code box for the stage.
+
+   .. image:: /images/node-quickstart/group-code.png
+      :alt: The $group stage
+
+   3. Now we can input code for the ``$group`` stage. We will provide an ``_id``, which is the field that the Aggregation Framework will use to create our groups. In this case, we will use ``$address.suburb`` as our ``_id``. Inside of the $group stage, we will also create a new field named ``averagePrice``. We can use the `$avg <https://docs.mongodb.com/manual/reference/operator/aggregation/avg/index.html>`__ aggregation pipeline operator to calculate the average price for each suburb. Replace the code in the $group stage's code box with the following:
+
+   .. code-block:: json 
+
+      {
+        _id: "$address.suburb",
+        averagePrice: {
+          "$avg": "$price"
+        }
+      }
+
+   The Aggregation Pipeline Builder automatically updates the output on the right side of the row to show a sample of 20 documents that will be included in the results after the ``$group`` stage is executed. Note that the documents have been transformed. Instead of having a document for each listing, we now have a document for each suburb. The suburb documents have only two fields: ``_id`` (the name of the suburb) and ``averagePrice``.
+
+   .. image:: /images/node-quickstart/group-output.png
+      :alt: $group stage output
+
+   Add a $sort Stage
+   ~~~~~~~~~~~~~~~~~
+
+   Now that we have the average prices for suburbs in the Sydney, Australia market, we are ready to sort them to discover which are the least expensive. We can do so by using the `$sort <https://docs.mongodb.com/manual/reference/operator/aggregation/sort/>`__ stage.
+
+   1. Click **ADD STAGE**. A new stage appears in the pipeline.
+
+   2. On the row representing the new stage of the pipeline, choose **$sort** in the **Select**... box. The Aggregation Pipeline Builder automatically provides sample code for how to use the ``$sort`` operator in the code box for the stage.
+
+   .. image:: /images/node-quickstart/sort-code.png
+      :alt: The $sort stage
+
+   3. Now we are ready to input code for the ``$sort`` stage. We will sort on the ``$averagePrice`` field we created in the previous stage. We will indicate we want to sort in ascending order by passing 1. Replace the code in the $sort stage's code box with the following:
+
+   .. code-block:: json
+
+      {
+        "averagePrice": 1
+      }
+
+   The Aggregation Pipeline Builder automatically updates the output on the right side of the row to show a sample of 20 documents that will be included in the results after the ``$sort`` stage is executed. Note that the documents have the same shape as the documents in the previous stage; the documents are simply sorted from least to most expensive.
+
+   .. image:: /images/node-quickstart/sort-output.png
+      :alt: $sort stage output
+
+   Add a $limit Stage
+   ~~~~~~~~~~~~~~~~~~
+
+   Now we have the average prices for suburbs in the Sydney, Australia market sorted from least to most expensive. We may not want to work with all of the suburb documents in our application. Instead, we may want to limit our results to the ten least expensive suburbs. We can do so by using the `$limit <https://docs.mongodb.com/manual/reference/operator/aggregation/limit/>`__ stage.
+
+   1. Click **ADD STAGE**. A new stage appears in the pipeline.
+
+   2. On the row representing the new stage of the pipeline, choose **$limit** in the **Select**... box. The Aggregation Pipeline Builder automatically provides sample code for how to use the ``$limit`` operator in the code box for the stage.
+
+   .. image:: /images/node-quickstart/limit-code.png
+      :alt: The $limit stage
+
+   3. Now we are ready to input code for the ``$limit`` stage. Let's limit our results to ten documents. Replace the code in the $limit stage's code box with the following:
+
+   .. code-block:: json 
+
+      10
+
+   The Aggregation Pipeline Builder automatically updates the output on the right side of the row to show a sample of ten documents that will be included in the results after the ``$limit`` stage is executed. Note that the documents have the same shape as the documents in the previous stage; we've simply limited the number of results to ten.
+   
+   .. image:: /images/node-quickstart/limit-output.png
+      :alt: $limit stage output
+
+   Execute an Aggregation Pipeline in Node.js
+   ------------------------------------------
+
+   Now that we have built an aggregation pipeline, let's execute it from inside of a Node.js script.
+
+   Get a Copy of the Node.js Template
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   To make following along with this blog post easier, I've created a starter template for a Node.js script that accesses an Atlas cluster.
+
+   1. Download a copy of `template.js <https://github.com/mongodb-developer/nodejs-quickstart/blob/master/template.js>`__.
+   2. Open template.js in your favorite code editor.
+   3. Update the Connection URI to point to your Atlas cluster. If you're not sure how to do that, refer back to the `first post in this series <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__.
+   4. Save the file as ``aggregation.js``.
+
+   You can run this file by executing ``node aggregation.js`` in your shell. At this point, the file simply opens and closes a connection to your Atlas cluster, so no output is expected. If you see DeprecationWarnings, you can ignore them for the purposes of this post.
+
+   Create a Function
+   ~~~~~~~~~~~~~~~~~
+
+   Let's create a function whose job it is to print the cheapest suburbs for a given market.
+
+   1. Continuing to work in aggregation.js, create an asynchronous function named ``printCheapestSuburbs`` that accepts a connected MongoClient, a country, a market, and the maximum number of results to print as parameters.
+
+   .. code-block:: js 
+
+      async function printCheapestSuburbs(client, country, market, maxNumberToPrint) {
+      }
+
+   2. We can execute a pipeline in Node.js by calling `Collection <https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html>`__'s `aggregate() <https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#aggregate>`__. Paste the following in your new function:
+
+   .. code-block:: js
+
+      const pipeline = [];
+ 
+      const aggCursor = client.db("sample_airbnb")
+                              .collection("listingsAndReviews")
+                              .aggregate(pipeline);
+
+   3. ``aggregate()`` has one required param: a pipeline of type object. We could manually create the pipeline here. Since we've already created a pipeline inside of Atlas, let's export the pipeline from there. Return to the Aggregation Pipeline Builder in Atlas. Click the **Export pipeline code to language** button.
+
+   .. image:: /images/node-quickstart/export-pipeline.png
+      :alt: Export pipeline in Atlas
+
+   4. The **Export Pipeline To Language** dialog appears. In the **Export Pipleine To** selection box, choose **NODE**.
+
+   5. In the Node pane on the right side of the dialog, click the **copy** button.
+
+   6. Return to your code editor and paste the ``pipeline`` in place of the empty object currently assigned to the pipeline constant.
+
+   .. code-block:: js
+
+      const pipeline = [
+        {
+          '$match': {
+             'bedrooms': 1,
+             'address.country': 'Australia', 
+             'address.market': 'Sydney', 
+             'address.suburb': {
+               '$exists': 1, 
+               '$ne': ''
+             }, 
+             'room_type': 'Entire home/apt'
+           }
+        }, {
+          '$group': {
+             '_id': '$address.suburb', 
+             'averagePrice': {
+               '$avg': '$price'
+             }
+           }
+        }, {
+          '$sort': {
+            'averagePrice': 1
+           }
+        }, {
+          '$limit': 10
+        }
+      ];
+
+   7. This pipeline would work fine as written. However, it is hardcoded to search for ten results in the Sydney, Australia market. We should update this pipeline to be more generic. Make the following replacements in the pipeline definition:
+
+   1. Replace ``'Australia'`` with ``country``
+   2. Replace ``'Sydney'`` with ``market``
+   3. Replace ``10`` with ``maxNumberToPrint``
+
+   8. ``aggregate()`` will return an `AggregationCursor <https://mongodb.github.io/node-mongodb-native/3.3/api/AggregationCursor.html>`__, which we are storing in the ``aggCursor`` constant. An AggregationCursor allows traversal over the aggregation pipeline results. We can use AggregationCursor's `forEach() <https://mongodb.github.io/node-mongodb-native/3.3/api/AggregationCursor.html#forEach>`__ to iterate over the results. Paste the following inside ``printCheapestSuburbs()`` below the definition of ``aggCursor``.
+
+   .. code-block:: js 
+
+      await aggCursor.forEach(airbnbListing => {
+        console.log(`${airbnbListing._id}: ${airbnbListing.averagePrice}`);
+      });
+
+   Call the Function
+   ~~~~~~~~~~~~~~~~~
+
+   Now we are ready to call our function to print the ten cheapest suburbs in the Sydney, Australia market. Add the following call in the ``main()`` function beneath the comment that says ``Make the appropriate DB calls``.
+
+   .. code-block:: js 
+
+      await printCheapestSuburbs(client, "Australia", "Sydney", 10);
+
+   Running aggregation.js results in the following output:
+
+   .. code-block:: json 
+
+      Balgowlah: 45.00
+      Willoughby: 80.00
+      Marrickville: 94.50
+      St Peters: 100.00
+      Redfern: 101.00
+      Cronulla: 109.00
+      Bellevue Hill: 109.50
+      Kingsgrove: 112.00
+      Coogee: 115.00
+      Neutral Bay: 119.00
+
+   Now I know what suburbs to begin searching as I prepare for my trip to Sydney, Australia.
+
+.. summary::
+
+   Wrapping Up
+   -----------
+
+   The aggregation framework is an incredibly powerful way to analyze your data. Creating pipelines may seem a little intimidating at first, but it's worth the investment. The aggregation framework can get results to your end-users faster and save you from a lot of scripting.
+
+   Today, we only scratched the surface of the aggregation framework. I highly recommend MongoDB University's free course specifically on the aggregation framework: `M121: The MongoDB Aggregation Framework <https://university.mongodb.com/courses/M121/about>`__. The course has a more thorough explanation of how the aggregation framework works and provides detail on how to use the various pipeline stages.
+
+   This post included many code snippets that built on code written in the `first <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__ post of this MongoDB and Node.js Quick Start series. To get a full copy of the code used in today's post, visit the `Node.js Quick Start GitHub Repo <https://github.com/mongodb-developer/nodejs-quickstart/blob/master/aggregation.js>`__.
+
+   Be on the lookout for the next post in this series where we'll discuss change streams.
+
+   Series Versions
+   ---------------
+
+   The examples in this article were created with the following application versions:
+
+   .. list-table::
+      :header-rows: 1
+
+      * - Component
+        - Version used
+      * - MongoDB
+        - 4.0
+      * - MongoDB Node.js Driver
+        - 3.3.2
+      * - Node.js
+        - 10.16.3
+
+   All Posts in the *Quick Start: Node.js and MongoDB* Series:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   -  `How to connect to a MongoDB database using Node.js <https://developer.mongodb.com/quickstart/node-connect-mongodb>`__
+   -  `How to execute the CRUD Operations with MongoDB & Node.js <https://developer.mongodb.com/quickstart/node-crud-tutorial>`__
+   -  How to analyze your data using MongoDB's Aggregation Framework and Node.js (this post)
+   -  `How to implement transactions using Node.js <https://developer.mongodb.com/quickstart/node-transactions>`__
+   -  `How to react to database changes with change streams and triggers <https://developer.mongodb.com/quickstart/nodejs-change-streams-triggers>`__
+
+   Questions? Comments? We'd love to connect with you. Join the conversation on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.

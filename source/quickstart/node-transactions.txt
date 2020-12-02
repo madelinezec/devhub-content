@@ -1,0 +1,504 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/quickstart/nodejs.png
+
+.. meta-description::
+
+   Discover how to implement multi-document transactions in MongoDB using Node.js.
+
+.. twitter::
+   :creator: @Lauren_Schaefer
+   :title: How to Use MongoDB Transactions in Node.js
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developer
+
+   Discover how to implement multi-document transactions in MongoDB using Node.js.
+
+.. og::
+   :title: How to Use MongoDB Transactions in Node.js
+   :image: /images/social/open-graph/og-pink-pattern.png
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-12-01
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. tags::
+
+   * Node.js
+
+.. languages::
+
+   * JavaScript
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. related::
+
+   * `Video: How to perform the CRUD operations using MongoDB & Node.js <https://www.mongodb.com/blog/post/quick-start-video-nodejs--mongodb--the-crud-operations>`__
+   * `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-analyze-data-using-the-aggregation-framework>`__
+   * `How to implement transactions using Node.js <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-implement-transactions>`__
+
+==========================================
+How to Use MongoDB Transactions in Node.js
+==========================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-nodejs.png
+      :alt: QuickStart Node.js Logo
+      :scale: 30%
+      :align: right
+
+   Developers who move from relational databases to MongoDB commonly ask, "Does MongoDB support ACID transactions? If so, how do you create a transaction?" The answer to the first question is, "Yes!"
+
+   Beginning in 4.0 MongoDB added support for `multi-document ACID transactions <https://www.mongodb.com/press/mongodb-announces-multi-document-acid-transactions-in-release-40>`__, and beginning in 4.2 MongoDB added support for `distributed ACID transactions <https://www.mongodb.com/press/mongodb-42-adds-distributed-transactions-field-level-encryption-updated-kubernetes-operator-and-more-to-the-leading-modern-general-purpose-database>`__. If you're not familiar with what ACID transactions are or if you should be using them in MongoDB, check out my `earlier post <https://www.mongodb.com/blog/post/mongodb-qa-whats-the-deal-with-data-integrity-in-relational-databases-vs-mongodb>`__ on the subject.
+
+   For those of you just joining us in this Quick Start with MongoDB and Node.js series, welcome! We began by walking through how to `connect to MongoDB <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__ and perform each of the CRUD — `create <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-create-documents>`__, `read <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-read-documents>`__, `update <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-update-documents>`__, and `delete <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-delete-documents>`__ — operations. Then we jumped into more advanced topics like the aggregation framework.
+
+   The code we write today will use the same structure as the code we built in the first post in the series, so, if you have any questions about how to get started or how the code is structured, `head back to that first post <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__.
+
+   Now let's dive into that second question developers ask--let's discover how to create a transaction!
+
+   .. image:: /images/node-quickstart/giphy-xei4uavnsz.gif
+      :alt: Are you on acid?
+
+   .. blockquote::
+
+      Get started with an M0 cluster on `Atlas <https://www.mongodb.com/cloud/atlas>`__ today. It's free forever, and it's the easiest way to try out the steps in this blog series.
+
+.. content::
+
+   Creating an Airbnb Reservation
+   ------------------------------
+
+   As you may have experienced while working with MongoDB, most use cases do not require you to use multi-document transactions. When you model your data using our rule of thumb **Data that is accessed together should be stored together**, you'll find that you rarely need to use a multi-document transaction. In fact, I struggled a bit to think of a use case for the Airbnb dataset that would require a multi-document transaction.
+
+   After a bit of brainstorming, I came up with a somewhat plausible example. Let's say we want to allow users to create reservations in the ``sample_airbnb database``.
+
+   We could begin by creating a collection named users. We want users to be able to easily view their reservations when they are looking at their profiles, so we will store the reservations as embedded documents in the users collection. For example, let's say a user named Leslie creates two reservations. Her document in the users collection would look like the following:
+
+   .. code-block:: json
+
+      {
+        "_id": {"$oid":"5dd589544f549efc1b0320a5"},
+        "email": "leslie@example.com",
+        "name": "Leslie Yepp",
+        "reservations":  [
+          {
+            "name":"Infinite Views",
+            "dates": [
+               {"$date": {"$numberLong":"1577750400000"}},
+               {"$date": {"$numberLong":"1577836800000"}}
+            ],
+            "pricePerNight": {"$numberInt":"180"},
+            "specialRequests": "Late checkout",
+            "breakfastIncluded":true
+          },
+          {
+            "name": "Lovely Loft",
+             "dates": [
+               {"$date": {"$numberLong": "1585958400000"}}
+            ],
+            "pricePerNight": {"$numberInt":"210"}
+            "breakfastIncluded":false
+          }
+        ]
+      }
+
+   When browsing Airbnb listings, users need to know if the listing is already booked for their travel dates. As a result we want to store the dates the listing is reserved in the ``listingsAndReviews`` collection. For example, the "Infinite Views" listing that Leslie reserved should be updated to list her reservation dates.
+
+   .. code-block:: json
+
+      {
+        "_id": {"$oid":"5dbc20f942073d6d4dabd730"},
+        "name":"Infinite Views",
+        "summary":"Modern home with infinite views from the infinity pool",
+        "property_type": "House",
+        "bedrooms": {"$numberInt": "6"},
+        "bathrooms":{"$numberDouble":"4.5"},
+        "beds":{"$numberInt":"8"},
+        "datesReserved": [
+          {"$date": {"$numberLong": "1577750400000"}},
+          {"$date": {"$numberLong": "1577836800000"}}
+        ]
+      }
+
+   Keeping these two records in sync is imperative. If we were to create a reservation in a document in the users collection without updating the associated document in the ``listingsAndReviews`` collection, our data would be inconsistent. We can use a multi-document transaction to ensure both updates succeed or fail together.
+
+   Set Up
+   ------
+
+   As with all posts in this MongoDB and Node.js Quick Start series, you'll need to ensure you've completed the prerequisite steps outlined in the **Set up** section of the `first post in this series <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__.
+
+   We'll be using the "Infinite Views" Airbnb listing we created in a previous post in this series. Hop back to the `post on Creating Documents <https://www.mongodb.com/blog/post/quick-start-nodejs--mongodb--how-to-create-documents>`__ if your database doesn't currently have the Infinite Views listing.
+
+   The Airbnb sample dataset only has the listingsAndReviews collection by default. To help you quickly create the necessary collection and data, I wrote `usersCollection.js <https://github.com/mongodb-developer/nodejs-quickstart/blob/master/usersCollection.js>`__. Download a copy of the file, update the uri constant to reflect your Atlas connection info, and run it by executing ``node usersCollection.js``. The script will create three new users in the users collection: Leslie Yepp, April Ludfence, and Tom Haverdodge. If the users collection does not already exist, MongoDB will automatically create it for you when you insert the new users. The script also creates an index on the ``email`` field in the users collection. The index requires that every document in the users collection has a unique ``email``.
+
+   Create a Transaction in Node.js
+   -------------------------------
+
+   Now that we are set up, let's implement the functionality to store Airbnb reservations.
+
+   Get a Copy of the Node.js Template
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   To make following along with this blog post easier, I've created a starter template for a Node.js script that accesses an Atlas cluster.
+
+   1. Download a copy of `template.js <https://github.com/mongodb-developer/nodejs-quickstart/blob/master/template.js>`__.
+   2. Open template.js in your favorite code editor.
+   3. Update the Connection URI to point to your Atlas cluster. If you're not sure how to do that, refer back to the `first post in this series <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__.
+   4. Save the file as ``transaction.js``.
+
+   You can run this file by executing ``node transaction.js`` in your shell. At this point, the file simply opens and closes a connection to your Atlas cluster, so no output is expected. If you see DeprecationWarnings, you can ignore them for the purposes of this post.
+
+   Create a Helper Function
+   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Let's create a helper function. This function will generate a reservation document that we will use later.
+
+   1. Paste the following function in ``transaction.js``:
+
+   .. code-block:: js
+
+      function createReservationDocument(nameOfListing, reservationDates, reservationDetails) {
+            // Create the reservation
+            let reservation = {
+                name: nameOfListing,
+                dates: reservationDates,
+            }
+      
+            // Add additional properties from reservationDetails to the reservation
+            for (let detail in reservationDetails) {
+                reservation[detail] = reservationDetails[detail];
+            }
+      
+            return reservation;
+        }
+
+   To give you an idea of what this function is doing, let me show you an example. We could call this function from inside of ``main()``:
+
+   .. code-block:: js
+
+      createReservationDocument("Infinite Views",
+          [new Date("2019-12-31"), new Date("2020-01-01")],
+          { pricePerNight: 180, specialRequests: "Late checkout", breakfastIncluded: true });
+
+   The function would return the following:
+
+   .. code-block:: js
+
+      { 
+         name: 'Infinite Views',
+         dates: [ 2019-12-31T00:00:00.000Z, 2020-01-01T00:00:00.000Z ],
+         pricePerNight: 180,
+         specialRequests: 'Late checkout',
+         breakfastIncluded: true 
+      }
+
+   Create a Function for the Transaction
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Let's create a function whose job is to create the reservation in the database.
+
+   1. Continuing to work in transaction.js, create an asynchronous function named ``createReservation``. The function should accept a MongoClient, the user's email address, the name of the Airbnb listing, the reservation dates, and any other reservation details as parameters.
+
+   .. code-block:: js
+
+      async function createReservation(client, userEmail, nameOfListing, reservationDates, reservationDetails) {
+      }
+
+   2. Now we need to access the collections we will update in this function. Add the following code to ``createReservation()``.
+
+   .. code-block:: js
+
+      const usersCollection = client.db("sample_airbnb").collection("users");
+      const listingsAndReviewsCollection = client.db("sample_airbnb").collection("listingsAndReviews");
+
+   3. Let's create our reservation document by calling the helper function we created in the previous section. Paste the following code in ``createReservation()``.
+
+   .. code-block:: js
+
+      const reservation = createReservationDocument(nameOfListing, reservationDates, reservationDetails);
+
+   4. Every transaction and its operations must be associated with a session. Beneath the existing code in ``createReservation()``, start a session.
+
+   .. code-block:: js
+
+      const session = client.startSession();
+
+   5. We can choose to define options for the transaction. We won't get into the details of those here. You can learn more about these options in the `driver documentation <https://mongodb.github.io/node-mongodb-native/3.3/api/global.html#TransactionOptions>`__. Paste the following beneath the existing code in ``createReservation()``.
+
+   .. code-block:: js
+
+      const transactionOptions = {
+       readPreference: 'primary',
+       readConcern: { level: 'local' },
+       writeConcern: { w: 'majority' }
+      };
+
+   6. Now we're ready to start working with our transaction. Beneath the existing code in ``createReservation()``, open a ``try{}`` block, follow it with a ``catch{}`` block, and finish it with a ``finally{}`` block.
+
+   .. code-block:: js
+
+      try {
+
+      } catch(e){
+   
+      } finally {
+   
+      }
+
+   7. We can use ClientSession's `withTransaction() <https://mongodb.github.io/node-mongodb-native/3.3/api/ClientSession.html#withTransaction>`__ to start a transaction, execute a callback function, and commit (or abort on error) the transaction. ``withTransaction()`` requires us to pass a function that will be run inside the transaction. Add a call to ``withTransaction()`` inside of ``try`` {}. Let's begin by passing an anonymous asynchronous function to ``withTransaction()``.
+
+   .. code-block:: js
+
+      const transactionResults = await session.withTransaction(async () => {}, transactionOptions);
+
+   8. The anonymous callback function we are passing to ``withTransaction()`` doesn't currently do anything. Let's start to incrementally build the database operations we want to call from inside of that function. We can begin by adding a reservation to the reservations array inside of the appropriate user document. Paste the following inside of the anonymous function that is being passed to ``withTransaction()``.
+
+   .. code-block:: js
+
+      const usersUpdateResults = await usersCollection.updateOne(
+          { email: userEmail },
+          { $addToSet: { reservations: reservation } },
+          { session });
+      console.log(`${usersUpdateResults.matchedCount} document(s) found in the users collection with the email address ${userEmail}.`);
+      console.log(`${usersUpdateResults.modifiedCount} document(s) was/were updated to include the reservation.`);
+
+   9. Since we want to make sure that an Airbnb listing is not double-booked for any given date, we should check if the reservation date is already listed in the listing's ``datesReserved`` array. If so, we should abort the transaction. Aborting the transaction will rollback the update to the user document we made in the previous step. Paste the following beneath the existing code in the anonymous function.
+
+   .. code-block:: js
+
+      const isListingReservedResults = await listingsAndReviewsCollection.findOne(
+            { name: nameOfListing, datesReserved: { $in: reservationDates } },
+            { session });
+      if (isListingReservedResults) {
+            await session.abortTransaction();
+            console.error("This listing is already reserved for at least one of the given dates. The reservation could not be created.");
+            console.error("Any operations that already occurred as part of this transaction will be rolled back.");
+            return;
+         }
+
+   10. The final thing we want to do inside of our transaction is add the reservation dates to the ``datesReserved`` array in the ``listingsAndReviews`` collection. Paste the following beneath the existing code in the anonymous function.
+
+   .. code-block:: js
+
+      const listingsAndReviewsUpdateResults = await listingsAndReviewsCollection.updateOne(
+          { name: nameOfListing },
+          { $addToSet: { datesReserved: { $each: reservationDates } } },
+          { session });
+      console.log(`${listingsAndReviewsUpdateResults.matchedCount} document(s) found in the listingsAndReviews collection with the name ${nameOfListing}.`);
+      console.log(`${listingsAndReviewsUpdateResults.modifiedCount} document(s) was/were updated to include the reservation dates.`);
+
+   11. We'll want to know if the transaction succeeds. If ``transactionResults`` is defined, we know the transaction succeeded. If ``transactionResults`` is undefined, we know that we aborted it intentionally in our code. Beneath the definition of the ``transactionResults`` constant, paste the following code.
+
+   .. code-block:: js
+
+      if (transactionResults) {
+           console.log("The reservation was successfully created.");
+      } else {
+           console.log("The transaction was intentionally aborted.");
+      }
+
+   12. Let's log any errors that are thrown. Paste the following inside of ``catch(e){ }``:
+
+   .. code-block:: js
+
+      console.log("The transaction was aborted due to an unexpected error: " + e);
+
+   13. Regardless of what happens, we need to end our session. Paste the following inside of ``finally { }``:
+
+   .. code-block:: js
+
+      await session.endSession();
+
+   At this point, your function should look like the following:
+
+   .. code-block:: js
+
+      async function createReservation(client, userEmail, nameOfListing, reservationDates, reservationDetails) {
+ 
+          const usersCollection = client.db("sample_airbnb").collection("users");
+          const listingsAndReviewsCollection = client.db("sample_airbnb").collection("listingsAndReviews");
+       
+          const reservation = createReservationDocument(nameOfListing, reservationDates, reservationDetails);
+       
+          const session = client.startSession();
+       
+          const transactionOptions = {
+              readPreference: 'primary',
+              readConcern: { level: 'local' },
+              writeConcern: { w: 'majority' }
+          };
+       
+          try {
+              const transactionResults = await session.withTransaction(async () => {
+       
+                  const usersUpdateResults = await usersCollection.updateOne(
+                      { email: userEmail },
+                      { $addToSet: { reservations: reservation } },
+                      { session });
+                  console.log(`${usersUpdateResults.matchedCount} document(s) found in the users collection with the email address ${userEmail}.`);
+                  console.log(`${usersUpdateResults.modifiedCount} document(s) was/were updated to include the reservation.`);
+       
+       
+                  const isListingReservedResults = await listingsAndReviewsCollection.findOne(
+                      { name: nameOfListing, datesReserved: { $in: reservationDates } },
+                      { session });
+                  if (isListingReservedResults) {
+                      await session.abortTransaction();
+                      console.error("This listing is already reserved for at least one of the given dates. The reservation could not be created.");
+                      console.error("Any operations that already occurred as part of this transaction will be rolled back.");
+                      return;
+                  }
+       
+                  const listingsAndReviewsUpdateResults = await listingsAndReviewsCollection.updateOne(
+                      { name: nameOfListing },
+                      { $addToSet: { datesReserved: { $each: reservationDates } } },
+                      { session });
+                  console.log(`${listingsAndReviewsUpdateResults.matchedCount} document(s) found in the listingsAndReviews collection with the name ${nameOfListing}.`);
+                  console.log(`${listingsAndReviewsUpdateResults.modifiedCount} document(s) was/were updated to include the reservation dates.`);
+       
+              }, transactionOptions);
+       
+              if (transactionResults) {
+                  console.log("The reservation was successfully created.");
+              } else {
+                  console.log("The transaction was intentionally aborted.");
+              }
+          } catch(e){
+              console.log("The transaction was aborted due to an unexpected error: " + e);
+          } finally {
+              await session.endSession();
+          }
+       
+      }
+
+   Call the Function
+   -----------------
+   
+   Now that we've written a function that creates a reservation using a transaction, let's try it out! Let's create a reservation for Leslie at the Infinite Views listing for the nights of December 31, 2019 and January 1, 2020.
+
+   1. Inside of ``main()`` beneath the comment that says ``Make the appropriate DB calls``, call your ``createReservation()`` function:
+
+   .. code-block:: js
+
+      await createReservation(client,
+           "leslie@example.com",
+           "Infinite Views",
+           [new Date("2019-12-31"), new Date("2020-01-01")],
+           { pricePerNight: 180, specialRequests: "Late checkout", breakfastIncluded: true });
+
+   2. Save your file.
+  
+   3. Run your script by executing ``node transaction.js`` in your shell.
+
+   4. The following output will be displayed in your shell.
+
+   .. code-block:: bash
+
+      1 document(s) found in the users collection with the email address leslie@example.com.
+      1 document(s) was/were updated to include the reservation.
+      1 document(s) found in the listingsAndReviews collection with the name Infinite Views.
+      1 document(s) was/were updated to include the reservation dates.
+      The reservation was successfully created.
+
+   Leslie's document in the users collection now contains the reservation.
+
+   .. code-block:: js
+
+      {
+        "_id": {"$oid":"5dd68bd03712fe11bebfab0c"},
+        "email":"leslie@example.com",
+        "name":"Leslie Yepp",
+        "reservations": [
+          {
+            "name":"Infinite Views", "dates": [
+              {"$date": {"$numberLong":"1577750400000"}},
+              {"$date": {"$numberLong":"1577836800000"}}
+              ],
+            "pricePerNight": {"$numberInt":"180"},
+            "specialRequests": "Late checkout",
+            "breakfastIncluded":true
+          }
+        ]
+      }
+
+   The "Infinite Views" listing in the ``listingsAndReviews`` collection now contains the reservation dates.
+
+   .. code-block:: js
+
+      {
+        "_id": {"$oid": "5dbc20f942073d6d4dabd730"},
+        "name": "Infinite Views",
+        "summary": "Modern home with infinite views from the infinity pool",
+        "property_type": "House",
+        "bedrooms": {"$numberInt":"6"},
+        "bathrooms": {"$numberDouble":"4.5"},
+        "beds": {"$numberInt":"8"},
+        "datesReserved": [
+          {"$date": {"$numberLong": "1577750400000"}},
+          {"$date": {"$numberLong": "1577836800000"}}
+        ]
+      }
+
+.. summary::
+
+   Wrapping Up
+   -----------
+
+   Today we implemented a multi-document transaction. Transactions are really handy when you need to make changes to more than one document as an all-or-nothing operation.
+
+   Be sure you are using the correct read and write concerns when creating a transaction. See the `MongoDB documentation <https://docs.mongodb.com/manual/core/transactions/#read-concern-write-concern-read-preference>`__ for more information.
+
+   When you use relational databases, related data is commonly split between different tables in an effort to normalize the data. As a result, transaction usage is fairly common.
+
+   When you use MongoDB, data that is accessed together should be stored together. When you model your data this way, you will likely find that you rarely need to use transactions.
+
+   This post included many code snippets that built on code written in the `first <https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database>`__ post of this MongoDB and Node.js Quick Start series. To get a full copy of the code used in today's post, visit the `Node.js Quick Start GitHub Repo <https://github.com/mongodb-developer/nodejs-quickstart/blob/master/transaction.js>`__.
+
+   Be on the lookout for the next post in this series where we'll discuss change streams.
+
+   Additional Resources
+   --------------------
+
+   * `MongoDB official documentation: Transactions <https://docs.mongodb.com/manual/core/transactions/>`__
+   * `MongoDB documentation: Read Concern/Write Concern/Read Preference <https://docs.mongodb.com/manual/core/transactions/#read-concern-write-concern-read-preference>`__
+   * `Blog post: What's the deal with data integrity in relational databases vs MongoDB? <https://www.mongodb.com/blog/post/mongodb-qa-whats-the-deal-with-data-integrity-in-relational-databases-vs-mongodb>`__
+   * `Informational page with videos and links to additional resources: ACID Transactions in MongoDB <https://www.mongodb.com/transactions>`__
+   * `Whitepaper: MongoDB Multi-Document ACID Transactions <https://www.mongodb.com/collateral/mongodb-multi-document-acid-transactions>`__
+
+   Series Versions
+   ---------------
+
+   The examples in this article were created with the following application versions:
+
+   .. list-table::
+      :header-rows: 1
+
+      * - Component
+        - Version used
+      * - MongoDB
+        - 4.0
+      * - MongoDB Node.js Driver
+        - 3.3.2
+      * - Node.js
+        - 10.16.3
+
+   All Posts in the *Quick Start: Node.js and MongoDB* Series:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   -  `How to connect to a MongoDB database using Node.js <https://developer.mongodb.com/quickstart/node-connect-mongodb>`__
+   -  `How to execute the CRUD Operations with MongoDB & Node.js <https://developer.mongodb.com/quickstart/node-crud-tutorial>`__
+   -  `How to analyze your data using MongoDB's Aggregation Framework and Node.js <https://developer.mongodb.com/quickstart/node-aggregation-framework>`__
+   -  How to implement transactions using Node.js (this post)
+   -  `How to react to database changes with change streams and triggers <https://developer.mongodb.com/quickstart/nodejs-change-streams-triggers>`__
+
+   Questions? Comments? We'd love to connect with you. Join the conversation on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.
