@@ -1,0 +1,354 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
+.. meta-description:: 
+
+   Learn about the MongoDB Podcast
+
+.. twitter::
+   :creator: @mlynn
+   :title: Behind the Scenes of the MongoDB Podcast
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
+   :image-alt: Schema Design Patterns
+
+   Behind the Scenes of the MongoDB Podcast
+
+.. og::
+   :title: Behind the Scenes of the MongoDB Podcast
+   :image: /images/social/open-graph/og-mongodb-podcast.png
+ 
+   Behind the Scenes of the MongoDB Podcast
+
+.. include:: /includes/authors/lynn-michael.rst
+
+.. type:: article
+
+.. pubdate:: 2020-12-03
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Podcast
+
+.. products::
+
+   * MongoDB
+
+========================================
+Behind the Scenes of the MongoDB Podcast
+========================================
+
+.. introduction::
+
+   If you're like me, podcasts have become an important part of your news and information diet. I listen to approximately eight to 10 podcasts weekly
+   and frankly, it's where I tend to get much of my developer-related information.  
+   
+   This is precisely why, when the idea of creating a `MongoDB-focused podcast <https://mongodb.com/podcast>`__ was raised, I immediately volunteered. 
+
+   In this article, I'll share details about `this podcast <https://mongodb.com/podcast>`__ such as our tools, equipment, and our process for recording, producing, and 
+   publishing. In sharing, it's my hope that you'll be inspired to create something, listen to our show, or even become a guest and share your experience
+   with our growing audience.
+
+   To begin, I'd like to answer some of the basic questions: Who, Why, and What. Who is responsible for producing and publishing the podcast?
+   Why do we do what we do? What are the tools and the processes we use to produce the podcast?
+
+   As `Simon Synek <https://startwithwhy.com>`__ suggests, let's start with Why.
+
+   Why (Produce This Podcast?)
+   ---------------------------
+
+   Podcasting is a relatively new but swiftly growing medium. Listeners have flocked to podcasts in search of fresh, relevant content about subjects
+   that change so rapidly that conventional media channels can't keep up. 
+
+   The MongoDB Podcast started as an experiment. It was a best-efforts project that we tried to keep under the wire
+   while we experimented with formats, guests, and show lengths. Once we started to incorporate changes in line with listenership, the increases
+   in the number of listeners and positive comments frankly took us by surprise. In the first three months, we went from zero listeners to 
+   approximately 2,500 unique listeners per month. Still fairly meager in comparison to some of the larger, more established podcasts
+   but obviously, we all have to start somewhere.
+
+   What we proved with our early experimentation was that there is a demand for fresh, engaging content about software, data, and things related to 
+   MongoDB. So long as people continue to listen, we'll continue sourcing interesting topics for conversation and producing more episodes. 
+
+   Who (Produces This Podcast?)
+   ----------------------------
+
+   The podcast team is small. There are only three of us working on the show at the time of this writing. In addition to the folks mentioned below, we're supported by the MongoDB Design team, 
+   the Web team, our Tech Support team, and countless other dedicated MongoDB employees always ready to pitch in on an episode, sharing their expertise and experience. 
+
+   Nic Raboy
+   ~~~~~~~~~
+
+   .. image:: /images/article/about-mongodb-podcast/nraboy.jpg
+      :alt: Nic Raboy
+      :scale: 50%
+
+   `Nic is a Developer Advocate <https://www.nraboy.com>`__ here at MongoDB. His experience is surprising given his age. I think the reason for this is that he's constantly
+   busy working on one project or another. Nic specializes in JavaScript, Go, and recently published a series on Game Development 
+   with Unity and MongoDB. When he's not working on the podcast, you can find him on the MongoDB twitch stream at https://twitch.tv/mongodb.
+
+   Rebecca Mosner
+   ~~~~~~~~~~~~~~
+
+   .. image:: /images/article/about-mongodb-podcast/rebecca_mosner.jpg
+      :alt: Rebecca Mosner
+
+   `Rebecca <https://www.linkedin.com/in/rebecca-mosner-3684669a/>`__ is head of our Social Media department and leads the team responsible for all that amazing content you see on `Twitter <https://twitter.com/mongodb>`__, `Instagram <https://instagram.com/mongodb>`__,
+   and other social channels. In addition, Rebecca is a producer on the podcast, helping with strategy and even contributing content when we can convince her to get on the microphone.
+
+   Michael Lynn
+   ~~~~~~~~~~~~
+
+   .. image:: /images/article/about-mongodb-podcast/mlynn.jpg
+      :alt: Michael Lynn
+      :scale: 50%
+
+   That's `me <https://www.linkedin.com/in/mlynn/>`__! I'm a software engineer, and a developer advocate at MongoDB. In previous roles, I've been in pre-sales, and have
+   led teams of engineers and architects at a Fortune 50 financial firm. When I'm not planning, recording, or editing a podcast episode, you'll likely find me working on a software project, or at the gym, or possibly running outdoors.
+
+   What (Tools and Processes Do We Use?)
+   -------------------------------------
+   
+   There are several categories of tools that a podcaster will need in order to create and publish. Here is a list of the hardware I use. This is not intended to be a recommendation and if you intend to make a purchase, please do the research to find out if these items will work for your specific set-up. Additionally, I welcome your feedback and questions.
+
+   .. image:: /images/article/about-mongodb-podcast/mikes-setup.png
+      :alt: Here's what Mike's setup looks like
+
+   Hardware
+   --------
+
+   Here's a list of the equipment I use. These items are simply what we use for this podcast. Your mileage may vary and I welcome comments and feedback. Visit the `Community Forums <https://developer.mongodb.com/community/forums/t/whats-your-set-up/12056>`__.
+
+   Computers
+   ~~~~~~~~~
+
+   * `Lenovo Legion T730-28ICO <https://www.cdw.com/product/lenovo-legion-t730-28ico-tower-core-i9-9900k-3.6-ghz-32-gb-ssd-1-tb/6170746?pfm=srh#AA>`__ - Core i9 9900K 3.6 GHz - 32 GB - SSD 1 TB (Windows 10) (Note: this computer has some serious power. Probably more than is needed to simply record a podcast. I also use this for audio, video processing and for streaming.)
+
+   .. image:: /images/article/about-mongodb-podcast/lenovo-tower.png
+      :alt: Lenovo Legion T730-28ICO
+
+   * `MacBook Pro (15-inch, 2019) <https://www.apple.com/shop/buy-mac/macbook-pro/16-inch-space-gray-2.6ghz-6-core-processor-512gb>`__ 2.3 GHz 8-Core Intel Core i9, 32 GB 2400 MHz DDR4 
+
+   .. image:: /images/article/about-mongodb-podcast/macbook-pro.jpg
+      :alt: MacBook Pro
+   
+   Microphone
+   ~~~~~~~~~~
+
+   * `Audio-Technica AT2020USB+ Cardioid Condenser USB Microphone <https://www.bhphotovideo.com/c/product/911194-REG/audio_technica_at2020usb_cardioid_condenser_microphone.html>`__  This provides great sound quality.
+
+   .. image:: /images/article/about-mongodb-podcast/at2020USB.jpg
+      :alt: Audio-Technica AT2020USB+ Cardioid Condenser USB Microphone
+
+   Headphones
+   ~~~~~~~~~~
+
+   * Wireless Option: `Bose SoundLink around-ear wireless headphones II <SoundLink® around-ear wireless headphones II>`__
+
+   .. image:: /images/article/about-mongodb-podcast/bose-headphones.jpg
+      :alt: Bose SoundLink around-ear wireless headphones II
+      :width: 300 px
+
+   * Wired Option: `Audio-Technica ATH-M20x Professional Studio Monitor Headphones <https://www.audio-technica.com/en-us/headphones/best-for/studio>`__
+
+   .. image:: /images/article/about-mongodb-podcast/atm20x.jpg
+      :alt: Audio-Technica ATH-M20x Professional Studio Monitor Headphones
+      :width: 300 px
+
+   Camera (For Video Podcasts and Streams)
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   * Low Budget: If you're using a laptop with a camera, that will probably suffice. Most of our podcast episodes are audio-only.
+
+   * Mid-range: `Logitech c922x <https://www.amazon.com/Logitech-C922x-Pro-Stream-Webcam/dp/B01LXCDPPK/ref=sxts_sxwds-bia-wc-nc-drs1_0?c=ts&cv_ct_cx=Webcams&dchild=1&keywords=Webcams&pd_rd_i=B01LXCDPPK&pd_rd_r=c192b4bb-c6b6-42de-9f41-886bd8d216b4&pd_rd_w=f5fTw&pd_rd_wg=7toBu&pf_rd_p=84ce0865-d9ca-42e3-87ed-168be8f93162&pf_rd_r=R42FXBF66CNQE81P33PA&psc=1&qid=1606142833&refinements=p_n_feature_keywords_two_browse-bin%3A6025546011&s=pc&sr=1-1-88388c6d-14b8-4f70-90f6-05ac39e80cc0&ts_id=172511>`__
+
+   .. image:: /images/article/about-mongodb-podcast/logitech-c922x.jpg
+      :alt: Logitech c922x
+      :width: 300 px
+      
+   * High End: `Sony A6300 DSLR <https://www.sony.com/electronics/interchangeable-lens-cameras/ilce-6300-body-kit>`__ - For live-streams, this camera 
+
+   .. image:: /images/article/about-mongodb-podcast/sony-a6300.jpg
+      :alt: Sony A6300 DSLR
+      :width: 300 px
+
+   * `Elgato Cam Link 4k <https://www.elgato.com/en/gaming/cam-link-4k>`__ - The Cam Link enables you to plug any Digital Video device into your computer's USB port. This enables me to use my DSLR as a webcam.
+
+   .. image:: /images/article/about-mongodb-podcast/elgato-camlink-4k.jpg
+      :alt: Elgato Cam Link 4k
+      :width: 300 px
+
+   Lighting
+   ~~~~~~~~
+
+   * `Elgato Keylight Air <https://www.elgato.com/en/gaming/key-light-air>`__ - Nothing like good lighting to enhance a live-stream. We don't publish video for all of our podcast episodes but for the ones that we do, lighting helps. The Elgato Keylight Air is really powerful, bright, and can be controlled from your computer.
+
+   .. image:: /images/article/about-mongodb-podcast/elgato-keylight-air.png
+      :alt: Elgato Keylight Air
+      :width: 300 px
+
+   Miscellaneous
+   ~~~~~~~~~~~~~
+
+   * `Desk Bell <https://www.staples.com/Advantus-Call-Bell-3-3-8-Silver/product_901294>`__ - Immensely helpful for recording. Don't like the way a thread is progressing? Mess up a word? No worries... just hit the bell. This produces a visually recognizable signature on the audio so you can find it and remove the unwanted audio.
+
+   .. image:: /images/article/about-mongodb-podcast/desk-bell.jpg
+      :alt: Desk Bell
+      :width: 300 px
+
+   Software
+   --------
+
+   Audio Recording/Editing
+   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   * `Audacity <https://www.audacityteam.org/>`__ - This is open source and free and provides all the necessary capabilities to enable you to edit and refine your audio. To use Audacity, you simply download the version for your OS platform, install it, and configure your devices. There are some great tutorials on YouTube that helped me.
+   * `Zencastr <https://zencastr.com>`__ - This is a browser-based software-as-a-service offering that enables you to share a link with your guests and record them individually. While you're recording, the audio is stored locally on the guests' computer. When you complete a recording, it's uploaded to your Zencastr account where you can download the tracks individually and edit them using Audacity.
+   * Another option for editing is `Garage Band <https://www.apple.com/mac/garageband/>`__.
+
+   Guest Booking
+   ~~~~~~~~~~~~~
+
+   * `Calendly <https://calend.ly>`__ - We use Calendly to schedule guest meetings. I'll talk about this more in the Process section. Calendly connects to your calendar and enables guests to schedule time on your calendar that's free, and convenient for them. This removes a lot of the friction and back-and-forth that can occur when scheduling.
+
+   Transcription
+   ~~~~~~~~~~~~~
+
+   * `Rev <https://rev.com>`__ - Each podcast episode we record becomes its own article on our `Developer Hub <https://developer.mongodb.com>`__. Transcribing the episodes helps accomplish several goals. First, it enables users to get the content when they're unable to listen to the podcast. Second, it enables us to increase our volume of content. Our articles are indexed in search engines, and having the content of our discussions in article form helps improve the relevancy of our content.
+
+   Branding and Images
+   ~~~~~~~~~~~~~~~~~~~
+
+   * Outsource 
+
+     - MongoDB Design Team - Fortunately, we have an amazing design team. Shout-out to the MongoDB Design team!  They are responsible for all of the graphics associated with the podcast. However, if you don't have a design team, you do have several options. My favorite image editing tool is Adobe Photoshop. This can be expensive, however, so here are some free options.
+     - `Fiverr <https://www.fiverr.com>`__ - If you don't have a design team, consider using a freelancing service like Fiverr. I used this service for our podcast `intro/outro <https://github.com/mongodb-developer/mongodb-podcast-assets>`__ music.
+
+   * Open Source Options for Image Editing software
+   
+     - `Krita <https://krita.org/>`__ - Free and open source, Krita has been around since approximately 1998.
+     - `Gimp <https://www.gimp.org/>`__ - Free and open source image editing. 
+
+   Episode Planning and Collaboration
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   * `Google Docs <https://docs.google.com>`__ - Google Docs enables us to create an episode agenda document and collaboratively build out our ideas. I will typically create a document, fill out the title, the guest, and a short statement about the goals of the episode and then invite my colleagues to help fill out the details and the topics we'll cover. 
+
+   Podcast Hosting
+   ~~~~~~~~~~~~~~~
+
+   * `Libsyn <https://libsyn.com>`__ - Once you've recorded your episodes, you'll need to get them out on the internet where people can find them. A podcast hosting services does a couple things. First, it provides storage for the actual media files. Second, most hosting services provide the ability to publish your podcast to multiple podcast networks such as Apple, Spotify, Google, etc. You could skip this step and go directly to a podcast network - but each network has a slightly different set of requirements and it's much simpler to use a hosting services that provides an RSS feed. Libsyn is reasonably priced and has a decent set of features over and above those I just mentioned. One in particular is analytics and statistics. You'll want to watch the number of listeners as you begin your experimentation and Libsyn provides a decent set of stats. 
+   
+   Process
+   -------
+
+   A lot of the work that went into creating this podcast was around establishing an efficient process. The following is a list of the steps
+   we take once we've identified a guest, or the idea for an episode. There's another process for forming the concept for your podcast, but we'll
+   leave that for another article.
+
+   Here's an overview of the process.
+
+   .. image:: /images/article/about-mongodb-podcast/podcast-process.png
+      :alt: Podcast Process
+
+   Weekly Content Meeting
+   ~~~~~~~~~~~~~~~~~~~~~~
+   
+   We meet on a weekly basis to discuss the episode ideas and update the team on where we're at with each episode. This meeting also provides a
+   great opportunity to brainstorm on new episode ideas.
+
+   .. blockquote::
+
+      Action: Create a running weekly content meeting document and share this with your team, assuming you're not alone.
+
+   Episode Lifecycle
+   ~~~~~~~~~~~~~~~~~
+
+   1. Brainstorm - Discuss your episode ideas with your team, or someone that can help you vet them. The outcome of this is a list of episode ideas. Schedule a weekly meeting, even if it's just you, to brainstorm on content and episode ideas. For each viable idea, continue with the remaining steps in the process.
+
+   2. Episode Agenda Formation - For each episode idea that successfully exits your brainstorm, create an episode agenda document. I've created a `template that you can use <https://github.com/mongodb-developer/mongodb-podcast-assets/blob/main/podcast-episode-agenda-template.md>`__, assuming you're working on an interview-style podcast. Copy the `template <https://github.com/mongodb-developer/mongodb-podcast-assets/blob/main/podcast-episode-agenda-template.md>`__, customize it for each episode including the guest name, title, etc.
+
+   3. Collaborate - Once you've got an agenda created, share that with your team. Have them collaborate on ideas for the show. Collaborate with your team, and then your guest to ensure that the questions and topics are compelling, relevant, and include topics your guest will want to cover.
+
+   4. Schedule Guests - Now that your idea is baked, you should schedule your guests for meeting number one of two. Scheduling involves sharing each of the participants' availability and choosing a date that works for everyone. This process has been greatly simplified through the use of `Calendly <https://calend.ly>`__. Calendly connects to your calendar, enables you to specify windows of availability for you and the team, and then lets the guest pick a time that's convenient for them. 
+
+   5. Guest Meetings One - During this first meeting (typically 30 min), you'll want to accomplish four (4) goals.
+
+   * Logistics - First, explain the logistics of your podcast. Let them know how you'll record and what they'll need to do in order to participate. 
+   * Agenda - Share the agenda doc with them and encourage them to review, comment, and even edit where they see fit. This will enable them to feel in control of the discussion. 
+   * Equipment - Discuss equipment with the guests. To ensure acceptable audio, it's always best for guests to use a headset and a proper microphone. Sometimes this is just not possible but at least encourage them to use earphones to separate the speaker audio from their input.
+   * Schedule Recording - Before you end the first meeting, make sure you have scheduled the actual recording. Send a calendar item to the guests to ensure that they've got it on their diary. Ensure that you book enough time before the actual recording to do a tech-check and ensure proper audio levels.
+
+   .. blockquote::
+
+      Tip: Set and share the goals of your meeting at the start, and then again at the end of the meeting to confirm you're accomplishing what you set out to achieve.
+
+   6. Guest Meeting Two - Recording the podcast episode.
+
+   * Sound Check - Assuming you've done your job in meeting one, when the time comes to record the episode, your guests will arrive ready to record. Check the recording levels. If you're using Zencastr, go ahead and hit record and start chatting with the guests for a few minutes. Stop the recording and check the levels. 
+   * Just before you record - Remind the guest about the bell. Let them know this is not a scripted interview - it's a chat... a conversation. Set them at ease. 
+   * Record - I find it helpful to use web conference in addition to Zencastr. Zencastr is audio-only. This means that you lose a good deal of the data available during a conversation. We use Zoom for this but there are many options.
+   * Closing - Assuming you've loosely stuck to the agenda and you've come to a natural and/or timely conclusion of the interview, bring the episode to a close by asking the guest to share anything else they want the audience to know. Ask them to share their contact deals in case listeners want to follow up and ask them for any additional plugs.
+
+   7. Podcast Production and Audio Processing
+
+   * Download the individual tracks from Zencastr - Use Audacity or some similar audio editing tool to stitch them together.
+   * Edit and Refine Audio - Listen to the tracks and keep your ears peeled for "ums," "ahs," breaths, pauses, gonks/noises, and anything you don't want in your finished episode audio.
+
+   8. Apply Intro/Outro
+
+   * Before closing out Audacity, prepend your audio intro to the episode. Your intro can be something you custom-create for each episode - or you can have a pre-recorded intro with music. We do both. After listening to the episode, we create some bullet points, highlights that were brought up during the podcast. I talk those out in a custom intro for each episode and place that right before our pre-recorded music intro.  
+
+   9. Guest Follow-up
+
+   * Stay in touch with the guest and give them the option of getting access to the recording before you publish it. 
+
+   10. Publish Episode
+
+   * Publishing the episodes is done with `Libsyn <https://libsyn.com>`__.  After the episode has been edited, upload the finished audio to Libsyn and apply the necessary settings to ensure that it's published to your various downstream channels, such as the various podcast networks and to social media. 
+   
+   .. image:: /images/article/about-mongodb-podcast/faq.png
+      :alt: Frequently Asked Questions
+      :align: center  
+
+   Frequently Asked Questions
+   --------------------------
+
+   Here are just a few questions I get frequently. If you have more, please visit the `Community Forums <https://developer.mongodb.com/community/forums/t/whats-your-set-up/12056>`__ thread to start a discussion or reach out to me via `email <mailto:podcast@mongodb.com>`__.
+
+   Q: How do you source your guests?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   A: Our guests come from a variety of sources. First, you'll notice we have a number of guests who are employees of MongoDB. Who better to talk about MongoDB, right? Rebecca, Nic, and I meet regularly to discuss potential guests and topics. We each go through our own personal networks to reach out to folks that we think will have interesting things to discuss. 
+
+   Once we land on a topic, we begin to search our personal networks for individuals that can speak authoritatively on that subject. Many times, this is someone internal - but this is not a rule. 
+
+   Q: How do you get your podcast published on [Apple, Google, Spotify, etc.]?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   A: `Libsyn.com <https://libsyn.com>`__ does this automatically. Once you complete your Libsyn configuration, you will have an RSS feed for the episodes you publish. You'll use this feed URL to create your Apple Podcast submission. Same goes for nearly every other podcast network. The magic is in the RSS feed.
+
+   Q: How do I make my own podcast?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+   A: In short, just do it. Get a Libsyn or other podcast hosting service account. Create your content, upload it, and you're in business. I welcome questions and would love to help you get started. Visit the `Community Forums <https://developer.mongodb.com/community/forums/t/whats-your-set-up/12056>`__ thread to start a discussion or reach out to me via `email <mailto:podcast@mongodb.com>`__.
+
+   Q: What does it cost to publish your podcast?
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   A: We maintain a very small budget. The actual process of publishing and hosting costs less than $100 USD per month. The real cost is in the time we spend creating and editing the episodes. The real answer is that your mileage may vary. You can get started for very little, and some hosting services even have a free tier. The best advice I can give is to shop around, start small, but just start. The best way to learn is by doing. Your costs will quickly start to add up when you add services such as transcription, enhanced reporting, analytics, etc.
+   
+   Summary
+   -------
+
+   Podcasts are a great way to learn and stay current. Becoming a guest on a podcast can also be a great way to help others and grow your own personal brand. If, after reading this, you are inspired to create something, or you want
+   to talk about becoming a guest on the show, please don't hesitate to reach out!
+
+   If you or someone you know is a MongoDB user that would like to share their story with the world, `complete this nomination form <https://docs.google.com/forms/d/e/1FAIpQLSeSzarIny2xqxsSMjyK0HIdncz1GUiB2nA-Dhh_mNtAcWzPMg/viewform?usp=sf_link>`__ and we'll get back to you about scheduling a discussion and possibly appearing on the podcast.
+
+   Please check out the latest episodes of the `MongoDB Podcast <https://mongodb.com/podcast>`__ on `Apple <https://podcasts.apple.com/us/podcast/the-mongodb-podcast/id1500452446>`__, `Spotify <https://open.spotify.com/show/0ibUtrJG4JVgwfvB2MXMSb>`__, `Google <https://podcasts.google.com/feed/aHR0cHM6Ly9tb25nb2RiLmxpYnN5bi5jb20vcnNz>`__, `iHeart <https://www.iheart.com/podcast/269-the-mongodb-podcast-60738931/>`__, or any one of the many podcast networks.
+
+   If you like what you hear, I would love to hear about it in a review. Reviews are an essential way that podcasts grow. When you share your
+   thoughts, others will be inspired to listen. Reviews also help a podcast to improve reach - those podcasts with more reviews are ranked above
+   those with fewer and therefore, rating will help us boost our reach. Thank you!
