@@ -307,7 +307,7 @@ Introducing GraphQL Support in MongoDB Atlas with Stitch
     Create an **index.html** file on your computer with the following
     boilerplate code:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <html>
             <head></head>

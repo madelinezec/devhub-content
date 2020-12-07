@@ -400,7 +400,7 @@ Building Modern Applications with Next.js and MongoDB
 
    This will allow us to feed this component dynamic data and based on the data provided, we'll display the correct background, as well as target ranges for our macros. We can now simplify our index.js page component by removing all the boilerplate code and replacing it with:
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <div className="flex mb-4 text-center">
         <Result results={results.calories} />

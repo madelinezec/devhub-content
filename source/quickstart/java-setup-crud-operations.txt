@@ -142,7 +142,7 @@ MongoDB & Java - CRUD Operations Tutorial
 
    The pom.xml file should contain the following code:
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <?xml version="1.0" encoding="UTF-8"?>
       <project xmlns="http://maven.apache.org/POM/4.0.0"

@@ -220,7 +220,7 @@ Building an Autocomplete Form Element with Atlas Search and JavaScript
     environment variable on your computer called ``ATLAS_URI`` and set it to your 
     MongoDB connection string. This connection string will look something like this:
 
-    .. code:: auto
+    .. code:: none
 
         mongodb+srv://<username>:<password>@cluster0-yyarb.mongodb.net/<dbname>?retryWrites=true&w=majority
 
@@ -320,7 +320,7 @@ Building an Autocomplete Form Element with Atlas Search and JavaScript
     Create a new project with an **index.html** file in it. Open that file
     and include the following:
 
-    .. code:: auto
+    .. code:: xml
 
         <!DOCTYPE html>
         <html>
@@ -348,7 +348,7 @@ Building an Autocomplete Form Element with Atlas Search and JavaScript
 
     Within the ``<script>`` tag we can add the following:
 
-    .. code:: auto
+    .. code:: xml
 
         <script>
             $(document).ready(function () {

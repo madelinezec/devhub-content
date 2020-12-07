@@ -75,7 +75,7 @@ How We Migrated Realm JavaScript From NAN to N-API
 
    Unfortunately, NAN and N-API diverged too much starting from the initial setup of the native addon. Most of the NAN code used the ``v8::Isolate`` and the N-API code had the opaque structure ``Napi::Env`` as a substitute to it. Our initialization code with NAN was using the v8::Isolate to initialize the Realm constructor in the init function
 
-   .. code:: C++
+   .. code:: clike
 
       static void init(v8::Local<v8::Object> exports, 
          v8::Local<v8::Value> module, v8::Local<v8::Context> context) {
@@ -89,7 +89,7 @@ How We Migrated Realm JavaScript From NAN to N-API
 
    and our N-API equivalent for this code was going to be
 
-   .. code:: cpp
+   .. code:: clike
 
          static Napi::Object NAPI_Init(Napi::Env env, Napi::Object exports) {
             return exports;
@@ -100,14 +100,14 @@ How We Migrated Realm JavaScript From NAN to N-API
 
    Fortunately, it turned out we could just use a hack in our initial implementation. This enabled us to convert certain parts of our Realm JS implementation while we continued to build and ship new versions of Realm JS with parts using NAN. Since ``Napi::Env`` is just an equivalent substitute for ``v8::Isolate``, we can check if it has a ``v8::Isolate`` hiding in it. As it turns out, this is a way to do this -  but it's a private member. We can grab it from memory with
 
-   .. code:: cpp
+   .. code:: clike
 
          napi_env e  =  env;
          v8::Isolate* isolate = (v8::Isolate*)e + 3;
 
    and our NAPI_init method becomes
 
-   .. code:: cpp
+   .. code:: clike
 
          static Napi::Object NAPI_Init(Napi::Env env, Napi::Object exports) {
          //NAPI: FIXME: remove when NAPI complete

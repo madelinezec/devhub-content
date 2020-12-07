@@ -76,7 +76,7 @@ A Free GraphQL API for Johns Hopkins University COVID-19 Dataset
 
    It's a great dataset for education purposes and for pet projects. The MongoDB Atlas cluster is freely accessible using the user ``readonly`` and the password ``readonly`` using the connection string:
 
-   .. code-block:: auto
+   .. code-block:: none
 
       mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
 

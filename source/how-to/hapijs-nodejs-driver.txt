@@ -446,7 +446,7 @@ Build a RESTful API with HapiJS and MongoDB
 
     The payload that we are going to submit to this endpoint will look like this: 
 
-    .. code-block:: auto
+    .. code-block:: javascript
 
        {
         	"title": "Avengers: Endgame",

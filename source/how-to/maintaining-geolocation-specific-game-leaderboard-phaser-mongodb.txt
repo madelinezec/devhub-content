@@ -299,7 +299,7 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
     directory. On your computer create a new project directory and in it,
     create an **index.html** file with the following HTML markup:
 
-    .. code:: auto
+    .. code:: xml
 
         <!DOCTYPE html>
         <html>
@@ -341,7 +341,7 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
 
     Within the ``<head>`` you'll notice the following ``<script>`` tags:
 
-    .. code:: auto
+    .. code:: xml
 
         <head>
             <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
@@ -391,7 +391,7 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
     ``<script>`` tag that contains the ``phaserConfig``, modify it to the
     following:
 
-    .. code:: auto
+    .. code:: xml
 
         <script>
 
@@ -459,7 +459,7 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
     Create a **form.html** file within the game project and add the
     following HTML markup:
 
-    .. code:: auto
+    .. code:: xml
 
         <!DOCTYPE html>
         <html>
@@ -527,7 +527,7 @@ Maintaining a Geolocation Specific Game Leaderboard with Phaser and MongoDB
     At this point, we technically have a working scene even though nothing happens with the
     user input. Let's edit the **index.html** file so we can switch to it:
 
-    .. code:: auto
+    .. code:: xml
 
         <script>
 

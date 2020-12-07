@@ -71,7 +71,7 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
 
    You can connect to it using MongoDB Compass, the Mongo Shell, SQL or any MongoDB driver supporting at least MongoDB 4.2 with the following URI:
 
-   .. code-block:: auto
+   .. code-block:: none
 
       mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
 

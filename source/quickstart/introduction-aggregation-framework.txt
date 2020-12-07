@@ -112,7 +112,7 @@ Introduction to the MongoDB Aggregation Framework
    Let's take a look at an example pipeline. Our documents are from the `Sample Data <https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/>`__ that's available in MongoDB Atlas
    and the ``routes`` collection in the ``sample_training`` database. Here's a sample document:
 
-   .. code-block:: auto
+   .. code-block:: json
 
       {
       "_id":{
@@ -142,7 +142,7 @@ Introduction to the MongoDB Aggregation Framework
    on those documents that meet a base of conditions. In this case, we'll look for documents with a ``src_airport``, or
    source airport, of PDX and that are direct flights, i.e. that have zero stops.
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       {
         $match: {
@@ -154,7 +154,7 @@ Introduction to the MongoDB Aggregation Framework
    That reduces the number of documents in our pipeline down from 66,985 to 113. Next, we'll group by the airline name
    and count the number of flights:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       {
           $group: {
@@ -170,7 +170,7 @@ Introduction to the MongoDB Aggregation Framework
    With the addition of the ``$group`` stage, we're down to 16 documents. Let's sort those with a ``$sort`` stage and
    sort in descending order:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       {
           $sort: {
@@ -180,7 +180,7 @@ Introduction to the MongoDB Aggregation Framework
 
    Then we can add a ``$limit`` stage to just have the top three airlines that are servicing Portland, Oregon:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       {
          $limit: 3

@@ -84,7 +84,7 @@ Procedure to Allow Non-Root Users to Stop/Start/Restart "mongod" Process
 
    - Add the user with limited permissions (replace testuser with your user):
 
-   .. code-block:: auto
+   .. code-block:: bash
 
       $ adduser testuser
       $ groupadd testgroup

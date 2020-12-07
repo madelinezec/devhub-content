@@ -84,7 +84,7 @@ Create a Contact Form with the MongoDB Stitch Webhooks Service and Mailgun
 
     Create an HTML file on your computer and add the following:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>

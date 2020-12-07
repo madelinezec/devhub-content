@@ -283,7 +283,7 @@ Real-Time Chat in a Phaser Game with MongoDB and Socket.io
     Create a new directory on your computer and within that directory create
     an **index.html** file with the following HTML markup:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>
@@ -331,7 +331,7 @@ Real-Time Chat in a Phaser Game with MongoDB and Socket.io
 
     First you'll notice the following two lines:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <script src="//cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
         <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
@@ -403,7 +403,7 @@ Real-Time Chat in a Phaser Game with MongoDB and Socket.io
     Within your game project directory, create a new **form.html** file with
     the following HTML:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>

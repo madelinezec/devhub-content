@@ -154,7 +154,7 @@ Realm Serverless platform integration with No-Code Composer from AppGyver
    3. Choose any meaningful Resource ID (eg. "Auth" or "User_Password_API").
    4. Input the Base URL page with the relevant Realm authentication URL (This is based on the following `convention <https://docs.mongodb.com/realm/reference/authenticate-http-client-requests/#get-a-client-api-access-token>`__ ``https://realm.mongodb.com/api/client/v2.0/app/<yourappid>/auth/providers/<provider type>/login``).
    
-   .. code-block:: auto
+   .. code-block:: http
 
       https://realm.mongodb.com/api/client/v2.0/app/movies-abcd/auth/providers/local-userpass
 
@@ -248,7 +248,7 @@ Realm Serverless platform integration with No-Code Composer from AppGyver
 
    1. Again, we will define the base URL as the path to our webhook service without the webhook function name.
 
-   .. code-block:: auto
+   .. code-block:: http
 
       https://webhooks.mongodb-realm.com/api/client/v2.0/app/movies-abcd/service/smsLogin/incoming_webhook/
 

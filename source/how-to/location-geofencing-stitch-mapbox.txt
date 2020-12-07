@@ -216,7 +216,7 @@ Location Geofencing with MongoDB, Stitch, and Mapbox
     On your computer, create an **index.html** file with the following
     boilerplate code:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <head>

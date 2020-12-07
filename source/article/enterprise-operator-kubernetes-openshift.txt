@@ -395,15 +395,15 @@ Introducing the MongoDB Enterprise Operator for Kubernetes and OpenShift
    Ops Manager console. For sample purposes we can call this file
    "my-project.yaml".
 
-   .. code-block:: auto
+   .. code-block:: yaml
 
       apiVersion: v1
       kind: ConfigMap
       metadata:
-         name:<<Name i.e. name of OpsManager Project>>
+         name: <<Name i.e. name of OpsManager Project>>
          namespace: mongodb
       data:
-         projectId:<<Project ID>>
+         projectId: <<Project ID>>
          baseUrl: <<OpsManager URL>>
 
    Figure 9: Sample ConfigMap file

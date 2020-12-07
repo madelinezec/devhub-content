@@ -108,7 +108,7 @@ Capture IOT Data With MongoDB Stitch in 5 Minutes
   directly by the sensors from the webhook provided by MongoDB Stitch like
   so:
 
-  .. code-block:: auto
+  .. code-block:: bash
 
     curl -H "Content-Type: application/json" -d '{"temp":22.4}' https://webhooks.mongodb-stitch.com/api/client/v2.0/app/stitchtapp-abcde/service/sensors/incoming_webhook/post_sensor?secret=test
 

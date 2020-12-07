@@ -114,7 +114,7 @@ Creating a Multiplayer Drawing Game with Phaser and MongoDB
 
     Within the **index.html** file, add the following:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>
@@ -191,7 +191,7 @@ Creating a Multiplayer Drawing Game with Phaser and MongoDB
     **index.html** file and instantiate our class. This can be done in the
     ``<script>`` tag that currently exists:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <script>
             const game = new Game({
@@ -301,7 +301,7 @@ Creating a Multiplayer Drawing Game with Phaser and MongoDB
     Within the **index.html** file, add the following line to your
     ``<script>`` block below the instantiation of the ``game`` object:
 
-    .. code-block:: auto
+    .. code-block:: javascript
 
         game.createGame();
 
@@ -576,7 +576,7 @@ Creating a Multiplayer Drawing Game with Phaser and MongoDB
 
     Open the **index.html** file and make it look like the following:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>
@@ -639,7 +639,7 @@ Creating a Multiplayer Drawing Game with Phaser and MongoDB
     The above code has a little more going on now, but don't forget to use your own application ids, database names, and collections. You'll start by probably
     noticing the following markup:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <div style="position: absolute; background-color: green; padding: 10px; margin: 10px; color: #FFFFFF">
             <div id="visitor">

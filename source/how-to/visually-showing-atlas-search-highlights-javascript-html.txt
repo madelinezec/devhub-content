@@ -276,7 +276,7 @@ Visually Showing Atlas Search Highlights with JavaScript and HTML
     representing the front end instead of the back end. Within this new
     directory, create an **index.html** file with the following markup:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <html>

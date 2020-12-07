@@ -146,7 +146,7 @@ Real-Time Location Updates with MongoDB Stitch, Change Streams, and Mapbox
 
     Let's start by adding the following boilerplate code:
 
-    .. code-block:: auto
+    .. code-block:: xml
 
         <!DOCTYPE html>
         <head>

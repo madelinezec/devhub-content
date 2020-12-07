@@ -77,7 +77,7 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
 
    The MongoDB Atlas cluster is freely accessible using the user ``readonly`` and the password ``readonly`` using the connection string:
 
-   .. code-block:: auto
+   .. code-block:: none
 
       mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19
 

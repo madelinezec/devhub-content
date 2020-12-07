@@ -135,7 +135,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    In the ``templates`` directory, let's create a ``index.html``, ``listing.html``, and ``confirmation.html`` file for our three views. In each of the files, let's just create a skeleton of the page we'll want to render.
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <html>
       <head>
@@ -289,7 +289,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    Let's return to our ``index.html`` file now and update it with the actual UI we want to build.
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <html>
       <head>
@@ -340,7 +340,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    In the ``index.html`` page add the following code underneath the ``<h1 class="text-4xl font-bold mb-5">MongoBnB</h1>`` tag:
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <div class="inline-flex">
           <a href="/" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
@@ -430,7 +430,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    Open up ``listing.html`` and update the content to:
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <html>
       <head>
@@ -508,7 +508,7 @@ Build a Property Booking Website with Starlette, MongoDB, and Twilio
 
    Open up ``confirmation.html`` and add the following UI code:
 
-   .. code-block:: auto
+   .. code-block:: xml
 
       <html>
       <head>

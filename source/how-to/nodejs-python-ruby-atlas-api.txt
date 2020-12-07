@@ -118,13 +118,13 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
    what it needs to do HTTP Digest authentication. After installing the
    required libraries
 
-   .. code-block:: auto
+   .. code-block:: bash
 
       npm install digest-fetch crypto-js node-fetch --save
 
    We can now create our code:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       const DigestFetch = require("digest-fetch");
 
@@ -165,7 +165,7 @@ Calling the MongoDB Atlas API - How to do it from Node, Python, and Ruby
    methods on HTTParty itself. For brevity, we'll do the latter. Here's the
    code:
 
-   .. code-block:: auto
+   .. code-block:: ruby
 
       require 'httparty'
       require 'json'

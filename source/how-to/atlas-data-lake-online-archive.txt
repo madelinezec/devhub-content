@@ -215,7 +215,7 @@ How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake & O
 
    Let's create the recommended index and see how the situation improves:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       db.global_and_us.createIndex({ date: 1, country: 1})
 
@@ -230,7 +230,7 @@ How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake & O
 
    Just before we start our archiving process, let's run an aggregation pipeline in MongoDB Compass to check the content of our collection.
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       [
         {
@@ -318,7 +318,7 @@ How to Archive Old Data to Cloud Object Storage with MongoDB Atlas Data Lake & O
 
    Make sure you replace the database and the password in the command. Once you are connected, you can run the following aggregation pipeline:
 
-   .. code-block:: auto
+   .. code-block:: javascript
 
       [
         {
