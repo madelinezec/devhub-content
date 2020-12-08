@@ -1,0 +1,279 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/logos/O-FISH-hacktoberfest.png
+
+.. meta-description::
+
+   Participating in Hacktoberfest taught us what works and what does not work to build a happy community of contributors for an open source project.
+
+.. twitter::
+   :creator: @Sheeri
+   :title: 5 Key Takeaways from Hacktoberfest 2020
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: Developing on MongoDB
+
+   Participating in Hacktoberfest taught us what works to build a happy community of contributors for an open source project - learn our 5 key takeaways!
+
+.. og::
+   :title: 5 Key Takeaways from Hacktoberfest 2020
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/cabral-sheeri.rst
+
+.. pubdate:: 2020-12-08
+
+.. type:: article
+
+.. level:: beginner
+
+.. related::
+
+   * Article: `O-FISH on the MongoDB Community Forums <https://developer.mongodb.com/community/forums/tag/o-fish/>`__
+   * Article: `Protecting Our Oceans With An Open-Source Application <https://www.mongodb.com/blog/post/mongodb-cloud-rescue-protecting-oceans-opensource-application>`__ (explains what the O-FISH app is)
+   * Article: `Contributing to O-FISH <https://wildaid.github.io/contribute/>`__
+   * Article: `NBC News story on the O-FISH application <https://www.nbcnews.com/tech/tech-news/tracking-illegal-fishing-there-s-finally-app-n1235857>`__
+
+.. languages::
+
+   * JavaScript
+   * Kotlin
+   * Swift
+
+=======================================
+5 Key Takeaways from Hacktoberfest 2020
+=======================================
+ 
+.. introduction:: 
+
+   Hacktoberfest 2020 is over, and it was a resounding success. We had over 100 contributions from more than 50 different contributors to the O-FISH project. Learn about why the app is crucial in the `NBC story about O-FISH <https://www.nbcnews.com/tech/tech-news/tracking-illegal-fishing-there-s-finally-app-n1235857>`__.
+
+   Before we get to the :ref:`key-takeaways`, let's look at what was accomplished during Hacktoberfest, and who we have to thank for all the good work.
+
+.. prerequisites::
+
+   Wrap-Up Video
+   -------------
+   
+   If you were a part of Hacktoberfest for the `O-FISH project <https://wildaid.github.io/contribute>`__, make sure you watch the `wrap-up video <https://www.youtube.com/watch?v=hzzvEy5tA5I&feature=youtu.be>`__ below. It's about 10 minutes.
+
+   .. youtube:: hzzvEy5tA5I
+
+.. content::
+
+   The point of Hacktoberfest is to be a CELEBRATION of open source, not just "to make and get contributions." All pull requests, no matter how big or small, had a great impact. If you participated in Hacktoberfest, do not forget to claim your `MongoDB Community forum <https://developer.mongodb.com/community/forums>`__ badges! You can still get an `O-FISH badge <https://developer.mongodb.com/community/forums/badges/110/o-fish-contributor>`__ at any time, by contributing to the `O-FISH project <https://wildaid.github.io/contribute/>`__. Here's what the badges look like:
+
+   .. image:: /images/article/hacktoberfestbadges.png
+      :scale: 50%
+      :alt: Hacktoberfest contribution badge featuring a pumpkin shape with binary inside - and O-FISH contribution badge featuring the O-FISH logo
+
+   Just go to the community forums post `Open Source Contributors, Pick Up Your Badges Here! <https://developer.mongodb.com/community/forums/t/open-source-contributors-pick-up-your-badges-here/10167/>`__
+
+   There were lots of bug fixes, as well as feature additions both small and big—like dark mode for our mobile applications!
+
+   .. list-table:: Contributions by week per repository
+      :header-rows: 1
+      
+      * - Merged/Closed
+        - `o-fish-android <https://github.com/WildAid/o-fish-android/>`__
+        - `o-fish-ios <https://github.com/WildAid/o-fish-ios/>`__
+        - `o-fish-realm <https://github.com/WildAid/o-fish-realm/>`__
+        - `o-fish-web <https://github.com/WildAid/o-fish-web/>`__
+        - `wildaid.github.io <https://github.com/WildAid/wildaid.github.io/>`__
+        - Total
+      * - 01 - 04 Oct
+        - 6
+        - 6
+        - 0
+        - 7
+        - 14
+        - 33
+      * - 05 - 11 Oct
+        - 9
+        - 5
+        - 0
+        - 10
+        - 3
+        - 27
+      * - 12 - 18 Oct
+        - 15
+        - 6
+        - 1
+        - 11
+        - 2
+        - 35
+      * - 19 - 25 Oct
+        - 4
+        - 1
+        - 1
+        - 4
+        - 1 
+        - 11    
+      * - 26 - 31 Oct
+        - 2
+        - 4
+        - 2
+        - 3
+        - 0
+        - 11
+      * - **Total**
+        - **36**
+        - **22**
+        - **4**
+        - **35**
+        - **20**
+        - **117**
+   
+   
+   Celebrating the Contributors
+   ----------------------------
+
+   Here are the contributors who made Hacktoberfest so amazing for us! This would not have been possible without all these folks.
+
+   .. list-table:: Hacktoberfest 2020 Contributors
+
+      * - `aayush287 <https://github.com/aayush287>`__
+        - `aayushi2883 <https://github.com/aayushi2883>`__
+        - `abdulbasit75 <https://github.com/abdulbasit75>`__
+        - `antwonthegreat <https://github.com/antwonthegreat>`__
+      * - `ardlank <https://github.com/ardlank>`__
+        - `ashwinpilgaonkar <https://github.com/ashwinpilgaonkar>`__
+        - `Augs0 <https://github.com/Augs0>`__
+        - `ayushjainrksh <https://github.com/ayushjainrksh>`__
+      * - `bladebunny <https://github.com/bladebunny>`__
+        - `cfsnsalazar <https://github.com/cfsnsalazar>`__
+        - `coltonlemmon <https://github.com/coltonlemmon>`__
+        - `CR96 <https://github.com/CR96>`__
+      * - `crowtech7 <https://github.com/crowtech7>`__
+        - `czuria1 <https://github.com/czuria1>`__
+        - `deveshchatuphale7 <https://github.com/deveshchatuphale7>`__
+        - `Dusch4593 <https://github.com/Dusch4593>`__
+      * - `ericblancas23 <https://github.com/ericblancas23>`__
+        - `evayde <https://github.com/evayde>`__
+        - `evnik <https://github.com/evnik>`__
+        - `fandok <https://github.com/fandok>`__
+      * - `GabbyJ <https://github.com/GabbyJ>`__
+        - `gabrielhicks <https://github.com/gabrielhicks>`__
+        - `haqiqiw <https://github.com/haqiqiw>`__
+        - `ippschi <https://github.com/ippschi>`__
+      * - `ismaeldcom <https://github.com/ismaeldcom>`__
+        - `jessicasalbert <https://github.com/jessicasalbert>`__
+        - `jkreller <https://github.com/jkreller>`__
+        - `jokopriyono <https://github.com/jokopriyono>`__
+      * - `joquendo <https://github.com/joquendo>`__
+        - `k-charette <https://github.com/k-charette>`__
+        - `kandarppatel28 <https://github.com/kandarppatel28>`__
+        - `lenmorld <https://github.com/lenmorld>`__
+      * - `ljhaywar <https://github.com/ljhaywar>`__
+        - `mdegis <https://github.com/mdegis>`__
+        - `mfhan <https://github.com/mfhan>`__
+        - `newprtst <https://github.com/newprtst>`__
+      * - `nugmanoff <https://github.com/nugmanoff>`__
+        - `pankova <https://github.com/pankova>`__
+        - `rh9891 <https://github.com/rh9891>`__
+        - `RitikPandey1 <https://github.com/RitikPandey1>`__
+      * - `Roshanpaswan <https://github.com/Roshanpaswan>`__
+        - `RuchaYagnik <https://github.com/RuchaYagnik>`__
+        - `rupalkachhwaha <https://github.com/rupalkachhwaha>`__
+        - `saribricka <https://github.com/saribricka>`__
+      * - `seemagawaradi <https://github.com/seemagawaradi>`__
+        - `SEGH <https://github.com/SEGH>`__
+        - `sourabhbagrecha <https://github.com/sourabhbagrecha>`__
+        -  
+      * - `stennie <https://github.com/stennie>`__
+        - `subbramanil <https://github.com/subbramanil>`__
+        - `sunny52525 <https://github.com/sunny52525>`__
+        -  
+      * - `thearavind <https://github.com/thearavind>`__
+        - `wlcreate <https://github.com/wlcreate>`__
+        - `yoobi <https://github.com/yoobi>`__ 
+        -  
+
+   Hacktoberfest is not about closing issues and merging PRs. It's about celebrating community, coming together and learning from each other. I learned a lot about specific coding conventions, and I felt like we really bonded together as a community that cares about the O-FISH application.
+
+   I also learned that some things we thought were code turned out to be permissions. That means that some folks did research only to find out that the issue required an instance of their own to debug. And, we fixed a lot of bugs we didn't even know existed by fixing permissions. 
+
+   .. _key-takeaways:
+   
+   Lessons Learned
+   ---------------
+   So, what did we learn from Hacktoberfest? These key takeaways are for project maintainers and developers alike.
+
+   Realize That Project Maintainers are People Managers
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Being a project maintainer means being a people manager. Behind every pull request (PR) is a person. Unlike in a workplace where I communicate with others all the time, there can be very few communications with contributors. And those communications are public. So, I was careful to consider the recipient of my feedback. There's a world of difference between, "This doesn't work," and "I tested this and here's a screenshot of what I see—I don't see X, which the PR was supposed to fix. Can you help me out?"
+
+   .. blockquote::
+      Tip 1: With fewer interactions and established relationships, each word holds more weight. Project maintainers - make sure your feedback is constructive, and your tone is appreciative, helpful and welcoming. Developers - it's absolutely OK to communicate more - ask questions in the Issues, go to any office hours, even comment on your own PR to explain the choices you made or as a question like "I did this with inline CSS, should I move it to a separate file?"
+
+   People likely will not code or organize the way I would expect. Sometimes that's a drawback - if the PR has code that introduces a memory leak, for example. But often a different way of working is a good thing, and leads to discussion. 
+   
+   For example, we had two issues that were similar, and assigned to two different people. One person misunderstood their issue, and submitted code that fixed the first issue. The other person submitted code that fixed their issue, but used a different method. I had them talk it out with each other in the comments, and we came to a mutual agreement on how to do it. Which is also awesome, because I learned too - this particular issue was about using `onClick and Link in node.js <https://github.com/WildAid/o-fish-web/pull/327#issuecomment-713241974>`__, and I didn't know why one was used over the other before this came up.
+
+   .. blockquote::
+      Tip 2: Project maintainers - Frame things as a problem, not a specific solution. You'd be surprised what contributors come up with. Developers - read the issue thoroughly to make sure you understand what's being asked. If you have a different idea feel free to bring it up in the issue.
+
+   Framing issues as a problem, not a specific solution, is something I do all the time as a product person. I would say it is one of the most important changes that a developer who has been 'promoted' to project maintainer (or team manager!) should internalize.  
+
+   Lower the Barrier to Entry
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   O-FISH has a great backend infrastructure that `anyone can build for free <https://wildaid.github.io/build/>`__. However, it takes time to build and it is unrealistic to expect someone doing 30 minutes of work to fix a bug will spend 2 hours setting up an infrastructure.
+
+   So, we set up a sandbox instance where people can `fill out a form <https://wildaidsandbox-mxgfy.mongodbstitch.com/#/users/new_dev_user>`__ and automatically get a login to the sandbox server.
+
+   There are limitations on our sandbox, and some issues need your own instance to properly diagnose and fix. The sandbox is not a perfect solution, but it was a great way to lower the barrier for the folks who wanted to tackle smaller issues. 
+
+   .. blockquote::
+      Tip 3: Project maintainers - Make it easy for developers to contribute in meaningful ways. Developers - for hacktoberfest, if you've done work but it did not result in a PR, ask if you can make a PR that will be closed and marked as 'accepted' so you get the credit you deserve.
+
+
+   Cut Back On Development To Make Time For Administration
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   There's a lot of work to do, that is not coding work. Issues should be well-described and defined as small amounts of work, with good titles. Even though I did this in September, I missed a few important items. For example, we had an issue titled "Localization Management System" which sounded really daunting and nobody picked it up. During office hours, I explained to someone wanting to do work that it was really 2 small shell scripts. They took on the work and did a great job! But if I had not explained it during office hours, nobody would have taken it because the title sounds like a huge project.
+
+   Office hours were a great idea, and it was awesome that developers showed up to ask questions. That really helped with something I touched on earlier - being able to build relationships.
+
+   .. blockquote::
+      Tip 4: Project Maintainers - Make regular time to meet with contributors in real-time - over video or real-time chat. Developers - Take any and every opportunity you can to talk to other developers and the project maintainer(s).
+
+   We hosted office hours for one hour, twice a week, on Tuesdays and Thursdays, at different times to accommodate different time zones. Our lead developer attended a few office hours as well.
+
+   Open The Gates
+   ~~~~~~~~~~~~~~
+   
+   When I get a pull request, I want to accept it. It's heartbreaking to not approve something. While I am technically the gatekeeper for the code that gets accepted to the project, knowing what to let go of and what to be firm on is very important.
+   
+   In addition to accepting code done differently than I would have done it, I also accepted code that was not quite perfect. Sometimes I accepted that it was good enough, and other times I suggested a quick change that would fix it. 
+
+   This is not homework and it is OK to give hints. If someone queried using the wrong function, I'll explain what they did, and what issues that might cause, and then say "use this other function - here's how it works, it takes in X and Y and returns A and B." And I'll link to that function in the code. It's more work on my part, but I'm more familiar with the codebase and the contributor can see that I'm on their team - I'm not just rejecting their PR and saying "use this other function", I'm trying to help them out.
+
+   As a product manager, ultimately I hope I'm enabling contributors to learn more than just the code. I hope folks learn the "why", and that decisions are not necessarily made easily. There are reasons. Doing that kind of mentorship is a very different kind of work, and it can be draining - but it is critical to a project's success.
+
+   I was very liberal with the hacktoberfest-accepted label. Sometimes someone provided a fix that just didn't work due to the app's own quirkiness. They spent time on it, we discussed the issue, they understood. So I closed the PR and added the accepted label, because they did good work and deserved the credit. In other cases, someone would ask questions about an issue, and explain to me why it was not possible to fix, and I'd ask them to submit a PR anyway, and I would give them the credit. Not all valuable contributions are in the form of a PR, but you can have them make a PR to give them credit.
+
+   .. blockquote::
+      Tip 5: Project maintainers: Give developers as much credit as you can. Thank them, and connect with them on social media. Developers: Know that all forms of work are valuable, even if there's no tangible outcome. For example, being able to rule out an option is extremely valuable.
+
+
+   Give People Freedom and They Will Amaze You
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The PRs that most surprised me were ones that made me file additional tickets—like folks who pointed out accessibility issues and fixed a few. Then, I went back and made tickets for all the rest.
+
+   .. summary:
+
+   tl;ra (Too Long; Read Anyway)
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   All in all, Hacktoberfest 2020 was successful—for getting code written and bugs fixed, but also for building a community. Thanks to all who participated!
+
+
+   .. blockquote::
+
+      **It's Not Too Late to Get Involved!**
+
+      O-FISH is open source and still accepting contributions. If you want to work on O-FISH, just follow the `contribution guidelines <https://wildaid.github.io/contribute/index.html>`__ -. To contact me, message me from my `forum page <https://developer.mongodb.com/community/forums/u/sheeri_cabral/summary/>`__ - you need to have the easy-to-achieve `Sprout level <https://developer.mongodb.com/community/forums/t/trust-levels-and-forum-privileges/10492#heading--sprout>`__ for messaging. 
+
+      If you have any questions or feedback, hop on over to the `MongoDB Community Forums. <https://developer.mongodb.com/community/forums/>`__ We love connecting!
