@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-02-29
 
-.. updated-date:: 2020-10-21
+.. updated-date:: 2020-12-09
 
 .. type:: quickstart
 
@@ -37,9 +37,9 @@
    * MongoDB
    * Atlas
 
-=========================================
-MongoDB & Java - CRUD Operations Tutorial
-=========================================
+================================================================
+Getting Started with MongoDB and Java - CRUD Operations Tutorial
+================================================================
 
 .. introduction::
 
@@ -60,9 +60,9 @@ MongoDB & Java - CRUD Operations Tutorial
 
    In future blog posts, we will move on and work through:
 
-   - `Mapping MongoDB BSON documents directly to Plain Old Java Object (POJO) <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--mapping-pojos>`__,
-   - `The MongoDB Aggregation Framework <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--aggregation-pipeline>`__,
-   - `Change Streams <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--change-streams>`__,
+   - :doc:`Mapping MongoDB BSON documents directly to Plain Old Java Object (POJO) </quickstart/java-mapping-pojos/>`,
+   - :doc:`The MongoDB Aggregation Framework </quickstart/java-aggregation-pipeline/>`,
+   - :doc:`Change Streams </quickstart/java-change-streams/>`,
    - Multi-document ACID transactions,
    - The MongoDB Java reactive streams driver.
 
@@ -83,15 +83,14 @@ MongoDB & Java - CRUD Operations Tutorial
    version accordingly in the pom.xml file we are about to setup.
 
    For the MongoDB Cluster, we will be using a M0 Free Tier MongoDB Cluster
-   from `MongoDB Atlas <http://bit.ly/mongodbatlas>`__. If you don't have
-   one already, check out my `Get started with an M0
-   cluster <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__
+   from `MongoDB Atlas <https://www.mongodb.com/cloud/atlas/>`__. If you don't have
+   one already, check out my :doc:`Get started with an M0 cluster </quickstart/free-atlas-cluster/>`
    blog post.
 
    .. blockquote:: 
 
       Get your free M0 cluster on `MongoDB
-      Atlas <http://bit.ly/mongodbatlas>`__ today. It's free forever, and
+      Atlas <https://www.mongodb.com/cloud/atlas/>`__ today. It's free forever, and
       you'll be able to use it to work with the examples in this blog
       series.
 
@@ -251,17 +250,15 @@ MongoDB & Java - CRUD Operations Tutorial
 
    Now that our Maven project works, we can start talking with MongoDB.
 
-   If you have imported the `Sample
-   Dataset <http://bit.ly/atlas-sample-data-blog>`__ as suggested in the
-   `Quick Start Atlas blog
-   post <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__,
+   If you have imported the :doc:`Sample Dataset </article/atlas-sample-datasets/>` as suggested in the
+   :doc:`Quick Start Atlas blog post </quickstart/free-atlas-cluster/>`,
    then with the Java code we are about to create, you will be able to see
    a list of the databases in the sample Dataset.
 
    The first step is to instantiate a ``MongoClient`` by passing a MongoDB
    Atlas connection string into the ``MongoClients.create()`` static
    method. This will establish a connection to `MongoDB
-   Atlas <http://bit.ly/mongodbatlas>`__ using the connection string. Then
+   Atlas <https://www.mongodb.com/cloud/atlas/>`__ using the connection string. Then
    we can retrieve the list of databases on this cluster and print them out
    to test the connection with MongoDB.
 
@@ -337,8 +334,7 @@ MongoDB & Java - CRUD Operations Tutorial
    ``Connection``. Now we will work on the ``Create`` class.
 
    If you didn't set up your free cluster on MongoDB Atlas, now is great
-   time to do so. You have all the instructions in this `blog
-   post <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__.
+   time to do so. You have all the instructions in this :doc:`blog post </quickstart/free-atlas-cluster/>`.
 
    Checking the Collection and Data Model
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -491,8 +487,8 @@ MongoDB & Java - CRUD Operations Tutorial
    ObjectId for us if we didn't explicitly create one here but it's good
    practise to set the ``_id`` ourselves. This won't change our life right
    now but it makes more sense when we directly manipulate POJOs and we
-   want to create a clean REST API. I'm doing this in my `mapping POJOs
-   post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--mapping-pojos>`__.
+   want to create a clean REST API. I'm doing this in my :doc:`mapping POJOs
+   post </quickstart/java-mapping-pojos/>`.
 
    Insert Operation
    ~~~~~~~~~~~~~~~~
@@ -547,9 +543,7 @@ MongoDB & Java - CRUD Operations Tutorial
       }
 
    You can execute this class with the following maven command line in the
-   root directory or using your IDE (see the `previous
-   post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
-   for details). Do not forget the doubles quotes around the MongoDB URI to
+   root directory or using your IDE (see above for more details). Do not forget the doubles quotes around the MongoDB URI to
    avoid surprises.
 
    .. code-block:: bash
@@ -1206,9 +1200,7 @@ MongoDB & Java - CRUD Operations Tutorial
 
    In order to run this program, make sure you set up your ``mongodb.uri``
    in your system properties using your IDE if you want to run this code in
-   your favorite IDE (see my `first blog
-   post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
-   for more details).
+   your favorite IDE (see above for more details).
 
    Alternatively, you can use this maven command line in your root project
    (where the ``src`` folder is):
@@ -1562,9 +1554,7 @@ MongoDB & Java - CRUD Operations Tutorial
 
    In order to run this program, make sure you set up your ``mongodb.uri``
    in your system properties using your IDE if you want to run this code in
-   your favorite IDE (see my `first blog
-   post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
-   for more details).
+   your favorite IDE (see above for more details).
 
    Alternatively, you can use this maven command line in your root project
    (where the ``src`` folder is):
@@ -1706,5 +1696,4 @@ MongoDB & Java - CRUD Operations Tutorial
 
       If you want to learn more and deepen your knowledge faster, I
       recommend you check out the M220J: MongoDB for Java Developers
-      training available for free on `MongoDB
-      University <http://bit.ly/mongodbuniversity>`__.
+      training available for free on `MongoDB University <https://university.mongodb.com/courses/M220J/about>`__.

@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-02-27
 
-.. updated-date:: 2020-10-21
+.. updated-date:: 2020-12-09
 
 .. type:: quickstart
 
@@ -64,8 +64,7 @@ Java - Change Streams
    framework, an application can also filter for specific changes or
    transform the notifications at will.
    
-   In this blog post, as promised in the `first blog
-   post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
+   In this blog post, as promised in the :doc:`first blog post </quickstart/java-setup-crud-operations/>`
    of this series, I will show you how to leverage MongoDB Change Streams
    using Java.
 
@@ -85,8 +84,7 @@ Java - Change Streams
    .. blockquote::
    
       If you haven't yet set up your free cluster on MongoDB Atlas, now is
-      a great time to do so. You have all the instructions in this `blog
-      post <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__.
+      a great time to do so. You have all the instructions in this :doc:`blog post </quickstart/free-atlas-cluster/>`.
 
 .. content::
 
@@ -642,9 +640,9 @@ Java - Change Streams
    Scaling up correctly a Change Stream data processing pipeline can be
    tricky. That's why you can implement this easily using `MongoDB Triggers
    in MongoDB
-   Stitch <https://docs.mongodb.com/stitch/triggers/database-triggers/>`__.
+   Realm <https://docs.mongodb.com/realm/triggers/database-triggers/>`__.
    
-   You can check out my `MongoDB Stitch sample
+   You can check out my `MongoDB Realm sample
    application <https://github.com/MaBeuLux88/mongodb-stitch-movie-collection>`__
    if you want to see a real example with several Change Streams in action.
    
@@ -653,7 +651,7 @@ Java - Change Streams
       If you want to learn more and deepen your knowledge faster, I
       recommend you check out the M220J: MongoDB for Java Developers
       training available for free on `MongoDB
-      University <http://bit.ly/mongodbuniversity>`__.
+      University <https://university.mongodb.com/>`__.
    
    In the next blog post, I will show you multi-document ACID transactions
    in Java.

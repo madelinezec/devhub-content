@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-01-07
 
-.. updated-date:: 2020-10-21
+.. updated-date:: 2020-12-09
 
 .. type:: quickstart
 
@@ -82,8 +82,7 @@ Java - Aggregation Pipeline
    .. blockquote::
 
       If you didn't set up your free cluster on MongoDB Atlas, now is great
-      time to do so. You have all the instructions in this `blog
-      post <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__.
+      time to do so. You have all the instructions in this :doc:`blog post </quickstart/free-atlas-cluster/>`.
 
 .. content::
 
@@ -92,7 +91,7 @@ Java - Aggregation Pipeline
 
    In the `MongoDB Sample
    Dataset <https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/>`__
-   in `MongoDB Atlas <http://bit.ly/mongodbatlas>`__, let's explore a bit
+   in `MongoDB Atlas <https://www.mongodb.com/cloud/atlas/>`__, let's explore a bit
    the ``zips`` collection in the ``sample_training`` database.
 
    .. code-block:: javascript
@@ -142,7 +141,7 @@ Java - Aggregation Pipeline
    builder <https://docs.mongodb.com/compass/master/aggregation-pipeline-builder/>`__
    that is available in `MongoDB
    Compass <https://www.mongodb.com/products/compass>`__ or in `MongoDB
-   Atlas <http://bit.ly/mongodbatlas>`__ in the ``Collections`` tab.
+   Atlas <https://www.mongodb.com/cloud/atlas/>`__ in the ``Collections`` tab.
 
    Once this is done, you can `export your pipeline to
    Java <https://docs.mongodb.com/compass/master/export-pipeline-to-language/>`__
@@ -212,7 +211,7 @@ Java - Aggregation Pipeline
    In MongoDB 4.2, there are 30 different aggregation pipeline stages that
    you can use to manipulate your documents. If you want to know more, I
    encourage you to follow this course on MongoDB University: `M121: The
-   MongoDB Aggregation Framework <http://bit.ly/MongoDBUniversityM121>`__.
+   MongoDB Aggregation Framework <https://university.mongodb.com/courses/M121/about>`__.
 
    Second Example with Posts
    -------------------------
@@ -434,13 +433,13 @@ Java - Aggregation Pipeline
    .. blockquote::
 
       I encourage you to follow the `M121 course on MongoDB
-      University <http://bit.ly/MongoDBUniversityM121>`__ to become an
+      University <https://university.mongodb.com/courses/M121/about>`__ to become an
       aggregation pipeline jedi.
 
       If you want to learn more and deepen your knowledge faster, I
       recommend you check out the M220J: MongoDB for Java Developers
       training available for free on `MongoDB
-      University <http://bit.ly/mongodbuniversity>`__.
+      University <https://university.mongodb.com/>`__.
 
    In the next blog post, I will explain to you the `Change
    Streams <https://docs.mongodb.com/manual/changeStreams/>`__ in Java.

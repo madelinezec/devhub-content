@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-01-07
 
-.. updated-date:: 2020-10-21
+.. updated-date:: 2020-12-09
 
 .. type:: quickstart
 
@@ -57,7 +57,7 @@ Java - Mapping POJOs
    documents, which look a lot like objects. Indeed, this is not a
    coincidence because that's the core idea behind the MongoDB database.
 
-   In this blog post, as promised in the `first blog post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
+   In this blog post, as promised in the :doc:`first blog post </quickstart/java-setup-crud-operations/>`
    of this series, I will show you how to automatically map MongoDB
    documents to Plain Old Java Objects (POJOs) using only the MongoDB
    driver.
@@ -76,8 +76,7 @@ Java - Mapping POJOs
       git clone https://github.com/mongodb-developer/java-quick-start
 
    If you haven't yet set up your free cluster on MongoDB Atlas, now is a
-   great time to do so. You have all the instructions in this `blog
-   post <https://www.mongodb.com/blog/post/quick-start-getting-your-free-mongodb-atlas-cluster>`__.
+   great time to do so. You have all the instructions in this :doc:`blog post </quickstart/free-atlas-cluster/>`.
 
 .. content::
 
@@ -210,9 +209,7 @@ Java - Mapping POJOs
 
    -  I need a ``ConnectionString`` instance instead of the usual
       ``String`` I have used so far in this series. I'm still retrieving my
-      MongoDB Atlas URI from the system properties. See my `starting and
-      setup blog
-      post <https://www.mongodb.com/blog/post/quick-start-java-and-mongodb--starting-and-setup>`__
+      MongoDB Atlas URI from the system properties. See my :doc:`starting and setup blog post </quickstart/java-setup-crud-operations/>`
       if you need a reminder.
 
    .. code-block:: java
@@ -395,6 +392,6 @@ Java - Mapping POJOs
 
       If you want to learn more and deepen your knowledge faster, I
       recommend you check out the M220J: MongoDB for Java Developers
-      training available for free on `MongoDB University <http://bit.ly/mongodbuniversity>`__.
+      training available for free on `MongoDB University <https://university.mongodb.com/>`__.
 
    In the next blog post, I will show you the aggregation framework in Java.
