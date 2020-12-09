@@ -22,16 +22,18 @@
 
 .. pubdate:: 2020-12-08
 
+.. updated-date:: 2020-12-09
+
 .. type:: article
 
 .. level:: beginner
 
 .. related::
 
-   * Article: `O-FISH on the MongoDB Community Forums <https://developer.mongodb.com/community/forums/tag/o-fish/>`__
-   * Article: `Protecting Our Oceans With An Open-Source Application <https://www.mongodb.com/blog/post/mongodb-cloud-rescue-protecting-oceans-opensource-application>`__ (explains what the O-FISH app is)
-   * Article: `Contributing to O-FISH <https://wildaid.github.io/contribute/>`__
-   * Article: `NBC News story on the O-FISH application <https://www.nbcnews.com/tech/tech-news/tracking-illegal-fishing-there-s-finally-app-n1235857>`__
+   * `Article: O-FISH on the MongoDB Community Forums <https://developer.mongodb.com/community/forums/tag/o-fish/>`__
+   * `Article: Protecting Our Oceans With An Open-Source Application <https://www.mongodb.com/blog/post/mongodb-cloud-rescue-protecting-oceans-opensource-application>`__ (explains what the O-FISH app is)
+   * `Article: Contributing to O-FISH <https://wildaid.github.io/contribute/>`__
+   * `Article: NBC News story on the O-FISH application <https://www.nbcnews.com/tech/tech-news/tracking-illegal-fishing-there-s-finally-app-n1235857>`__
 
 .. languages::
 
