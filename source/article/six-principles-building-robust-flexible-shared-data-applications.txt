@@ -1,0 +1,108 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/six-principles-resilient-evolvability.png
+
+.. meta-description:: 
+
+   Learn how to build robust yet flexible shared data applications which don't break when data model changes occur, to rapidly meet new business requirements.
+
+.. twitter::
+   :creator: @TheDonester
+   :title: The Six Principles for Resilient Evolvability
+   :image: /images/social/twitter/twitter-six-principles-resilient-evolvability.png
+   :image-alt: MongoDB Six Principles For Resilient Evolvavility.
+
+   Building robust yet flexible shared data applications with MongoDB by Paul Done.
+
+.. og::
+   :title: The Six Principles for Resilient Evolvability
+   :image: /images/social/open-graph/og-six-principles-resilient-evolvability.png
+ 
+.. include:: /includes/authors/done-paul.rst
+
+.. pubdate:: 2020-12-09
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * API
+   * BSON
+   * CRUD
+   * Data
+   * Data Structures
+   * Kafka
+   * Public Speaking
+   * Releases
+   * Schema Design
+   * Technical
+   * Testing
+
+.. languages::
+
+   * Rust
+
+.. products::
+
+   * MongoDB
+   * Atlas
+
+.. related::
+
+   * `Github Repository <https://github.com/mongodb-developer/mongo-resilient-evolvability-demo>`__
+
+============================================================================
+The Six Principles for Building Robust Yet Flexible Shared Data Applications
+============================================================================
+
+.. content::
+
+   I've spent my seven years employed at MongoDB Inc. thinking about how organisations can better build fluid data-intensive applications. Over the years, in conversations with clients, I've tried to convey my opinions of how this can be achieved, but in hindsight, I've only had limited success, due to my inability to articulate the "why" and the "how" properly. In fact, the more I reflect, the more I realise it's a theme I've been jostling with for most of my IT career. For example, back in 2008, when SOAP was still commonplace for building web services, I touched on a similar theme in my blog post `Web Service Messaging Nirvana <http://pauldone.blogspot.com/2008/10/web-service-messaging-nirvana.html>`__. Now, after quite some time, I feel like I've finally been able to locate the signals in the noise, and capture these into something cohesive and positively actionable by others...
+
+   So, I've now brought together a set of techniques I've identified to effectively deliver resilient yet evolvable data-driven applications, in a recorded online 45-minute talk, which you can view below.
+
+   .. blockquote::
+
+      The Six Principles For Resilient Evolvability by Paul Done.
+
+      .. youtube:: ms-2kgZbdGU
+
+   You can also scan through the slides I used for the talk, `here <https://speakerdeck.com/pdone/the-six-principles-for-resilient-evolvability>`__.
+
+   I've also shared, on Github, `a sample Rust application <https://github.com/mongodb-developer/mongo-resilient-evolvability-demo>`__ I built that highlights some of the patterns described.
+
+   In my talk, you will hear about the potential friction that can occur with multiple applications on different release trains, due to overlapping dependencies on a shared data set. Without forethought, the impact of making shared data model changes to meet new requirements for one application can result in needing to modify every other application too, dramatically reducing business agility and flexibility. You might be asking yourself, "If this shared data is held in a modern real-time operational database like MongoDB, why isn't MongoDB's flexible data model sufficient to allow applications and services to easily evolve?" My talk will convey why this is a naive assumption made by some, and why the adoption of specific best practices, in your application tier, is also required to mitigate this.
+
+   In the talk, I identify the resulting best practices as a set of six key principles, which I refer to as "resilient evolvability." Below is a summary of the six principles:
+
+   1. Support optional fields. Field absence conveys meaning.
+   2. For Finds, only ask for fields that are your concern, to support variability and to reduce change dependency.
+   3. For Updates, always use in-place operators, changing targeted fields only. Replacing whole documents blows away changes made by other applications.
+   4. For the rare data model Mutative Changes, adopt "Interim Duplication" to reduce delaying high priority business requirements.
+   5. Facilitate entity variance, because real-world entities do vary, especially when a business evolves and diversifies.
+   6. Only use Document Mappers if they are NOT "all or nothing," and only if they play nicely with the other five principles.
+
+   Additionally, in the talk, I capture my perspective on the three different distributed application/data architectural combinations I often see, which I call "The Data Access Triangle."
+
+   .. figure:: /images/article/six-principles-resilient-evolvability/triangle.png
+      :align: center
+      :alt: Data Access Triangle with shared data, duplicated data and isolated data.
+
+   In essence, my talk is primarily focussed on how to achieve agility and flexibility when Shared Data is being used by many applications or services, but some of the principles will still apply when using Isolated Data or Duplicated Data for each application or service.
+
+.. summary::
+
+   Wrap-Up
+   -------
+
+   From experience, by adopting the six principles, I firmly believe:
+
+   - Your software will enable varying structured data which embraces, rather than inhibits, real-world requirements.
+   - Your software won't break when additive data model changes occur, to rapidly meet new business requirements.
+   - You will have a process to deal with mutative data model changes, which reduces delays in delivering new business requirements.
+
+   This talk and its advice is the culmination of many years trying to solve and address the problems in this space. I hope you will find my guidance to be a useful contribution to your work and a set of principles everyone can build on in the future.
+
+   .. include:: /includes/callouts/community-cta.rst
