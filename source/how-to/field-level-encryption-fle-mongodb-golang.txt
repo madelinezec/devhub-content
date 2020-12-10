@@ -1,0 +1,822 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to encrypt document fields client-side in Go with MongoDB field level encryption (FLE).
+
+.. twitter::
+   :creator: @nraboy
+   :title: Field Level Encryption (FLE) in MongoDB with Golang
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to encrypt document fields client-side in Go with MongoDB field level encryption (FLE).
+
+.. og::
+   :title: Field Level Encryption (FLE) in MongoDB with Golang
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2020-12-10
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. languages::
+
+   * Go
+
+.. tags::
+
+   * Field Level Encryption
+   * Security
+
+===================================================
+Field Level Encryption (FLE) in MongoDB with Golang
+===================================================
+
+.. introduction::
+
+    One of the many great things about MongoDB is how secure you can make
+    your data in it. In addition to network and user-based rules, you have
+    encryption of your data at rest, encryption over the wire, and now
+    recently, client-side encryption known as field level encryption (FLE).
+
+    So, what exactly is field level encryption (FLE) and how do you use it?
+
+    With field level encryption, you can choose to encrypt certain fields
+    within a document, client-side, while leaving other fields as plain
+    text. This is particularly useful because when viewing a FLE document with
+    the `CLI <https://docs.mongodb.com/manual/mongo/>`__, `Compass <https://www.mongodb.com/products/compass>`__, or directly within `Altas <https://www.mongodb.com/cloud/atlas>`__, the encrypted fields will
+    not be human readable. When they are not human readable, if the
+    documents should get into the wrong hands, those fields will be useless
+    to the malicious user. However, when using the MongoDB language drivers
+    while using the same encryption keys, those fields can be decrypted and
+    are queryable within the application.
+
+    In this quick start themed tutorial, we're going to see how to use
+    `MongoDB field level
+    encryption <https://docs.mongodb.com/drivers/security/client-side-field-level-encryption-guide>`__
+    with the Go programming language (Golang). In particular, we're going to be exploring automatic encryption rather than manual encryption.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    There are a few requirements that must be met prior to attempting to use
+    FLE with the Go driver.
+
+    -  MongoDB Atlas 4.2+
+    -  MongoDB Go driver 1.2+
+    -  The `libmongocrypt <https://github.com/mongodb/libmongocrypt>`__ library installed
+    -  The `mongocryptd <https://docs.mongodb.com/manual/reference/security-client-side-encryption-appendix/>`__ binary installed
+
+    .. blockquote::
+
+        This tutorial will focus on automatic encryption. While this tutorial will use `MongoDB
+        Atlas <https://www.mongodb.com/cloud/atlas>`__, you're going to need to be
+        using version 4.2 or newer for MongoDB Atlas or MongoDB Enterprise
+        Edition. You will not be able to use automatic field level encryption with MongoDB
+        Community Edition.
+
+    The assumption is that you're familiar with developing Go applications that use MongoDB. If you want a refresher, take a look at the `quick start series <https://www.mongodb.com/blog/post/quick-start-golang--mongodb--starting-and-setup>`__ that I 
+    published on the topic.
+
+    To use field level encryption, you're going to need a little more than
+    just having an appropriate version of MongoDB and the MongoDB Go driver.
+    We'll need **libmongocrypt**, which is a companion library for encryption
+    in the MongoDB drivers, and **mongocryptd**, which is a binary for
+    parsing automatic encryption rules based on the extended JSON format.
+
+.. content::
+
+    Installing the Libmongocrypt and Mongocryptd Binaries and Libraries
+    -------------------------------------------------------------------
+
+    Because of the **libmongocrypt** and **mongocryptd** requirements, it's
+    worth reviewing how to install and configure them. We'll be exploring
+    installation on macOS, but refer to the documentation for
+    `libmongocrypt <https://github.com/mongodb/libmongocrypt>`__ and
+    `mongocryptd <https://docs.mongodb.com/manual/reference/security-client-side-encryption-appendix/>`__
+    for your particular operating system.
+
+    There are a few solutions torward installing the **libmongocrypt**
+    library on macOS, the easiest being with
+    `Homebrew <https://brew.sh/>`__. If you've got Homebrew installed, you
+    can install **libmongocrypt** with the following command:
+
+    .. code-block:: bash
+
+        brew install mongodb/brew/libmongocrypt
+
+    Just like that, the MongoDB Go driver will be able to handle encryption. Further explanation of the instructions can be found in the `documentation <https://github.com/mongodb/libmongocrypt#installing-libmongocrypt-on-macos>`__.
+
+    Because we want to do automatic encryption with the driver using an
+    extended JSON schema, we need **mongocryptd**, a binary that ships
+    with MongoDB Enterprise Edition. The **mongocryptd** binary needs
+    to exist on the computer or server where the Go application intends to
+    run. It is not a development dependency like **libmongocrypt**, but a
+    runtime dependency.
+
+    You'll want to consult the
+    `documentation <https://docs.mongodb.com/manual/reference/security-client-side-encryption-appendix/#mongocryptd-installation>`__
+    on how to obtain the **mongocryptd** binary as each operating system has
+    different steps.
+
+    For macOS, you'll want to download MongoDB Enterprise Edition from the
+    `MongoDB Download
+    Center <https://www.mongodb.com/try/download/enterprise?tck=docs_server>`__.
+    You can refer to the Enterprise Edition `installation
+    instructions <https://docs.mongodb.com/manual/tutorial/install-mongodb-enterprise-on-os-x/>`__
+    for macOS to install, but the gist of the installation involves
+    extracting the TAR file and moving the files to the appropriate
+    directory.
+
+    By this point, all the appropriate components for field level encryption
+    should be installed or available.
+
+    Create a Data Key in MongoDB for Encrypting and Decrypting Document Fields
+    --------------------------------------------------------------------------
+
+    Before we can start encrypting and decrypting fields within our
+    documents, we need to establish keys to do the bulk of the work. This
+    means defining our key vault location within MongoDB and the Key
+    Management System (KMS) we wish to use for decrypting the data
+    encryption keys.
+
+    The key vault is a collection that we'll create within MongoDB for storing encrypted keys for our document fields. The primary key within the KMS will decrypt the keys 
+    within the key vault.
+
+    For this particular tutorial, we're going to use a Local Key Provider for
+    our KMS. It is worth looking into something like `AWS KMS <https://aws.amazon.com/kms/>`__ or
+    similar, something we'll explore in a future tutorial, as an alternative to a Local Key Provider.
+
+    On your computer, create a new Go project with the following **main.go**
+    file:
+
+    .. code-block:: go
+
+        package main
+
+        import (
+            "context"
+            "crypto/rand"
+            "fmt"
+            "io/ioutil"
+            "log"
+            "os"
+
+            "go.mongodb.org/mongo-driver/bson"
+            "go.mongodb.org/mongo-driver/mongo"
+            "go.mongodb.org/mongo-driver/mongo/options"
+        )
+
+        var (
+            ctx          = context.Background()
+            kmsProviders map[string]map[string]interface{}
+            schemaMap    bson.M
+        )
+
+        func createDataKey() {}
+        func createEncryptedClient() *mongo.Client {}
+        func readSchemaFromFile(file string) bson.M {}
+
+        func main() {}
+
+    You'll need to install the MongoDB Go driver to proceed. To learn how to
+    do this, take a moment to check out my previous tutorial titled `Quick
+    Start: Golang & MongoDB - Starting and
+    Setup <https://www.mongodb.com/blog/post/quick-start-golang--mongodb--starting-and-setup>`__.
+
+    In the above code, we have a few variables defined as well as a few
+    functions. We're going to focus on the ``kmsProviders`` variable and the
+    ``createDataKey`` function for this particular part of the tutorial.
+
+    Take a look at the following ``createDataKey`` function:
+
+    .. code-block:: go
+
+        func createDataKey() {
+            kvClient, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("ATLAS_URI")))
+            if err != nil {
+                log.Fatal(err)
+            }
+            clientEncryptionOpts := options.ClientEncryption().SetKeyVaultNamespace("keyvault.datakeys").SetKmsProviders(kmsProviders)
+            clientEncryption, err := mongo.NewClientEncryption(kvClient, clientEncryptionOpts)
+            if err != nil {
+                log.Fatal(err)
+            }
+            defer clientEncryption.Close(ctx)
+            _, err = clientEncryption.CreateDataKey(ctx, "local", options.DataKey().SetKeyAltNames([]string{"example"}))
+            if err != nil {
+                log.Fatal(err)
+            }
+        }
+
+    In the above ``createDataKey`` function, we are first connecting to
+    MongoDB. The MongoDB connection string is defined by the environment
+    variable ``ATLAS_URI`` in the above code. While you could hard-code this
+    connection string or store it in a configuration file, for security
+    reasons, it makes a lot of sense to use environment variables instead.
+
+    If the connection was successful, we need to define the key vault
+    namespace and the KMS provider as part of the encryption configuration
+    options. The namespace is composed of the database name followed by the
+    collection name. This is where the key information will be stored. The
+    ``kmsProviders`` map, which will be defined later, will have local key
+    information.
+
+    Executing the ``CreateDataKey`` function will create the key information
+    within MongoDB as a document.
+
+    We are choosing to specify an alternate key name of ``example`` so that
+    we don't have to refer to the data key by its ``_id`` when using it with
+    our documents. Instead, we'll be able to use the unique alternate name
+    which could follow a special naming convention. It is important to note that the alternate key name is only useful when using the ``AEAD_AES_256_CBC_HMAC_SHA_512-Random``, 
+    something we'll explore later in this tutorial.
+
+    To use the ``createDataKey`` function, we can make some modifications to
+    the ``main`` function:
+
+    .. code-block:: go
+
+        func main() {
+            localKey := make([]byte, 96)
+            if _, err := rand.Read(localKey); err != nil {
+                log.Fatal(err)
+            }
+            kmsProviders = map[string]map[string]interface{}{
+                "local": {
+                    "key": localKey,
+                },
+            }
+            createDataKey()
+        }
+
+    In the above code, we are generating a random key. This random key is
+    added to the ``kmsProviders`` map that we were using within the
+    ``createDataKey`` function.
+
+    .. blockquote::
+
+        It is insecure to have your local key stored within the application or on the same server. In production, consider using AWS KMS or accessing your local 
+        key through a separate request before adding it to the Local Key Provider.
+
+    If you ran the code so far, you'd end up with a ``keyvault`` database
+    and a ``datakeys`` collection which has a document of a key with an
+    alternate name. That document would look something like this:
+
+    .. code-block:: none
+
+        {
+            "_id": UUID("27a51d69-809f-4cb9-ae15-d63f7eab1585"),
+            "keyAltNames": [
+                "example"
+            ],
+            "keyMaterial": Binary("oJ6lEzjIEskHFxz7zXqddCgl64EcP1A7E/r9zT+OL19/ZXVwDnEjGYMvx+BgcnzJZqkXTFTgJeaRYO/fWk5bEcYkuvXhKqpMq2ZO", 0),
+            "creationDate": 2020-11-05T23:32:26.466+00:00,
+            "updateDate": 2020-11-05T23:32:26.466+00:00,
+            "status": 0,
+            "masterKey": {
+                "provider": "local"
+            }
+        }
+
+    There are a few important things to note with our code so far:
+
+    -  The ``localKey`` is random and is not persisting beyond the runtime which will result in key mismatches upon consecutive runs of the application. Either specify a non-random key or store it somewhere after generation.
+    -  We're using a Local Key Provider with a key that exists locally. This is not recommended in a production scenario due to security concerns. Instead, use a provider like AWS KMS or store the key externally.
+    -  The ``createDataKey`` should only be executed when a particular key is needed to be created, not every time the application runs.
+    -  There is no strict naming convention for the key vault and the keys that reside in it. Name your database and collection however makes sense to you.
+
+    After we run our application the first time, we'll probably want to
+    comment out the ``createDataKey`` line in the ``main`` function.
+
+    Defining an Extended JSON Schema Map for Fields to be Encrypted
+    ---------------------------------------------------------------
+
+    With the data key created, we're at a point in time where we need to
+    figure out what fields should be encrypted in a document and what fields
+    should be left as plain text. The easiest way to do this is with a
+    schema map.
+
+    A schema map for encryption is extended JSON and can be added directly
+    to the Go source code or loaded from an external file. From a
+    maintenance perspective, loading from an external file is easier to
+    maintain.
+
+    Take a look at the following schema map for encryption:
+
+    .. code-block:: json
+
+        {
+            "fle-example.people": {
+                "encryptMetadata": {
+                    "keyId": "/keyAltName"
+                },
+                "properties": {
+                    "ssn": {
+                        "encrypt": {
+                            "bsonType": "string",
+                            "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random"
+                        }
+                    }
+                },
+                "bsonType": "object"
+            }
+        }
+
+    Let's assume the above JSON exists in a **schema.json** file which sits
+    relative to our Go files or binary. In the above JSON, we're saying that
+    the map applies to the ``people`` collection within the ``fle-example``
+    database.
+
+    The ``keyId`` field within the ``encryptMetadata`` object says that
+    documents within the ``people`` collection must have a string field
+    called ``keyAltName``. The value of this field will reflect the
+    alternate key name that we defined when creating the data key. Notice
+    the ``/`` that prefixes the value. That is not an error. It is a
+    requirement for this particular value since it is a pointer.
+
+    The ``properties`` field lists fields within our document and in this
+    example lists the fields that should be encrypted along with the
+    encryption algorithm to use. In our example, only the ``ssn`` field will
+    be encrypted while all other fields will remain as plain text.
+
+    There are two algorithms currently supported:
+
+    - AEAD_AES_256_CBC_HMAC_SHA_512-Random
+    - AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic
+
+    In short, the ``AEAD_AES_256_CBC_HMAC_SHA_512-Random`` algorithm is best used on fields that have low cardinality or don't need to be used within a filter for a query. The 
+    ``AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic`` algorithm should be used for fields with high cardinality or for fields that need to be used within a filter.
+
+    To learn more about these algorithms, visit the `documentation <https://docs.mongodb.com/manual/core/security-client-side-encryption/#encryption-algorithms>`__. 
+    We'll be exploring both algorithms in this particular tutorial.
+
+    If we wanted to, we could change the schema map to the following:
+
+    .. code-block:: json
+
+        {
+            "fle-example.people": {
+                "properties": {
+                    "ssn": {
+                        "encrypt": {
+                            "keyId": "/keyAltName",
+                            "bsonType": "string",
+                            "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random"
+                        }
+                    }
+                },
+                "bsonType": "object"
+            }
+        }
+
+    The change made in the above example has to do with the ``keyId`` field.
+    Rather than declaring it as part of the ``encryptMetadata``, we've
+    declared it as part of a particular field. This could be useful if you
+    want to use different keys for different fields.
+
+    Remember, the pointer used for the ``keyId`` will only work with the ``AEAD_AES_256_CBC_HMAC_SHA_512-Random`` algorithm. You can, however, use the actual key id for both 
+    algorithms.
+
+    With a schema map for encryption available, let's get it loaded in the
+    Go application. Change the ``readSchemaFromFile`` function to look like
+    the following:
+
+    .. code-block:: go
+
+        func readSchemaFromFile(file string) bson.M {
+            content, err := ioutil.ReadFile(file)
+            if err != nil {
+                log.Fatal(err)
+            }
+            var doc bson.M
+            if err = bson.UnmarshalExtJSON(content, false, &doc); err != nil {
+                log.Fatal(err)
+            }
+            return doc
+        }
+
+    In the above code, we are reading the file, which will be the
+    **schema.json** file soon enough. If it is read successfully, we use the
+    ``UnmarshalExtJSON`` function to load it into a ``bson.M`` object that
+    is more pleasant to work with in Go.
+
+    Enabling MongoDB Automatic Client Encryption in a Golang Application
+    --------------------------------------------------------------------
+
+    By this point, you should have the code in place for creating a data key
+    and a schema map defined to be used with the automatic client encryption
+    functionality that MongoDB supports. It's time to bring it together to
+    actually encrypt and decrypt fields.
+
+    We're going to start with the ``createEncryptedClient`` function within
+    our project:
+
+    .. code-block:: go
+
+        func createEncryptedClient() *mongo.Client {
+            schemaMap = readSchemaFromFile("schema.json")
+            mongocryptdOpts := map[string]interface{}{
+                "mongodcryptdBypassSpawn": true,
+            }
+            autoEncryptionOpts := options.AutoEncryption().
+                SetKeyVaultNamespace("keyvault.datakeys").
+                SetKmsProviders(kmsProviders).
+                SetSchemaMap(schemaMap).
+                SetExtraOptions(mongocryptdOpts)
+            mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("ATLAS_URI")).SetAutoEncryptionOptions(autoEncryptionOpts))
+            if err != nil {
+                log.Fatal(err)
+            }
+            return mongoClient
+        }
+
+    In the above code we are making use of the ``readSchemaFromFile``
+    function that we had just created to load our schema map for encryption.
+    Next, we are defining our auto encryption options and establishing a
+    connection to MongoDB. This will look somewhat familiar to what we did
+    in the ``createDataKey`` function. When defining the auto encryption
+    options, not only are we specifying the KMS for our key and vault, but
+    we're also supplying the schema map for encryption.
+
+    You'll notice that we are using ``mongocryptdBypassSpawn`` as an extra option. We're doing this so that the client doesn't try to automatically start the 
+    **mongocryptd** daemon if it is already running. You may or may not want to use this in your own application.
+
+    If the connection was successful, the client is returned.
+
+    It's time to revisit the ``main`` function within the project:
+
+    .. code-block:: go
+
+        func main() {
+            localKey := make([]byte, 96)
+            if _, err := rand.Read(localKey); err != nil {
+                log.Fatal(err)
+            }
+            kmsProviders = map[string]map[string]interface{}{
+                "local": {
+                    "key": localKey,
+                },
+            }
+            // createDataKey()
+            client := createEncryptedClient()
+            defer client.Disconnect(ctx)
+            collection := client.Database("fle-example").Collection("people")
+            if _, err := collection.InsertOne(context.TODO(), bson.M{"name": "Nic Raboy", "ssn": "123456", "keyAltName": "example"}); err != nil {
+                log.Fatal(err)
+            }
+            result, err := collection.FindOne(context.TODO(), bson.D{}).DecodeBytes()
+            if err != nil {
+                log.Fatal(err)
+            }
+            fmt.Println(result)
+        }
+
+    In the above code, we are creating our Local Key Provider using a local
+    key that was randomly generated. Remember, this key should match what
+    was used when creating the data key, so random may not be the best long-term.
+    Likewise, a local key shouldn't be used in production
+    because of security reasons.
+
+    Once the KMS providers are established, the ``createEncryptedClient``
+    function is executed. Remember, this particular function will set the
+    automatic encryption options and establish a connection to MongoDB.
+
+    To match the database and collection used in the schema map definition,
+    we are using ``fle-example`` as the database and ``people`` as the
+    collection. The operations that follow, such as ``InsertOne`` and
+    ``FindOne``, can be used as if field level encryption wasn't even a
+    thing. Because we have an ``ssn`` field and the ``keyAltName`` field,
+    the ``ssn`` field will be encrypted client-side and saved to MongoDB.
+    When doing lookup operation, the encrypted field will be decrypted.
+
+    .. image:: /images/how-to/atlas-fle-example.png
+        :alt: FLE Data in MongoDB Atlas
+
+    When looking at the data in Atlas, for example, the encrypted fields will not be human readable as seen in the above screenshot.
+
+    Running and Building a Golang Application with MongoDB Field Level Encryption
+    -----------------------------------------------------------------------------
+
+    When field level encryption is included in the Go application, a special
+    tag must be included in the build or run process, depending on the route
+    you choose. You should already have **mongocryptd** and
+    **libmongocrypt**, so to build your Go application, you'd do the
+    following:
+
+    .. code-block:: bash
+
+        go build -tags cse
+
+    If you use the above command to build your binary, you can use it as
+    normal. However, if you're running your application without building,
+    you can do something like the following:
+
+    .. code-block:: bash
+
+        go run -tags cse main.go
+
+    The above command will run the application with client-side encryption
+    enabled.
+
+    Filter Documents in MongoDB on an Encrypted Field
+    -------------------------------------------------
+
+    If you've run the example so far, you'll probably notice that while you
+    can automatically encrypt fields and decrypt fields, you'll get an error if you try to use a filter that contains an
+    encrypted field.
+
+    In our example thus far, we use the
+    ``AEAD_AES_256_CBC_HMAC_SHA_512-Random`` algorithm on our encrypted
+    fields. To be able to filter on encrypted fields, the
+    ``AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic`` must be used. More
+    information between the two options can be found in the
+    `documentation <https://docs.mongodb.com/manual/core/security-client-side-encryption/#field-level-encryption-algorithms>`__.
+
+    To use the deterministic approach, we need to make a few revisions to
+    our project. These changes are a result of the fact that we won't be
+    able to use alternate key names within our schema map.
+
+    First, let's change the **schema.json** file to the following:
+
+    .. code-block:: json
+
+        {
+            "fle-example.people": {
+                "encryptMetadata": {
+                    "keyId": [
+                        {
+                            "$binary": {
+                                "base64": "%s",
+                                "subType": "04"
+                            }
+                        }
+                    ]
+                },
+                "properties": {
+                    "ssn": {
+                        "encrypt": {
+                            "bsonType": "string",
+                            "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+                        }
+                    }
+                },
+                "bsonType": "object"
+            }
+        }
+
+    The two changes in the above JSON reflect the new algorithm and the
+    ``keyId`` using the actual ``_id`` value rather than an alias. For the
+    ``base64`` field, notice the use of the ``%s`` placeholder. If you know
+    the base64 string version of your key, then swap it out and save
+    yourself a bunch of work. Since this tutorial is an example and the data
+    changes pretty much every time we run it, we probably want to swap out
+    that field after the file is loaded.
+
+    Starting with the ``createDataKey`` function, find the following line
+    with the ``CreateDataKey`` function call:
+
+    .. code-block:: go
+
+        dataKeyId, err := clientEncryption.CreateDataKey(ctx, "local", options.DataKey())
+
+    What we didn't see in the previous parts of this tutorial is that this
+    function returns the ``_id`` of the data key. We should probably update
+    our ``createDataKey`` function to return ``primitive.Binary`` and then
+    return that ``dataKeyId`` variable.
+
+    We need to move that ``dataKeyId`` value around until it reaches where
+    we load our JSON file. We're doing a lot of work for the following
+    reasons:
+
+    -  We're in the scenario where we don't know the ``_id`` of our data key prior to runtime. If we know it, we can add it to the schema and be done.
+    -  We designed our code to jump around with functions.
+
+    The schema map requires a base64 value to be used, so when we pass
+    around ``dataKeyId``, we need to have first encoded it.
+
+    In the ``main`` function, we might have something that looks like this:
+
+    .. code-block:: go
+
+        dataKeyId := createDataKey()
+        client := createEncryptedClient(base64.StdEncoding.EncodeToString(dataKeyId.Data))
+
+    This means that the ``createEncryptedClient`` needs to receive a string
+    argument. Update the ``createEncryptedClient`` to accept a string and
+    then change how we're reading our JSON file:
+
+    .. code-block:: go
+
+        schemaMap = readSchemaFromFile("schema.json", dataKeyIdBase64)
+
+    Remember, we're just passing the base64 encoded value through the
+    pipeline. By the end of this, in the ``readSchemaFromFile`` function, we
+    can update our code to look like the following:
+
+    .. code-block:: go
+
+        func readSchemaFromFile(file string, dataKeyIdBase64 string) bson.M {
+            content, err := ioutil.ReadFile(file)
+            if err != nil {
+                log.Fatal(err)
+            }
+            content = []byte(fmt.Sprintf(string(content), dataKeyIdBase64))
+            var doc bson.M
+            if err = bson.UnmarshalExtJSON(content, false, &doc); err != nil {
+                log.Fatal(err)
+            }
+            return doc
+        }
+
+    Not only are we receiving the base64 string, but we are using an
+    ``Sprintf`` function to swap our ``%s`` placeholder with the actual
+    value.
+
+    Again, these changes were based around how we designed our code. At the
+    end of the day, we were really only changing the ``keyId`` in the schema
+    map and the algorithm used for encryption. By doing this, we are not only
+    able to decrypt fields that had been encrypted, but we're also able to
+    filter for documents using encrypted fields.
+
+    The Field Level Encryption (FLE) Code in Go
+    -------------------------------------------
+
+    While it might seem like we wrote a lot of code, the reality is that the code was far simpler than the concepts involved. To get a better look at the code, you can 
+    find it below:
+
+    .. code-block:: go
+
+        package main
+
+        import (
+            "context"
+            "crypto/rand"
+            "encoding/base64"
+            "fmt"
+            "io/ioutil"
+            "log"
+            "os"
+
+            "go.mongodb.org/mongo-driver/bson"
+            "go.mongodb.org/mongo-driver/bson/primitive"
+            "go.mongodb.org/mongo-driver/mongo"
+            "go.mongodb.org/mongo-driver/mongo/options"
+        )
+
+        var (
+            ctx          = context.Background()
+            kmsProviders map[string]map[string]interface{}
+            schemaMap    bson.M
+        )
+
+        func createDataKey() primitive.Binary {
+            kvClient, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("ATLAS_URI")))
+            if err != nil {
+                log.Fatal(err)
+            }
+            kvClient.Database("keyvault").Collection("datakeys").Drop(ctx)
+            clientEncryptionOpts := options.ClientEncryption().SetKeyVaultNamespace("keyvault.datakeys").SetKmsProviders(kmsProviders)
+            clientEncryption, err := mongo.NewClientEncryption(kvClient, clientEncryptionOpts)
+            if err != nil {
+                log.Fatal(err)
+            }
+            defer clientEncryption.Close(ctx)
+            dataKeyId, err := clientEncryption.CreateDataKey(ctx, "local", options.DataKey())
+            if err != nil {
+                log.Fatal(err)
+            }
+            return dataKeyId
+        }
+
+        func createEncryptedClient(dataKeyIdBase64 string) *mongo.Client {
+            schemaMap = readSchemaFromFile("schema.json", dataKeyIdBase64)
+            mongocryptdOpts := map[string]interface{}{
+                "mongodcryptdBypassSpawn": true,
+            }
+            autoEncryptionOpts := options.AutoEncryption().
+                SetKeyVaultNamespace("keyvault.datakeys").
+                SetKmsProviders(kmsProviders).
+                SetSchemaMap(schemaMap).
+                SetExtraOptions(mongocryptdOpts)
+            mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("ATLAS_URI")).SetAutoEncryptionOptions(autoEncryptionOpts))
+            if err != nil {
+                log.Fatal(err)
+            }
+            return mongoClient
+        }
+
+        func readSchemaFromFile(file string, dataKeyIdBase64 string) bson.M {
+            content, err := ioutil.ReadFile(file)
+            if err != nil {
+                log.Fatal(err)
+            }
+            content = []byte(fmt.Sprintf(string(content), dataKeyIdBase64))
+            var doc bson.M
+            if err = bson.UnmarshalExtJSON(content, false, &doc); err != nil {
+                log.Fatal(err)
+            }
+            return doc
+        }
+
+        func main() {
+            fmt.Println("Starting the application...")
+            localKey := make([]byte, 96)
+            if _, err := rand.Read(localKey); err != nil {
+                log.Fatal(err)
+            }
+            kmsProviders = map[string]map[string]interface{}{
+                "local": {
+                    "key": localKey,
+                },
+            }
+            dataKeyId := createDataKey()
+            client := createEncryptedClient(base64.StdEncoding.EncodeToString(dataKeyId.Data))
+            defer client.Disconnect(ctx)
+            collection := client.Database("fle-example").Collection("people")
+            collection.Drop(context.TODO())
+            if _, err := collection.InsertOne(context.TODO(), bson.M{"name": "Nic Raboy", "ssn": "123456"}); err != nil {
+                log.Fatal(err)
+            }
+            result, err := collection.FindOne(context.TODO(), bson.M{"ssn": "123456"}).DecodeBytes()
+            if err != nil {
+                log.Fatal(err)
+            }
+            fmt.Println(result)
+        }
+
+    Try to set the ``ATLAS_URI`` in your environment variables and give the code a spin.
+
+    Troubleshooting Common MongoDB FLE Problems
+    -------------------------------------------
+
+    If you ran the above code and found some encrypted data in your database, fantastic! However, if you didn't get so lucky, I want to address a few of the common problems that 
+    come up.
+
+    Let's start with the following runtime error:
+
+    .. code-block:: none
+
+        panic: client-side encryption not enabled. add the cse build tag to support
+
+    If you see the above error, it is likely because you forgot to use the ``-tags cse`` flag when building or running your application. To get beyond this, just build 
+    your application with the following:
+
+    .. code-block:: none
+
+        go build -tags cse
+
+    Assuming there aren't other problems, you won't receive that error anymore.
+
+    When you build or run with the ``-tags cse`` flag, you might stumble upon the following error:
+
+    .. code-block:: none
+
+        /usr/local/Cellar/go/1.13.1/libexec/pkg/tool/darwin_amd64/link: running clang failed: exit status 1
+        ld: warning: directory not found for option '-L/usr/local/Cellar/libmongocrypt/1.0.4/lib'
+        ld: library not found for -lmongocrypt
+        clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+    The error might not look exactly the same as mine depending on the operating system you're using, but the gist of it is that it's saying you are missing the **libmongocrypt** library. Make 
+    sure that you've installed it correctly for your operating system per the `documentation <https://github.com/mongodb/libmongocrypt>`__.
+
+    Now, what if you encounter the following?
+
+    .. code-block:: none
+
+        exec: "mongocryptd": executable file not found in $PATH
+        exit status 1
+
+    Like with the **libmongocrypt** error, it just means that we don't have access to **mongocryptd**, a requirement for automatic field level encryption. There are 
+    numerous methods toward installing this binary, as seen in the `documentation <https://docs.mongodb.com/manual/reference/security-client-side-encryption-appendix/>`__, but on macOS it means having MongoDB Enterprise Edition nearby.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    You just saw how to use MongoDB field level encryption (FLE) in your Go
+    application. This is useful if you'd like to encrypt fields within
+    MongoDB documents client-side before it reaches the database.
+
+    To give credit where credit is due, a lot of the code from this tutorial was taken from Kenn White's `sandbox repository <https://github.com/mongodb-labs/field-level-encryption-sandbox/blob/master/go/main.go>`__ on GitHub.
+
+    There are a few things that I want to reiterate:
+
+    -  Using a local key is a security risk in production. Either use something like AWS KMS or load your Local Key Provider with a key that was obtained through an external request.
+    -  The **mongocryptd** binary must be available on the computer or server running the Go application. This is easily installed through the MongoDB Enterprise Edition installation.
+    -  The **libmongocrypt** library must be available to add compatibility to the Go driver for client-side encryption and decryption.
+    -  Don't lose your client-side key. Otherwise, you lose the ability to decrypt your fields.
+
+    In a future tutorial, we'll explore how to use AWS KMS and similar for
+    key management.
+
+    Questions? Comments? We'd love to connect with you. Join the conversation on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.

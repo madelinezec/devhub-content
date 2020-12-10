@@ -15,6 +15,7 @@ Data Visualization
 DevOps
 FARM Stack
 FastAPI
+Field Level Encryption
 Full-Text Search
 Game Development
 GatsbyJS
