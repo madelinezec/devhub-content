@@ -4,18 +4,18 @@
 
 .. meta-description:: 
 
-   Learn how to encrypt document fields client-side in Go with MongoDB field level encryption (FLE).
+   Learn how to encrypt document fields client-side in Go with MongoDB client-side field level encryption (CSFLE).
 
 .. twitter::
    :creator: @nraboy
-   :title: Field Level Encryption (FLE) in MongoDB with Golang
+   :title: Client-Side Field Level Encryption (CSFLE) in MongoDB with Golang
    :image: /images/social/twitter/twitter-green-pattern.png
    :image-alt: MongoDB
 
-   Learn how to encrypt document fields client-side in Go with MongoDB field level encryption (FLE).
+   Learn how to encrypt document fields client-side in Go with MongoDB client-side field level encryption (CSFLE).
 
 .. og::
-   :title: Field Level Encryption (FLE) in MongoDB with Golang
+   :title: Client-Side Field Level Encryption (CSFLE) in MongoDB with Golang
    :image: /images/social/open-graph/og-green-pattern.png
 
 .. include:: /includes/authors/raboy-nic.rst
@@ -35,22 +35,22 @@
    * Field Level Encryption
    * Security
 
-===================================================
-Field Level Encryption (FLE) in MongoDB with Golang
-===================================================
+=================================================================
+Client-Side Field Level Encryption (CSFLE) in MongoDB with Golang
+=================================================================
 
 .. introduction::
 
     One of the many great things about MongoDB is how secure you can make
     your data in it. In addition to network and user-based rules, you have
     encryption of your data at rest, encryption over the wire, and now
-    recently, client-side encryption known as field level encryption (FLE).
+    recently, client-side encryption known as client-side field level encryption (CSFLE).
 
-    So, what exactly is field level encryption (FLE) and how do you use it?
+    So, what exactly is client-side field level encryption (CSFLE) and how do you use it?
 
     With field level encryption, you can choose to encrypt certain fields
     within a document, client-side, while leaving other fields as plain
-    text. This is particularly useful because when viewing a FLE document with
+    text. This is particularly useful because when viewing a CSFLE document with
     the `CLI <https://docs.mongodb.com/manual/mongo/>`__, `Compass <https://www.mongodb.com/products/compass>`__, or directly within `Altas <https://www.mongodb.com/cloud/atlas>`__, the encrypted fields will
     not be human readable. When they are not human readable, if the
     documents should get into the wrong hands, those fields will be useless
@@ -69,7 +69,7 @@ Field Level Encryption (FLE) in MongoDB with Golang
     ----------------
 
     There are a few requirements that must be met prior to attempting to use
-    FLE with the Go driver.
+    CSFLE with the Go driver.
 
     -  MongoDB Atlas 4.2+
     -  MongoDB Go driver 1.2+
@@ -755,8 +755,8 @@ Field Level Encryption (FLE) in MongoDB with Golang
 
     Try to set the ``ATLAS_URI`` in your environment variables and give the code a spin.
 
-    Troubleshooting Common MongoDB FLE Problems
-    -------------------------------------------
+    Troubleshooting Common MongoDB CSFLE Problems
+    ---------------------------------------------
 
     If you ran the above code and found some encrypted data in your database, fantastic! However, if you didn't get so lucky, I want to address a few of the common problems that 
     come up.
@@ -803,7 +803,7 @@ Field Level Encryption (FLE) in MongoDB with Golang
     Conclusion
     ----------
 
-    You just saw how to use MongoDB field level encryption (FLE) in your Go
+    You just saw how to use MongoDB client-side field level encryption (CSFLE) in your Go
     application. This is useful if you'd like to encrypt fields within
     MongoDB documents client-side before it reaches the database.
 
