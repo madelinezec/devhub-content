@@ -22,6 +22,8 @@
 
 .. pubdate:: 2020-09-25
 
+.. updated-date:: 2020-12-10
+
 .. type:: article
 
 .. level:: beginner
@@ -82,7 +84,7 @@ A Free GraphQL API for Johns Hopkins University COVID-19 Dataset
 
    .. blockquote::
 
-      This cluster contains 2 databses: ``covid19`` and ``covid19jhu``. Only the first one will be exposed with this GraphQL API. The second one contains the unprocessed raw data from JHU's CSV files. Learn about the databases and collection in :doc:`the dedicated blog post </article/johns-hopkins-university-covid-19-data-atlas>`.
+      This cluster contains 2 databases: ``covid19`` and ``covid19jhu``. Only the first one will be exposed with this GraphQL API. The second one contains the unprocessed raw data from JHU's CSV files. Learn about the databases and collection in :doc:`the dedicated blog post </article/johns-hopkins-university-covid-19-data-atlas>`.
 
    You can use this cluster to build your application, but I also set up a GraphQL API using `MongoDB Realm <https://www.mongodb.com/realm>`__ to expose this data for you.
    

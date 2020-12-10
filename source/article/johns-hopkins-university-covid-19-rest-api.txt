@@ -22,7 +22,7 @@
 
 .. pubdate:: 2020-07-28
 
-.. updated-date:: 2020-09-10
+.. updated-date:: 2020-12-10
 
 .. type:: article
 
@@ -58,6 +58,15 @@ A Free REST API for Johns Hopkins University COVID-19 dataset
 
    News
    ----
+
+   December 10th, 2020
+   ~~~~~~~~~~~~~~~~~~~
+
+   - Added 3 new calculated fields:
+
+     - confirmed_daily.
+     - deaths_daily.
+     - recovered_daily.
 
    September 10th, 2020
    ~~~~~~~~~~~~~~~~~~~~

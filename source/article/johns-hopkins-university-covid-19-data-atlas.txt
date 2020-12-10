@@ -28,7 +28,7 @@
 
 .. pubdate:: 2020-04-20
 
-.. updated-date:: 2020-05-13
+.. updated-date:: 2020-12-10
 
 .. type:: article
 
@@ -67,9 +67,9 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    TL;DR
    -----
 
-   Our MongoDB Cluster is running in version 4.2.5.
+   Our MongoDB Cluster is running in version 4.4.1.
 
-   You can connect to it using MongoDB Compass, the Mongo Shell, SQL or any MongoDB driver supporting at least MongoDB 4.2 with the following URI:
+   You can connect to it using MongoDB Compass, the Mongo Shell, SQL or any MongoDB driver supporting at least MongoDB 4.4 with the following URI:
 
    .. code-block:: none
 
@@ -82,13 +82,23 @@ How to work with Johns Hopkins University COVID-19 Data in MongoDB Atlas
    Updates
    -------
 
-   May 13th
-   ~~~~~~~~
+   December 10th, 2020
+   ~~~~~~~~~~~~~~~~~~~
+
+   - Upgraded the cluster to 4.4.
+   - Improved the python data import script to calculate the daily values using the existing cumulative values with an `Aggregation Pipeline <https://docs.mongodb.com/manual/core/aggregation-pipeline/>`__.
+
+     - confirmed_daily.
+     - deaths_daily.
+     - recovered_daily.
+
+   May 13th, 2020
+   ~~~~~~~~~~~~~~
 
    - Renamed the field "city" to "county" and "cities" to "counties" where appropriate. They contains the data from the column "Admin2" in JHU CSVs.
 
-   May 6th
-   ~~~~~~~
+   May 6th, 2020
+   ~~~~~~~~~~~~~
 
    - The ``covid19`` database now has 5 collections. More details in our `README.md <https://github.com/mongodb-developer/open-data-covid-19/blob/master/README.md>`__.
    - The ``covid19.statistics`` collection is renamed ``covid19.global_and_us`` for more clarity.
