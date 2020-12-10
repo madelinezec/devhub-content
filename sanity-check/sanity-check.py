@@ -369,7 +369,7 @@ def check_thing_not_found(things, all_images, images_used):
 
 
 def check_snooty(blog_posts):
-    blog_posts = list(map(lambda b: b.path.replace('../source', '').replace('.txt', '').replace('\\', '/'), blog_posts))
+    blog_posts = list(map(lambda b: b.path.replace('../source', '').replace('.txt', '/').replace('\\', '/'), blog_posts))
     output = [['\nList of errors in snooty.toml.\n']]
     with open('../snooty.toml', encoding='utf-8') as f:
         home = ''
