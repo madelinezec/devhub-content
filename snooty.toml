@@ -7,8 +7,8 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/article/key-developer-takeaways-hacktoberfest-2020/", "/article/mongodb-schema-design-best-practices/", "/article/behind-scenes-mongodb-podcast/", "/article/resumable-initial-sync/"]
-"learn" = ["/how-to/FARM-Stack-FastAPI-React-MongoDB/", "/article/sizing-mongodb-with-jay-runkel/", "/how-to/realm-swiftui-combine-first-app/"]
+"home" = ["/how-to/realm-google-authentication-android/", "/how-to/field-level-encryption-fle-mongodb-golang/", "/article/six-principles-building-robust-flexible-shared-data-applications/", "/article/key-developer-takeaways-hacktoberfest-2020/"]
+"learn" = ["/article/mongodb-schema-design-best-practices/", "/article/behind-scenes-mongodb-podcast/", "/article/resumable-initial-sync/"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations/", "/quickstart/java-mapping-pojos/", "/quickstart/java-aggregation-pipeline/", "/quickstart/java-change-streams/"]
 "NodeJS Tutorials" = ["/quickstart/node-connect-mongodb/", "/quickstart/node-crud-tutorial/", "/quickstart/node-aggregation-framework/", "/quickstart/node-transactions/", "/quickstart/nodejs-change-streams-triggers/"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128/", "/quickstart/bson-data-types-objectid/", "/quickstart/bson-data-types-date/"]
