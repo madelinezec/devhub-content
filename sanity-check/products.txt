@@ -11,3 +11,4 @@ Realm
 Realm Studio
 Stitch
 VS Code
+BI Connector

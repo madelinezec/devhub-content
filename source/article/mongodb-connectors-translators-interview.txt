@@ -1,0 +1,343 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/mongodb-podcast.png
+
+.. meta-description:: 
+
+   MongoDB Podcast Interview with Connectors and Translators Team
+
+.. twitter::
+   :creator: @mlynn
+   :title: MongoDB Podcast Interview with Connectors and Translators Team
+   :image: /images/social/twitter/twitter-mongodb-podcast.png
+   :image-alt: MongoDB Connectors and Translators
+
+   MongoDB Podcast Interview with Connectors and Translators Team
+
+.. og::
+   :title: MongoDB Podcast Interview with Connectors and Translators Team
+   :image: /images/social/open-graph/og-mongodb-podcast.png
+ 
+.. include:: /includes/authors/lynn-michael.rst
+
+.. pubdate:: 2020-12-14
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * MongoDB 4.4
+   * DevOps
+
+.. products::
+
+   * Atlas
+   * BI Connector
+
+.. related::
+
+   - `MongoDB Podcast <https://www.mongodb.com/podcast>`__
+
+==============================================================
+MongoDB Podcast Interview with Connectors and Translators Team
+==============================================================
+   
+.. introduction::
+
+   The `BI Connector <https://docs.mongodb.com/bi-connector/master/>`__ and `mongomirror <https://docs.atlas.mongodb.com/reference/mongomirror>`__ are just two examples of powerful but less popular MongoDB products. These products are maintained by a team in MongoDB known as the Connectors and Translators Engineering team.
+   In this podcast episode transcript, we chat with Tim Fogarty, Varsha Subrahmanyam, and Evgeni Dobranov. The team gives us a better understanding of these tools, focusing specifically on the BI Connector and mongomirror.
+
+.. content::
+
+   This episode of the MongoDB Podcast is available on YouTube if you prefer to listen.
+
+   .. youtube:: SFezkmAbwos
+
+   Michael Lynn (01:58):
+   All right, welcome back. Today, we're talking about connectors and translators and you might be thinking, "Wait a minute. What is a connector and what is a translator?" We're going to get to that. But first, I want to introduce the folks that are joining us on the podcast today. Varsha, would you introduce yourself?
+
+   .. image:: /images/article/connectors-translators-team/varsha_headshot.jpg
+      :alt: Varsha Subrahmanyam
+      :align: center
+      :scale: 50%
+
+   Varsha Subrahmanyam (02:19):
+   Yes. Hi, my name is Varsha Subrahmanyam. I'm a software engineer on the translators and connectors team. I graduated from the University of Illinois at Urbana-Champagne in 2019 and was an intern at MongoDB just before graduation. And I returned as a full-timer the following summer. So I've been here for one and a half years. [inaudible 00:02:43]
+
+   Michael Lynn (02:43):
+   Evgeni?
+
+   .. image:: /images/article/connectors-translators-team/edobranov.jpg
+      :alt: Evgeni Dobranov
+      :align: center
+      :scale: 50%
+
+   Evgeni Dobranov (02:44):
+   Yeah. Hello. My name is Evgeni Dobranov. I'm more or less right alongside Varsha. We interned together in 2018. We both did our rotations just about a year ago and ended up on connector and translators together. I went to Tufts University and graduated in 2019.
+
+   Michael Lynn (03:02):
+   And Tim, welcome.
+
+   .. image:: /images/article/connectors-translators-team/tim_fogarty.jpeg
+      :alt: Tim Fogarty
+      :align: center
+      :scale: 50%
+
+
+   Tim Fogarty (03:04):
+   Hey, Mike. So I'm Tim Fogarty. I'm also a software engineer on the connectors and translators team. I actually worked for mLab, the MongoDB hosting service, which was acquired by MongoDB about two years ago. So I was working there before MongoDB and now I'm working on the connectors and translators team.
+
+   Michael Lynn (03:25):
+   Fantastic. And Nic, who are you??
+
+   Nic Raboy (03:27):
+   I am Nic and I am Mike's co-host for this fabulous podcast and the developer relations team at MongoDB.
+
+   Michael Lynn (03:33):
+   Connectors and translators. It's a fascinating topic. We were talking before we started recording and I made the incorrect assumption that connectors and translators are somewhat overlooked and might not even appear on the front page, but that's not the case. So Tim, I wonder if I could ask you to explain what connectors and translators are? What kind of software are we talking about?
+
+   Tim Fogarty (03:55):
+   Yeah, so our team works on essentially three different software groups. We have the BI Connector or the business intelligence connector, which is used to essentially translate SQL commands into MongoDB commands so that you can use it with tools like Tableau or PowerBI, those kinds of business intelligence tools.
+
+   Tim Fogarty (04:20):
+   Then we also have the database tools, which are used for importing and exporting data, creating backups on the command line, and then also mongomirror, which is used internally for the Atlas Live Migrates function. So you're able to migrate a MongoDB database into a MongoDB apps cloud service.
+
+   Tim Fogarty (04:39):
+   The connectors and translators, it's a bit of a confusing name. And we also have other products which are called connectors. So we have the Kafka connector and Spark connector, and we actually don't work on those. So it's a bit of an awkward name, but essentially we're dealing with backups restores, migrations, and translating SQL.
+
+   Michael Lynn (04:58):
+   So you mentioned the BI Connector and Tableau and being able to use SQL with MongoDB. Can we maybe take a step back and talk about why somebody might even want to use a connector, whether that the BI one or something else with MongoDB?
+
+   Varsha Subrahmanyam (05:16):
+   Yeah. So I can speak about that a little bit. The reason why we might want to use the BI Connector is for people who use business intelligence tools, they're mostly based on SQL. And so we would like people to use the MongoDB query language. So we basically had this translation engine that connects business intelligence tools to the MongoDB back end. So the BI Connector received SQL queries. And then the BI Connector translates those into SQL, into the MongoDB aggregation language. And then queries MongoDB and then returns the result. So it's very easy to store your data at MongoDB without actually knowing how to query the database with MQL.
+
+   Michael Lynn (06:03):
+   Is this in real time? Is there a delay or a lag?
+
+   Varsha Subrahmanyam (06:06):
+   Maybe Evgeni can speak a bit to this? I believe most of this happens in memory. So it's very, very quick and we are able to process, I believe at this point 100% of all SQL queries, if not very close to that. But it is very, very quick.
+
+   Michael Lynn (06:22):
+   Maybe I've got an infrastructure in place where I'm leveraging a BI tool and I want to make use of the data or an application that leverages MongoDB on the back end. That sounds like a popular used case. I'm curious about how it does that. Is it just a straight translation from the SQL commands and the operators that come to us from SQL?
+
+   .. blockquote::
+      "So if you've heard of transpilers, they translate code from one higher level language to another. Regular compilers will translate high level code to lower level code, something like assembly, but the BI Connector acts like a transpilers where it's translating from SQL to the MongoDB query language."" -- Varsha Subrahmanyam on the BI Connector 
+
+   Varsha Subrahmanyam (06:47):
+   So if you've heard of transpilers, they translate code from one higher level language to another. Regular compilers will translate high level code to lower level code, something like assembly, but the BI Connector acts like a transpilers where it's translating from SQL to the MongoDB query language. And there are multiple steps to a traditional compiler. There's the front end that basically verifies the SQL query from both a semantic and syntactic perspective.
+
+   Varsha Subrahmanyam (07:19):
+   So kind of like does this query make sense given the context of the language itself and the more granularly the database in question. And then there are two more steps. There's the middle end and the back end. They basically just after verifying the query is acceptable, will then actually step into the translation process.
+
+   Varsha Subrahmanyam (07:40):
+   We basically from the syntactic parsing segment of the compiler, we produce this parse tree which basically takes all the tokens, constructs the tree out of them using the grammar of SQL and then based off of that, we will then start the translation process. And there's something called push-down. Evgeni, if you want to talk about that.
+
+   Evgeni Dobranov (08:03):
+   Yeah, I actually have not done or worked with any code that does push-down specifically, unfortunately.
+
+   Varsha Subrahmanyam (08:09):
+   I can talk about that.
+
+   Evgeni Dobranov (08:13):
+   Yeah. It might be better for you.
+
+   Varsha Subrahmanyam (08:13):
+   Yeah. In push-down basically, we basically had this parse tree and then from that we construct something called a `query plan <https://docs.mongodb.com/manual/core/query-plans/>`__, which basically creates stages for every single part of the SQL query. And stages are our internal representation of what those tokens mean. So then we construct like a linear plan, and this gets us into something called push-down.
+
+   Varsha Subrahmanyam (08:42):
+   So basically let's say you have, I suppose like a normal SELECT query. The SELECT will then be a stage in our intermediate representation of the query. And that slowly will just translate single token into the equivalent thing in MQL. And we'll do that in more of a linear fashion, and that slowly will just generate the MQL representation of the query.
+
+   Michael Lynn (09:05):
+   Now, there are differences in the way that data is represented between a relational or tabular database and the way that MongoDB represents it in document. I guess, through the push-down and through the tokenization, you're able to determine when a SQL statement comes in that is referencing what would be columns if there's a translator that makes that reference field.
+
+   Varsha Subrahmanyam (09:31):
+   Right, right. So we have similar kinds of ways of translating things from the relational model to the document model.
+
+   Tim Fogarty (09:39):
+   So we have to either sample or set a specific schema for the core collection so that it looks like it's a table with columns. Mike, maybe you can talk a little bit more about that.
+
+   Michael Lynn (09:55):
+   Yeah. So is there a requirement to use the BI Connector around normalizing your data or providing some kind of hint about how you're representing the data?
+
+   Varsha Subrahmanyam (10:06):
+   That I'm not too familiar with.
+
+   Nic Raboy (10:10):
+   How do you even develop such a connector? What kind of technologies are you using? Are you using any of the MongoDB drivers in the process as well?
+
+   .. image:: /images/article/connectors-translators-team/bi-connector.png
+      :alt: BI Connector Flow
+      :align: center
+
+   Varsha Subrahmanyam (10:18):
+   I know for the BI Connector, a lot of the code was borrowed from existing parsing logic. And then it's all written in Go. Everything on our team is written in Go. It's been awhile since I have been on this recode, so I am not too sure about specific technologies that are used. I don't know if you recall, Evgeni.
+
+   Evgeni Dobranov (10:40):
+   Well, I think the biggest thing is the Mongo AST, the abstract syntax tree, which has also both in Go and that sort of like, I think what Varsha alluded to earlier was like the big intermediate stage that helps translate SQL queries to Mongo queries by representing things like taking a programming language class in university. It sort of represents things as nodes in a tree and sort of like relates how different like nouns to verbs and things like that in like a more grammatical sense.
+
+   Michael Lynn (11:11):
+   Is the BI Connector open source? Can people take a look at the source code to see how it works?
+
+   Evgeni Dobranov (11:16):
+   It is not, as far as I know, no.
+
+   Michael Lynn (11:19):
+   That's the BI Connector. I'm sure there's other connectors that you work on. Let's talk a little bit about the other connectors that you guys work on.
+
+   Nic Raboy (11:26):
+   Yeah. Maybe what's the most interesting one. What's your personal favorites? I mean, you're probably all working on one separately, but is there one that's like commonly cool and commonly beneficial to the MongoDB customers?
+
+   Evgeni Dobranov (11:39):
+   Well, the one I've worked on the most recently personally at least has been mongomirror and I've actually come to like it quite a bit just because I think it has a lot of really cool components. So just as a refresher, mongomirror is the tool that we use or the primary tool that Atlas uses to help customers with live migration. So what this helps them essentially do is they could just be running a database, taking in writes and reads and things like that. And then without essentially shutting down the database, they can migrate over to a newer version of Mongo. Maybe just like bigger clusters, things like that, all using mongomirror.
+
+   Evgeni Dobranov (12:16):
+   And mongomirror has a couple of stages that it does in order to help with the migration. It does like an initial sync or just copies the existing data as much as it can. And then it also records. It also records operations coming in as well and puts them in the oplog, which is essentially another collection of all the operations that are being done on the database while the initial sync is happening. And then replays this data on top of your destination, the thing that you're migrating to.
+
+   Evgeni Dobranov (12:46):
+   So there's a lot of juggling basically with operations and data copying, things like that. I think it's a very robust system that seems to work well most of the time actually. I think it's a very nicely engineered piece of software.
+
+   Nic Raboy (13:02):
+   I wanted to comment on this too. So this is a plug to the event that we actually had recently called MongoDB Live for one of our local events though for North America. I actually sat in on a few sessions and there were customer migration stories where they actually used mongomirror to migrate from on-premise solutions to MongoDB Atlas. It seems like it's the number one tool for getting that job done. Is this a common scenario that you have run into as well? Are people using it for other types of migrations as well? Like maybe Atlas, maybe AWS to GCP even though that we have multi-cloud now, or is it mostly on prem to Atlas kind of migrations?
+
+   Evgeni Dobranov (13:43):
+   We work more on maintaining the software itself, having taken the request from the features from the Atlas team. The people that would know exactly these details, I think would be the TSEs, the technical services engineers, who are the ones working with the actual customers, and they receive more information about exactly what type of migration is happening, whether it's from private database or Mongo Atlas or private to private, things like that. But I do know for a fact that you have all combinations of migrations. Mongomirror is not limited to a single type. Tim can expand more on this for sure.
+
+   Tim Fogarty (14:18):
+   Yeah. I'd say definitely migrating from on-prem to Atlas is the number one use case we see that's actually the only technically officially supported use case. So there are customers who are doing other things like they're migrating on-prem to on-prem or one cloud to another cloud. So it definitely does happen. But by far, the largest use case is migrating to Atlas. And that is the only use case that we officially test for and support.
+
+   Nic Raboy (14:49):
+   I actually want to dig deeper into mongomirror as well. I mean, how much data can you move with it at a certain time? Do you typically like use a cluster of these mongomirrors in parallel to move your however many terabytes you might have in your cluster? Or maybe go into the finer details on how it works?
+
+   Tim Fogarty (15:09):
+   Yeah, that would be cool, but that would be much more difficult. So we generally only spin up one mongomirror machine. So if we have a source cluster that's on-prem, and then we have our destination cluster, which is MongoDB Atlas, we spin up a machine that's hosted by us or you can run MongoDB on-prem yourself, if you want to, if there are, let's say firewall concerns, and sometimes make it a little bit easier.
+
+   Tim Fogarty (15:35):
+   But a single process and then the person itself is paralyzed. So it will, during the initial sync stage Evgeni mentioned, it will copy over all of the data for each collection in parallel, and then it will start building indexes in parallels as well. You can migrate over terabytes of data, but it can take a very long time. It can be a long running process. We've definitely seen customers where if they've got very large data sets, it can take weeks to migrate. And particularly the index build phase takes a long time because that's just a very compute intensive like hundreds of thousands of indexes on a very large data set.
+
+   .. blockquote::
+      "But then once the initial sync is over, then we're just in the business of replicating any changes that happen to the source database to the destination cluster." -- Tim Fogarty on the mongomirror process of migrating data from one cluster to another.
+
+   Tim Fogarty (16:18):
+   But then once the initial sync is over, then we're just in the business of replicating any changes that happen to the source database to the destination cluster.
+
+   Nic Raboy (16:28):
+   So when you say changes that happened to the source database, are you talking about changes that might have occurred while that migration was happening?
+
+   Tim Fogarty (16:35):
+   Exactly.
+
+   Nic Raboy (16:36):
+   Or something else?
+
+   Tim Fogarty (16:38):
+   While the initial sync happens, we buffer all of the changes that happened to the source destination to a file. So we essentially just save them on disc, ready to replay them once we're finished with the initial sync. So then once the initial sync has finished, we replay everything that happened during the initial sync and then everything new that comes in, we also start to replay that once that's done. So we keep the two clusters in sync until the user is ready to cut over the application from there to source database over to their new destination cluster.
+
+   Nic Raboy (17:12):
+   When it copies over the data, is it using the same object IDs from the source database or is it creating new documents on the destination database?
+
+   Tim Fogarty (17:23):
+   Yeah. The object IDs are the same, I believe. And this is a kind of requirement because in the oplog, it will say like, "Oh, this document with this object ID, we need to update it or change it in this way." So when we need to reapply those changes to the destination kind of cluster, then we need to make sure that obviously the object ID matches that we're changing the right document when we need to reapply those changes.
+
+   Michael Lynn (17:50):
+   Okay. So there's two sources of data used in a mongomirror execution. There's the database, the source database itself, and it sounds like mongomirror is doing, I don't know, a standard find getting all of the documents from there, transmitting those to the new, the target system and leveraging an explicit ID reference so that the documents that are inserted have the same object ID. And then during that time, that's going to take a while, this is physics, folks. It's going to take a while to move those all over, depending on the size of the database.
+
+   Michael Lynn (18:26):
+   I'm assuming there's a marketplace in the oplog or at least the timestamp of the, the time that the mongomirror execution began. And then everything between that time and the completion of the initial sync is captured in oplog, and those transactions in the oplog are used to recreate the transactions that occurred in the target database.
+
+   Tim Fogarty (18:48):
+   Yeah, essentially correct. The one thing is the initial sync phase can take a long time. So it's possible that your oplog, because the oplog is a cap collection, which means it can only be a certain finite size. So eventually the older entries just start getting deleted when they're not used. As soon as we start the initial sync, we start listening to the oplog and saving it to the disc that we have the information saved. So if we start deleting things off the back of the oplog, we don't essentially get lost.
+
+   Michael Lynn (19:19):
+   Great. So I guess a word of caution would be ensure that you have enough disc space available to you in order to execute.
+
+   Tim Fogarty (19:26):
+   Yes, exactly.
+
+   Michael Lynn (19:29):
+   That's mongomirror. That's great. And I wanted to clarify, mongomirror, It sounds like it's available from the MongoDB Atlas console, right? Because we're going to execute that from the console, but it also sounds like you said it might be available for on-prem. Is it a downloadable? Is it an executable command line?
+
+   Tim Fogarty (19:47):
+   Yeah. So in general, if you want to migrate into Atlas, then you should use the Atlas Live Migrate service. So that's available on the Atlas console. It's like click and set it up and that's the easiest way to use it. There are some cases where for some reason you might need to run mongomirror locally, in which case you can download the binaries and run it locally. Those are kind of rare cases. I think that's probably something you should talk to support about if you're concerned that you might work locally.
+
+   Nic Raboy (20:21):
+   So in regards to the connectors like mongomirror, is there anything that you've done recently towards the product or anything that's coming soon on the roadmap?
+
+   Evgeni Dobranov (20:29):
+   So Varsha and I just finished a big epic on Jira, which improves status reporting. And basically this was like a huge collection of tickets that customers have come to us over time, basically just saying, "We wish there was a better status here. We wish there was a better logging or I wish the logs gave us a better idea of what was going on in mongomirror internally. So we basically spent about a month or so, and Varsha spent quite a bit of time on a ticket recently that she can talk about. We just spent a lot of time improving error messages and revealing information that previously wasn't revealed to help users get a better idea of what's going on in the internals of mongomirror.
+
+   Varsha Subrahmanyam (21:12):
+   Yeah. The ticket I just finished but was working on for quite some time, was to provide better logging during the index building process, which happens during initial sync and then again during all oplog sync. Now, users will be able to get logs at a collection level telling them what percentage of indexes have been built on a particular collection as well as on each host in their replica set. And then also if they wanted to roll that information from the HTTP server, then they can also do that.
+
+   Varsha Subrahmanyam (21:48):
+   So that's an exciting addition, I think. And now I'm also enabling those logs in the oplog sync portion of mongomirror, which is pretty similar, but probably we'll probably have a little bit less information just because we're figuring out which indexes need to be built on a rolling basis because we're just tailoring the oplog and seeing what comes up. So by the nature of that, there's a little less information on how many indexes can you expect to be built. You don't exactly know from the get-go, but yeah, I think that'll be hopefully a great help to people who are unsure if their indexes are stalled or are just taking a long time to build.
+
+   Michael Lynn (22:30):
+   Well, some fantastic updates. I want to thank you all for stopping by. I know we've got an entire set of content that I wanted to cover around the tools that you work on. Mongoimport, Mongoexport, Mongorestore, Mongodump. But I think I'd like to give that the time that it deserves. That could be a really healthy discussion. So I think what I'd like to do is get you guys to come back. That sound good?
+
+   Varsha Subrahmanyam (22:55):
+   Yeah.
+
+   Tim Fogarty (22:56):
+   Yeah.
+
+   Varsha Subrahmanyam (22:56):
+   Sounds good.
+
+   Evgeni Dobranov (22:56):
+   Yeah. Sounds great.
+
+   Michael Lynn (22:57):
+   Well, again, I want to thank you very much. Is there anything else you want the audience to know before we go? How can they reach out to you? Are you on social media, LinkedIn, Twitter? This is a time to plug yourself.
+
+   Varsha Subrahmanyam (23:09):
+   You can find me on LinkedIn.
+
+   Tim Fogarty (23:12):
+   I'm trying to stay away from social media recently.
+
+   Nic Raboy (23:15):
+   No problem.
+
+   Tim Fogarty (23:16):
+   No, please don't contact me.
+
+   Michael Lynn (23:19):
+   I get that. I get it.
+
+   Tim Fogarty (23:21):
+   You can contact me, I'll tell you where, on the community forums.
+
+   Michael Lynn (23:25):
+   There you go. Perfect.
+
+   Tim Fogarty (23:27):
+   If you have questions-
+
+   Michael Lynn (23:28):
+   Great.
+
+   Tim Fogarty (23:29):
+   If you have questions about the database tools, then you can ask questions there and I'll probably see it.
+
+   Michael Lynn (23:34):
+   All right. So `community.mongodb.com <https://community.mongodb.com>`__. We'll all be there. If you have questions, you can swing by and ask them in that forum. Well, thanks once again, everybody. Tim Fogarty, Varsha Subrahmanyam, and Evgeni Dobranov.
+
+   Evgeni Dobranov (23:47):
+   Yes, you got it.
+
+   Michael Lynn (23:48):
+   All right. So thanks so much for stopping by. Have a great day.
+
+   Varsha Subrahmanyam (23:52):
+   Thank you.
+
+   Summary
+   -------
+
+   I hope you enjoyed this episode of the `MongoDB Podcast <https://www.mongodb.com/podcast>`__ and learned a bit more about the MongoDB Connectors and Translators including the `Connector for Business Intelligence <https://docs.mongodb.com/bi-connector/master/>`__ and `mongomirror <https://docs.atlas.mongodb.com/reference/mongomirror>`__. If you enjoyed this episode, please consider giving a review on your favorite podcast networks including `Apple <https://podcasts.apple.com/us/podcast/the-mongodb-podcast/id1500452446>`__, `Google <https://podcasts.google.com/feed/aHR0cHM6Ly9tb25nb2RiLmxpYnN5bi5jb20vcnNz>`__, and `Spotify <https://open.spotify.com/show/0ibUtrJG4JVgwfvB2MXMSb>`__.
+
+   For more information on the BI Connector, visit our `docs <https://docs.mongodb.com/bi-connector/master/>`__ or `product <https://www.mongodb.com/products/bi-connector>`__ pages.
+
+   For more information on mongomirror, visit the `docs <https://docs.atlas.mongodb.com/reference/mongomirror>`__.
