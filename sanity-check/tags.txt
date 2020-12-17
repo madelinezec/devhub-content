@@ -35,8 +35,10 @@ Public Speaking
 Raspberry Pi
 React
 Releases
+Remote Work
 Schema Design
 Security
+Soft Skills
 Speaker Program
 SQL
 Starlette

@@ -1,0 +1,369 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/work-from-home.png
+
+.. meta-description::
+
+   Discover tips and tricks for being a happy and successful remote employee
+
+.. twitter::
+   :creator: @Lauren_Schaefer
+   :title: Top 10 Tips for Making Remote Work Actually Work Right Now
+   :image: /images/social/twitter/twitter-work-from-home.png
+   :image-alt: Illustration of a house with a speech bubble coming out of it
+
+   Discover tips and tricks for being a happy and successful remote employee
+
+.. og::
+   :title: Top 10 Tips for Making Remote Work Actually Work Right Now
+   :image: /images/social/open-graph/og-work-from-home.png
+
+.. include:: /includes/authors/schaefer-lauren.rst
+
+.. pubdate:: 2020-12-17
+
+.. type:: article
+
+.. level:: beginner
+
+.. tags:: 
+
+   * Remote Work
+   * Soft Skills
+
+.. related::
+
+   * `Schema Design Anti-Patterns and How to Spot Them <http://docs-devhub-staging.s3-website-us-east-1.amazonaws.com/01cd0b8/devhub/docsworker-xlarge/remote-work/article/schema-design-anti-pattern-summary>`__
+   * `Mapping Terms and Concepts from SQL to MongoDB <http://docs-devhub-staging.s3-website-us-east-1.amazonaws.com/01cd0b8/devhub/docsworker-xlarge/remote-work/article/map-terms-concepts-sql-mongodb>`__
+   * `How to Write Unit Tests for MongoDB Realm Serverless Functions <http://docs-devhub-staging.s3-website-us-east-1.amazonaws.com/01cd0b8/devhub/docsworker-xlarge/remote-work/how-to/unit-test-realm-serverless-functions>`__
+   * `Connect to a MongoDB Database Using Node.js <http://docs-devhub-staging.s3-website-us-east-1.amazonaws.com/372a478/devhub/docsworker-xlarge/remote-work/quickstart/node-connect-mongodb>`__
+
+==========================================================
+Top 10 Tips for Making Remote Work Actually Work Right Now
+==========================================================
+ 
+.. introduction::
+
+   Many of us acquired new skills during 2020...Some skills were acquired by choice and some out of necessity.  For example, some of us learned to bake bread.  Some of us learned how to homeschool our kids.  And some of us learned to work remotely.
+
+   As for me, I completely avoided baking bread.  I attempted to teach my preschooler skills she'll need when she ventures off to kindergarten next year.  And I continued to work remotely.
+
+   .. figure:: /images/article/remote-work/lauren-office.jpg
+      :align: right
+      :figwidth: 325px
+      :alt: Picture of my home office with desk and bookcase
+
+      I've created a pink home office where I enjoy working
+
+   In fact, I've been working remotely for over a decade.  (When I put it that way, I find myself feeling very old.  I'll just stuff that feeling down and deal with it later.)  But yes, I've been working remotely for 10 years.  
+
+   I began working remotely as a software engineer at IBM.  I held many roles during my time at IBM including developer, growth hacking engineer, and test automation specialist.  After working remotely for seven years at IBM, I went on to be a developer advocate at SugarCRM where I continued to work remotely.  Two years ago, I joined MongoDB as a developer advocate—again working remotely.  
+
+   To be completely transparent, I struggled with remote work initially.  In fact, the very first conference talk I ever gave was about how I failed at working remotely.  But gradually, over time, I began to become a successful remote employee...and, eventually, I came to love it.
+
+   Perhaps you began working remotely for the first time during the pandemic, and you find yourself feeling isolated or struggling to get your work done.  Or perhaps you're starting to enjoy working remotely and are hoping to continue even after the pandemic ends.  Or perhaps you're a remote work veteran who doesn't ever see yourself returning to an office.
+
+   In any case, this post will provide you with tips to boost your productivity and give you some encouragement as you continue on your remote work journey.
+
+   .. blockquote::
+
+      .. youtube:: TRWaRtm6-Hg
+
+      Prefer video over text?  Check out this recording of a talk I gave at Big Mountain Data & Dev 2020.
+      
+   Without further ado, here are my top 10 tips for making remote work actually work...right now.
+
+.. content::
+
+   10. Acknowledge this isn't normal
+   ---------------------------------
+
+   We're in the middle of a pandemic (which we will hopefully be seeing end soon).  *Life isn't normal right now.*  If you are struggling to work remotely, acknowledge that these are not normal remote work conditions.  `Julia Ferraioli <https://twitter.com/juliaferraioli>`__, a Technical Program Manager at Google, Tweeted the following at the beginning of May:
+
+   .. figure:: /images/article/remote-work/tweet.png
+      :alt: Screenshot of Tweet from @juliaferraioli: "I've been working remotely for 2.5 years. The past 2.5 months have left me more *exhausted* than ever before. This is your reminder that you're not working remotely. You're working remotely during a global health crisis."
+
+      `Tweet from @juliaferraioli <https://twitter.com/juliaferraioli/status/1260233745921126400>`__ 
+
+   I couldn't agree more. Despite working remotely for the last 10 years, working remotely during the pandemic has been a struggle for me.  For the first two months of the pandemic, I had a preschooler who was running around, making noise, and interrupting me.  
+
+   Prior to the pandemic when I would tell people that I worked from home, they would say things like, "Oh, that must be so nice that you get to spend time with your kid while you work."  I would reply, "Oh, no, she goes to daycare. There is no way I could work effectively and watch her at the same time."  And yet many of us have been forced to do just that during quarantine.  
+
+   Perhaps you have noisy kids or roommates or pets.  Perhaps you're stressed because of financial concerns.  Or you're worried about the health of your friends and family.  Or you miss being around other people.  Or you're upset due to recent tragedies and racial injustice.  Or you're frustrated with politics.  
+
+   Whatever the case, life is not normal right now.  Try to cut yourself some slack. Acknowledge that if you're currently struggling with remote work, you may do better once we return to more "normal" conditions...whatever that new normal looks like.
+
+   9. Do something else 
+   --------------------
+
+   If you're going to be in a meeting where you know you're going to struggle to pay attention and you'll be tempted to reply to e-mail, check social media, or message snarky comments back and forth with your colleagues, take your hands away from your keyboard and do some other mindless task.  
+
+   .. youtube:: 1Xgdt9uXzr0
+   
+   (Get tips like this as well as silliness related to software engineering on `my TikTok <https://www.tiktok.com/@lauren_schaefer>`__. Yes, I'm on TikTok. I love it. Don't judge me.)
+
+   For example, you could do the dishes, color, clean your home, exercise, paint your nails, or do a puzzle.  Studies show that `doodling helps people retain information <https://www.health.harvard.edu/blog/the-thinking-benefits-of-doodling-2016121510844>`__.  I've found the same to be true for any mindless task.  
+
+   If I sit in front of my computer, the temptation to multi-task is too great.  I'm likely to do something else that will require mental energy and prevent me from fully listening.  
+
+   So, for those boring all-hands calls or dry conference sessions where you're going to struggle to pay attention, turn off your webcam and do something else.
+
+   .. figure:: /images/article/remote-work/fast-food-and-laptop.jpg
+      :align: right
+      :alt: Picture of takeout containers filled with french fries, burgers, and chicken nuggets sitting on a desk beside a laptop
+   
+      Photo by ready made from `Pexels <https://www.pexels.com/photo/fast-food-and-laptop-on-table-4021938/>`__
+   
+   8. Eat intentionally
+   --------------------
+   
+   I love shopping at Costco.  The bargains on huge, family-sized quantities of food beckon to me.  I have a problem of bringing a huge Costco-sized box of snacks into my office and then eating way too much.  The quarantine has not been kind to my waistline.  
+
+   Recently, I've been trying to make an effort to eat intentionally.  If I want a snack, I pour a reasonably-sized portion into a bowl.  I also try to limit the number of snacks and keep them *relatively* healthy.  
+
+   I've heard from some of my colleagues that they have the opposite problem.  They will sit at their desks and not realize they missed lunch until 2:00 pm.  I don't understand how this is possible due to my love for snacking, but apparently this is an issue for some people.  If that's you, set an alarm on your phone or block time on your calendar to eat.  
+
+   Make sure you're taking care of yourself and eating intentionally.
+
+
+   7. Actively prevent burnout
+   ---------------------------
+
+   When you work from home, it's soooo easy to work long hours and never feel disconnected from your work.  `A study in March of this year <https://businessfacilities.com/2020/03/u-s-employees-working-more-hours-during-covid-19-pandemic>`__ showed that US employees are working an average of three hours more per day during the pandemic.  Three hours!  
+
+   When you work remotely, you don't have the physical trigger of walking into an office to know you should begin working and the physical trigger of leaving the office to know you should stop working.  It's so easy for the lines to blur—especially since many of us have access to our email and messaging services like Slack and Microsoft Teams on our phones.  
+
+   .. figure:: /images/article/remote-work/burnout.jpg
+      :align: left
+      :alt: Picture of woman sitting at her desk with her head resting sadly on her hands
+ 
+      Photo by energepic.com from `Pexels <https://www.pexels.com/photo/design-desk-display-eyewear-313690/>`__
+
+   But here's the thing:  Your employer has invested a lot of time and money to make you a productive employee.  They don't want you to burn out and quit.  If you leave, they have to start over and train someone completely new to be productive.  Additionally, if you leave, you take with you all of that team knowledge that may not be written down anywhere.  
+
+   So, actively prevent burnout.  
+
+   One key to preventing burnout is to be proactive and not rely on your manager to do this for you.  If your manager asks you to do something that will force you to work overtime, be upfront and ask them which task they would like you to drop.  
+
+   Another key to preventing burnout is to choose what time you typically want to start working and what time you typically want to stop working.  And stick to those times.  When your workday is over, turn off your computer; hide it in a closet if you have to.  If you have work-related email and messaging apps on your phone, turn off those notifications when your workday is done.  
+
+   Completely disconnect whenever possible, so that you can return to work each day refreshed and ready to do your best work.  
+
+   .. figure:: /images/article/remote-work/clock.jpg
+      :align: right
+      :alt: Picture of a large digital clock
+   
+      Photo by Brett Sayles from `Pexels <https://www.pexels.com/photo/01-52-time-readout-2388570/>`__
+
+   6. Be productive 
+   ----------------
+
+   Yes, it's important to actually do your job.  
+
+   `Slack conducted a study <https://slack.com/blog/collaboration/report-remote-work-during-coronavirus>`__ during the pandemic and found that how long you've been working remotely in terms of experience makes an impact on how productive you are.  In fact, they found that those who were new to remote work were twice as likely to say they are less productive at home.  The study also showed that a majority of experienced remote workers say they are more productive at home.  Over time, as you work remotely, you gather tools to help you be productive.  
+
+   So let's talk about some tools you can use to help you be productive.
+
+   First, set daily goals.  I begin every day by looking at my task list and picking out the most important one or two things I want to get done that day.  And then I do everything I can to get those done.  This helps me focus on what's most important and not just what's most urgent or what's easiest.  
+
+   If you don't have a consolidated task list, I encourage you to make one.  I keep track of my to-dos in `Jira <https://www.atlassian.com/software/jira>`__ as that is where my team works.  I keep everything from code I need to write to things I want to learn to conference presentations I need to prepare in Jira.  I've also had success using tools like `Asana <https://asana.com>`__, and I know a lot of people who are big fans of `Trello <https://trello.com>`__.  Find a tool that works for you and stick with it.
+
+   Second, take mental breaks throughout your day.  I have a tendency to get lost in my work.  I can sit at my computer for hours without taking a break except for maybe a quick trip to the kitchen to grab a snack that I eat at my desk.  This isn't great.  So I've set up "Reminders to Move" on my Fitbit.  Every hour, my Fitbit will alert me if I haven't moved enough. This is a great reminder for me as it helps me stretch and clear my head.  
+
+   `Studies show that mental breaks will help you be more productive and creative <https://www.psychologytoday.com/us/blog/changepower/201704/how-do-work-breaks-help-your-brain-5-surprising-answers>`__, so take them.  
+
+   Third, create focused time to work.  Some people struggle to get work done if they don't have the accountability of someone walking by to see if they're actually working.  If you're one of those people, I recommend trying out the `Pomodoro Technique <https://en.wikipedia.org/wiki/Pomodoro_Technique>`__.  The idea behind the Pomodoro Technique is to work in short blocks of time on a specific task—about 25 minutes—and then take a break.  The great thing about the Pomodoro Technique is that it encourages you to avoid distractions like social media, television, or Slack messages, so you can create focused work time to get stuff done.  
+
+   In summary, (1) set daily goals, (2) take mental breaks, and (3) create focused time to work.  Be productive.
+
+
+   5. Embrace the kids
+   -------------------
+
+   Admittedly, this is not advice I typically give remote workers.  But these are not normal times.
+
+   Do you remember the BBC interview below?  It went viral a few years ago, but it still makes me laugh every time I watch it.  A dad is giving an interview on a very serious topic, and one of his kids rolls in, super pleased with herself.  Dad is just mortified.  And then another kid rolls in.  And Dad just can't believe this is happening.  Mom comes in to save the day and manages to shut the door.  
+
+   .. youtube:: Mh4f9AYRCZY
+
+   To be honest with you, I probably would have been mortified as well.  I strongly recommend having childcare if you're working from home.  It's really hard to be an effective parent and an effective employee at the same time.  
+
+   The thing is, kids are home right now, and there is very little we can do about it.
+
+   I was so impressed with the way Jimmy Fallon embraced his kids while filming The Tonight Show for the first several months of the pandemic.  (See the video below, but don't get too distracted by it. 😉) He knew his kids were going to be around, so he rolled with it.  
+
+   .. youtube:: G_RgpnAZl1k
+
+   My husband and I have done our best to co-parent while working remotely, but it's been tough.  I've been so appreciative of my management team and colleagues who talk with my daughter and make her feel special when they see her on video calls.  My kid is much happier if she feels acknowledged, and talking with my "friends" at work is one of the highlights of her day.  I've found that if I let her say, "Hi," to everyone, she's much more likely to leave and play in another room.  
+
+   If you're working with people who have kids at home, please be kind to the kids.  The parents are struggling and a few kind words to the kids will make everyone feel better.
+
+   One surprising sidebar for you:  While it may seem like parents are the least productive people on your team right now, a `Valoir study <https://finance.yahoo.com/news/parents-are-more-productive-at-home-than-workers-without-kids-study-124955053.html>`__ showed otherwise.  They surveyed people during the pandemic and found that those who were working from home with children saw a 2% productivity decrease while those who were working alone without other adults or children in the home saw a 3% productivity decrease.  This really surprised me.  When you're checking in on your coworkers who are parents to make sure they're doing okay, also check in on your coworkers who are isolating completely by themselves.  They may be struggling even more.
+
+   .. figure:: /images/article/remote-work/self-care.jpg
+      :align: right
+      :alt: Picture of a letter board that reads "Self care isn't selfish"
+   
+      Photo by Madison Inouye from `Pexels <https://www.pexels.com/photo/self-care-isn-t-selfish-signage-2821823>`__
+
+   4. Care for yourself
+   --------------------
+
+   This tip is another one that is easier said than done, especially if you're caring for others right now.  
+
+   But do what you can to take care of yourself.  Every day, try to exercise a bit, eat something healthy, and do something fun.  
+
+   I'm an introvert.  You might think I'd be doing fine during quarantine, but I actually have way less time to myself now that everyone is home with me all the time.  I've found that taking slow walks by myself in the evening can really help.  Sometimes I put my noise cancelling headphones on and don't even play music while I walk, so I can really be alone with my thoughts.  
+
+   My husband and I decided a few months ago that we should each take a night off from parenting.  Sometimes I'll meet up with a friend for dinner at a local park.  Sometimes he'll go golfing.  But we each need some time away from the daily grind of parenting.  If you're feeling that way, see if you can lean on your support system—maybe it's a spouse, maybe it's a friend, maybe it's a neighbor, or maybe it's someone you can hire, but figure out how to get time to yourself.
+
+   I have a feeling that extroverts are also struggling.  If that's you, create virtual coffee breaks, happy hours, game nights, or whatever with your colleagues, your friends, and/or your families.  You know what you need, so make time for it.  
+
+   If you find that you're struggling with your mental health, I encourage you to talk with a therapist.  Despite my years of remote work experience, the pandemic has hit me hard.  A few months ago, I began meeting with a therapist for the first time.  And I'm really glad I did.  She's helped me talk through situations and feel like I'm regaining control of pieces of my life in a world where I have no control.  
+
+   If you're struggling, know that you're not the only one.  Reach out if you need help.  Care for yourself.
+
+
+   3. Take a lunch break
+   ---------------------
+
+   You might be thinking, "Wait. Lauren already had a tip about eating intentionally.  Why are we talking about food again?"  Yes, food is an important part of my day.  But this tip is less about food and more about taking a break in the middle of your day.
+
+   .. figure:: /images/article/remote-work/lunch.jpg
+      :align: left
+      :alt: Picture of a woman reading a book while eating a vegetable salad
+   
+      Photo by Daria Shevtsova from `Pexels <https://www.pexels.com/photo/round-white-bowl-with-vegetable-salad-942417>`__
+   
+   Take a lunch break.  Every day.  Away from your computer.  
+
+   As a working mom, my lunch break is one of my favorite parts of my day.  Prior to the pandemic, my lunch break was my guilt-free time to sit quietly and enjoy watching whatever TV show I liked.  No one was there to complain about the quality of the show (I have a weakness for bad reality TV) or interrupt it 500 times. I could just sit and enjoy frivolous television.
+
+   Maybe you're not a TV person.  Maybe you prefer to read a book or a magazine.  Maybe you want to listen to a podcast (have you heard the `MongoDB podcast <https://mongodb.com/podcast>`__???).  Or maybe you want to go for a walk or exercise.  
+
+   Whatever the case, take 30 to 60 minutes in the middle of your day, step away from your computer, and do something else.  I've found that if I'm starting to lose focus or I'm stuck on a problem, I'll take a lunch break.  I'll return refreshed and the answer on how to move forward on the problem will typically come to me. 
+
+   So, every day, take a lunch break.
+
+   .. figure:: /images/article/remote-work/question.jpg
+      :align: right
+      :alt: Picture of a woman cheerfully sitting in front a laptop with her hands raised beside her as if she is asking a question
+
+      Photo by Andrea Piacquadio from `Pexels <https://www.pexels.com/photo/cheerful-surprised-woman-sitting-with-laptop-3762940>`__
+
+   2. Ask for what you want
+   ------------------------
+
+   I attended the `Grace Hopper Celebration of Women in Computing <https://ghc.anitab.org>`__ a few years ago—back when we could attend conferences in person—and a moderator asked a keynote panel, "If you could change one thing, what would it be?" 
+
+   `Telle Whitney <https://en.wikipedia.org/wiki/Telle_Whitney>`__'s response was so simple, but it has stuck with me all these years later.  She said, 
+   "If I could change anything, it would be that each and every one of you would ask for what she wants."  
+
+   Typically, when I share this with people, I encourage them to ask for things like a promotion, a raise, or a growth opportunity.  I still stand by that advice, but I really encourage you to think about what you want **right now** from your company, your spouse, your roommates, your kids, and then ask them for it.  
+
+   I've read a lot of articles about how to successfully work remotely with kids during quarantine, and some of the articles have suggested that you simply explain to your kids that you need focused time to work and then supposedly the kids will allow you to work for an hour or two uninterrupted.  That sounds really great, and maybe that works for older kids, but I can assure you that did not work for my preschooler.  
+
+   Think about what your ask is—what's within the reasonable scope of possibilities—and ask for it.  
+
+   When the pandemic began, MongoDB created a parental care leave policy that allowed those with dependents whose care location had closed the opportunity to take a few weeks off to care for them.  After trying to work with my preschooler at home, I told my manager I was struggling and was considering taking advantage of the parental care leave option.  I told him I wasn't sure when the best time to take the parental care leave was based on my husband's work schedule.  My manager offered to let me stretch the parental care leave out and work part-time for an extended period instead of taking fewer weeks completely off.  This was a great fit for both my family and my team.  I was able to stay in-the-loop with what was happening at work and feel the satisfaction of accomplishing tasks at work while still making sure my preschooler felt loved and cared for.  My family and I would have had a really tough time without this option.
+
+   What do you want?  Perhaps you want to ask your manager if you can shift your schedule around and work different hours than you typically do.  Perhaps you want to ask your boss for a new desk or an external monitor.  Perhaps you want to ask someone if they can watch your kids so you can have a night off.  Perhaps you want to ask your roommates if they can stop playing loud music at 10:00 pm, so you can maintain a regular sleep schedule.  
+
+   Asking for what you want might seem scary or feel uncomfortable, but the people in your life probably don't know what you need or what you want.  So ask for what you want.  
+
+   1. Be a great PR agent for yourself
+   -----------------------------------
+
+   I'm shamelessly borrowing this tip from a keynote that `Nora Denzel <https://twitter.com/NoraDenzel>`__ gave several years ago at the `Grace Hopper Celebration of Women in Computing <https://ghc.anitab.org>`__.  Nora encouraged us all to be great PR (public relations) agents for ourselves.  
+
+   .. youtube:: 242Z5BhJAC8?t=2170
+
+   (Add the keynote above to your watchlist.  It's hilarious and inspiring.  You won't regret it.)
+
+   Your colleagues and your managers probably don't know all of the amazing things you do.  So tell them.  If you solve a really hard problem, tell them about it.  And don't just say, "I solved X and it was no big deal."  Explain why it was hard or time consuming. 
+
+   When you work remotely, people don't see what you're working on.  So you have to advertise your work.  If you have a daily scrum or a weekly status meeting, show up ready to tell your team what you've been working on.  
+
+   Be conscious of how you're describing yourself.  Control your press release.  
+
+   When I gave a talk about remote work last year, this was one of my tips.  That very same day, a Vice President at MongoDB asked me how another talk I had given went.  I said something along the lines of, "Well, I got really nervous, so I started talking really fast and then I started coughing and I lost my train of thought..." And he said, "I heard it went great."  There I was wrecking the press release that someone else had already given about me to a **Vice President**. 
+
+   If you do a great job, let people know about it.  You can do this in a variety of ways, and it depends on your team's culture.  If someone gives me a compliment on Twitter or email, I forward it to my management team.  It's an easy way to brag without it seeming like I'm bragging.  If someone gives me a compliment verbally, I ask them to email it to me or my manager.  Another option is to create a culture of compliments on your team.  If you compliment your teammates (be sure the compliments are genuine!) and make it normal to do so, they're likely to compliment your strengths as well.  And that's a win for everyone.  
+
+   Be a great PR agent for yourself.
+
+
+.. summary::
+
+   Summary 
+   -------
+
+   Let's recap my top 10 tips for making remote work actually work right now.
+
+   **10. Acknowledge this isn't normal.** If you're struggling to work remotely right now, know that there are a lot of other factors at play.  Remote work may not necessarily be the problem.
+   
+   **9. Do something else.** If you're going to struggle to pay attention during a meeting, do a mindless task at the same time.
+  
+   **8. Eat intentionally.** Portion control your snacks. Schedule time to eat if you need to.
+   
+   **7. Actively prevent burnout.** Do what you can to work a consistent schedule. When you're done working, turn off your computer and your work-related phone notifications.
+   
+   **6. Be productive.** Set daily goals, take mental breaks, and create focused time to work using the Pomodoro Technique.
+   
+   **5. Embrace the kids.** They're around right now. Let parents know that it's okay.
+   
+   **4. Care for yourself.** Every day, try to exercise in some form, eat something healthy, and do something fun. Talk with someone if you're struggling.
+   
+   **3. Take a lunch break.** In the middle of your day, step away from your computer for 30 to 60 minutes to clear your head.
+   
+   **2. Ask for what you want.** Those around you probably don't know what you want or need unless you ask.  So ask.
+   
+   **1. Be a great PR agent for yourself.**  Advertise your work. And be conscious of the words that you are using when you do so.
+
+   I recently made a guest appearance on the `Espacios Abiertos Podcast <https://espaciosabiertos.dev/lauren-schaefer>`__.  In the episode (recorded in English, because I'm lame and only speak one language), I chatted about how to handle different remote-work situations people are facing during the pandemic.  I hope you'll check it out.
+
+   If you're interested in learning more about remote work, I recommend you watch the `recording of the talk I gave at PyCon 2019 <https://youtu.be/CTWgKyLk6mo>`__.  I discussed what the research shows about the effectiveness of remote work, walked through a framework of how to ask your boss if you can work remotely, and shared my top five tips for working remotely during "normal" conditions. 
+
+   .. youtube:: CTWgKyLk6mo
+
+   I wish you success and happiness on your remote work journey!  You've got this!
+
+   .. blockquote::
+
+      I'd love to chat with you about your remote work experience! Share your story or ask questions in the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.
+
+   .. figure:: /images/article/remote-work/you-got-this.jpg
+      :alt: Picture of a laptop and a letter board that reads "YOU GOT THIS" on a desk
+ 
+      Photo by Prateek Katyal from `Pexels <https://www.pexels.com/photo/black-and-white-laptop-2740956/>`__
+   
+   Additional Resources
+   --------------------
+
+   Below are lists of additional resources about remote work.
+   
+   Remote Work Tips
+   ~~~~~~~~~~~~~~~~
+
+   - `Everything We Know About Remote Work <https://buffer.com/resources/remote-work/>`__
+   - `How to evaluate a remote job <https://about.gitlab.com/company/culture/all-remote/evaluate/>`__ 
+   - `Junior Developers Checklist for Landing a Remote Job <https://dev.to/ugglr/junior-developers-checklist-for-landing-a-remote-job-2ldb>`__
+   - `Working from home tips from our experienced remote employees <https://stackoverflow.blog/2020/03/12/working-from-home-tips-from-our-experienced-remote-employees>`__ 
+
+   How Remote Work Improves Diversity
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   - `How to Diversify Your Candidate Pool with Remote Work <https://www.flexjobs.com/employer-blog/diversify-candidate-pool-remote-work/>`__ 
+   - `How Remote Workplaces Benefit Women <https://www.fastcompany.com/3055021/how-remote-workplaces-benefit-women>`__
+   - `How Working Remotely Is Helping Women Close The Gender Gap In Tech <https://www.forbes.com/sites/andrealoubier/2017/03/13/how-working-remotely-is-helping-women-close-the-gender-gap-in-tech>`__
+   - `Want to Improve Your Company's Diversity? Go Remote. <https://www.entrepreneur.com/article/333010>`__ 
+
+   Remote Work and the Pandemic
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   - `Interest in Twitter, Facebook Jobs Surges After CEOs Allow Permanent Work From Home <https://observer.com/2020/05/twitter-facebook-square-job-interest-surge-permanent-remote-work/>`__
+   - `Most workers say WFH can succeed <https://www.linkedin.com/news/story/most-workers-say-wfh-can-succeed-4842284/>`__
+   - `Now Is a Great Time for Your Company to Cancel Fridays <https://marker.medium.com/now-is-a-great-time-for-your-company-to-cancel-fridays-192d49323273>`__
+   - `To Avoid Burnout, Work Less and Ignore 'Productivity Propaganda' <https://www.bloomberg.com/news/articles/2020-05-11/exercising-eating-right-won-t-prevent-burnout>`__
+   - `Women in the Workplace 2020 <https://www.mckinsey.com/featured-insights/diversity-and-inclusion/women-in-the-workplace>`__
+   - `Working From Home During the Coronavirus Pandemic: The State of Remote Work <https://clutch.co/real-estate/resources/state-of-remote-work-during-coronavirus-pandemic>`__
