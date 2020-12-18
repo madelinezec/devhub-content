@@ -257,7 +257,7 @@ Store Sensitive Data With Python & MongoDB Client-Side Field Level Encryption
    find your cluster, and click on ``Collections``.
 
    Run Queries Using Your Key and Schema
-   -----------------------------------
+   -------------------------------------
 
    Create a new file, called ``csfle_main.py``.
    This script will connect to your MongoDB cluster using the key and schema created by running ``create_key.py``.
