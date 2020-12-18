@@ -1,0 +1,562 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/quickstart/python.png
+
+.. meta-description::
+
+   Store data securely in MongoDB using Client-Side Field-Level Encryption
+
+.. twitter::
+   :creator: @judy2k
+   :title: QuickStart: Client-Side Field-Level Encryption with Python
+   :image: /images/social/twitter/twitter-mdb-developer.png
+   :image-alt: MongoDB Developers
+
+   Store data securely in MongoDB with Client-Side Field-Level Encryption
+
+.. og::
+   :title: QuickStart: Basic Operations in Python
+   :image: /images/social/open-graph/og-mdb-developer.png
+
+.. include:: /includes/authors/smith-mark.rst
+
+.. pubdate:: 2020-12-18
+
+.. type:: quickstart
+
+.. level:: beginner
+
+.. languages::
+
+   * Python
+
+
+===============================================================================
+Store Sensitive Data With Python & MongoDB Client-Side Field Level Encryption
+===============================================================================
+
+.. introduction::
+
+   .. image:: /images/qs-badges/qs-badge-python.png
+      :scale: 30%
+      :alt: Python badge
+      :align: right
+
+   With a combination of legislation around customer data protection (such as `GDPR <https://gdpr-info.eu/>`__),
+   and increasing legislation around `money laundering <https://www.finra.org/rules-guidance/key-topics/aml>`__,
+   it's increasingly necessary to be able to store sensitive customer data *securely*.
+   While MongoDB's default security is based on modern industry standards,
+   such as TLS for the transport-layer
+   and `SCRAM-SHA-2356 <https://docs.mongodb.com/manual/core/security-scram/>`__ for password exchange,
+   it's still possible for someone to get into your database,
+   either by attacking your server through a different vector,
+   or by somehow obtaining your security credentials.
+
+   In these situations, you can add an extra layer of security to the most sensitive fields in your database using client-side field level encryption (`CSFLE <https://docs.mongodb.com/drivers/security/client-side-field-level-encryption-guide>`__).
+   CSFLE encrypts certain fields that you specify, within the driver, on the client,
+   so that it is never transmitted unencrypted, nor seen unencrypted by the MongoDB server.
+   CSFLE makes it nearly impossible to obtain sensitive information from the database server
+   either directly through intercepting data from the client,
+   or from reading data directly from disk, even with DBA or root credentials.
+
+   There are two ways to use CSFLE in MongoDB:
+   *Explicit*, where your code has to manually encrypt data before it is sent to the driver to be inserted or updated using helper methods;
+   and *implicit*, where you declare in your collection which fields should be encrypted using an extended JSON Schema, and this is done by the Python driver without any code changes.
+   This tutorial will cover *implicit* CSFLE, which is only available in `MongoDB Enterprise <https://www.mongodb.com/try/download/enterprise>`__ and `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__.
+   If you're running MongoDB Community Server, you'll need to use `explicit CSFLE <https://docs.mongodb.com/manual/core/security-explicit-client-side-encryption/>`__, which won't be covered here.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   * A recent release of Python 3.
+     The code in this post was written for 3.8,
+     but any release of Python 3.6+ should be fine.
+   * A `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`__ cluster running MongoDB 4.2 or later.
+
+.. content::
+
+   Getting Set Up
+   --------------
+
+   There are two things you need to have installed on your app server to enable CSFLE in the `PyMongo driver <https://docs.mongodb.com/drivers/python>`__.
+   The first is a Python library called `pymongocrypt <https://pypi.org/project/pymongocrypt/>`__, which you can install by running the following with your virtualenv enabled:
+
+   .. code-block:: bash
+
+      python -m pip install "pymongo[encryption,srv]~=3.11"
+
+   The ``[encryption]`` in square braces tells pip to install the optional dependencies required to encrypt data within the PyMongo driver.
+
+   The second thing you'll need to have installed is mongocryptd,
+   which is an application that is provided as part of
+   `MongoDB Enterprise <https://docs.mongodb.com/manual/administration/install-enterprise/>`__.
+   Follow the `instructions <https://docs.mongodb.com/manual/reference/security-client-side-encryption-appendix/#mongocryptd-installation>`__
+   to install mongocryptd on to the machine you'll be using to run your Python code. In a production environment, it's recommended to run mongocryptd as a service at startup on your VM or container.
+
+   Test that you have mongocryptd installed in your path by running ``mongocryptd``, ensuring that it prints out some output.
+   You can then shut it down again with ``Ctrl-C``.
+
+   Creating a Key to Encrypt and Decrypt Your Data
+   -----------------------------------------------
+
+   First, I'll show you how to write a script to generate a new secret master key which will be used to protect individual field keys. In this tutorial, we will be using a "local" master key which will be stored on the application side either in-line in code or in a local key file. Note that a local key file should only be used in development. For production, it's strongly recommended to either use one of the integrated native cloud key management services or retrieve the master key from a secrets manager such as Hashicorp Vault.
+   This Python script will generate some random bytes to be used as a secret master key.
+   It will then create a new field key in MongoDB, encrypted using the master key.
+   The master key will be written out to a file so it can be loaded by other python scripts,
+   along with a JSON schema document that will tell PyMongo which fields should be encrypted and how.
+
+   .. blockquote::
+
+      All of the code described in this post is `on GitHub <https://github.com/mongodb-developer/python-quickstart-code/tree/master/src/csfle>`__.
+      I recommend you check it out if you get stuck, but otherwise, it's worth following the tutorial and writing the code yourself!
+
+   First, here's a few imports you'll need.
+   Paste these into a file called ``create_key.py``.
+
+   .. code-block:: python
+
+      # create_key.py
+
+      import os
+      from pathlib import Path
+      from secrets import token_bytes
+
+      from bson import json_util
+      from bson.binary import STANDARD
+      from bson.codec_options import CodecOptions
+      from pymongo import MongoClient
+      from pymongo.encryption import ClientEncryption
+      from pymongo.encryption_options import AutoEncryptionOpts
+
+   The first thing you need to do is to generate 96 bytes of random data.
+   Fortunately, Python ships with a module for exactly this purpose, called ``secrets``. 
+   You can use the ``token_bytes`` method for this:
+
+   .. code-block:: python
+
+      # create_key.py
+
+      # Generate a secure 96-byte secret key:
+      key_bytes = token_bytes(96)
+
+   Next, here's some code that creates a MongoClient, configured with a local key management system (KMS).
+
+   .. blockquote::
+
+      **Note**: Storing the master key, unencrypted, on a local filesystem (which is what I do in this demo code) is insecure.
+      In production you should use a secure KMS, such as
+      `AWS KMS <https://aws.amazon.com/kms/>`__,
+      `Azure Key Vault <https://azure.microsoft.com/en-gb/services/key-vault/>`__,
+      or `Google's Cloud KMS <https://cloud.google.com/security-key-management>`__.
+
+      I'll cover this in a later blog post, but if you want to get started now, you should read the
+      `documentation <https://docs.mongodb.com/drivers/security/client-side-field-level-encryption-local-key-to-kms/>`__
+
+   Add this code to your ``create_key.py`` script:
+
+   .. code-block:: python
+
+      # create_key.py
+
+      # Configure a single, local KMS provider, with the saved key:
+      kms_providers = {"local": {"key": key_bytes}}
+      csfle_opts = AutoEncryptionOpts(
+         kms_providers=kms_providers, key_vault_namespace="csfle_demo.__keystore"
+      )
+
+      # Connect to MongoDB with the key information generated above:
+      with MongoClient(os.environ["MDB_URL"], auto_encryption_opts=csfle_opts) as client:
+         print("Resetting demo database & keystore ...")
+         client.drop_database("csfle_demo")
+
+         # Create a ClientEncryption object to create the data key below:
+         client_encryption = ClientEncryption(
+            kms_providers,
+            "csfle_demo.__keystore",
+            client,
+            CodecOptions(uuid_representation=STANDARD),
+         )
+
+         print("Creating key in MongoDB ...")
+         key_id = client_encryption.create_data_key("local", key_alt_names=["example"])
+
+
+   Once the client is configured in the code above,
+   it's used to drop any existing "csfle_demo" database,
+   just to ensure that running this or other scripts doesn't result in
+   your database being left in a weird state.
+
+   The configuration and the client is then used to create a ClientEncryption object
+   that you'll use once to create a data key in the ``__keystore`` collection in the ``csfle_demo`` database.
+   ``create_data_key`` will create a document in the ``__keystore`` collection that will look a little like this:
+
+   .. code-block:: python
+
+      {
+         '_id': UUID('00c63aa2-059d-4548-9e18-54452195acd0'),
+         'creationDate': datetime.datetime(2020, 11, 24, 11, 25, 0, 974000),
+         'keyAltNames': ['example'],
+         'keyMaterial': b'W\xd2"\xd7\xd4d\x02e/\x8f|\x8f\xa2\xb6\xb1\xc0Q\xa0\x1b\xab ...'
+         'masterKey': {'provider': 'local'},
+         'status': 0,
+         'updateDate': datetime.datetime(2020, 11, 24, 11, 25, 0, 974000)
+      }
+
+   Now you have two keys!
+   One is the 96 random bytes you generated with ``token_bytes`` - that's the master key (which remains outside the database).
+   And there's another key in the ``__keystore`` collection!
+   This is because MongoDB CSFLE uses `envelope encryption <https://docs.mongodb.com/drivers/security/client-side-field-level-encryption-guide#a.-create-a-master-key>`__.
+   The key that is actually used to encrypt field values is stored in the database,
+   but it is stored encrypted with the master key you generated.
+
+   To make sure you don't lose the master key,
+   here's some code you should add to your script which will save it to a file called ``key_bytes.bin``.
+
+   .. code-block:: python
+
+      # create_key.py
+
+      Path("key_bytes.bin").write_bytes(key_bytes)
+
+   Finally, you need a JSON schema structure that will tell PyMongo which fields need to be encrypted, and how.
+   The schema needs to reference the key you created in ``__keystore``,
+   and you have that in the ``key_id`` variable,
+   so this script is a good place to generate the JSON file.
+   Add the following to the end of your script:
+
+   .. code-block:: python
+
+      # create_key.py
+
+      schema = {
+        "bsonType": "object",
+        "properties": {
+            "ssn": {
+               "encrypt": {
+                  "bsonType": "string",
+                  # Change to "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" in order to filter by ssn value:
+                  "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random",
+                  "keyId": [key_id],  # Reference the key
+               }
+            },
+         },
+      }
+
+      json_schema = json_util.dumps(
+         schema, json_options=json_util.CANONICAL_JSON_OPTIONS, indent=2
+      )
+      Path("json_schema.json").write_text(json_schema)
+
+   Now you can run this script.
+   First, set the environment variable ``MDB_URL`` to the URL for your Atlas cluster.
+   The script should create two files locally: ``key_bytes.bin``, containing your master key; and ``json_schema.json``, containing your JSON schema.
+   In your database, there should be a ``__keystore`` collection containing your new (encrypted) field key!
+   The easiest way to check this out is to go to `cloud.mongodb.com <https://cloud.mongodb.com/>`__,
+   find your cluster, and click on ``Collections``.
+
+   Run Queries Using Your Key and Schema
+   -----------------------------------
+
+   Create a new file, called ``csfle_main.py``.
+   This script will connect to your MongoDB cluster using the key and schema created by running ``create_key.py``.
+   I'll then show you how to insert a document, and retrieve it both with and without CSFLE configuration,
+   to show how it is stored encrypted and transparently decrypted by PyMongo when the correct configuration is provided.
+
+   Start with some code to import the necessary modules and load the saved files:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      import os
+      from pathlib import Path
+
+      from pymongo import MongoClient
+      from pymongo.encryption_options import AutoEncryptionOpts
+      from pymongo.errors import EncryptionError
+      from bson import json_util
+
+      # Load the master key from 'key_bytes.bin':
+      key_bin = Path("key_bytes.bin").read_bytes()
+
+      # Load the 'person' schema from "json_schema.json":
+      collection_schema = json_util.loads(Path("json_schema.json").read_text())
+
+   Add the following configuration needed to connect to MongoDB:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      # Configure a single, local KMS provider, with the saved key:
+      kms_providers = {"local": {"key": key_bin}}
+
+      # Create a configuration for PyMongo, specifying the local master key,
+      # the collection used for storing key data, and the json schema specifying
+      # field encryption:
+      csfle_opts = AutoEncryptionOpts(
+         kms_providers,
+         "csfle_demo.__keystore",
+         schema_map={"csfle_demo.people": collection_schema},
+      )
+
+   The code above is very similar to the configuration created in ``create_key.py``.
+   Note that this time, ``AutoEncryptionOpts`` is passed a ``schema_map``,
+   mapping the loaded JSON schema against the ``people`` collection in the ``csfle_demo`` database.
+   This will let PyMongo know which fields to encrypt and decrypt, and which algorithms and keys to use.
+
+   At this point, it's worth taking a look at the JSON schema that you're loading.
+   It's stored in ``json_schema.json``, and it should look a bit like this:
+
+   .. code-block:: json
+
+      {
+      "bsonType": "object",
+      "properties": {
+         "ssn": {
+            "encrypt": {
+            "bsonType": "string",
+            "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random",
+            "keyId": [
+               {
+                  "$binary": {
+                  "base64": "4/p3dLgeQPyuSaEf+NddHw==",
+                  "subType": "04"}}]
+            }}}}
+
+   This schema specifies that the ``ssn`` field, used to store a social security number,
+   is a string which should be stored encrypted using the
+   `AEAD_AES_256_CBC_HMAC_SHA_512-Random <https://docs.mongodb.com/manual/core/security-client-side-encryption/#randomized-encryption>`__
+   algorithm.
+
+   If you don't want to store the schema in a file when you generate your field key in MongoDB,
+   you can load the key ID at any time using the values you set for ``keyAltNames`` when you created the key.
+   In my case, I set ``keyAltNames`` to ``["example"]``, so I could look it up using the following line of code:
+
+   .. code-block:: python
+
+      key_id = db.__keystore.find_one({ "keyAltNames": "example" })["_id"]
+
+   Because my code in ``create_key.py`` writes out the schema at the same time as generating the key,
+   it already has access to the key's ID so the code doesn't need to look it up.
+
+   Add the following code to connect to MongoDB using the configuration you added above:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      # Add a new document to the "people" collection, and then read it back out
+      # to demonstrate that the ssn field is automatically decrypted by PyMongo:
+      with MongoClient(os.environ["MDB_URL"], auto_encryption_opts=csfle_opts) as client:
+         client.csfle_demo.people.delete_many({})
+         client.csfle_demo.people.insert_one({
+            "full_name": "Sophia Duleep Singh",
+            "ssn": "123-12-1234",
+         })
+         print("Decrypted find() results: ")
+         print(client.csfle_demo.people.find_one())
+
+   The code above connects to MongoDB and clears any existing documents from the ``people`` collection.
+   It then adds a new person document, for Sophia Duleep Singh, with a fictional ``ssn`` value.
+
+   Just to prove the data can be read back from MongoDB and decrypted by PyMongo, 
+   the last line of code queries back the record that was just added and prints it to the screen.
+   When I ran this code, it printed:
+
+   .. code-block:: none
+
+      {'_id': ObjectId('5fc12f13516b61fa7a99afba'), 'full_name': 'Sophia Duleep Singh', 'ssn': '123-12-1234'}
+
+   To prove that the data is encrypted on the server,
+   you can connect to your cluster using `Compass <https://www.mongodb.com/products/compass>`__
+   or at `cloud.mongodb.com <https://cloud.mongodb.com/>`__,
+   but it's not a lot of code to connect again without encryption configuration,
+   and query the document:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      # Connect to MongoDB, but this time without CSFLE configuration.
+      # This will print the document with ssn *still encrypted*:
+      with MongoClient(os.environ["MDB_URL"]) as client:
+         print("Encrypted find() results: ")
+         print(client.csfle_demo.people.find_one())
+
+   When I ran this, it printed out:
+
+   .. code-block:: none
+
+      {
+         '_id': ObjectId('5fc12f13516b61fa7a99afba'),
+         'full_name': 'Sophia Duleep Singh',
+         'ssn': Binary(b'\x02\xe3\xfawt\xb8\x1e@\xfc\xaeI\xa1\x1f\xf8\xd7]\x1f\x02\xd8+,\x9el ...', 6)
+      }
+
+   That's a very different result from '123-12-1234'!
+   Unfortunately, when you use the Random encryption algorithm, you lose the ability to filter on the field.
+   You can see this if you add the following code to the end of your script and execute it:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      # The following demonstrates that if the ssn field is encrypted as
+      # "Random" it cannot be filtered:
+      try:
+         with MongoClient(os.environ["MDB_URL"], auto_encryption_opts=csfle_opts) as client:
+            # This will fail if ssn is specified as "Random".
+            # Change the algorithm to "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+            # in client_schema_create_key.py (and run it again) for this to succeed:
+            print("Find by ssn: ")
+            print(client.csfle_demo.people.find_one({"ssn": "123-12-1234"}))
+      except EncryptionError as e:
+         # This is expected if the field is "Random" but not if it's "Deterministic"
+         print(e)
+
+   When you execute this block of code, it will print an exception saying, "Cannot query on fields encrypted with the randomized encryption algorithm...".
+   ``AEAD_AES_256_CBC_HMAC_SHA_512-Random`` is the correct algorithm to use for sensitive data you won't have to filter on,
+   such as medical conditions, security questions, etc.
+   It also provides better protection against frequency analysis recovery,
+   and so should probably be your default choice for encrypting sensitive data,
+   especially data that is high-cardinality, 
+   such as a credit card number, phone number, or ... yes ... a social security number.
+   But there's a distinct probability that you might want to search for someone by their Social Security number,
+   given that it's a unique identifier for a person,
+   and you can do this by encrypting it using the "Deterministic" algorithm.
+
+   In order to fix this, open up ``create_key.py`` again and change the algorithm in the schema definition from ``Random`` to ``Deterministic``,
+   so it looks like this:
+
+   .. code-block:: python
+
+      # create_key.py
+
+      "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
+
+   Re-run ``create_key.py`` to generate a new master key, field key, and schema file.
+   (This operation will also delete your ``csfle_demo`` database!)
+   Run ``csfle_main.py`` again.
+   This time, the block of code that failed before should instead print out the details of Sophia Duleep Singh.
+
+   The problem with this way of configuring your client is that if some other code is misconfigured,
+   it can either save unencrypted values in the database
+   or save them using the wrong key or algorithm.
+   Here's an example of some code to add a second record, for Dora Thewlis.
+   Unfortunately, this time, the configuration has not provided a ``schema_map``!
+   What this means is that the SSN for Dora Thewlis will be stored in plaintext.
+
+   .. code-block:: python
+
+      # Configure encryption options with the same key, but *without* a schema:
+      csfle_opts_no_schema = AutoEncryptionOpts(
+         kms_providers,
+         "csfle_demo.__keystore",
+      )
+      with MongoClient(
+         os.environ["MDB_URL"], auto_encryption_opts=csfle_opts_no_schema
+      ) as client:
+         print("Inserting Dora Thewlis, without configured schema.")
+         # This will insert a document *without* encrypted ssn, because
+         # no schema is specified in the client or server:
+         client.csfle_demo.people.insert_one({
+            "full_name": "Dora Thewlis",
+            "ssn": "234-23-2345",
+         })
+
+      # Connect without CSFLE configuration to show that Sophia Duleep Singh is
+      # encrypted, but Dora Thewlis has her ssn saved as plaintext.
+      with MongoClient(os.environ["MDB_URL"]) as client:
+         print("Encrypted find() results: ")
+         for doc in client.csfle_demo.people.find():
+            print(" *", doc)
+
+
+   If you paste the above code into your script and run it,
+   it should print out something like this,
+   demonstrating that one of the documents has an encrypted SSN, and the other's is plaintext:
+
+   .. code-block:: none
+
+      * {'_id': ObjectId('5fc12f13516b61fa7a99afba'), 'full_name': 'Sophia Duleep Singh', 'ssn': Binary(b'\x02\xe3\xfawt\xb8\x1e@\xfc\xaeI\xa1\x1f\xf8\xd7]\x1f\x02\xd8+,\x9el\xfe\xee\xa7\xd9\x87+\xb9p\x9a\xe7\xdcjY\x98\x82]7\xf0\xa4G[]\xd2OE\xbe+\xa3\x8b\xf5\x9f\x90u6>\xf3(6\x9c\x1f\x8e\xd8\x02\xe5\xb5h\xc64i>\xbf\x06\xf6\xbb\xdb\xad\xf4\xacp\xf1\x85\xdbp\xeau\x05\xe4Z\xe9\xe9\xd0\xe9\xe1n<', 6)}
+      * {'_id': ObjectId('5fc12f14516b61fa7a99afc0'), 'full_name': 'Dora Thewlis', 'ssn': '234-23-2345'}
+
+   *Fortunately*, MongoDB provides the ability to attach a `validator <https://docs.mongodb.com/manual/core/schema-validation/>`__ to a collection,
+   to ensure that the data stored is encrypted according to the schema.
+
+   In order to have a schema defined on the server-side, return to your ``create_key.py`` script, 
+   and instead of writing out the schema to a JSON file,
+   provide it to the ``create_collection`` method as a JSON Schema validator:
+
+   .. code-block:: python
+
+      # create_key.py
+
+      print("Creating 'people' collection in 'csfle_demo' database (with schema) ...")
+      client.csfle_demo.create_collection(
+         "people",
+         codec_options=CodecOptions(uuid_representation=STANDARD),
+         validator={"$jsonSchema": schema},
+      )
+
+   Providing a validator attaches the schema to the created collection,
+   so there's no need to save the file locally,
+   no need to read it into ``csfle_main.py``,
+   and no need to provide it to MongoClient anymore.
+   It will be stored and enforced by the server.
+   This simplifies both the key generation code and the code to query the database,
+   *and* it ensures that the SSN field will always be encrypted correctly.
+   Bonus!
+
+   The definition of ``csfle_opts`` becomes:
+
+   .. code-block:: python
+
+      # csfle_main.py
+
+      csfle_opts = AutoEncryptionOpts(
+         kms_providers,
+         "csfle_demo.__keystore",
+      )
+
+.. summary::
+
+   In Conclusion
+   -------------
+
+   By completing this quick start, you've learned how to:
+
+   * Create a secure random key for encrypting data keys in MongoDB.
+   * Use local key storage to store a key during development.
+   * Create a Key in MongoDB (encrypted with your local key) to encrypt data in MongoDB.
+   * Use a JSON Schema to define which fields should be encrypted.
+   * Assign the JSON Schema to a collection to validate encrypted fields on the server.
+
+   As mentioned earlier, you should *not* use local key storage to manage your key - it's insecure.
+   You can store the key manually in a KMS of your choice, such as `Hashicorp Vault <https://www.vaultproject.io/>`__,
+   or if you're using one of the three major cloud providers,
+   their KMS services are already integrated into PyMongo.
+   Read the `documentation <https://docs.mongodb.com/drivers/security/client-side-field-level-encryption-local-key-to-kms>`__ to find out more.
+
+   .. blockquote::
+
+      I hope you enjoyed this post! Let us know what you think on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.
+
+   There is a lot of documentation about Client-Side Field-Level Encryption, in different places.
+   Here are the docs I found useful when writing this post:
+
+   * `PyMongo CSFLE Docs <https://pymongo.readthedocs.io/en/stable/examples/encryption.html>`__
+   * `Client-Side Field Level Encryption docs <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__
+   * `Schema Validation <https://docs.mongodb.com/manual/core/schema-validation/>`__
+   * `MongoDB University CSFLE Guides Repository <https://github.com/mongodb-university/csfle-guides/tree/master/python>`__
+
+   If CSFLE doesn't quite fit your security requirements, you should check out our `other security docs <https://docs.mongodb.com/manual/security/>`__,
+   which cover `encryption at rest <https://docs.mongodb.com/manual/core/security-encryption-at-rest/>`__
+   and configuring `transport encryption <https://docs.mongodb.com/manual/core/security-transport-encryption/>`__,
+   among other things.
+
+   As always, if you have any questions, or if you've built something cool, let us know on the
+   `MongoDB Community Forums <https://community.mongodb.com/>`__!
