@@ -1,0 +1,1101 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/generic/green.png
+
+.. meta-description:: 
+
+   Learn how to create a 2D side-scrolling platformer game with MongoDB and Unity.
+
+.. twitter::
+   :creator: @nraboy
+   :title: Developing a Side-Scrolling Game with Unity and MongoDB Realm
+   :image: /images/social/twitter/twitter-green-pattern.png
+   :image-alt: MongoDB
+
+   Learn how to create a 2D side-scrolling platformer game with MongoDB and Unity.
+
+.. og::
+   :title: Developing a Side-Scrolling Platformer Game with Unity and MongoDB Realm
+   :image: /images/social/open-graph/og-green-pattern.png
+
+.. include:: /includes/authors/raboy-nic.rst
+
+.. pubdate:: 2021-01-04
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. languages::
+
+   * C#
+
+.. tags::
+
+   * Game Development
+
+.. products::
+
+   * Atlas
+   * Realm
+
+========================================================================
+Developing a Side-Scrolling Platformer Game with Unity and MongoDB Realm
+========================================================================
+
+.. introduction::
+
+    I've been a gamer since the 1990s, so 2D side-scrolling platformer games
+    like Super Mario Bros. hold a certain place in my heart. Today, 2D games
+    are still being created, but with the benefit of having connectivity to
+    the internet, whether that be to store your player state information, to
+    access new levels, or something else.
+
+    Every year, MongoDB holds an internal company-wide hackathon known as
+    Skunkworks. During Skunkworks, teams are created and using our skills
+    and imagination, we create something to make MongoDB better or something
+    that uses MongoDB in a neat way. For Skunkworks 2020, I (`Nic
+    Raboy <https://www.nraboy.com>`__) teamed up with Barry O'Neill to
+    create a side-scrolling platformer game with Unity that queries and
+    sends data between MongoDB and the game. Internally, this project was
+    known as The Untitled Leafy Game.
+
+    In this tutorial, we're going to see what went into creating a game like
+    `The Untitled Leafy
+    Game <https://github.com/mongodb-developer/the-untitled-leafy-game>`__
+    using `Unity <https://unity.com/>`__ as the game development framework
+    and `MongoDB Realm <https://www.mongodb.com/realm>`__ for data storage
+    and back end.
+
+    To get a better idea of what we're going to accomplish, take a look at
+    the following animated image:
+
+    .. image:: /images/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/untitled-leafy-game.gif
+        :scale: 100%
+        :alt: The Untitled Leafy Game
+
+    The idea behind the game is that you are a MongoDB leaf character and
+    you traverse through the worlds to obtain your trophy. As you traverse
+    through the worlds, you can accumulate points by answering questions
+    about MongoDB. These questions are obtained through a remote HTTP
+    request and the answers are validated through another HTTP request.
+
+.. prerequisites::
+
+    The Requirements
+    ----------------
+
+    There are a few requirements that must be met prior to starting this
+    tutorial:
+
+    -  You must be using `MongoDB Atlas <https://www.mongodb.com/cloud>`__ and `MongoDB Realm <https://www.mongodb.com/realm>`__.
+    -  You must be using `Unity <https://unity.com/>`__ 2020.1.8f1 or more recent.
+    -  At least some familiarity with Node.js (Realm) and C# (Unity).
+    -  Your own game graphic assets.
+
+    For this tutorial, MongoDB Atlas will be used to store our data and
+    MongoDB Realm will act as our back end that the game communicates with,
+    rather than trying to access the data directly from Atlas.
+
+    Many of the assets in The Untitled Leafy Game were obtained through the
+    `Unity Asset Store <https://assetstore.unity.com/>`__. For this reason,
+    I won't be able to share them raw in this tutorial. However, they are
+    available for free with a Unity account.
+
+    You can follow along with this tutorial using the source material on
+    `GitHub <https://github.com/mongodb-developer/the-untitled-leafy-game>`__.
+    We won't be doing a step by step reproduction, but we'll be exploring
+    important topics, all of which can be further seen in the project source
+    on GitHub.
+
+.. content::
+
+    Creating the Game Back End with MongoDB Atlas and MongoDB Realm
+    ---------------------------------------------------------------
+
+    It might seem that MongoDB plays a significant role in this game, but
+    the amount of code to make everything work is actually quite small. This
+    is great because as a game developer, the last thing you want is to
+    worry about fiddling with your back end and database.
+
+    It's important to understand the data model that will represent
+    questions in the game. For this game, we're going to use the following
+    model:
+
+    .. code-block:: none
+
+        {
+            "_id": ObjectId("5f973c8c083f84fa6151ca54"),
+            "question_text": "MongoDB is Awesome!",
+            "problem_id": "abc123",
+            "subject_area": "general",
+            "answer": true
+        }
+
+    The ``question_text`` field will be displayed within the game. We can
+    specify which question should be placed where in the game through the
+    ``problem_id`` field because it will allow us to filter for the document
+    we want. When the player selects an answer, it will be sent back to
+    MongoDB Realm and used as a filter for the ``answer`` field. The
+    ``subject_area`` field might be valuable when creating reports at a
+    later date.
+
+    In MongoDB Atlas, the configuration might look like the following:
+
+    .. image:: /images/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/mongodb-atlas-skunkworks-collection.png
+        :alt: MongoDB Atlas Skunkworks Collection
+
+    In the above example, documents with the proposed data model are stored
+    in the ``questions`` collection of the ``game`` database. How you choose
+    to name your collections or even the fields of your documents is up to
+    you.
+
+    Because we'll be using MongoDB Realm rather than a self-hosted
+    application, we need to create webhook functions to act as our back end.
+    Create a Realm application that uses the MongoDB Atlas cluster with our
+    data. The naming of the application does not really matter as long as it
+    makes sense to you.
+
+    .. image:: /images/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/mongodb-realm-skunkworks-dashboard.png
+        :alt: MongoDB Realm Skunkworks Application
+
+    Within the MongoDB Realm dashboard, you're going to want to click on
+    **3rd Party Services** to create new webhook functions.
+
+    Add a new **HTTP** service and give it a name of your choosing.
+
+    .. image:: /images/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/mongodb-realm-skunkworks-service.png
+        :alt: MongoDB Realm HTTP Service
+
+    We'll have the option to create new webhooks and add associated function
+    code to them. The idea is to create two webhooks, a ``get_question``
+    for retrieving question information based on an id value and a
+    ``checkanswer`` for validating a sent answer with an id value.
+
+    The ``get_question``, which should accept GET method requests, will have
+    the following JavaScript code:
+
+    .. code-block:: javascript
+
+        exports = async function (payload, response) {
+
+            const { problem_id } = payload.query;
+
+            const results = await await context.services
+                .get("mongodb-atlas")
+                .db("game")
+                .collection("questions")
+                .findOne({ "problem_id": problem_id }, { problem_id : 1, question_text : 1 })
+
+            response.setBody(JSON.stringify(results));
+
+        }
+
+    In the above code, if the function is executed, the query parameters are
+    stored. We are expecting a ``problem_id`` as a query parameter in any
+    given request. Using that information, we can do a ``findOne`` with the
+    ``problem_id`` as the filter. Next, we can specify that we only want the
+    ``problem_id`` and the ``question_text`` fields returned for any matched
+    document.
+
+    The ``checkanswer`` should accept POST requests and will have the
+    following JavaScript code:
+
+    .. code-block:: javascript
+
+        exports = async function (payload, response) {
+
+            const query = payload.body.text();
+            const filter = EJSON.parse(query);
+
+            const results = await context.services
+                .get("mongodb-atlas")
+                .db("game")
+                .collection("questions")
+                .findOne({ problem_id: filter.problem_id, answer: filter.answer }, { problem_id : 1, answer: 1 });
+
+            response.setBody(results ? JSON.stringify(results) : "{}");
+
+        }
+
+    The logic between the two functions is quite similar. The difference is
+    that this time, we are expecting a payload to be used as the filter. We
+    are also filtering on both the ``problem_id`` as well as the ``answer``
+    rather than just the ``problem_id`` field.
+
+    Assuming you have questions in your database and you've deployed your
+    webhook functions, you should be able to send HTTP requests to them for
+    testing. As we progress through the tutorial, interacting with the
+    questions will be done through the Unity produced game.
+
+    Designing a Game Scene with Game Objects, Tile Pallets, and Sprites
+    -------------------------------------------------------------------
+
+    With the back end in place, we can start focusing on the game itself. To
+    set expectations, we're going to be using graphic assets from the `Unity
+    Asset Store <https://assetstore.unity.com/>`__, as previously mentioned
+    in the tutorial. In particular, we're going to be using the `Pixel
+    Adventure
+    1 <https://assetstore.unity.com/packages/2d/characters/pixel-adventure-1-155360>`__
+    asset pack which can be obtained for free. This is in combination with
+    some MongoDB custom graphics.
+
+    We're going to assume this is not your first time dabbling with Unity.
+    This means that some of the topics around creating a scene won't be
+    explored from a beginner perspective. It will save us some time and
+    energy and get to the point.
+
+    An example of things that won't be explored include:
+
+    -  Using the Palette Editor to create a world.
+    -  Importing media and animating sprites.
+
+    If you want to catch up on some beginner Unity with MongoDB content, check out the `series that I did with Adrienne Tacke <https://developer.mongodb.com/how-to/designing-strategy-develop-game-unity-mongodb>`__.
+
+    The game will be composed of worlds also referred to as levels. Each
+    world will have a camera, a player, some question boxes, and a
+    multi-layered tilemap. Take the following image for example:
+
+    .. image:: /images/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/unity-game-world-hierarchy.png
+        :alt: Unity Game World Hierarchy
+
+    Within any given world, we have a **GameController** game object. The
+    role of this object is to orchestrate the changing of scenes, something
+    we'll explore later in the tutorial. The **Camera** game object is
+    responsible for following the player position to keep everything within
+    view.
+
+    The **Grid** is the parent game object to each layer of the tilemap,
+    where in our worlds will be composed of three layers. The **Ground**
+    layer will have basic colliders to prevent the player from moving
+    through them, likewise with the **Boundaries** layer. The **Traps**
+    layer will allow for collision detection, but won't actually apply
+    physics. We have separate layers because we want to know when the player
+    interacts with any of them. These layers are composed of tiles from the
+    **Pixel Adventure 1** set and they are the graphical component to our
+    worlds.
+
+    To show text on the screen, we'll need to use a **Canvas** parent game
+    object with a child game object with the **Text** component. This child
+    game object is represented by the **Score** game object. The **Canvas**
+    comes in combination with the **EventSystem** which we will never
+    directly engage with.
+
+    The **Trophy** game object is nothing more than a sprite with an image
+    of a trophy. We will have collision related components attached, but
+    more on that in a moment.
+
+    Finally, we have the **Questions** and **QuestionModal** game objects,
+    both of which contain child game objects. The **Questions** group has
+    any number of sprites to represent question boxes in the game. They have
+    the appropriate collision components and when triggered, will interact
+    with the game objects within the **QuestionModal** group. Think of it
+    this way. The player interacts with the question box. A modal or popup
+    displays with the text, possible answers, and a submit button. Each
+    question box will have scripts where you can define which document in
+    the database is associated with them.
+
+    In summary, any given world scene will look like this:
+
+    -  GameController
+
+       -  Camera
+       -  Grid
+
+          -  Ground
+          -  Boundaries
+          -  Traps
+
+       -  Player
+       -  QuestionModal
+
+          -  ModalBackground
+          -  QuestionText
+          -  Dropdown
+          -  SubmitButton
+
+       -  Questions
+
+          -  QuestionOne
+          -  QuestionTwo
+
+       -  Trophy
+       -  Canvas
+
+          -  Score
+
+       -  EventSystem
+
+    The way you design your game may differ from the above, but it worked
+    for the example that Barry and I did for the MongoDB Skunkworks project.
+
+    We know that every item in the project hierarchy is a game object. The
+    components we add to them define what the game object actually does.
+    Let's figure out what we need to add to make this game work.
+
+    The **Player** game object should have the following components:
+
+    -  Sprite Renderer
+    -  Rigidbody 2D
+    -  Box Collider 2D
+    -  Animator
+    -  Script
+
+    The **Sprite Renderer** will show the graphic of our choosing for this
+    particular game object. The **Rigidbody 2D** is the physics applied to
+    the sprite, so how much gravity should be applied and similar. The **Box
+    Collider 2D** represents the region around the image where collisions
+    should be detected. The **Animator** represents the animations and flow
+    that will be assigned to the game object. The **Script**, which in this
+    example we'll call **Player**, will control how this sprite is
+    interacted with. We'll get to the script later in the tutorial, but
+    really what matters is the physics and colliders applied.
+
+    The **Trophy** game object and each of the question box game objects
+    will have the same components, with the exception that the rigidbody
+    will be static and not respond to gravity and similar physics events on
+    the question boxes and the **Trophy** won't have any rigidbody. They
+    will also not be animated.
+
+    Interacting with the Game Player and the Environment
+    ----------------------------------------------------
+
+    At this point, you should have an understanding of the game objects and
+    components that should be a part of your game world scenes. What we want
+    to do is make the game interactive by adding to the script for the
+    player.
+
+    The **Player** game object should have a script associated to it. Mine
+    is **Player.cs**, but yours could be different. Within this script, add
+    the following:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public class Player : MonoBehaviour {
+
+            private Rigidbody2D rb2d;
+            private Animator animator;
+            private bool isGrounded;
+
+            [Range(1, 10)]
+            public float speed;
+
+            [Range(1, 10)]
+            public float jumpVelocity;
+
+            [Range(1, 5)]
+            public float fallingMultiplier;
+
+            public Score score;
+
+            void Start() {
+                rb2d = GetComponent<Rigidbody2D>();
+                animator = GetComponent<Animator>();
+                isGrounded = true;
+            }
+
+            void FixedUpdate() {
+                float horizontalMovement = Input.GetAxis("Horizontal");
+                
+                if(Input.GetKey(KeyCode.Space) && isGrounded == true) {
+                    rb2d.velocity += Vector2.up * jumpVelocity;
+                    isGrounded = false;
+                }
+
+                if (rb2d.velocity.y < 0) {
+                    rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallingMultiplier - 1) * Time.fixedDeltaTime;
+                }
+                else if (rb2d.velocity.y > 0 && !Input.GetKey(KeyCode.Space)) {
+                    rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallingMultiplier - 1) * Time.fixedDeltaTime;
+                }
+
+                rb2d.velocity = new Vector2(horizontalMovement * speed, rb2d.velocity.y);
+
+                if(rb2d.position.y < -10.0f) {
+                    rb2d.position = new Vector2(0.0f, 1.0f);
+                    score.Reset();
+                }
+            }
+
+            private void OnCollisionEnter2D(Collision2D collision) {
+                if (collision.collider.name == "Ground" || collision.collider.name == "Platforms") {
+                    isGrounded = true;
+                }
+                if(collision.collider.name == "Traps") {
+                    rb2d.position = new Vector2(0.0f, 1.0f);
+                    score.Reset();
+                }
+            }
+
+            void OnTriggerEnter2D(Collider2D collider) {
+                if (collider.name == "Trophy") {
+                    Destroy(collider.gameObject);
+                    score.BankScore();
+                    GameController.NextLevel();
+                }
+            }
+
+        }
+
+    The above code could be a lot to take in, so we're going to break it
+    down starting with the variables.
+
+    .. code-block:: csharp
+
+        private Rigidbody2D rb2d;
+        private Animator animator;
+        private bool isGrounded;
+
+        [Range(1, 10)]
+        public float speed;
+
+        [Range(1, 10)]
+        public float jumpVelocity;
+
+        [Range(1, 5)]
+        public float fallingMultiplier;
+
+        public Score score;
+
+    The ``rb2d`` variable will be used to obtain the currently added
+    **Rigidbody 2D** component. Likewise, the ``animator`` variable will
+    obtain the **Animator** component. We'll use ``isGrounded`` to let us
+    know if the player is currently jumping so that way, we can't jump
+    infinitely.
+
+    The public variables such as ``speed``, ``jumpVelocity``, and
+    ``fallingMultiplier`` have to do with our physics. We want to define the
+    movement speed, how fast a jump should happen, and how fast the player
+    should fall when finishing a jump. Finally, the ``score`` variable will
+    be used to link the **Score** game object to our player script. This
+    will allow us to interact with the text in our script.
+
+    .. code-block:: csharp
+
+        void Start() {
+            rb2d = GetComponent<Rigidbody2D>();
+            animator = GetComponent<Animator>();
+            isGrounded = true;
+        }
+
+    On the first rendered frame, we obtain each of the components and default
+    our ``isGrounded`` variable.
+
+    During the ``FixedUpdate`` method, which happens continuously, we can
+    check for keyboard interaction:
+
+    .. code-block:: csharp
+
+        float horizontalMovement = Input.GetAxis("Horizontal");
+
+        if(Input.GetKey(KeyCode.Space) && isGrounded == true) {
+            rb2d.velocity += Vector2.up * jumpVelocity;
+            isGrounded = false;
+        }
+
+    In the above code, we are checking to see if the horizontal keys are
+    pressed. These can be defined within Unity, but default as the **a** and
+    **d** keys or the left and right arrow keys. If the space key is pressed
+    and the player is currently on the ground, the ``jumpVelocity`` is
+    applied to the rigidbody. This will cause the player to start moving up.
+
+    To remove the feeling of the player jumping on the moon, we can make use
+    of the ``fallingMultiplier`` variable:
+
+    .. code-block:: csharp
+
+        if (rb2d.velocity.y < 0) {
+            rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallingMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        else if (rb2d.velocity.y > 0 && !Input.GetKey(KeyCode.Space)) {
+            rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallingMultiplier - 1) * Time.fixedDeltaTime;
+        }
+
+    We have an if / else if for the reason of long jumps and short jumps. If
+    the velocity is less than zero, you are falling and the multiplier should
+    be used. If you're currently mid jump and continuing to jump, but you
+    let go of the space key, then the fall should start to happen rather
+    than continuing to jump until the velocity reverses.
+
+    Now if you happen to fall off the screen, we need a way to reset.
+
+    .. code-block:: csharp
+
+        if(rb2d.position.y < -10.0f) {
+            rb2d.position = new Vector2(0.0f, 1.0f);
+            score.Reset();
+        }
+
+    If we fall off the screen, the ``Reset`` function on ``score``, which
+    we'll see shortly, will reset back to zero and the position of the
+    player will be reset to the beginning of the level.
+
+    We can finish the movement of our player in the ``FixedUpdate`` method
+    with the following:
+
+    .. code-block:: csharp
+
+        rb2d.velocity = new Vector2(horizontalMovement * speed, rb2d.velocity.y);
+
+    The above line takes the movement direction based on the input key,
+    multiplies it by our defined speed, and keeps the current velocity in
+    the y-axis. We keep the current velocity so we can move horizontally if
+    we are jumping or not jumping.
+
+    This brings us to the ``OnCollisionEnter2D`` and ``OnTriggerEnter2D``
+    methods.
+
+    We need to know when we've ended a jump and when we've stumbled upon a
+    trap. We can't just say a jump is over when the y-position falls below a
+    certain value because the player may have fallen off a cliff.
+
+    Take the ``OnCollisionEnter2D`` method:
+
+    .. code-block:: csharp
+
+        private void OnCollisionEnter2D(Collision2D collision) {
+            if (collision.collider.name == "Ground" || collision.collider.name == "Platforms") {
+                isGrounded = true;
+            }
+            if(collision.collider.name == "Traps") {
+                rb2d.position = new Vector2(0.0f, 1.0f);
+                score.Reset();
+            }
+        }
+
+    If there was a collision, we can get the game object of what we collided
+    with. The game object should be named so we should know immediately if
+    we collided with a floor or platform or something else. If we collided
+    with a floor or platform, reset the jump. If we collided with a trap, we
+    can reset the position and the score.
+
+    The ``OnTriggerEnter2D`` method is a little different.
+
+    .. code-block:: csharp
+
+        void OnTriggerEnter2D(Collider2D collider) {
+            if (collider.name == "Trophy") {
+                Destroy(collider.gameObject);
+                score.BankScore();
+                GameController.NextLevel();
+            }
+        }
+
+    Remember, the **Trophy** won't have a rigidbody so there will be no
+    physics. However, we want to know when our player has overlapped with
+    the trophy. In the above function, if triggered, we will destroy the
+    trophy which will remove it from the screen. We will also make use of
+    the ``BankScore`` function that we'll see soon as well as the
+    ``NextLevel`` function that will change our world.
+
+    As long as the tilemap layers have the correct collider components, your
+    player should be able to move around whatever world you've decided to
+    create. This brings us to some of the other scripts that need to be
+    created for interaction in the **Player.cs** script.
+
+    We used a few functions on the ``score`` variable within the
+    **Player.cs** script. The ``score`` variable is a reference to our
+    **Score** game object which should have its own script. We'll call this
+    the **Score.cs** script. However, before we get to the **Score.cs**
+    script, we need to create a static class to hold our locally persistent
+    data.
+
+    Create a **GameData.cs** file with the following:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public static class GameData
+        {
+
+            public static int totalScore;
+
+        }
+
+    Using static classes and variables is the easiest way to pass data
+    between scenes of a Unity game. We aren't assigning this script to any
+    game object, but it will be accessible for as long as the game is open.
+    The ``totalScore`` variable will represent our session score and it will
+    be manipulated through the **Score.cs** file.
+
+    Within the **Score.cs** file, add the following:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+        using UnityEngine.UI;
+
+        public class Score : MonoBehaviour
+        {
+
+            private Text scoreText;
+            private int score;
+
+            void Start()
+            {
+                scoreText = GetComponent<Text>();
+                this.Reset();
+            }
+
+            public void Reset() {
+                score = GameData.totalScore;
+                scoreText.text = "SCORE: " + GameData.totalScore;
+            }
+
+            public void AddPoints(int amount) {
+                score += amount;
+                scoreText.text = "SCORE: " + score;
+            }
+
+            public void BankScore() {
+                GameData.totalScore += score;
+            }
+
+        }
+
+    In the above script, we have two private variables. The ``scoreText``
+    will reference the component attached to our game object and the
+    ``score`` will be the running total for the particular world.
+
+    The ``Reset`` function, which we've seen already, will set the visible
+    text on the screen to the value in our static class. We're doing this
+    because we don't want to necessarily zero out the score on a reset. For
+    this particular game, rather than resetting the entire score when we
+    fail, we reset the score for the particular world, not all the worlds.
+    This makes more sense in the ``BankScore`` method. We'd typically call
+    ``BankScore`` when we progress from one world to the next. We take the
+    current score for the world, add it to the persisted score, and then
+    when we want to reset, our persisted score holds while the world score
+    resets. You can design this functionality however you want.
+
+    In the **Player.cs** script, we've also made use of a
+    **GameController.cs** script. We do this to manage switching between
+    scenes in the game. This **GameController.cs** script should be attached
+    to the **GameController** game object within the scene. The code behind
+    the script should look like the following:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+        using UnityEngine.SceneManagement;
+        using System;
+
+        public class GameController : MonoBehaviour {
+
+            private static int currentLevelIndex;
+            private static string[] levels;
+
+            void Start() {
+                levels = new string[] {
+                    "LevelOne",
+                    "LevelTwo"
+                };
+                currentLevelIndex = Array.IndexOf(levels, SceneManager.GetActiveScene().name);
+            }
+
+            public static void NextLevel() {
+                if(currentLevelIndex < levels.Length - 1) {
+                    SceneManager.LoadScene(levels[currentLevelIndex + 1]);
+                }
+            }
+
+        }
+
+    So why even create a script for switching scenes when it isn't
+    particularly difficult? There are a few reasons:
+
+    1. We don't want to manage scene switching in the **Player.cs** script
+    to reduce cruft code.
+    2. We want to define world progression while being cautious that other
+    scenes such as menus could exist.
+
+    With that said, when the first frame renders, we could define every
+    scene that is a level or world. While we don't explore it here, we could
+    also define every scene that is a menu or similar. When we want to
+    progress to the next level, we can just iterate through the level array,
+    all of which is managed by this scene manager.
+
+    Knowing what we know now, if we had set everything up correctly and
+    tried to move our player around, we'd likely move off the screen. We
+    need the camera to follow the player and this can be done in another
+    script.
+
+    The **Camera.cs** script, which should be attached to the **Camera**
+    game object, should have the following C# code:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public class Camera : MonoBehaviour
+        {
+
+            public Transform player;
+
+            void Update() {
+                transform.position = new Vector3(player.position.x + 4, transform.position.y, transform.position.z);
+            }
+        }
+
+    The ``player`` variable should represent the **Player** game object,
+    defined in the UI that Unity offers. It can really be any game object,
+    but because we want to have the camera follow the player, it should
+    probably be the **Player** game object that has the movement scripts. On
+    every frame, the camera position is set to the player position with a
+    small offset.
+
+    Everything we've seen up until now is responsible for player
+    interaction. We can traverse a world, collide with the environment, and
+    keep score.
+
+    Making HTTP Requests from the Unity Game to MongoDB Realm
+    ---------------------------------------------------------
+
+    How the game interacts with the MongoDB Realm webhooks is where the fun
+    really comes in! I explored a lot of this in a previous tutorial I wrote
+    titled, `Sending and Requesting Data from MongoDB in a Unity
+    Game <https://developer.mongodb.com/how-to/sending-requesting-data-mongodb-unity-game>`__,
+    but it is worth exploring again for the context of The Untitled Leafy
+    Game.
+
+    Before we get into the sending and receiving of data, we need to create
+    a data model within Unity that roughly matches what we see in MongoDB.
+    Create a **DatabaseModel.cs** script with the following C# code:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+
+        public class DatabaseModel {
+
+            public string _id;
+            public string question_text;
+            public string problem_id;
+            public string subject_area;
+            public bool answer;
+
+            public string Stringify() {
+                return JsonUtility.ToJson(this);
+            }
+
+            public static DatabaseModel Parse(string json) {
+                return JsonUtility.FromJson<DatabaseModel>(json);
+            }
+
+        }
+
+    The above script is not one that we plan to add to a game object. We'll
+    be able to instantiate it from any script. Notice each of the public
+    variables and how they are named based on the fields that we're using
+    within MongoDB. Unity offers a
+    `JsonUtility <https://docs.unity3d.com/ScriptReference/JsonUtility.html>`__
+    class that allows us to take public variables and either convert them
+    into a JSON string or parse a JSON string and load the data into our
+    public variables. It's very convenient, but the public variables need to
+    match to be effective.
+
+    The process of game to MongoDB interaction is going to be as follows:
+
+    1. Player collides with question box
+    2. Question box, which has a ``problem_id`` associated, launches the modal
+    3. Question box sends an HTTP request to MongoDB Realm
+    4. Question box populates the fields in the modal based on the HTTP response
+    5. Question box sends an HTTP request with the player answer to MongoDB Realm
+    6. The modal closes and the game continues
+
+    With those chain of events in mind, we can start making this happen.
+    Take a **Question.cs** script that would exist on any particular
+    question box game object:
+
+    .. code-block:: csharp
+
+        using System.Collections;
+        using System.Collections.Generic;
+        using UnityEngine;
+        using UnityEngine.Networking;
+        using System.Text;
+        using UnityEngine.UI;
+
+        public class Question : MonoBehaviour {
+
+            private DatabaseModel question;
+
+            public string questionId;
+            public GameObject questionModal;
+            public Score score;
+
+            private Text questionText;
+            private Dropdown dropdownAnswer;
+            private Button submitButton;
+
+            void Start() {
+                GameObject questionTextGameObject = questionModal.transform.Find("QuestionText").gameObject;
+                questionText = questionTextGameObject.GetComponent<Text>();
+                GameObject submitButtonGameObject = questionModal.transform.Find("SubmitButton").gameObject;
+                submitButton = submitButtonGameObject.GetComponent<Button>();
+                GameObject dropdownAnswerGameObject = questionModal.transform.Find("Dropdown").gameObject;
+                dropdownAnswer = dropdownAnswerGameObject.GetComponent<Dropdown>();
+            }
+
+            private void OnCollisionEnter2D(Collision2D collision) {
+                if (collision.collider.name == "Player") {
+                    questionModal.SetActive(true);
+                    Time.timeScale = 0;
+                    StartCoroutine(GetQuestion(questionId, result => {
+                        questionText.text = result.question_text;
+                        submitButton.onClick.AddListener(() =>{SubmitOnClick(result, dropdownAnswer);});
+                    }));
+                }
+            }
+
+            void SubmitOnClick(DatabaseModel db, Dropdown dropdownAnswer) {
+                db.answer = dropdownAnswer.value == 0;
+                StartCoroutine(CheckAnswer(db.Stringify(), result => {
+                    if(result == true) {
+                        score.AddPoints(1);
+                    }
+                    questionModal.SetActive(false);
+                    Time.timeScale = 1;
+                    submitButton.onClick.RemoveAllListeners();
+                }));
+            }
+
+            IEnumerator GetQuestion(string id, System.Action<DatabaseModel> callback = null)
+            {
+                using (UnityWebRequest request = UnityWebRequest.Get("https://webhooks.mongodb-realm.com/api/client/v2.0/app/skunkworks-rptwf/service/webhooks/incoming_webhook/get_question?problem_id=" + id))
+                {
+                    yield return request.SendWebRequest();
+                    if (request.isNetworkError || request.isHttpError) {
+                        Debug.Log(request.error);
+                        if(callback != null) {
+                            callback.Invoke(null);
+                        }
+                    }
+                    else {
+                        if(callback != null) {
+                            callback.Invoke(DatabaseModel.Parse(request.downloadHandler.text));
+                        }
+                    }
+                }
+            }
+
+            IEnumerator CheckAnswer(string data, System.Action<bool> callback = null) {
+                using (UnityWebRequest request = new UnityWebRequest("https://webhooks.mongodb-realm.com/api/client/v2.0/app/skunkworks-rptwf/service/webhooks/incoming_webhook/checkanswer", "POST")) {
+                    request.SetRequestHeader("Content-Type", "application/json");
+                    byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+                    request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+                    request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                    yield return request.SendWebRequest();
+                    if (request.isNetworkError || request.isHttpError) {
+                        Debug.Log(request.error);
+                        if(callback != null) {
+                            callback.Invoke(false);
+                        }
+                    } else {
+                        if(callback != null) {
+                            callback.Invoke(request.downloadHandler.text != "{}");
+                        }
+                    }
+                }
+            }
+        }
+
+    Of the scripts that exist in the project, this is probably the most
+    complex. It isn't complex because of the MongoDB interaction. It is just
+    complex based on how questions are integrated into the game.
+
+    Let's break it down starting with the variables:
+
+    .. code-block:: csharp
+
+        private DatabaseModel question;
+
+        public string questionId;
+        public GameObject questionModal;
+        public Score score;
+
+        private Text questionText;
+        private Dropdown dropdownAnswer;
+        private Button submitButton;
+
+    The ``questionId``, ``questionModal``, and ``score`` variables are
+    assigned through the UI inspector in Unity. This allows us to give each
+    question box a unique id and give each question box the same modal to
+    use and score widget. If we wanted, the modal and score items could be
+    different, but it's best to recycle game objects for performance
+    reasons.
+
+    The ``questionText``, ``dropdownAnswer``, and ``submitButton`` will be
+    obtained from the attached ``questionModal`` game object.
+
+    To obtain each of the game objects and their components, we can look at
+    the ``Start`` method:
+
+    .. code-block:: csharp
+
+        void Start() {
+            GameObject questionTextGameObject = questionModal.transform.Find("QuestionText").gameObject;
+            questionText = questionTextGameObject.GetComponent<Text>();
+            GameObject submitButtonGameObject = questionModal.transform.Find("SubmitButton").gameObject;
+            submitButton = submitButtonGameObject.GetComponent<Button>();
+            GameObject dropdownAnswerGameObject = questionModal.transform.Find("Dropdown").gameObject;
+            dropdownAnswer = dropdownAnswerGameObject.GetComponent<Dropdown>();
+        }
+
+    Remember, game objects don't mean a whole lot to us. We need to get the
+    components that exist on each game object. We have the attached
+    ``questionModal`` so we can use Unity to find the child game objects
+    that we need and their components.
+
+    Before we explore how the HTTP requests come together with the rest of
+    the script, we should explore how these requests are made in general.
+
+    .. code-block:: csharp
+
+        IEnumerator GetQuestion(string id, System.Action<DatabaseModel> callback = null)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Get("https://webhooks.mongodb-realm.com/api/client/v2.0/app/skunkworks-rptwf/service/webhooks/incoming_webhook/get_question?problem_id=" + id))
+            {
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError) {
+                    Debug.Log(request.error);
+                    if(callback != null) {
+                        callback.Invoke(null);
+                    }
+                }
+                else {
+                    if(callback != null) {
+                        callback.Invoke(DatabaseModel.Parse(request.downloadHandler.text));
+                    }
+                }
+            }
+        }
+
+    In the above ``GetQuestion`` method, we expect an ``id`` which will be
+    our ``problem_id`` that is attached to the question box. We also provide
+    a ``callback`` which will be used when we get a response from the
+    backend. With the
+    `UnityWebRequest <https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html>`__,
+    we can make a request to our MongoDB Realm webhook. Upon success, the
+    ``callback`` variable is invoked and the parsed data is returned.
+
+    You can see this in action within the ``OnCollisionEnter2D`` method.
+
+    .. code-block:: csharp
+
+        private void OnCollisionEnter2D(Collision2D collision) {
+            if (collision.collider.name == "Player") {
+                questionModal.SetActive(true);
+                Time.timeScale = 0;
+                StartCoroutine(GetQuestion(questionId, result => {
+                    questionText.text = result.question_text;
+                    submitButton.onClick.AddListener(() =>{SubmitOnClick(result, dropdownAnswer);});
+                }));
+            }
+        }
+
+    When a collision happens, we see if the **Player** game object is what
+    collided. If true, then we set the modal to active so it displays, alter
+    the time scale so the game pauses, and then execute the ``GetQuestion``
+    from within a Unity coroutine. When we get a result for that particular
+    ``problem_id``, we set the text within the modal and add a special click
+    listener to the button. We want the button to use the correct
+    information from this particular instance of the question box. Remember,
+    the modal is shared for all questions in this example, so it is
+    important that the correct listener is used.
+
+    So we displayed the question information in the modal. Now we need to
+    submit it. The HTTP request is slightly different:
+
+    .. code-block:: csharp
+
+        IEnumerator CheckAnswer(string data, System.Action<bool> callback = null) {
+            using (UnityWebRequest request = new UnityWebRequest("https://webhooks.mongodb-realm.com/api/client/v2.0/app/skunkworks-rptwf/service/webhooks/incoming_webhook/checkanswer", "POST")) {
+                request.SetRequestHeader("Content-Type", "application/json");
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+                request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError) {
+                    Debug.Log(request.error);
+                    if(callback != null) {
+                        callback.Invoke(false);
+                    }
+                } else {
+                    if(callback != null) {
+                        callback.Invoke(request.downloadHandler.text != "{}");
+                    }
+                }
+            }
+        }
+
+    In the ``CheckAnswer`` method, we do another ``UnityWebRequest``, this
+    time a POST request. We encode the JSON string which is our data and we
+    send it to our MongoDB Realm webhook. The result for the ``callback`` is
+    either going to be a true or false depending on if the response is an
+    empty object or not.
+
+    We can see this in action through the ``SubmitOnClick`` method:
+
+    .. code-block:: csharp
+
+        void SubmitOnClick(DatabaseModel db, Dropdown dropdownAnswer) {
+            db.answer = dropdownAnswer.value == 0;
+            StartCoroutine(CheckAnswer(db.Stringify(), result => {
+                if(result == true) {
+                    score.AddPoints(1);
+                }
+                questionModal.SetActive(false);
+                Time.timeScale = 1;
+                submitButton.onClick.RemoveAllListeners();
+            }));
+        }
+
+    Dropdowns in Unity are numeric, so we need to figure out if it is true or
+    false. Once we have this information, we can execute the ``CheckAnswer``
+    through a coroutine, sending the document information with our user
+    defined answer. If the response is true, we add to the score.
+    Regardless, we hide the modal, reset the time scale, and remove the
+    listener on the button.
+
+.. summary::
+
+    Conclusion
+    ----------
+
+    While we didn't see the step by step process towards reproducing a
+    side-scrolling platformer game like the MongoDB Skunkworks project, The
+    Untitled Leafy Game, we did walk through each of the components that
+    went into it. These components consisted of designing a scene for a
+    possible game world, adding player logic, score keeping logic, and HTTP
+    request logic.
+
+    To play around with the project that took Barry O'Neill and myself (`Nic
+    Raboy <https://www.nraboy.com>`__) three days to complete, check it out
+    on
+    `GitHub <https://github.com/mongodb-developer/the-untitled-leafy-game>`__.
+    After swapping the MongoDB Realm endpoints with your own, you'll be able
+    to play the game.
+
+    If you're interested in getting more out of game development with
+    MongoDB and Unity, check out a series that I'm doing with Adrienne
+    Tacke, starting with `Designing a Strategy to Develop a Game with Unity
+    and
+    MongoDB <https://developer.mongodb.com/how-to/designing-strategy-develop-game-unity-mongodb>`__.
+
+    Questions? Comments? We'd love to connect with you. Join the conversation on the `MongoDB Community Forums <https://developer.mongodb.com/community/forums/>`__.
