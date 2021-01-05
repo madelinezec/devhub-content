@@ -15,7 +15,7 @@
    Store data securely in MongoDB with Client-Side Field-Level Encryption
 
 .. og::
-   :title: QuickStart: Basic Operations in Python
+   :title: QuickStart: Client-Side Field-Level Encryption with Python
    :image: /images/social/open-graph/og-mdb-developer.png
 
 .. include:: /includes/authors/smith-mark.rst
