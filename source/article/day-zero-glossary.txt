@@ -118,13 +118,13 @@ Day Zero: Glossary of Terms
       :scale: 50%
       :align: center
 
-   During one of the challenges, Malena must choose between field level encryption (FLE), or `encryption at rest <https://docs.mongodb.com/manual/core/security-encryption-at-rest/>`__. This term is used to
+   During one of the challenges, Malena must choose between client-side field level encryption (CSFLE), or `encryption at rest <https://docs.mongodb.com/manual/core/security-encryption-at-rest/>`__. This term is used to
    describe the state of data that has been stored on disk in an encrypted state as opposed to in plain text. 
 
    Encryption at rest, when used in conjunction with transport encryption and good security policies that protect relevant accounts, 
    passwords, and encryption keys, can help ensure compliance with security and privacy standards.
 
-   A key reason Malena chooses application-level encryption, or field level encryption is that she learns that the malicious AI has
+   A key reason Malena chooses application-level encryption, or client-side field level encryption is that she learns that the malicious AI has
    administrative access to the infrastructure and as such, likely has access to the key management system.
 
    ----------
@@ -212,11 +212,11 @@ Day Zero: Glossary of Terms
 
    .. _day-zero-glossary-csfle:
 
-   Field Level Encryption (FLE)
-   ----------------------------
+   Client-Side Field Level Encryption (CSFLE)
+   ------------------------------------------
 
    .. image:: /images/day-zero/field_level_encryption.jpg
-      :alt: Also referred to as Client-Side Field Level Encryption 
+      :alt: Making a choice 
       :scale: 50%
       :align: center
 
@@ -229,7 +229,7 @@ Day Zero: Glossary of Terms
    For example, a MongoDB cluster enforcing authentication uses TLS encryption to protect data in transit. The cluster also uses the 
    MongoDB encrypted storage engine to secure data on disk. 
 
-   Malena uses `Field Level Encryption <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ to protect elements in the Operand User collection. 
+   Malena uses `Client-Side Field Level Encryption <https://docs.mongodb.com/manual/core/security-client-side-encryption/>`__ to protect elements in the Operand User collection. 
 
    Read `more about encryption and key management <https://docs.mongodb.com/manual/core/security-client-side-encryption-key-management/>`__.
 

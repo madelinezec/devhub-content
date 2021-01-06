@@ -204,8 +204,8 @@ Day Zero: An Interactive MongoDB Thriller
 
    .. _day-zero-field-level-or-at-rest:
 
-   Field Level Encryption or Data Encryption at Rest
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Client-Side Field Level Encryption or Data Encryption at Rest
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Malena checks the configuration of her Level-13 Cluster and verifies that all data is encrypted at rest by default. This 
    would be sufficient were it not for the fact that the attacker apparently has administrative access. This is a critical 
@@ -310,7 +310,7 @@ Day Zero: An Interactive MongoDB Thriller
 
    * `generate-user-load.js <https://github.com/mongodb-developer/operand/blob/main/scripts/generate-user-load.js>`__ creates thousands of users. The script uses faker.js to create random usernames, addresses, and additional user data. faker.js is a JavaScript library perfectly suited for this type of exercise.
 
-   * `enable-fle.js <https://github.com/mongodb-developer/operand/blob/main/scripts/enable-fle.js>`__ was written to mock the interaction between Malena and the database when she wants to implement field level encryption. The script doesn't actually implement field level encryption, however. It merely displays information to the screen in true Hollywood style.
+   * `enable-fle.js <https://github.com/mongodb-developer/operand/blob/main/scripts/enable-fle.js>`__ was written to mock the interaction between Malena and the database when she wants to implement client-side field level encryption. The script doesn't actually implement client-side field level encryption, however. It merely displays information to the screen in true Hollywood style.
 
    * `release.js <https://github.com/mongodb-developer/operand/blob/main/scripts/release.js>`__ is featured during Malena's initial challenge when she's forced to push Level 13 into production. Once again, we're not actually pushing code with this script.
    
