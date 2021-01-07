@@ -1,0 +1,475 @@
+:template: devhub-article
+
+.. atf-image:: /images/atf-images/illustrations/realm-swiftui.png
+
+.. meta-description:: 
+
+   Building a Mobile Chat App Using Realm – Data Architecture.
+
+.. twitter::
+   :creator: @andrewmorgan
+   :title: Building a Mobile Chat App Using Realm – Data Architecture
+   :image: /images/social/twitter/twitter-realm-swiftui.png
+   :image-alt: Realm mobile app development
+
+   Building a Mobile Chat App Using Realm – Data Architecture
+
+.. og::
+   :title: Building a Mobile Chat App Using Realm – Data Architecture
+   :image: /images/social/open-graph/og-realm-swiftui.png
+
+.. include:: /includes/authors/morgan-andrew.rst
+
+.. pubdate:: 2021-01-07
+
+.. type:: how-to
+
+.. level:: intermediate
+
+.. tags:: 
+
+   * Mobile
+   * iOS
+
+.. languages::
+
+   * Swift
+   * JavaScript
+
+.. products::
+
+   * Realm
+   * MongoDB
+
+==========================================================
+Building a Mobile Chat App Using Realm – Data Architecture
+==========================================================
+
+.. introduction::
+
+   This article targets developers looking to build the Realm mobile database into their mobile apps and (optionally) use MongoDB Realm Sync. It focuses on the data architecture, both the schema and the partitioning strategy. I use a chat app as an example, but you can apply the same principals to any mobile app. This post will equip you with the knowledge needed to design an efficient, performant, and robust data architecture for your mobile app.
+
+   `RChat <https://github.com/ClusterDB/RChat>`__ is a chat application. Members of a chat room share messages, photos, location, and presence information with each other. The initial version is an iOS (Swift and SwiftUI) app, but we will use the same data model and back end Realm application to build an Android version in the future.
+
+   RChat makes an interesting use case for several reasons:
+
+   - A chat message needs to be viewable by all members of a chat room and no one else.
+   - New messages must be pushed to the chat room for all online members in real-time.
+   - The app should notify a user that there are new messages even when they don't have that chat room open.
+   - Users should be able to observe the "presence" of other users (e.g., whether they're currently logged into the app).
+   - There's no limit on how many messages users send in a chat room, and so the data structures must allow them to grow indefinitely.
+
+   If you're looking to add a chat feature to your mobile app, you can repurpose the code from this article and the associated repo. If not, treat it as a case study that explains the reasoning behind the data model and partitioning/syncing decisions taken. You'll likely need to make similar design choices in your apps.
+
+.. prerequisites::
+
+   Prerequisites
+   -------------
+
+   If you want to build and run the app for yourself, this is what you'll need:
+
+   - iOS14.2+
+   - XCode 12.3+
+
+.. content::
+
+   Front End App Features
+   ----------------------
+
+   A user can register and then log into the app. They provide an avatar image and select options such as whether to share location information in chat messages.
+
+   Users can create new chat rooms and include other registered users.
+
+   The list of chat rooms is automatically updated to show how many unread messages are in that room. The members of the room are shown, together with an indication of their current status.
+
+   A user can open a chat room to view the existing messages or send new ones.
+
+   Chat messages can contain text, images, and location details.
+
+   .. blockquote::
+         
+      Watch this demo of the app in action.
+
+      .. youtube:: BlV9El_MJqk
+
+   Running the App for Yourself
+   ----------------------------
+
+   I like to see an app in action before I start delving into the code. If you're the same, you can find the instructions in the `README <https://github.com/ClusterDB/RChat/blob/main/README.md>`__.
+
+   The Data
+   --------
+
+   Figuring out how to store, access, sync, and share your data is key to designing a functional, performant, secure, and scalable application. Here are some things to consider:
+
+   - What data should a user be able to see? What should they be able to change?
+   - What data needs to be available in the mobile app for the current user?
+   - What data changes need to be communicated to which users?
+   - What pieces of data will be accessed at the same time?
+   - Are there instances where data should be duplicated for performance, scalability, or security purposes?
+
+   This article describes how I chose to organize and access the data, as well as why I made those choices.
+
+   Data Architecture
+   ~~~~~~~~~~~~~~~~~
+
+   I store virtually all of the application's data both on the mobile device (in `Realm <https://www.mongodb.com/realm>`__) and in the back end (in `MongoDB Atlas <https://cloud.mongodb.com/>`__). `MongoDB Realm Sync <https://www.mongodb.com/realm/mobile/sync>`__ is used to keep the multiple copies in sync.
+
+   The Realm schema is defined in code – I write the classes, and Realm handles the rest. I specify the back end (Atlas) schema through JSON schemas (though I cheated and used the `developer mode <https://docs.mongodb.com/realm/sync/enable-development-mode>`__ to infer the schema from the Realm model).
+
+   I use `Realm Triggers <https://docs.mongodb.com/realm/triggers>`__ to automatically create or modify data as a side effect of other actions, such as a new user registering with the app or adding a message to a chat room. Triggers simplify the front end application code and increase security by limiting what data needs to be accessible from the mobile app.
+
+   When the mobile app opens a Realm, it provides a list of the classes it should contain and a partition value. In combination, Realm uses that information to decide what data it should synchronize between the local Realm and the back end (and onto other instances of the app).
+
+   Realm Sync currently requires that an application must use the same partition key (name and type) in all of its Realm Objects and Atlas documents.
+
+   A common use case would be to use a string named "username" as the partition key. The mobile app would then open a Realm by setting the partition to the current user's name, ensuring that all of that user's data is available (but no data for other users).
+
+   For RChat, I needed something a bit more flexible. For example, multiple users need to be able to view a chat message, while a user should only be able to update their own profile details. I chose a string partition key, where the string is always composed of a key-value pair — for example, ``"user=874798352934983"`` or ``"conversation=768723786839"``.
+
+   I needed to add back end rules to prevent a rogue user from hacking the mobile app and syncing data that they don't own. Realm `sync permissions <https://docs.mongodb.com/realm/sync/permissions>`__ are defined through two JSON rules – one for read connections, one for writes. For this app, the rules delegate the decision to Realm functions:
+
+   .. figure:: /images/how-to/realm-swiftui-chat-app/sync-permissions.png
+      :scale: 100%
+      :align: center
+      :alt: Configure Realm sync permission rules using the Realm UI
+
+   The Realm functions split the partition key into its key and value components. They perform different checks depending on the key component:
+
+   .. code-block:: javascript
+      :caption: Structure of ``canReadPartition`` and ``canWritePartition`` Realm Functions
+
+      const splitPartition = partition.split("=");
+      if (splitPartition.length == 2) {
+         partitionKey = splitPartition[0];
+         partitionValue = splitPartition[1];
+         console.log(`Partition key = ${partitionKey}; partition value = ${partitionValue}`);
+      } else {
+         console.log(`Couldn't extract the partition key/value from ${partition}`);
+         return;
+      }
+
+      switch (partitionKey) {
+         case "user":
+            // ...
+         case "conversation":
+            // ...
+         case "all-users":
+            // ...
+         default:
+            console.log(`Unexpected partition key: ${partitionKey}`);
+            return false;
+      }
+
+   The full logic for the partition checks can be found in the `canReadPartition <https://github.com/ClusterDB/RChat/blob/main/RChat-Realm/RChat/functions/canReadPartition/source.js>`__ and `canWritePartition <https://github.com/ClusterDB/RChat/blob/main/RChat-Realm/RChat/functions/canWritePartition/source.js>`__ Realm Functions. I'll cover how each of the cases are handled later.
+
+   Data Model
+   ~~~~~~~~~~
+
+   There are three top-level Realm Objects, and I'll work through them in turn.
+
+   .. figure:: /images/how-to/realm-swiftui-chat-app/RChat-Class-Model.png
+      :scale: 100%
+      :align: center
+      :alt: The Realm class model for the RChat iOS app
+
+   User Object
+   ```````````
+
+   The `User class <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/User.swift>`__ represents an application user:
+
+   .. code-block:: swift
+
+      class User: Object {
+         @objc dynamic var _id = UUID().uuidString
+         @objc dynamic var partition = "" // "user=_id"
+         @objc dynamic var userName = ""
+         @objc dynamic var userPreferences: UserPreferences?
+         @objc dynamic var lastSeenAt: Date?
+         let conversations = List<Conversation>()
+         @objc dynamic var presence = "Off-Line"
+      }
+
+   I declare that the ``User`` class top-level Realm objects, by making it inherit from Realm's ``Object`` class. 
+
+   The partition key is a string. I always set the partition to ``"user=_id"`` where ``_id`` is a unique identifier for the user's ``User`` object.
+
+   ``User`` includes some simple attributes such as strings for the user name and presence state.
+
+   `User preferences <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/UserPreferences.swift>`__ are embedded within the User class:
+
+   .. code-block:: swift
+      
+      class UserPreferences: EmbeddedObject {
+         @objc dynamic var displayName: String?
+         @objc dynamic var avatarImage: Photo?
+      }
+
+   It's the inheritance from Realm's ``EmbeddedObject`` that tags this as a class that must always be embedded within a higher-level Realm object.
+
+   Note that only the top-level Realm Object class needs to include the partition field. The partition's embedded objects get included automatically.
+
+   ``UserPreferences`` only contains two attributes, so I could have chosen to include them directly in the ``User`` class. I decided to add the extra level of hierarchy as I felt it made the code easier to understand, but it has no functional impact.
+
+   Breaking the avatar image into its own embedded class was a more critical design decision as I reuse the ``Photo`` class elsewhere. This is the `Photo class <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/Photo.swift>`__:
+
+   .. code-block:: swift
+
+      class Photo: EmbeddedObject, ObservableObject {
+         @objc dynamic var _id = UUID().uuidString
+         @objc dynamic var thumbNail: Data?
+         @objc dynamic var picture: Data?
+         @objc dynamic var date = Date()
+      }
+
+   
+   The ``User`` class includes a Realm ``List`` of embedded `Conversation <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/Conversation.swift>`__ objects:
+
+   .. code-block:: swift
+
+      class Conversation: EmbeddedObject, ObservableObject, Identifiable {
+         @objc dynamic var id = UUID().uuidString
+         @objc dynamic var displayName = ""
+         @objc dynamic var unreadCount = 0
+         let members = List<Member>()
+      }
+
+   I've intentionally duplicated some data by embedding the conversation data into the ``User`` object. Every member of a conversation (chat room) will have a copy of the conversation's data. Only the ``unreadCount`` attribute is unique to each user.
+
+   What was the alternative?
+   #########################
+
+   I could have made ``Conversation`` a top-level Realm object and set the partition to a string of the format ``"conversation=conversation-id"``. The User object would then have contained an array of conversation-ids. If a user were a member of 20 conversations, then the app would need to open 20 Realms (one for each of the partitions) to fetch all of the data it needed to display a list of the user's conversations. That would be a very inefficient approach.
+
+   What are the downsides to duplicating the conversation data?
+   ############################################################
+
+   Firstly, it uses more storage in the back end. The cost isn't too high as the ``Conversation`` only contains meta-data about the chat room and not the actual chat messages (and embedded photos). There are relatively few conversations compared to the number of chat messages.
+
+   The second drawback is that I need to keep the different versions of the conversation consistent. That does add some extra complexity, but I contain the logic within a `Realm Trigger <https://github.com/ClusterDB/RChat/blob/main/RChat-Realm/RChat/functions/chatMessageChange/source.js>`__ in the back end. This reasonably simple function ensures that all instances of the conversation data are updated when someone adds a new chat message:
+
+   .. code-block:: javascript
+      :caption: ``chatMessageChange`` Realm Function
+
+      exports = function(changeEvent) {
+         if (changeEvent.operationType != "insert") {
+            console.log(`ChatMessage ${changeEvent.operationType} event – currently ignored.`);
+            return;
+         }
+         
+         console.log(`ChatMessage Insert event being processed`);
+         let userCollection = context.services.get("mongodb-atlas").db("RChat").collection("User");
+         let chatMessage = changeEvent.fullDocument;
+         let conversation = "";
+         
+         if (chatMessage.partition) {
+            const splitPartition = chatMessage.partition.split("=");
+            if (splitPartition.length == 2) {
+               conversation = splitPartition[1];
+               console.log(`Partition/conversation = ${conversation}`);
+            } else {
+               console.log("Couldn't extract the conversation from partition ${chatMessage.partition}");
+               return;
+            }
+         } else {
+            console.log("partition not set");
+            return;
+         }
+         
+         const matchingUserQuery = {
+            conversations: {
+               $elemMatch: {
+               id: conversation
+               }
+            }
+         };
+         
+         const updateOperator = {
+               $inc: {
+               "conversations.$[element].unreadCount": 1
+               }
+         };
+         
+         const arrayFilter = {
+            arrayFilters:[
+               {
+                  "element.id": conversation
+               }
+               ]
+         };
+         
+         userCollection.updateMany(matchingUserQuery, updateOperator, arrayFilter)
+         .then ( result => {
+            console.log(`Matched ${result.matchedCount} User docs; updated ${result.modifiedCount}`);
+         }, error => {
+            console.log(`Failed to match and update User docs: ${error}`);
+         });
+      };
+
+   Note that the function increments the ``unreadCount`` for all conversation members. When those changes are synced to the mobile app for each of those users, the app will update its rendered list of conversations to alert the user about the unread messages.
+
+   ``Conversations``, in turn, contain a List of `Members <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/Member.swift>`__:
+
+   .. code-block:: swift
+   
+      class Member: EmbeddedObject, Identifiable {
+         @objc dynamic var userName = ""
+         @objc dynamic var membershipStatus: String = "User added, but invite pending"
+      }
+
+   Again, there's some complexity to ensure that the ``User`` object for all conversation members contains the full list of members. Once more, a back end Realm trigger handles this.
+
+   This is how the iOS app opens a User Realm:
+
+   .. code-block:: swift
+   
+      let realmConfig = user.configuration(partitionValue: "user=\(user.id)")
+      return Realm.asyncOpen(configuration: realmConfig)
+
+   For efficiency, I open the User Realm when the user logs in and don't close it until the user logs out.
+
+   The Realm sync rules to determine whether a user can open a synced read or read/write Realm of User objects are very simple. Sync is allowed only if the value component of the partition string matches the logged-in user's ``id``:
+
+   .. code-block:: javascript
+   
+      case "user":
+            console.log(`Checking if partitionValue(${partitionValue}) matches user.id(${user.id}) – ${partitionKey === user.id}`);
+            return partitionValue === user.id;
+
+   Chatster Object
+   ```````````````
+
+   Realm Sync doesn't currently have a way to give one user permission to sync all elements of an object/document while restricting a different user to syncing just a subset of the attributes. The ``User`` object contains some attributes that should only be accessible by the user it represents (e.g., the list of conversations that they are members of). The impact is that we can't sync ``User`` objects to other users. But, there is also data in there that we would like to share (e.g., the user's avatar image).
+
+   The way I worked within the current constraints is to duplicate some of the ``User`` data in the `Chatster Object <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/Chatster.swift>`__:
+
+   .. code-block:: swift
+
+      class Chatster: Object {
+         @objc dynamic var _id = UUID().uuidString // This will match the _id of the associated User
+         @objc dynamic var partition = "all-users=all-the-users"
+         @objc dynamic var userName: String?
+         @objc dynamic var displayName: String?
+         @objc dynamic var avatarImage: Photo?
+         @objc dynamic var lastSeenAt: Date?
+         @objc dynamic var presence = "Off-Line"
+      }
+
+   I want all ``Chatster`` objects to be available to all users. For example, when creating a new conversation, the user can search for potential members based on their username. To make that happen, I set the partition to ``"all-users=all-the-users"`` for every instance.
+
+   A Realm Trigger handles the complexity of maintaining consistency between the ``User`` and ``Chatster`` collections/objects. The iOS app doesn't need any additional logic.
+
+   An alternate solution would have been to implement and call Realm Functions to fetch the required subset of ``User`` data and to search usernames. The functions approach would remove the data duplication, but it would add extra latency and wouldn't work when the device is offline.
+
+   This is how the iOS app opens a Chatster Realm:
+
+   .. code-block:: swift
+
+      let realmConfig = user.configuration(partitionValue: "all-users=all-the-users")
+      return Realm.asyncOpen(configuration: realmConfig)
+
+   For efficiency, I open the ``Chatster`` Realm when the user logs in and don't close it until the user logs out. 
+
+   The Realm sync rules to determine whether a user can open a synced read or read/write Realm of User objects are even more straightforward. 
+
+   It's always possible to open a synced ``Chatster`` Realm for reads:
+
+   .. code-block:: javascript
+   
+      case "all-users":
+         console.log(`Any user can read all-users partitions`);
+         return true;
+
+   It's never possible to open a synced ``Chatster`` Realm for writes (the trigger is the only place that needs to make changes):
+
+   .. code-block:: javascript
+
+      case "all-users":
+         console.log(`No user can write to an all-users partitions`);
+         return false;
+
+   ChatMessage Object
+   ``````````````````
+
+   The third and final top-level Realm Object is `ChatMessage <https://github.com/ClusterDB/RChat/blob/main/RChat-iOS/RChat/Model/ChatMessage.swift>`__:
+
+   .. code-block:: swift
+   
+      class ChatMessage: Object {
+         @objc dynamic var _id = UUID().uuidString
+         @objc dynamic var partition = "" // "conversation=<conversation-id>"
+         @objc dynamic var author: String?
+         @objc dynamic var text = ""
+         @objc dynamic var image: Photo?
+         let location = List<Double>()
+         @objc dynamic var timestamp = Date()
+      }
+
+   The partition is set to ``"conversation=<conversation-id>"``. This means that all messages in a single conversation are in the same partition.
+
+   An alternate approach would be to embed chat messages within the ``Conversation`` object. That approach has a severe drawback that Conversation objects/documents would indefinitely grow as users send new chat messages to the chat room. Recall that the ``ChatMessage`` includes photos, and so the size of the objects/documents could snowball, possibly exhausting MongoDB's 16MB limit. Unbounded document growth is a major :doc:`MongoDB anti-pattern </article/schema-design-anti-pattern-massive-arrays>` and should be avoided.
+
+   This is how the iOS app opens a ``ChatMessage`` Realm:
+
+   .. code-block:: swift
+
+      let realmConfig = user.configuration(partitionValue: "conversation=\(conversation.id)")
+      Realm.asyncOpen(configuration: realmConfig)
+
+   There is a different partition for each group of ``ChatMessages`` that form a conversation, and so every opened conversation requires its own synced Realm. If the app kept many ``ChatMessage`` Realms open simultaneously, it could quickly hit device resource limits. To keep things efficient, I only open ``ChatMessage`` Realms when a chat room's view is opened, and then I close them (set to ``nil``) when the conversation view is closed.
+
+   The Realm sync rules to determine whether a user can open a synced Realm of ChatMessage objects are a little more complicated than for ``User`` and ``Chatster`` objects. A user can only open a synced ``ChatMessage`` Realm if their conversation list contains the value component of the partition key:
+
+   .. code-block:: javascript
+   
+      case "conversation":
+         console.log(`Looking up User document for _id = ${user.id}`);
+         return userCollection.findOne({ _id: user.id })
+         .then (userDoc => {
+         if (userDoc.conversations) {
+            let foundMatch = false;
+            userDoc.conversations.forEach( conversation => {
+               console.log(`Checking if conversaion.id (${conversation.id}) === ${partitionValue}`)
+               if (conversation.id === partitionValue) {
+               console.log(`Found matching conversation element for id = ${partitionValue}`);
+               foundMatch = true;
+               }
+            });
+            if (foundMatch) {
+               console.log(`Found Match`);
+               return true;
+            } else {
+               console.log(`Checked all of the user's conversations but found none with id == ${partitionValue}`);
+               return false;
+            }
+         } else {
+            console.log(`No conversations attribute in User doc`);
+            return false;
+         }
+         }, error => {
+         console.log(`Unable to read User document: ${error}`);
+         return false;
+         });
+
+.. summary::
+
+   Summary
+   -------
+
+   RChat demonstrates how to develop a mobile app with complex data requirements using Realm.
+
+   So far, we've only implemented RChat for iOS, but we'll add an Android version soon – which will use the same back end Realm application. The data architecture for the Android app will also be the same. By the magic of MongoDB Realm Sync, Android users will be able to chat with iOS users. 
+
+   If you're adding a chat capability to your iOS app, you'll be able to use much of the code from RChat. If you're adding chat to an Android app, you should use the data architecture described here. If your app has no chat component, you should still consider the design choices described in this article, as you'll likely face similar decisions.
+
+   References
+   ----------
+
+   - `GitHub Repo for this app <https://github.com/ClusterDB/RChat>`__
+   - If you're building your first SwiftUI/Realm app, then check out :doc:`/how-to/realm-swiftui-combine-first-app`
+   - `GitHub Repo for Realm-Cocoa SDK <https://github.com/realm/realm-cocoa>`__
+   - `Realm Cocoa SDK documentation <https://realm.io/docs/swift/latest/>`__
+   - `MongoDB's Realm documentation <https://docs.mongodb.com/realm/>`__
+   - `WildAid O-FISH <https://github.com/WildAid/o-fish-ios>`__ – an example of a **much** bigger app built on Realm and MongoDB Realm Sync
+
+   .. include:: /includes/callouts/community-cta.rst
