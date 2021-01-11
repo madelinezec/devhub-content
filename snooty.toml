@@ -7,8 +7,8 @@ package-name-org = "mongodb-org"
 pgp-version = "{+version+}"
 
 [page_groups]
-"home" = ["/how-to/realm-google-authentication-android/", "/how-to/field-level-encryption-fle-mongodb-golang/", "/article/six-principles-building-robust-flexible-shared-data-applications/", "/article/key-developer-takeaways-hacktoberfest-2020/"]
-"learn" = ["/article/mongodb-schema-design-best-practices/", "/article/behind-scenes-mongodb-podcast/", "/article/resumable-initial-sync/"]
+"home" = ["/how-to/setup-multi-cloud-cluster-mongodb-atlas/", "/how-to/realm-swiftui-ios-chat-app/", "/article/10-tips-making-remote-work-actually-work/", "/how-to/client-side-field-level-encryption-csfle-mongodb-node/"]
+"learn" = ["/how-to/realm-swiftui-combine-first-app/", "/how-to/developing-side-scrolling-platformer-game-unity-mongodb-realm/", "/quickstart/java-setup-crud-operations/"]
 "Java Tutorials" = ["/quickstart/java-setup-crud-operations/", "/quickstart/java-mapping-pojos/", "/quickstart/java-aggregation-pipeline/", "/quickstart/java-change-streams/"]
 "NodeJS Tutorials" = ["/quickstart/node-connect-mongodb/", "/quickstart/node-crud-tutorial/", "/quickstart/node-aggregation-framework/", "/quickstart/node-transactions/", "/quickstart/nodejs-change-streams-triggers/"]
 "BSON Tutorials" = ["/quickstart/bson-data-types-decimal128/", "/quickstart/bson-data-types-objectid/", "/quickstart/bson-data-types-date/"]
